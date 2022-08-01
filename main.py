@@ -1,6 +1,6 @@
 try:
     import tkinter as tk  # python 3
-    from tkinter import font as tkfont  # python 3
+    from tkinter import font as tkfont, ttk  # python 3
 except ImportError:
     import Tkinter as tk  # python 2
     import tkFont as tkfont  # python 2
@@ -9,7 +9,8 @@ except ImportError:
 class SampleApp(tk.Tk):
     def __init__(self, *args, **kwargs):
         tk.Tk.__init__(self, *args, **kwargs)
-        self.title_font = tkfont.Font(family='Helvetica', size=18, weight="bold", slant="italic")
+        self.title_font = tkfont.Font(family='Times New Roman Baltic', size=180, weight="bold")
+        self.menu_button_font = tkfont.Font(family='Helvetica', size=18, weight="bold")
         container = tk.Frame(self)
         container.grid()
         container.grid_rowconfigure(0, weight=1)
@@ -45,10 +46,9 @@ class OpeningPage(tk.Frame):
         tk.Frame.__init__(self, parent)
         self.controller = controller
         label = tk.Label(self, text="Game Title", font=controller.title_font)
-        label.grid(row=0, sticky="nsew", pady=10)
-        button = tk.Button(self, text="Start Game", padx=10, pady=10,
+        label.grid(pady=10)
+        button = tk.Button(self, text="Start Game", padx=100, pady=100, font=controller.menu_button_font,
                            command=lambda: controller.show_frame("MainMenu"))
-        buttonLabel = ttk.LabelFrame
         button.grid()
 
 
@@ -83,7 +83,7 @@ class DungeonDelve(tk.Frame):
         tk.Frame.__init__(self, parent)
         self.controller = controller
         label = tk.Label(self, text="Dungeon", font=controller.title_font)
-        label.grid(row=0, sticky="nsew", pady=10)
+        label.grid(row=0, pady=10)
 
         buttonReturn = tk.Button(self, text="Return to Menu",
                            command=lambda: controller.show_frame("MainMenu"))
@@ -136,4 +136,5 @@ class LeaderboardPage(tk.Frame):
 
 if __name__ == "__main__":
     app = SampleApp()
+    #app.attributes('-fullscreen', True)
     app.mainloop()
