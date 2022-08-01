@@ -11,10 +11,12 @@ class SampleApp(tk.Tk):
         tk.Tk.__init__(self, *args, **kwargs)
         self.title_font = tkfont.Font(family='Times New Roman Baltic', size=180, weight="bold")
         self.menu_button_font = tkfont.Font(family='Helvetica', size=18, weight="bold")
+        self.attributes('-fullscreen', True)
+        self.grid_propagate(0)
         container = tk.Frame(self)
         container.grid()
-        container.grid_rowconfigure(0, weight=1)
-        container.grid_columnconfigure(0, weight=1)
+        container.grid_rowconfigure(11, weight=1)
+        container.grid_columnconfigure(11, weight=1)
 
         self.frames = {}
         for F in (OpeningPage, MainMenu, DungeonDelve, CreateTeamPage, CreditPage, How2PlayPage, LeaderboardPage):
@@ -46,10 +48,10 @@ class OpeningPage(tk.Frame):
         tk.Frame.__init__(self, parent)
         self.controller = controller
         label = tk.Label(self, text="Game Title", font=controller.title_font)
-        label.grid(pady=10)
+        label.grid(row=1, column=5, pady=10)
         button = tk.Button(self, text="Start Game", padx=100, pady=100, font=controller.menu_button_font,
                            command=lambda: controller.show_frame("MainMenu"))
-        button.grid()
+        button.grid(row=9, column=5)
 
 
 class MainMenu(tk.Frame):
@@ -57,7 +59,7 @@ class MainMenu(tk.Frame):
         tk.Frame.__init__(self, parent)
         self.controller = controller
         label = tk.Label(self, text="Surface Menu", font=controller.title_font)
-        label.grid(row=0, sticky="nsew", pady=10)
+        label.grid(row=0, pady=10)
         buttonDungeon = tk.Button(self, text="Delve into the Dungeon",
                                   command=lambda: controller.show_frame("DungeonDelve"))
         buttonTeam = tk.Button(self, text="Champion Camp",
@@ -70,12 +72,12 @@ class MainMenu(tk.Frame):
                                       command=lambda: controller.show_frame("LeaderboardPage"))
         buttonQuit = tk.Button(self, text="Exit game",
                                command=lambda: controller.breakcode())
-        buttonDungeon.grid(row=1, column=0)
-        buttonTeam.grid(row=2, column=0)
-        buttonCredit.grid(row=3, column=0)
-        buttonH2P.grid(row=4, column=0)
-        buttonLeaderboard.grid(row=5, column=0)
-        buttonQuit.grid(row=6, column=0)
+        buttonDungeon.grid(row=1, column=0, sticky="w")
+        buttonTeam.grid(row=2, column=0, sticky="w")
+        buttonCredit.grid(row=3, column=0, sticky="w")
+        buttonH2P.grid(row=4, column=0, sticky="w")
+        buttonLeaderboard.grid(row=5, column=0, stick="w")
+        buttonQuit.grid(row=6, column=0, sticky="w")
 
 
 class DungeonDelve(tk.Frame):
@@ -136,5 +138,4 @@ class LeaderboardPage(tk.Frame):
 
 if __name__ == "__main__":
     app = SampleApp()
-    #app.attributes('-fullscreen', True)
     app.mainloop()
