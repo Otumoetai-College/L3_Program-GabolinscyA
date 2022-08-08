@@ -10,6 +10,7 @@ class SampleApp(tk.Tk):
     def __init__(self, *args, **kwargs):
         tk.Tk.__init__(self, *args, **kwargs)
         self.title_font = tkfont.Font(family='Times New Roman Baltic', size=120, weight="bold")
+        self.small_title_font = tkfont.Font(family='Times New Roman Baltic', size=80, weight="bold")
         self.menu_button_font = tkfont.Font(family='Helvetica', size=18, weight="bold")
         self.geometry('1280x720')
         container = tk.Frame(self)
@@ -59,6 +60,7 @@ class OpeningPage(tk.Frame):
         invis_label3.grid(column=1, row=2, padx=95)
         button.grid(row=3, column=2)
 
+
 class LoginMenu(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
@@ -94,12 +96,49 @@ class RegisterMenu(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
         self.controller = controller
-        label = tk.Label(self, text="Register your account", font=controller.title_font)
-        label.grid(row=0, pady=10)
-
+        label = tk.Label(self, text="Register your account", font=controller.small_title_font)
+        label.grid(row=1, column=1, pady=10)
+        invis_label1 = tk.Label(self)
+        invis_label2 = tk.Label(self)
+        invis_label3 = tk.Label(self)
+        username_label = ttk.Label(self, text="Username:")
+        username_entry = ttk.Entry(self)
+        password_label = ttk.Label(self, text="Password:")
+        password_entry = ttk.Entry(self)
+        confirm_password_label = ttk.Label(self, text="Confirm Password:")
+        confirm_password_entry = ttk.Entry(self)
         confirm_registerbutton = tk.Button(self, text="Register Details",
                            command=lambda: controller.show_frame("LoginMenu"))
-        confirm_registerbutton.grid()
+
+        confirm_registerbutton.grid(row=6, column=1)
+        username_label.grid(row=3, column=1, ipadx=100, padx=10, pady=10)
+        username_entry.grid(row=3, column=1, padx=10, pady=10)
+        password_label.grid(row=4, column=1, ipadx=100, padx=10, pady=10)
+        password_entry.grid(row=4, column=1, padx=10, pady=10)
+        confirm_password_label.grid(row=5, column=1, ipadx=120, padx=10, pady=10)
+        confirm_password_entry.grid(row=5, column=1, padx=10, pady=10)
+        invis_label1.grid(row=0, pady=15)
+        invis_label2.grid(column=0, row=1, padx=25)
+        invis_label3.grid(row=2, column=1, pady=35)
+
+    def check_password(self, password_entry, confirm_password_entry):
+        password_entry.strip()
+        if password_entry == "":
+            no_pw_warning = ttk.Label(self, text="Password cannot be empty")
+            no_pw_warning.grid(row=4, column=1, ipadx=-100, fg="red", weight="bold")
+        if confirm_password_entry == password_entry:
+            no_pw_warning.destroy()
+            final_register_check(self)
+
+    def final_register_check(self):
+        register_window = Toplevel()
+        register_window.title("Confirmation")
+        register_window_label = ttk.Label(register_window, text="Are you sure you want to register with these details?")
+        register_window_button_yes = ttk.Button(register_window, text="Yes", command=)
+        register_window_button_no = ttk.Button(register_window, text="No", command=register_window.destroy())
+        register_window_label.grid(column=1, row=1)
+        register_window_button_yes.grid(column=1, row=2)
+        register_window_button_no.grid(column=1, row=3)
 
 
 class MainMenu(tk.Frame):
