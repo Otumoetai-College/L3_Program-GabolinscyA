@@ -7,6 +7,7 @@ except ImportError:
 
 
 class SampleApp(tk.Tk):
+
     def __init__(self, *args, **kwargs):
         tk.Tk.__init__(self, *args, **kwargs)
         self.title_font = tkfont.Font(family='Times New Roman Baltic', size=120, weight="bold")
@@ -50,6 +51,8 @@ class SampleApp(tk.Tk):
         global not_equal_pw_warning
         global no_us_and_pw_warning
         global no_us_warning
+        global inputted_username
+        global inputted_password
         inputted_username = username_entry.get()
         inputted_username.strip()
         inputted_password = password_entry.get()
@@ -84,7 +87,8 @@ class SampleApp(tk.Tk):
                 not_equal_pw_warning = 0
                 no_us_and_pw_warning = 0
                 no_us_warning = 0
-                self.final_register_check(inputted_username, inputted_password)
+                self.final_register_check()
+
         else:
             no_pw_warning = 0
             no_us_and_pw_warning = 0
@@ -93,24 +97,7 @@ class SampleApp(tk.Tk):
             not_equal_pw_warning = ttk.Label(self, text="Passwords aren't the same")
             not_equal_pw_warning.grid(row=3, column=0, padx=10, pady=10)
 
-    def final_register_check(self, inputted_username, inputted_password):
-        register_window = tk.Toplevel()
-        register_window.title("Confirmation")
-        register_window_label = ttk.Label(register_window, text="Are you sure you want to register with these details?")
-        register_window_button_yes = ttk.Button(register_window, text="Yes",
-                                                command=self.user_account_set(inputted_username, inputted_password,
-                                                                              register_window))
-        register_window_button_no = ttk.Button(register_window, text="No",
-                                               command=lambda: self.destroy_register_window(register_window))
-        register_window_label.grid(column=1, row=1)
-        register_window_button_yes.grid(column=1, row=2)
-        register_window_button_no.grid(column=1, row=3)
-
-    def destroy_register_window(self, register_window):
-        register_window.destroy()
-
-    def user_account_set(self, inputted_username, inputted_password, register_window):
-        global successful_user_addition
+    def user_account_set(self):
         file = open("C:/Users/gabolinscya/Documents/L2_ASSIGNMENT_RPG/account_data_username.txt", "a")
         file.write("\n")
         file.write(inputted_username)
@@ -119,18 +106,37 @@ class SampleApp(tk.Tk):
         file.write("\n")
         file.write(inputted_password)
         file.close()
-        register_window.destroy()
         successful_user_addition = ttk.Label(self, text="You're account has been created!")
-        successful_user_addition.grid(row=3, column=0, padx=10, pady=10)
+        successful_user_addition.grid(row=4, column=1, padx=10, pady=10)
+
+
+    def final_register_check(self):
+        register_window = registery_window(self)
+        registery_window.grab_set(self)
 
     def register_to_login(self):
         no_pw_warning = 0
         no_us_and_pw_warning = 0
         no_us_warning = 0
         not_equal_pw_warning = 0
-        successful_user_addition = 0
         self.show_frame("LoginMenu")
 
+
+class registery_window(tk.Toplevel):
+    def __init__(self, parent):
+        super().__init__(parent)
+        self.title("Confirmation")
+        register_window_label = ttk.Label(self, text="Are you sure you want to register with these details?")
+        register_window_button_yes = ttk.Button(self, text="Yes",
+                                                command=lambda: self.access_user_account_set())
+        register_window_button_no = ttk.Button(self, text="No",
+                                               command=self.destroy)
+        register_window_label.grid(column=1, row=1)
+        register_window_button_yes.grid(column=1, row=2)
+        register_window_button_no.grid(column=1, row=3)
+
+    def access_user_account_set(self):
+        SampleApp.user_account_set(self)
 
 class OpeningPage(tk.Frame):
     def __init__(self, parent, controller):
