@@ -59,16 +59,22 @@ class SampleApp(tk.Tk):
         inputted_password.strip()
         inputted_confirm_password = confirm_password_entry.get()
         inputted_confirm_password.strip()
+        username_file = open("C:/Users/gabolinscya/Documents/L2_ASSIGNMENT_RPG/account_data_username.txt", "r")
+        password_file = open("C:/Users/gabolinscya/Documents/L2_ASSIGNMENT_RPG/account_data_password.txt", "r")
+        username_file.readlines()
+        password_file.readlines()
         if inputted_password == "":
             if inputted_username == "":
                 not_equal_pw_warning = 0
                 no_pw_warning = 0
                 no_us_warning = 0
                 no_us_and_pw_warning = 0
+                pw_unavailable = 0
                 no_us_and_pw_warning = ttk.Label(self, text="Username and Password cannot be empty")
                 no_us_and_pw_warning.grid(row=3, column=0, padx=10, pady=10)
             else:
                 not_equal_pw_warning = 0
+                pw_unavailable = 0
                 no_us_warning = 0
                 no_us_and_pw_warning = 0
                 no_pw_warning = 0
@@ -76,6 +82,7 @@ class SampleApp(tk.Tk):
                 no_pw_warning.grid(row=3, column=0, padx=10, pady=10)
         elif inputted_confirm_password == inputted_password:
             if inputted_username == "":
+                pw_unavailable = 0
                 not_equal_pw_warning = 0
                 no_pw_warning = 0
                 no_us_and_pw_warning = 0
@@ -83,12 +90,23 @@ class SampleApp(tk.Tk):
                 no_us_warning = ttk.Label(self, text="Username cannot be empty")
                 no_us_warning.grid(row=3, column=0, padx=10, pady=10)
             else:
-                no_pw_warning = 0
-                not_equal_pw_warning = 0
-                no_us_and_pw_warning = 0
-                no_us_warning = 0
-                self.final_register_check()
-
+                if inputted_password in password_file:
+                    no_pw_warning = 0
+                    no_us_and_pw_warning = 0
+                    no_us_warning = 0
+                    not_equal_pw_warning = 0
+                    pw_unavailable = 0
+                    pw_unavailable = ttk.Label(self, text="Sorry, this password is already being used!")
+                    pw_unavailable.grid(row=3, column=0, padx=10, pady=10)
+                else:
+                    pw_unavailable = 0
+                    no_pw_warning = 0
+                    not_equal_pw_warning = 0
+                    no_us_and_pw_warning = 0
+                    no_us_warning = 0
+                    self.final_register_check()
+                    username_file.close()
+                    password_file.close()
         else:
             no_pw_warning = 0
             no_us_and_pw_warning = 0
@@ -98,17 +116,14 @@ class SampleApp(tk.Tk):
             not_equal_pw_warning.grid(row=3, column=0, padx=10, pady=10)
 
     def user_account_set(self):
-        file = open("C:/Users/gabolinscya/Documents/L2_ASSIGNMENT_RPG/account_data_username.txt", "a")
-        file.write("\n")
-        file.write(inputted_username)
-        file.close()
-        file = open("C:/Users/gabolinscya/Documents/L2_ASSIGNMENT_RPG/account_data_password.txt", "a")
-        file.write("\n")
-        file.write(inputted_password)
-        file.close()
-        successful_user_addition = ttk.Label(self, text="You're account has been created!")
-        successful_user_addition.grid(row=4, column=1, padx=10, pady=10)
-
+            file = open("C:/Users/gabolinscya/Documents/L2_ASSIGNMENT_RPG/account_data_username.txt", "a")
+            file.write("\n")
+            file.write(inputted_username)
+            file.close()
+            file = open("C:/Users/gabolinscya/Documents/L2_ASSIGNMENT_RPG/account_data_password.txt", "a")
+            file.write("\n")
+            file.write(inputted_password)
+            file.close()
 
     def final_register_check(self):
         register_window = registery_window(self)
@@ -137,6 +152,8 @@ class registery_window(tk.Toplevel):
 
     def access_user_account_set(self):
         SampleApp.user_account_set(self)
+        registery_window.destroy(self)
+
 
 class OpeningPage(tk.Frame):
     def __init__(self, parent, controller):
@@ -218,6 +235,7 @@ class RegisterMenu(tk.Frame):
         invis_label1.grid(row=0, pady=15)
         invis_label2.grid(column=0, row=1, padx=25)
         invis_label3.grid(row=2, column=1, pady=35)
+
 
 
 class MainMenu(tk.Frame):
