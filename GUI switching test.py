@@ -1,10 +1,10 @@
+import bcrypt
 try:
     import tkinter as tk  # python 3
     from tkinter import font as tkfont, ttk  # python 3
 except ImportError:
     import Tkinter as tk  # python 2
     import tkFont as tkfont  # python 2
-
 
 class SampleApp(tk.Tk):
 
@@ -49,39 +49,26 @@ class SampleApp(tk.Tk):
 
     def check_password(self, username_entry, password_entry, confirm_password_entry):
         global problem
-        global inputted_username
-        global inputted_password
-        global safe_password
         global safe_username
+        global encoded_username
+        global encoded_password
         inputted_username = username_entry.get()
         inputted_username.strip()
         inputted_password = password_entry.get()
         inputted_password.strip()
-        inputted_username = str(inputted_username)
-        inputted_password = str(inputted_password)
         inputted_confirm_password = confirm_password_entry.get()
         inputted_confirm_password.strip()
-        username_file = open("C:/Users/gabolinscya/Documents/L2_ASSIGNMENT_RPG/account_data_username.txt", "r")
-        password_file = open("C:/Users/gabolinscya/Documents/L2_ASSIGNMENT_RPG/account_data_password.txt", "r")
+        username_file = open("C:/Users/OEM/Documents/L2_ASSIGNMENT_RPG/account_data_username.txt", "r")
+        password_file = open("C:/Users/OEM/Documents/L2_ASSIGNMENT_RPG/account_data_password.txt", "r")
         no_us_and_pw_warning = "Username and Password cannot be empty"
         no_pw_warning = "Password cannot be empty"
         no_us_warning = "Username cannot be empty"
-        pw_unavailable = "Sorry, this password is already being used!"
         un_unavailable = "Sorry, this username is already being used!"
         not_equal_pw_warning = "Passwords aren't the same"
         self.problem.destroy()
         self.problem = ttk.Label(self, text="")
         self.problem.grid(row=3, column=0, padx=10, pady=10)
         username_file_r = username_file.read()
-        password_file_r = password_file.read()
-        username_file_rl = username_file.readlines()
-        password_file_rl = password_file.readlines()
-        password_list = []
-        username_list = []
-        safe_password = 0
-        safe_username = 0
-        index_p = 0
-        index_u = 0
         username_file.close()
         password_file.close()
         if inputted_password == "":
@@ -96,61 +83,28 @@ class SampleApp(tk.Tk):
                 self.problem.configure(text=no_pw_warning)
                 self.problem.grid(row=3, column=0, padx=10, pady=10)
         elif inputted_confirm_password == inputted_password:
+            password_encoder = inputted_username and "," and inputted_password
+            username_encoder = inputted_username
+            encoded_password = password_encoder.encode("utf-8")
+            encoded_username = username_encoder.encode("utf-8")
+            encoded_password = bcrypt.hashpw(encoded_password, bcrypt.gensalt())
             if inputted_username == "":
                 self.problem.destroy()
                 self.problem = ttk.Label(self, text="")
                 self.problem.configure(text=no_us_warning)
                 self.problem.grid(row=3, column=0, padx=10, pady=10)
             else:
-                if inputted_password in password_file_r:
-                    password_file = open("C:/Users/gabolinscya/Documents/L2_ASSIGNMENT_RPG/account_data_password.txt", "r")
-                    for line in password_file:
-                        index_p += 1
-                        if inputted_password in line:
-                            filed_password = password_file_rl[index_p]
-                            if inputted_password == filed_password:
-                                self.problem.destroy()
-                                self.problem = ttk.Label(self, text="")
-                                self.problem.configure(text=pw_unavailable)
-                                self.problem.grid(row=3, column=0, padx=10, pady=10)
-                                break
-                            else:
-                                safe_password = 1
-                                self.problem.destroy()
-                                self.problem = ttk.Label(self, text="")
-                                self.problem.configure(text="worked")
-                                self.problem.grid(row=3, column=0, padx=10, pady=10)
-                        else:
-                            self.problem.destroy()
-                            self.problem = ttk.Label(self, text="")
-                            self.problem.configure(text=password_file_rl[index_p])
-                            self.problem.grid(row=3, column=0, padx=10, pady=10)
-                else:
+                if str(encoded_username) in username_file_r:
                     self.problem.destroy()
                     self.problem = ttk.Label(self, text="")
-                    self.problem.configure(text="Bad thing happened1")
+                    self.problem.configure(text=un_unavailable)
                     self.problem.grid(row=3, column=0, padx=10, pady=10)
-            #    if inputted_username in username_file_r:
 
-                    # I_UN_len = len(inputted_username)
-                    # for username in username_file_rl:
-                    #  if inputted_username in username:
-                    #       username_list.append(username)
-                #           for usernames in username_list:
-                #            UN_F_len = len(username)
-                #              if I_UN_len == UN_F_len:
-                #                self.problem.destroy()
-                #                  self.problem = ttk.Label(self, text="")
-                #                  self.problem.configure(text=un_unavailable)
-                #                  self.problem.grid(row=3, column=0, padx=10, pady=10)
-                #            else:
-                #                 safe_username = 1
-            #   if safe_password == 1:
-            #      if safe_username == 1:
-            #          self.problem.destroy()
-            #          self.final_register_check()
-            #           username_file.close()
-            #           password_file.close()
+                else:
+                    self.problem.destroy()
+                    username_file.close()
+                    password_file.close()
+                    self.final_register_check()
         else:
             self.problem.destroy()
             self.problem = ttk.Label(self, text="")
@@ -158,13 +112,13 @@ class SampleApp(tk.Tk):
             self.problem.grid(row=3, column=0, padx=10, pady=10)
 
     def user_account_set(self):
-        file = open("C:/Users/gabolinscya/Documents/L2_ASSIGNMENT_RPG/account_data_username.txt", "a")
+        file = open("C:/Users/OEM/Documents/L2_ASSIGNMENT_RPG/account_data_username.txt", "a")
         file.write("\n")
-        file.write(inputted_username)
+        file.write(str(encoded_username))
         file.close()
-        file = open("C:/Users/gabolinscya/Documents/L2_ASSIGNMENT_RPG/account_data_password.txt", "a")
+        file = open("C:/Users/OEM/Documents/L2_ASSIGNMENT_RPG/account_data_password.txt", "a")
         file.write("\n")
-        file.write(inputted_password)
+        file.write(str(encoded_password))
         file.close()
 
     def final_register_check(self):
