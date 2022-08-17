@@ -1,10 +1,12 @@
 import bcrypt
+
 try:
     import tkinter as tk  # python 3
     from tkinter import font as tkfont, ttk  # python 3
 except ImportError:
     import Tkinter as tk  # python 2
     import tkFont as tkfont  # python 2
+
 
 class SampleApp(tk.Tk):
 
@@ -47,9 +49,71 @@ class SampleApp(tk.Tk):
     def breakcode(self):
         self.destroy()
 
-    def check_password(self, username_entry, password_entry, confirm_password_entry):
+    def login_check_password(self, username_entry, password_entry):
+        inputted_username = username_entry.get()
+        inputted_username.strip()
+        inputted_password = password_entry.get()
+        inputted_password.strip()
+        inputted_confirm_password = confirm_password_entry.get()
+        inputted_confirm_password.strip()
+        username_file = open("C:/Users/OEM/Documents/L2_ASSIGNMENT_RPG/account_data_username.txt", "r")
+        password_file = open("C:/Users/OEM/Documents/L2_ASSIGNMENT_RPG/account_data_password.txt", "r")
+        no_us_and_pw_warning = "Please enter a username and password"
+        no_pw_warning = "Password is missing"
+        no_us_warning = "Username is missing"
+        invalid_details = "Username and/or Password is incorrect"
+        self.problem.destroy()
+        self.problem = ttk.Label(self, text="")
+        self.problem.grid(row=1, column=1, padx=10, pady=10)
+        username_file_r = username_file.read()
+        password_file_r = password_file.read()
+        username_file.close()
+        password_file.close()
+        password_encoder = inputted_username and "," and inputted_password
+        username_encoder = inputted_username
+        encoded_password = password_encoder
+        encoded_password = encoded_password.encode("utf-8")
+        encoded_username = username_encoder.encode("utf-8")
+
+        if inputted_password == "":
+            if inputted_username == "":
+                self.problem.destroy()
+                self.problem = ttk.Label(self, text="")
+                self.problem.configure(text=no_us_and_pw_warning)
+                self.problem.grid(row=1, column=1, padx=10, pady=10)
+            else:
+                self.problem.destroy()
+                self.problem = ttk.Label(self, text="")
+                self.problem.configure(text=no_pw_warning)
+                self.problem.grid(row=7, column=2, padx=10, pady=10)
+        elif inputted_username == "":
+            self.problem.destroy()
+            self.problem = ttk.Label(self, text="")
+            self.problem.configure(text=no_us_warning)
+            self.problem.grid(row=7, column=2, padx=10, pady=10)
+        else:
+            if str(encoded_username) in username_file_r:
+                if bcrypt.checkpw(password_encoder.encode("utf-8"), encoded_password):
+                    if str(encoded_password) in open("C:/Users/OEM/Documents/L2_ASSIGNMENT_RPG/account_data_password.txt", "r"):
+                        self.show_frame("MainMenu")
+                    else:
+                        self.problem.destroy()
+                        self.problem = ttk.Label(self, text="")
+                        self.problem.configure(text=str(encoded_password))
+                        self.problem.grid(row=7, column=2, padx=10, pady=10)
+                else:
+                    self.problem.destroy()
+                    self.problem = ttk.Label(self, text="")
+                    self.problem.configure(text="decoding went bad")
+                    self.problem.grid(row=7, column=2, padx=10, pady=10)
+            else:
+                self.problem.destroy()
+                self.problem = ttk.Label(self, text="")
+                self.problem.configure(text="username incorrect")
+                self.problem.grid(row=7, column=2, padx=10, pady=10)
+
+    def register_check_password(self, username_entry, password_entry, confirm_password_entry):
         global problem
-        global safe_username
         global encoded_username
         global encoded_password
         inputted_username = username_entry.get()
@@ -179,7 +243,7 @@ class LoginMenu(tk.Frame):
         invis_label2 = tk.Label(self)
         invis_label3 = tk.Label(self)
         Loginbutton = tk.Button(self, text="Login", font=controller.menu_button_font,
-                                command=lambda: controller.show_frame("MainMenu"))
+                                command=lambda: controller.login_check_password(username_entry, password_entry))
         Regibutton = tk.Button(self, text="Register", font=controller.menu_button_font,
                                command=lambda: controller.show_frame("RegisterMenu"))
         Returnbutton = tk.Button(self, text="Back", font=controller.menu_button_font,
@@ -193,7 +257,7 @@ class LoginMenu(tk.Frame):
         invis_label3.grid(column=1, row=2, padx=95)
         Loginbutton.grid(row=5, column=2)
         Regibutton.grid(row=6, column=2)
-        Returnbutton.grid(row=7, column=2)
+        Returnbutton.grid(row=8, column=2)
         username_label.grid(row=3, column=2, ipadx=100, padx=10, pady=10)
         username_entry.grid(row=3, column=2, padx=10, pady=10)
         password_label.grid(row=4, column=2, ipadx=100, padx=10, pady=10)
@@ -220,8 +284,9 @@ class RegisterMenu(tk.Frame):
         confirm_password_label = ttk.Label(self, text="Confirm Password:")
         confirm_password_entry = ttk.Entry(self, show="*")
         confirm_registerbutton = tk.Button(self, text="Register Details",
-                                           command=lambda: controller.check_password(username_entry, password_entry,
-                                                                                     confirm_password_entry))
+                                           command=lambda: controller.register_check_password(username_entry,
+                                                                                              password_entry,
+                                                                                              confirm_password_entry))
         back_to_login = tk.Button(self, text="Back to Login",
                                   command=lambda: controller.register_to_login())
         back_to_login.grid(row=7, column=1, padx=10, pady=10)
