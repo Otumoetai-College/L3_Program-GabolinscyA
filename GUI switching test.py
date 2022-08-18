@@ -56,8 +56,8 @@ class SampleApp(tk.Tk):
         inputted_password.strip()
         inputted_confirm_password = confirm_password_entry.get()
         inputted_confirm_password.strip()
-        username_file = open("C:/Users/OEM/Documents/L2_ASSIGNMENT_RPG/account_data_username.txt", "r")
-        password_file = open("C:/Users/OEM/Documents/L2_ASSIGNMENT_RPG/account_data_password.txt", "r")
+        username_file = open("C:/Users/gabolinscya/Documents/L2_ASSIGNMENT_RPG/account_data_username.txt", "r")
+        password_file = open("C:/Users/gabolinscya/Documents/L2_ASSIGNMENT_RPG/account_data_password.txt", "r")
         no_us_and_pw_warning = "Please enter a username and password"
         no_pw_warning = "Password is missing"
         no_us_warning = "Username is missing"
@@ -66,9 +66,7 @@ class SampleApp(tk.Tk):
         self.problem = ttk.Label(self, text="")
         self.problem.grid(row=1, column=1, padx=10, pady=10)
         username_file_r = username_file.read()
-        password_file_r = password_file.read()
         username_file.close()
-        password_file.close()
         password_encoder = inputted_username and "," and inputted_password
         username_encoder = inputted_username
         encoded_password = password_encoder
@@ -93,19 +91,21 @@ class SampleApp(tk.Tk):
             self.problem.grid(row=7, column=2, padx=10, pady=10)
         else:
             if str(encoded_username) in username_file_r:
-                if bcrypt.checkpw(password_encoder.encode("utf-8"), encoded_password):
-                    if str(encoded_password) in open("C:/Users/OEM/Documents/L2_ASSIGNMENT_RPG/account_data_password.txt", "r"):
-                        self.show_frame("MainMenu")
+                while True:
+                    password_file_r = password_file.readline()
+                    password_file_r = password_file_r.decode(encoding="utf-8")
+                    password_file_r = bytes(password_file_r, 'utf-8')
+                    if not password_file_r:
+                        break
+                    if bcrypt.checkpw(password_encoder.encode("utf-8"), password_file_r):
+                        if str(password_file_r) in open("C:/Users/gabolinscya/Documents/L2_ASSIGNMENT_RPG/account_data_password.txt", "r"):
+                            self.show_frame("MainMenu")
+                            break
                     else:
                         self.problem.destroy()
                         self.problem = ttk.Label(self, text="")
-                        self.problem.configure(text=str(encoded_password))
+                        self.problem.configure(text="password not found")
                         self.problem.grid(row=7, column=2, padx=10, pady=10)
-                else:
-                    self.problem.destroy()
-                    self.problem = ttk.Label(self, text="")
-                    self.problem.configure(text="decoding went bad")
-                    self.problem.grid(row=7, column=2, padx=10, pady=10)
             else:
                 self.problem.destroy()
                 self.problem = ttk.Label(self, text="")
@@ -122,8 +122,8 @@ class SampleApp(tk.Tk):
         inputted_password.strip()
         inputted_confirm_password = confirm_password_entry.get()
         inputted_confirm_password.strip()
-        username_file = open("C:/Users/OEM/Documents/L2_ASSIGNMENT_RPG/account_data_username.txt", "r")
-        password_file = open("C:/Users/OEM/Documents/L2_ASSIGNMENT_RPG/account_data_password.txt", "r")
+        username_file = open("C:/Users/gabolinscya/Documents/L2_ASSIGNMENT_RPG/account_data_username.txt", "r")
+        password_file = open("C:/Users/gabolinscya/Documents/L2_ASSIGNMENT_RPG/account_data_password.txt", "r")
         no_us_and_pw_warning = "Username and Password cannot be empty"
         no_pw_warning = "Password cannot be empty"
         no_us_warning = "Username cannot be empty"
@@ -176,11 +176,11 @@ class SampleApp(tk.Tk):
             self.problem.grid(row=3, column=0, padx=10, pady=10)
 
     def user_account_set(self):
-        file = open("C:/Users/OEM/Documents/L2_ASSIGNMENT_RPG/account_data_username.txt", "a")
+        file = open("C:/Users/gabolinscya/Documents/L2_ASSIGNMENT_RPG/account_data_username.txt", "a")
         file.write("\n")
         file.write(str(encoded_username))
         file.close()
-        file = open("C:/Users/OEM/Documents/L2_ASSIGNMENT_RPG/account_data_password.txt", "a")
+        file = open("C:/Users/gabolinscya/Documents/L2_ASSIGNMENT_RPG/account_data_password.txt", "a")
         file.write("\n")
         file.write(str(encoded_password))
         file.close()
@@ -195,6 +195,10 @@ class SampleApp(tk.Tk):
         password_entry.delete(0, "end")
         confirm_password_entry.delete(0, "end")
         self.show_frame("LoginMenu")
+
+    def login_to_register(self):
+        self.problem.destroy()
+        self.show_frame("RegisterMenu")
 
 
 class registery_window(tk.Toplevel):
@@ -245,7 +249,7 @@ class LoginMenu(tk.Frame):
         Loginbutton = tk.Button(self, text="Login", font=controller.menu_button_font,
                                 command=lambda: controller.login_check_password(username_entry, password_entry))
         Regibutton = tk.Button(self, text="Register", font=controller.menu_button_font,
-                               command=lambda: controller.show_frame("RegisterMenu"))
+                               command=lambda: controller.login_to_register())
         Returnbutton = tk.Button(self, text="Back", font=controller.menu_button_font,
                                  command=lambda: controller.show_frame("OpeningPage"))
         username_label = ttk.Label(self, text="Username:")
