@@ -67,7 +67,7 @@ class SampleApp(tk.Tk):
         self.problem.grid(row=1, column=1, padx=10, pady=10)
         username_file_r = username_file.read()
         username_file.close()
-        password_encoder = inputted_username and "," and inputted_password
+        password_encoder = inputted_username and inputted_password
         username_encoder = inputted_username
         encoded_password = password_encoder
         encoded_password = encoded_password.encode("utf-8")
@@ -93,11 +93,11 @@ class SampleApp(tk.Tk):
             if str(encoded_username) in username_file_r:
                 while True:
                     password_file_r = password_file.readline()
-                    password_file_r = password_file_r.decode(encoding="utf-8")
-                    password_file_r = bytes(password_file_r, 'utf-8')
                     if not password_file_r:
                         break
-                    if bcrypt.checkpw(password_encoder.encode("utf-8"), password_file_r):
+                    password_file_byte = password_file_r.encode("utf-8")
+                    password_encoder = str(password_encoder).encode("utf-8")
+                    if bcrypt.checkpw(password_encoder, password_file_byte):
                         if str(password_file_r) in open("C:/Users/gabolinscya/Documents/L2_ASSIGNMENT_RPG/account_data_password.txt", "r"):
                             self.show_frame("MainMenu")
                             break
@@ -116,6 +116,7 @@ class SampleApp(tk.Tk):
         global problem
         global encoded_username
         global encoded_password
+        global hashed_password
         inputted_username = username_entry.get()
         inputted_username.strip()
         inputted_password = password_entry.get()
@@ -147,11 +148,12 @@ class SampleApp(tk.Tk):
                 self.problem.configure(text=no_pw_warning)
                 self.problem.grid(row=3, column=0, padx=10, pady=10)
         elif inputted_confirm_password == inputted_password:
-            password_encoder = inputted_username and "," and inputted_password
+            password_encoder = inputted_username and inputted_password
             username_encoder = inputted_username
             encoded_password = password_encoder.encode("utf-8")
             encoded_username = username_encoder.encode("utf-8")
             encoded_password = bcrypt.hashpw(encoded_password, bcrypt.gensalt())
+            hashed_password = encoded_password.decode("utf-8")
             if inputted_username == "":
                 self.problem.destroy()
                 self.problem = ttk.Label(self, text="")
@@ -182,7 +184,7 @@ class SampleApp(tk.Tk):
         file.close()
         file = open("C:/Users/gabolinscya/Documents/L2_ASSIGNMENT_RPG/account_data_password.txt", "a")
         file.write("\n")
-        file.write(str(encoded_password))
+        file.write(str(hashed_password))
         file.close()
 
     def final_register_check(self):
