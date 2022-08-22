@@ -1,16 +1,21 @@
-import bcrypt
-
+import os
 try:
     import tkinter as tk  # python 3
     from tkinter import font as tkfont, ttk  # python 3
 except ImportError:
     import Tkinter as tk  # python 2
     import tkFont as tkfont  # python 2
+from flask import Flask
+from flask_bcrypt import Bcrypt
+
+app = Flask(__name__)
+bcrypt = Bcrypt(app)
 
 
 class SampleApp(tk.Tk):
 
     def __init__(self, *args, **kwargs):
+        global computer_username
         tk.Tk.__init__(self, *args, **kwargs)
         self.problem = ttk.Label(self, text="")
         self.title_font = tkfont.Font(family='Times New Roman Baltic', size=120, weight="bold")
@@ -21,7 +26,7 @@ class SampleApp(tk.Tk):
         container.grid(sticky="nsew")
         container.grid_rowconfigure(0, weight=1)
         container.grid_columnconfigure(0, weight=1)
-
+        computer_username = os.getlogin()
         self.frames = {}
         for F in (
                 OpeningPage, MainMenu, DungeonDelve, CreateTeamPage, CreditPage, How2PlayPage, LeaderboardPage,
@@ -49,36 +54,37 @@ class SampleApp(tk.Tk):
     def breakcode(self):
         self.destroy()
 
+    def set_username(self, inputted_username):
+        global user
+        user = inputted_username
+
     def login_check_password(self, username_entry, password_entry):
         inputted_username = username_entry.get()
         inputted_username.strip()
         inputted_password = password_entry.get()
         inputted_password.strip()
-        inputted_confirm_password = confirm_password_entry.get()
-        inputted_confirm_password.strip()
-        username_file = open("C:/Users/gabolinscya/Documents/L2_ASSIGNMENT_RPG/account_data_username.txt", "r")
-        password_file = open("C:/Users/gabolinscya/Documents/L2_ASSIGNMENT_RPG/account_data_password.txt", "r")
+        username_file = open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/account_data_username.txt".format(computer_username), "r")
+        password_file = open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/account_data_password.txt".format(computer_username), "r")
         no_us_and_pw_warning = "Please enter a username and password"
         no_pw_warning = "Password is missing"
         no_us_warning = "Username is missing"
         invalid_details = "Username and/or Password is incorrect"
+        please_wait = "Logging in may take a while. Sit back and relax while we work :)"
+        invis_label4.grid_forget()
         self.problem.destroy()
-        self.problem = ttk.Label(self, text="")
-        self.problem.grid(row=1, column=1, padx=10, pady=10)
+        self.problem = tk.Label(self, text="")
+        self.problem.grid(row=7, column=2, padx=10, pady=10)
         username_file_r = username_file.read()
         username_file.close()
         password_encoder = inputted_username and inputted_password
         username_encoder = inputted_username
-        encoded_password = password_encoder
-        encoded_password = encoded_password.encode("utf-8")
         encoded_username = username_encoder.encode("utf-8")
-
         if inputted_password == "":
             if inputted_username == "":
                 self.problem.destroy()
                 self.problem = ttk.Label(self, text="")
                 self.problem.configure(text=no_us_and_pw_warning)
-                self.problem.grid(row=1, column=1, padx=10, pady=10)
+                self.problem.grid(row=7, column=2, padx=10, pady=10)
             else:
                 self.problem.destroy()
                 self.problem = ttk.Label(self, text="")
@@ -91,40 +97,43 @@ class SampleApp(tk.Tk):
             self.problem.grid(row=7, column=2, padx=10, pady=10)
         else:
             if str(encoded_username) in username_file_r:
+                self.problem.destroy()
+                self.problem = ttk.Label(self, text="")
+                self.problem.configure(text=please_wait)
+                self.problem.grid(row=7, column=2, padx=10, pady=10)
                 while True:
                     password_file_r = password_file.readline()
                     if not password_file_r:
                         break
-                    password_file_byte = password_file_r.encode("utf-8")
-                    password_encoder = str(password_encoder).encode("utf-8")
-                    if bcrypt.checkpw(password_encoder, password_file_byte):
-                        if str(password_file_r) in open("C:/Users/gabolinscya/Documents/L2_ASSIGNMENT_RPG/account_data_password.txt", "r"):
-                            self.show_frame("MainMenu")
-                            break
-                    else:
+                    try:
+                        if bcrypt.check_password_hash(password_file_r, password_encoder):
+                            if password_file_r in open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/account_data_password.txt".format(computer_username), "r"):
+                                self.set_username(inputted_username)
+                                self.problem.destroy()
+                                self.show_frame("MainMenu")
+                    except:
                         self.problem.destroy()
                         self.problem = ttk.Label(self, text="")
-                        self.problem.configure(text="password not found")
+                        self.problem.configure(text=invalid_details)
                         self.problem.grid(row=7, column=2, padx=10, pady=10)
             else:
                 self.problem.destroy()
                 self.problem = ttk.Label(self, text="")
-                self.problem.configure(text="username incorrect")
+                self.problem.configure(text=invalid_details)
                 self.problem.grid(row=7, column=2, padx=10, pady=10)
 
     def register_check_password(self, username_entry, password_entry, confirm_password_entry):
         global problem
         global encoded_username
         global encoded_password
-        global hashed_password
         inputted_username = username_entry.get()
         inputted_username.strip()
         inputted_password = password_entry.get()
         inputted_password.strip()
         inputted_confirm_password = confirm_password_entry.get()
         inputted_confirm_password.strip()
-        username_file = open("C:/Users/gabolinscya/Documents/L2_ASSIGNMENT_RPG/account_data_username.txt", "r")
-        password_file = open("C:/Users/gabolinscya/Documents/L2_ASSIGNMENT_RPG/account_data_password.txt", "r")
+        username_file = open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/account_data_username.txt".format(computer_username), "r")
+        password_file = open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/account_data_password.txt".format(computer_username), "r")
         no_us_and_pw_warning = "Username and Password cannot be empty"
         no_pw_warning = "Password cannot be empty"
         no_us_warning = "Username cannot be empty"
@@ -150,10 +159,8 @@ class SampleApp(tk.Tk):
         elif inputted_confirm_password == inputted_password:
             password_encoder = inputted_username and inputted_password
             username_encoder = inputted_username
-            encoded_password = password_encoder.encode("utf-8")
             encoded_username = username_encoder.encode("utf-8")
-            encoded_password = bcrypt.hashpw(encoded_password, bcrypt.gensalt())
-            hashed_password = encoded_password.decode("utf-8")
+            encoded_password = bcrypt.generate_password_hash(password_encoder).decode("utf-8")
             if inputted_username == "":
                 self.problem.destroy()
                 self.problem = ttk.Label(self, text="")
@@ -178,13 +185,13 @@ class SampleApp(tk.Tk):
             self.problem.grid(row=3, column=0, padx=10, pady=10)
 
     def user_account_set(self):
-        file = open("C:/Users/gabolinscya/Documents/L2_ASSIGNMENT_RPG/account_data_username.txt", "a")
+        file = open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/account_data_username.txt".format(computer_username), "a")
         file.write("\n")
         file.write(str(encoded_username))
         file.close()
-        file = open("C:/Users/gabolinscya/Documents/L2_ASSIGNMENT_RPG/account_data_password.txt", "a")
+        file = open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/account_data_password.txt".format(computer_username), "a")
         file.write("\n")
-        file.write(str(hashed_password))
+        file.write(str(encoded_password))
         file.close()
 
     def final_register_check(self):
@@ -230,7 +237,6 @@ class OpeningPage(tk.Frame):
         invis_label1 = tk.Label(self)
         invis_label2 = tk.Label(self)
         invis_label3 = tk.Label(self)
-
         button = tk.Button(self, text="Start Game", padx=100, pady=80, font=controller.menu_button_font,
                            command=lambda: controller.show_frame("LoginMenu"))
         invis_label1.grid(column=2, row=2, pady=50)
@@ -241,6 +247,7 @@ class OpeningPage(tk.Frame):
 
 class LoginMenu(tk.Frame):
     def __init__(self, parent, controller):
+        global invis_label4
         tk.Frame.__init__(self, parent)
         self.controller = controller
         label = tk.Label(self, text="Game Title", font=controller.title_font)
@@ -248,6 +255,7 @@ class LoginMenu(tk.Frame):
         invis_label1 = tk.Label(self)
         invis_label2 = tk.Label(self)
         invis_label3 = tk.Label(self)
+        invis_label4 = tk.Label(self)
         Loginbutton = tk.Button(self, text="Login", font=controller.menu_button_font,
                                 command=lambda: controller.login_check_password(username_entry, password_entry))
         Regibutton = tk.Button(self, text="Register", font=controller.menu_button_font,
@@ -261,6 +269,7 @@ class LoginMenu(tk.Frame):
         invis_label1.grid(column=2, row=2, pady=50)
         invis_label2.grid(column=1, row=1, padx=95)
         invis_label3.grid(column=1, row=2, padx=95)
+        invis_label4.grid(column=2, row=7, pady=50)
         Loginbutton.grid(row=5, column=2)
         Regibutton.grid(row=6, column=2)
         Returnbutton.grid(row=8, column=2)
@@ -321,6 +330,7 @@ class MainMenu(tk.Frame):
         invis_label5 = tk.Label(self)
         invis_label6 = tk.Label(self)
         invis_label7 = tk.Label(self)
+        user_label = tk.Label(self, text="Username: {}".format(self.user))
         buttonDungeon = tk.Button(self, text="Delve into the Dungeon", padx=10, pady=10,
                                   font=controller.menu_button_font,
                                   command=lambda: controller.show_frame("DungeonDelve"))
@@ -343,6 +353,7 @@ class MainMenu(tk.Frame):
         buttonLeaderboard.grid(row=3, column=2, pady=2, sticky="w")
         buttonLogout.grid(row=6, column=2, pady=2, sticky="w")
         buttonQuit.grid(row=7, column=2, pady=2, sticky="w")
+        user_label.grid(row=7, column=2, sticky="e")
         invis_label1.grid(column=1, row=1, padx=50)
         invis_label2.grid(column=1, row=2, padx=50)
         invis_label3.grid(column=1, row=3, padx=50)
