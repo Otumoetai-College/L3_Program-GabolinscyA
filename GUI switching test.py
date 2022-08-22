@@ -30,8 +30,7 @@ class SampleApp(tk.Tk):
         self.frames = {}
         for F in (
                 OpeningPage, MainMenu, DungeonDelve, CreateTeamPage, CreditPage, How2PlayPage, LeaderboardPage,
-                LoginMenu,
-                RegisterMenu):
+                LoginMenu, RegisterMenu, DungeonManagement):
             page_name = F.__name__
             frame = F(parent=container, controller=self)
             self.frames[page_name] = frame
@@ -54,10 +53,6 @@ class SampleApp(tk.Tk):
     def breakcode(self):
         self.destroy()
 
-    def set_username(self, inputted_username):
-        global user
-        user = inputted_username
-
     def login_check_password(self, username_entry, password_entry):
         inputted_username = username_entry.get()
         inputted_username.strip()
@@ -70,7 +65,6 @@ class SampleApp(tk.Tk):
         no_us_warning = "Username is missing"
         invalid_details = "Username and/or Password is incorrect"
         please_wait = "Logging in may take a while. Sit back and relax while we work :)"
-        invis_label4.grid_forget()
         self.problem.destroy()
         self.problem = tk.Label(self, text="")
         self.problem.grid(row=7, column=2, padx=10, pady=10)
@@ -108,7 +102,6 @@ class SampleApp(tk.Tk):
                     try:
                         if bcrypt.check_password_hash(password_file_r, password_encoder):
                             if password_file_r in open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/account_data_password.txt".format(computer_username), "r"):
-                                self.set_username(inputted_username)
                                 self.problem.destroy()
                                 self.show_frame("MainMenu")
                     except:
@@ -209,6 +202,8 @@ class SampleApp(tk.Tk):
         self.problem.destroy()
         self.show_frame("RegisterMenu")
 
+    def access_users_champion_camp(self):
+
 
 class registery_window(tk.Toplevel):
     def __init__(self, parent):
@@ -247,7 +242,6 @@ class OpeningPage(tk.Frame):
 
 class LoginMenu(tk.Frame):
     def __init__(self, parent, controller):
-        global invis_label4
         tk.Frame.__init__(self, parent)
         self.controller = controller
         label = tk.Label(self, text="Game Title", font=controller.title_font)
@@ -330,7 +324,6 @@ class MainMenu(tk.Frame):
         invis_label5 = tk.Label(self)
         invis_label6 = tk.Label(self)
         invis_label7 = tk.Label(self)
-        user_label = tk.Label(self, text="Username: {}".format(self.user))
         buttonDungeon = tk.Button(self, text="Delve into the Dungeon", padx=10, pady=10,
                                   font=controller.menu_button_font,
                                   command=lambda: controller.show_frame("DungeonDelve"))
@@ -353,7 +346,6 @@ class MainMenu(tk.Frame):
         buttonLeaderboard.grid(row=3, column=2, pady=2, sticky="w")
         buttonLogout.grid(row=6, column=2, pady=2, sticky="w")
         buttonQuit.grid(row=7, column=2, pady=2, sticky="w")
-        user_label.grid(row=7, column=2, sticky="e")
         invis_label1.grid(column=1, row=1, padx=50)
         invis_label2.grid(column=1, row=2, padx=50)
         invis_label3.grid(column=1, row=3, padx=50)
@@ -368,10 +360,26 @@ class DungeonDelve(tk.Frame):
         tk.Frame.__init__(self, parent)
         self.controller = controller
         label = tk.Label(self, text="Dungeon", font=controller.title_font)
-        label.grid(row=0, pady=10)
+        play_button = tk.Button(self, text="Enter the Dungeon", font=controller.menu_button_font)
+        dungeon_settings_button = tk.Button(self, text="Dungeon Management", font=controller.menu_button_font, command=lambda: controller.show_frame("DungeonManagement"))
+        buttonReturn = tk.Button(self, text="Return to Menu", font=controller.menu_button_font,
+                            command=lambda: controller.show_frame("MainMenu"))
+        invis_label1 = tk.Label(self)
+        invis_label2 = tk.Label(self)
+        label.grid(row=1, column=2, pady=20)
+        play_button.grid(row=3, column=2, pady=2)
+        dungeon_settings_button.grid(row=4, column=2, pady=2)
+        buttonReturn.grid(row=6, column=2, pady=2)
+        invis_label1.grid(row=1, column=1, padx=140)
+        invis_label2.grid(row=2, column=2, pady=50)
 
-        buttonReturn = tk.Button(self, text="Return to Menu",
-                                 command=lambda: controller.show_frame("MainMenu"))
+
+class DungeonManagement(tk.Frame):
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent)
+        self.controller = controller
+        buttonReturn = tk.Button(self, text="Return to Dungeon", font=controller.menu_button_font,
+                            command=lambda: controller.show_frame("DungeonDelve"))
         buttonReturn.grid()
 
 
@@ -379,11 +387,14 @@ class CreateTeamPage(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
         self.controller = controller
+
         label = tk.Label(self, text="Champion Camp", font=controller.title_font)
-        label.grid(row=0, sticky="nsew", pady=10)
-        button = tk.Button(self, text="Return to Menu",
+
+        buttonReturn = tk.Button(self, text="Return to Menu",
                            command=lambda: controller.show_frame("MainMenu"))
-        button.grid()
+
+        label.grid(row=1, column=2, sticky="nsew", pady=10)
+        buttonReturn.grid()
 
 
 class CreditPage(tk.Frame):
