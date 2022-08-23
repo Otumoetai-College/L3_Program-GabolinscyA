@@ -54,6 +54,7 @@ class SampleApp(tk.Tk):
         self.destroy()
 
     def login_check_password(self, username_entry, password_entry):
+        global global_username
         inputted_username = username_entry.get()
         inputted_username.strip()
         inputted_password = password_entry.get()
@@ -103,6 +104,7 @@ class SampleApp(tk.Tk):
                         if bcrypt.check_password_hash(password_file_r, password_encoder):
                             if password_file_r in open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/account_data_password.txt".format(computer_username), "r"):
                                 self.problem.destroy()
+                                global_username = inputted_username
                                 self.show_frame("MainMenu")
                     except:
                         self.problem.destroy()
@@ -114,6 +116,14 @@ class SampleApp(tk.Tk):
                 self.problem = ttk.Label(self, text="")
                 self.problem.configure(text=invalid_details)
                 self.problem.grid(row=7, column=2, padx=10, pady=10)
+
+    def get_user(self):
+        user = global_username
+        return user
+
+    def get_user_encoded(self):
+        user = global_username.encode("utf-8")
+        return user
 
     def register_check_password(self, username_entry, password_entry, confirm_password_entry):
         global problem
@@ -182,6 +192,18 @@ class SampleApp(tk.Tk):
         file.write("\n")
         file.write(str(encoded_username))
         file.close()
+        file = open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/account_data_championTeam_1.txt".format(computer_username), "a")
+        file.write("\n")
+        file.write(str(encoded_username) + ", ")
+        file.close()
+        file = open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/account_data_championTeam_2.txt".format(computer_username), "a")
+        file.write("\n")
+        file.write(str(encoded_username) + ", ")
+        file.close()
+        file = open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/account_data_championTeam_3.txt".format(computer_username), "a")
+        file.write("\n")
+        file.write(str(encoded_username) + ", ")
+        file.close()
         file = open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/account_data_password.txt".format(computer_username), "a")
         file.write("\n")
         file.write(str(encoded_password))
@@ -202,7 +224,45 @@ class SampleApp(tk.Tk):
         self.problem.destroy()
         self.show_frame("RegisterMenu")
 
-    def access_users_champion_camp(self):
+    def return_users_champion_team1(self):
+        user = ""
+        self.get_user_encoded()
+        champion_file_1 = open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/account_data_championTeam_1.txt".format(computer_username), "r")
+        champion_file_1_r = champion_file_1.readlines()
+        for line in champion_file_1_r:
+            if user in line:
+                team_line_1 = line.replace("{}, ".format(user), "")
+                return team_line_1
+
+    def return_users_champion_team2(self):
+        user = ""
+        self.get_user_encoded()
+        champion_file_2 = open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/account_data_championTeam_2.txt".format(computer_username), "r")
+        champion_file_2_r = champion_file_2.readlines()
+        for line in champion_file_2_r:
+            if user in line:
+                team_line_2 = line.replace("{}, ".format(user), "")
+                return team_line_2
+
+    def return_users_champion_team3(self):
+        user = ""
+        self.get_user_encoded()
+        champion_file_3 = open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/account_data_championTeam_3.txt".format(computer_username), "r")
+        champion_file_3_r = champion_file_3.readlines()
+        for line in champion_file_3_r:
+            if user in line:
+                team_line_1 = line.replace("{}, ".format(user), "")
+                return team_line_1
+
+    def access_users_champion_teams(self):
+        champion_team = []
+        team1_data = self.return_users_champion_team1()
+        champion_team.append(team1_data)
+        team2_data = self.return_users_champion_team2()
+        champion_team.append(team2_data)
+        team3_data = self.return_users_champion_team3()
+        champion_team.append(team3_data)
+        return champion_team
 
 
 class registery_window(tk.Toplevel):
@@ -328,7 +388,7 @@ class MainMenu(tk.Frame):
                                   font=controller.menu_button_font,
                                   command=lambda: controller.show_frame("DungeonDelve"))
         buttonTeam = tk.Button(self, text="Champion Camp", padx=10, pady=10, font=controller.menu_button_font,
-                               command=lambda: controller.show_frame("CreateTeamPage"))
+                               command=lambda: controller.access_users_champion_camp())
         buttonCredit = tk.Button(self, text="Credits", padx=10, pady=10, font=controller.menu_button_font,
                                  command=lambda: controller.show_frame("CreditPage"))
         buttonH2P = tk.Button(self, text="How to Play", padx=10, pady=10, font=controller.menu_button_font,
@@ -387,9 +447,11 @@ class CreateTeamPage(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
         self.controller = controller
-
+        Team_data_list = controller.access_users_champion_teams()
         label = tk.Label(self, text="Champion Camp", font=controller.title_font)
-
+        team1 = tk.Label(self)
+        team2 = tk.Label(self)
+        team3 = tk.Label(self)
         buttonReturn = tk.Button(self, text="Return to Menu",
                            command=lambda: controller.show_frame("MainMenu"))
 
