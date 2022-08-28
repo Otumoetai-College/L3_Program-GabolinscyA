@@ -1,4 +1,5 @@
 import os
+from Champions import *
 try:
     import tkinter as tk  # python 3
     from tkinter import font as tkfont, ttk  # python 3
@@ -11,10 +12,10 @@ from flask_bcrypt import Bcrypt
 app = Flask(__name__)
 bcrypt = Bcrypt(app)
 
-
 class SampleApp(tk.Tk):
 
     def __init__(self, *args, **kwargs):
+        self.global_username = ""
         global computer_username
         tk.Tk.__init__(self, *args, **kwargs)
         self.problem = ttk.Label(self, text="")
@@ -54,7 +55,6 @@ class SampleApp(tk.Tk):
         self.destroy()
 
     def login_check_password(self, username_entry, password_entry):
-        global global_username
         inputted_username = username_entry.get()
         inputted_username.strip()
         inputted_password = password_entry.get()
@@ -104,7 +104,7 @@ class SampleApp(tk.Tk):
                         if bcrypt.check_password_hash(password_file_r, password_encoder):
                             if password_file_r in open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/account_data_password.txt".format(computer_username), "r"):
                                 self.problem.destroy()
-                                global_username = inputted_username
+                                self.global_username = inputted_username
                                 self.show_frame("MainMenu")
                     except:
                         self.problem.destroy()
@@ -118,11 +118,11 @@ class SampleApp(tk.Tk):
                 self.problem.grid(row=7, column=2, padx=10, pady=10)
 
     def get_user(self):
-        user = global_username
+        user = self.global_username
         return user
 
     def get_user_encoded(self):
-        user = global_username.encode("utf-8")
+        user = self.global_username.encode("utf-8")
         return user
 
     def register_check_password(self, username_entry, password_entry, confirm_password_entry):
@@ -448,17 +448,40 @@ class CreateTeamPage(tk.Frame):
         tk.Frame.__init__(self, parent)
         self.controller = controller
         Team_data_list = controller.access_users_champion_teams()
+        team_1_data = Team_data_list[0]
+        team_2_data = Team_data_list[1]
+        team_3_data = Team_data_list[2]
+
+
         label = tk.Label(self, text="Champion Camp", font=controller.title_font)
         team1 = tk.Label(self)
         team2 = tk.Label(self)
         team3 = tk.Label(self)
+
         buttonReturn = tk.Button(self, text="Return to Menu",
                            command=lambda: controller.show_frame("MainMenu"))
 
         label.grid(row=1, column=2, sticky="nsew", pady=10)
         buttonReturn.grid()
-
-
+    def team_1_decode(self, team_1_data):
+        decoded_dungeoneer_team1 = []
+        if team_1_data == "":
+            decoded_dungeoneer_team1.append("Empty")
+        else:
+            if len(team_1_data) < 5:
+                for character in team_1_data:
+                    if character == "C1":
+                        decoded_dungeoneer_team1.append("Champion1")
+                    if character == "C2":
+                        decoded_dungeoneer_team1.append("Champion2")
+                    if not character:
+                        break
+            else:
+                for character in team_1_data:
+        if len(decoded_dungeoneer_team1) < 5:
+            while len(decoded_dungeoneer_team1) < 5:
+                decoded_dungeoneer_team1.appened(".")
+            return decoded_dungeoneer_team1
 class CreditPage(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
