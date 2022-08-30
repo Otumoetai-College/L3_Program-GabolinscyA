@@ -1,5 +1,6 @@
 import os
 from Champions import *
+
 try:
     import tkinter as tk  # python 3
     from tkinter import font as tkfont, ttk  # python 3
@@ -11,6 +12,7 @@ from flask_bcrypt import Bcrypt
 
 app = Flask(__name__)
 bcrypt = Bcrypt(app)
+
 
 class SampleApp(tk.Tk):
 
@@ -54,13 +56,14 @@ class SampleApp(tk.Tk):
         self.destroy()
 
     def login_check_password(self, username_entry, password_entry):
-        global global_username
         inputted_username = username_entry.get()
         inputted_username.strip()
         inputted_password = password_entry.get()
         inputted_password.strip()
-        username_file = open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/account_data_username.txt".format(computer_username), "r")
-        password_file = open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/account_data_password.txt".format(computer_username), "r")
+        username_file = open(
+            "C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/account_data_username.txt".format(computer_username), "r")
+        password_file = open(
+            "C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/account_data_password.txt".format(computer_username), "r")
         no_us_and_pw_warning = "Please enter a username and password"
         no_pw_warning = "Password is missing"
         no_us_warning = "Username is missing"
@@ -102,11 +105,14 @@ class SampleApp(tk.Tk):
                         break
                     try:
                         if bcrypt.check_password_hash(password_file_r, password_encoder):
-                            if password_file_r in open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/account_data_password.txt".format(computer_username), "r"):
+                            if password_file_r in open(
+                                    "C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/account_data_password.txt".format(
+                                            computer_username), "r"):
                                 self.problem.destroy()
-                                #make ANOTHER file and make a function here that puts the current users name in the folder and whenever you try to login clear the file and put the user back in
-                                global_username = inputted_username
-                                self.show_frame("MainMenu")
+                                self.set_current_user(inputted_username)
+                                self.login_to_main_menu(username_entry, password_entry)
+                            else:
+                                breakpoint()
                     except:
                         self.problem.destroy()
                         self.problem = ttk.Label(self, text="")
@@ -118,15 +124,30 @@ class SampleApp(tk.Tk):
                 self.problem.configure(text=invalid_details)
                 self.problem.grid(row=7, column=2, padx=10, pady=10)
 
+    def set_current_user(self, inputted_username):
+        current_user = open(
+            "C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/account_data_current_username.txt".format(computer_username), "w")
+        current_user.write("{}".format(inputted_username))
+        current_user.close()
+
     def get_user(self):
-        user = ""
-        user = global_username
-        return user
+        current_user = open(
+            "C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/account_data_current_username.txt".format(computer_username), "r")
+        current_user_r = current_user.readline()
+        for line in current_user_r:
+            user = line
+            current_user.close()
+            return user
 
     def get_user_encoded(self):
-        user = ""
-        user = global_username.encode("utf-8")
-        return user
+        current_user = open(
+            "C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/account_data_current_username.txt".format(computer_username), "r")
+        current_user_r = current_user.readline()
+        for line in current_user_r:
+            user = line
+            current_user.close()
+            user = user.encode("utf-8")
+            return str(user)
 
     def register_check_password(self, username_entry, password_entry, confirm_password_entry):
         global problem
@@ -138,8 +159,10 @@ class SampleApp(tk.Tk):
         inputted_password.strip()
         inputted_confirm_password = confirm_password_entry.get()
         inputted_confirm_password.strip()
-        username_file = open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/account_data_username.txt".format(computer_username), "r")
-        password_file = open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/account_data_password.txt".format(computer_username), "r")
+        username_file = open(
+            "C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/account_data_username.txt".format(computer_username), "r")
+        password_file = open(
+            "C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/account_data_password.txt".format(computer_username), "r")
         no_us_and_pw_warning = "Username and Password cannot be empty"
         no_pw_warning = "Password cannot be empty"
         no_us_warning = "Username cannot be empty"
@@ -195,15 +218,18 @@ class SampleApp(tk.Tk):
         file.write("\n")
         file.write(str(encoded_username))
         file.close()
-        file = open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/account_data_championTeam_1.txt".format(computer_username), "a")
+        file = open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/account_data_championTeam_1.txt".format(computer_username),
+                    "a")
         file.write("\n")
         file.write(str(encoded_username) + ", ")
         file.close()
-        file = open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/account_data_championTeam_2.txt".format(computer_username), "a")
+        file = open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/account_data_championTeam_2.txt".format(computer_username),
+                    "a")
         file.write("\n")
         file.write(str(encoded_username) + ", ")
         file.close()
-        file = open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/account_data_championTeam_3.txt".format(computer_username), "a")
+        file = open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/account_data_championTeam_3.txt".format(computer_username),
+                    "a")
         file.write("\n")
         file.write(str(encoded_username) + ", ")
         file.close()
@@ -216,56 +242,73 @@ class SampleApp(tk.Tk):
         register_window = registery_window(self)
         registery_window.grab_set(self)
 
-    def register_to_login(self):
+    def register_to_login(self, username_entry, password_entry, confirm_password_entry):
         self.problem.destroy()
         username_entry.delete(0, "end")
         password_entry.delete(0, "end")
         confirm_password_entry.delete(0, "end")
         self.show_frame("LoginMenu")
 
-    def login_to_register(self):
+    def login_to_register(self, username_entry, password_entry):
         self.problem.destroy()
+        username_entry.delete(0, "end")
+        password_entry.delete(0, "end")
         self.show_frame("RegisterMenu")
 
-    def return_users_champion_team1(self):
-        user = self.get_user_encoded()
-        champion_file_1 = open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/account_data_championTeam_1.txt".format(computer_username), "r")
+    def login_to_main_menu(self, username_entry, password_entry):
+        self.problem.destroy()
+        username_entry.delete(0, "end")
+        password_entry.delete(0, "end")
+        self.show_frame("MainMenu")
+
+    def login_to_start(self, username_entry, password_entry):
+        self.problem.destroy()
+        username_entry.delete(0, "end")
+        password_entry.delete(0, "end")
+        self.show_frame("OpeningPage")
+
+    def return_users_champion_team1(self, user):
+        team_line_1 = ""
+        champion_file_1 = open(
+            "C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/account_data_championTeam_1.txt".format(computer_username), "r")
         champion_file_1_r = champion_file_1.readlines()
         for line in champion_file_1_r:
-            if str(user) in line:
-                team_line_1 = line.replace("{}, ".format(str(user)), "")
-                champion_file_1.close()
-                return team_line_1
+            try:
+                if str(user) in line:
+                    team_line_1 = line.replace("{}, ".format(str(user)), "")
+                    champion_file_1.close()
+                    return team_line_1
+            except:
+                breakpoint()
 
-    def return_users_champion_team2(self):
-        user = self.get_user_encoded()
-        champion_file_2 = open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/account_data_championTeam_2.txt".format(computer_username), "r")
+    def return_users_champion_team2(self, user):
+        team_line_2 = ""
+        champion_file_2 = open(
+            "C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/account_data_championTeam_2.txt".format(computer_username), "r")
         champion_file_2_r = champion_file_2.readlines()
         for line in champion_file_2_r:
-            if str(user) in line:
-                team_line_2 = line.replace("{}, ".format(str(user)), "")
-                champion_file_2.close()
-                return team_line_2
+            try:
+                if str(user) in line:
+                    team_line_2 = line.replace("{}, ".format(str(user)), "")
+                    champion_file_2.close()
+                    return team_line_2
+            except:
+                breakpoint()
 
-    def return_users_champion_team3(self):
-        user = self.get_user_encoded()
-        champion_file_3 = open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/account_data_championTeam_3.txt".format(computer_username), "r")
+    def return_users_champion_team3(self, user):
+        team_line_3 = ""
+        champion_file_3 = open(
+            "C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/account_data_championTeam_3.txt".format(computer_username), "r")
         champion_file_3_r = champion_file_3.readlines()
         for line in champion_file_3_r:
-            if str(user) in line:
-                team_line_3 = line.replace("{}, ".format(str(user)), "")
-                champion_file_3.close()
-                return team_line_3
+            try:
+                if str(user) in line:
+                    team_line_3 = line.replace("{}, ".format(str(user)), "")
+                    champion_file_3.close()
+                    return team_line_3
+            except:
+                breakpoint()
 
-    def access_users_champion_teams(self):
-        champion_team = []
-        team_line_1 = self.return_users_champion_team1()
-        champion_team.append(team_line_1)
-        team_line_2 = self.return_users_champion_team2()
-        champion_team.append(team_line_2)
-        team_line_3 = self.return_users_champion_team3()
-        champion_team.append(team_line_3)
-        return champion_team
 
 class registery_window(tk.Toplevel):
     def __init__(self, parent):
@@ -315,9 +358,9 @@ class LoginMenu(tk.Frame):
         Loginbutton = tk.Button(self, text="Login", font=controller.menu_button_font,
                                 command=lambda: controller.login_check_password(username_entry, password_entry))
         Regibutton = tk.Button(self, text="Register", font=controller.menu_button_font,
-                               command=lambda: controller.login_to_register())
+                               command=lambda: controller.login_to_register(username_entry, password_entry))
         Returnbutton = tk.Button(self, text="Back", font=controller.menu_button_font,
-                                 command=lambda: controller.show_frame("OpeningPage"))
+                                 command=lambda: controller.login_to_start(username_entry, password_entry))
         username_label = ttk.Label(self, text="Username:")
         username_entry = ttk.Entry(self)
         password_label = ttk.Label(self, text="Password:")
@@ -337,9 +380,6 @@ class LoginMenu(tk.Frame):
 
 class RegisterMenu(tk.Frame):
     def __init__(self, parent, controller):
-        global username_entry
-        global password_entry
-        global confirm_password_entry
         tk.Frame.__init__(self, parent)
         self.controller = controller
         label = tk.Label(self, text="Register your account", font=controller.small_title_font)
@@ -358,7 +398,8 @@ class RegisterMenu(tk.Frame):
                                                                                               password_entry,
                                                                                               confirm_password_entry))
         back_to_login = tk.Button(self, text="Back to Login",
-                                  command=lambda: controller.register_to_login())
+                                  command=lambda: controller.register_to_login(username_entry, password_entry,
+                                                                               confirm_password_entry))
         back_to_login.grid(row=7, column=1, padx=10, pady=10)
         confirm_registerbutton.grid(row=6, column=1)
         username_label.grid(row=3, column=1, ipadx=100, padx=10, pady=10)
@@ -376,6 +417,7 @@ class MainMenu(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
         self.controller = controller
+        user = self.get_current_user()
         label = tk.Label(self, text="Surface Menu", font=controller.title_font)
         label.grid(column=2)
         invis_label1 = tk.Label(self)
@@ -385,6 +427,7 @@ class MainMenu(tk.Frame):
         invis_label5 = tk.Label(self)
         invis_label6 = tk.Label(self)
         invis_label7 = tk.Label(self)
+        current_user_label = tk.Label(self, text="Current User: {}".format(user), font=controller.menu_button_font)
         buttonDungeon = tk.Button(self, text="Delve into the Dungeon", padx=10, pady=10,
                                   font=controller.menu_button_font,
                                   command=lambda: controller.show_frame("DungeonDelve"))
@@ -407,6 +450,7 @@ class MainMenu(tk.Frame):
         buttonLeaderboard.grid(row=3, column=2, pady=2, sticky="w")
         buttonLogout.grid(row=6, column=2, pady=2, sticky="w")
         buttonQuit.grid(row=7, column=2, pady=2, sticky="w")
+        current_user_label.grid(row=7, column=2, pady=2, sticky="e")
         invis_label1.grid(column=1, row=1, padx=50)
         invis_label2.grid(column=1, row=2, padx=50)
         invis_label3.grid(column=1, row=3, padx=50)
@@ -414,6 +458,10 @@ class MainMenu(tk.Frame):
         invis_label5.grid(column=1, row=5, padx=50)
         invis_label6.grid(column=1, row=6, padx=50)
         invis_label7.grid(column=1, row=7, padx=50)
+    def get_current_user(self):
+        user = SampleApp.get_user(self)
+        return user
+
 
 
 class DungeonDelve(tk.Frame):
@@ -422,9 +470,10 @@ class DungeonDelve(tk.Frame):
         self.controller = controller
         label = tk.Label(self, text="Dungeon", font=controller.title_font)
         play_button = tk.Button(self, text="Enter the Dungeon", font=controller.menu_button_font)
-        dungeon_settings_button = tk.Button(self, text="Dungeon Management", font=controller.menu_button_font, command=lambda: controller.show_frame("DungeonManagement"))
+        dungeon_settings_button = tk.Button(self, text="Dungeon Management", font=controller.menu_button_font,
+                                            command=lambda: controller.show_frame("DungeonManagement"))
         buttonReturn = tk.Button(self, text="Return to Menu", font=controller.menu_button_font,
-                            command=lambda: controller.show_frame("MainMenu"))
+                                 command=lambda: controller.show_frame("MainMenu"))
         invis_label1 = tk.Label(self)
         invis_label2 = tk.Label(self)
         label.grid(row=1, column=2, pady=20)
@@ -440,22 +489,25 @@ class DungeonManagement(tk.Frame):
         tk.Frame.__init__(self, parent)
         self.controller = controller
         buttonReturn = tk.Button(self, text="Return to Dungeon", font=controller.menu_button_font,
-                            command=lambda: controller.show_frame("DungeonDelve"))
+                                 command=lambda: controller.show_frame("DungeonDelve"))
         buttonReturn.grid()
 
 
 class CreateTeamPage(tk.Frame):
     def __init__(self, parent, controller):
-        global team_1_data
-        global team_2_data
-        global team_3_data
         tk.Frame.__init__(self, parent)
         self.controller = controller
-        champion_team = SampleApp.access_users_champion_teams(controller)
-        Team_data_list = champion_team
-        team_1_data = Team_data_list[0]
-        team_2_data = Team_data_list[1]
-        team_3_data = Team_data_list[2]
+        user = SampleApp.get_user_encoded(self)
+        champion_team = []
+        team_line_1 = SampleApp.return_users_champion_team1(self, user)
+        champion_team.append(team_line_1)
+        team_line_2 = SampleApp.return_users_champion_team2(self, user)
+        champion_team.append(team_line_2)
+        team_line_3 = SampleApp.return_users_champion_team3(self, user)
+        champion_team.append(team_line_3)
+        team_1_data = champion_team[0]
+        team_2_data = champion_team[1]
+        team_3_data = champion_team[2]
         decoded_dungeoneer_team1 = self.team_1_decode(team_1_data)
         decoded_dungeoneer_team2 = self.team_2_decode(team_2_data)
         decoded_dungeoneer_team3 = self.team_3_decode(team_3_data)
@@ -465,7 +517,7 @@ class CreateTeamPage(tk.Frame):
         team_1_button_text = self.team_1_button_message(decoded_dungeoneer_team1)
         team_2_button_text = self.team_2_button_message(decoded_dungeoneer_team2)
         team_3_button_text = self.team_3_button_message(decoded_dungeoneer_team3)
-        team_1_label = tk.Label(self, text=str(Team_data_list))
+        team_1_label = tk.Label(self, text=team_1_text)
         team_2_label = tk.Label(self, text=team_2_text)
         team_3_label = tk.Label(self, text=team_3_text)
         label = tk.Label(self, text="Champion Camp", font=controller.title_font)
@@ -473,7 +525,7 @@ class CreateTeamPage(tk.Frame):
         team_2_button = tk.Button(self, text=team_2_button_text)
         team_3_button = tk.Button(self, text=team_3_button_text)
         buttonReturn = tk.Button(self, text="Return to Menu",
-                           command=lambda: controller.show_frame("MainMenu"))
+                                 command=lambda: controller.show_frame("MainMenu"))
         label.grid(row=1, column=2, sticky="nsew", pady=10)
         team_1_label.grid(row=2, column=2)
         team_2_label.grid(row=4, column=2)
@@ -482,6 +534,7 @@ class CreateTeamPage(tk.Frame):
         team_2_button.grid(row=5, column=2)
         team_3_button.grid(row=7, column=2)
         buttonReturn.grid(row=8, column=2)
+
     def display_team1(self, decoded_dungeoneer_team1):
         team_1_text = ""
         for character in decoded_dungeoneer_team1:
