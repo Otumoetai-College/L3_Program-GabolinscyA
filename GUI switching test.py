@@ -1,5 +1,6 @@
 import os
 from Champions import *
+from importlib import reload
 
 try:
     import tkinter as tk  # python 3
@@ -309,6 +310,11 @@ class SampleApp(tk.Tk):
             except:
                 breakpoint()
 
+    def mainmenu_to_login(self, validate_user_button, current_user_label):
+        validate_user_button.grid(row=7, column=2, pady=2, sticky="e")
+        current_user_label.destroy()
+        self.show_frame("LoginMenu")
+
 
 class registery_window(tk.Toplevel):
     def __init__(self, parent):
@@ -417,7 +423,6 @@ class MainMenu(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
         self.controller = controller
-        user = self.get_current_user()
         label = tk.Label(self, text="Surface Menu", font=controller.title_font)
         label.grid(column=2)
         invis_label1 = tk.Label(self)
@@ -427,7 +432,8 @@ class MainMenu(tk.Frame):
         invis_label5 = tk.Label(self)
         invis_label6 = tk.Label(self)
         invis_label7 = tk.Label(self)
-        current_user_label = tk.Label(self, text="Current User: {}".format(user), font=controller.menu_button_font)
+        validate_user_button = tk.Button(self, text="Validate User", font=controller.menu_button_font, command=lambda: self.get_current_user(controller, validate_user_button, current_user_label))
+        current_user_label = tk.Label(self)
         buttonDungeon = tk.Button(self, text="Delve into the Dungeon", padx=10, pady=10,
                                   font=controller.menu_button_font,
                                   command=lambda: controller.show_frame("DungeonDelve"))
@@ -440,7 +446,7 @@ class MainMenu(tk.Frame):
         buttonLeaderboard = tk.Button(self, text="Leaderboard", padx=10, pady=10, font=controller.menu_button_font,
                                       command=lambda: controller.show_frame("LeaderboardPage"))
         buttonLogout = tk.Button(self, text="Log Out", padx=10, pady=10, font=controller.menu_button_font,
-                                 command=lambda: controller.show_frame("LoginMenu"))
+                                 command=lambda: controller.mainmenu_to_login(validate_user_button, current_user_label))
         buttonQuit = tk.Button(self, text="Exit game", padx=10, pady=10, font=controller.menu_button_font,
                                command=lambda: controller.breakcode())
         buttonDungeon.grid(row=1, column=2, pady=2, sticky="w")
@@ -450,7 +456,9 @@ class MainMenu(tk.Frame):
         buttonLeaderboard.grid(row=3, column=2, pady=2, sticky="w")
         buttonLogout.grid(row=6, column=2, pady=2, sticky="w")
         buttonQuit.grid(row=7, column=2, pady=2, sticky="w")
+        validate_user_button.grid(row=7, column=2, pady=2, sticky="e")
         current_user_label.grid(row=7, column=2, pady=2, sticky="e")
+        current_user_label.grid_forget()
         invis_label1.grid(column=1, row=1, padx=50)
         invis_label2.grid(column=1, row=2, padx=50)
         invis_label3.grid(column=1, row=3, padx=50)
@@ -458,9 +466,14 @@ class MainMenu(tk.Frame):
         invis_label5.grid(column=1, row=5, padx=50)
         invis_label6.grid(column=1, row=6, padx=50)
         invis_label7.grid(column=1, row=7, padx=50)
-    def get_current_user(self):
+
+    def get_current_user(self, controller, validate_user_button, current_user_label):
         user = SampleApp.get_user(self)
-        return user
+        validate_user_button.grid_forget()
+        current_user_label = tk.Label(self, text="Current User: {}".format(user), font=controller.menu_button_font)
+        current_user_label.grid(row=7, column=2, pady=2, sticky="e")
+        return current_user_label
+
 
 
 
