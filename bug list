@@ -2,3 +2,4 @@
 When logging into an account, all previous accounts that have been logged into become invalid
 
 #2:
+When logging out and back into the account, the current_user_label is not deleted
