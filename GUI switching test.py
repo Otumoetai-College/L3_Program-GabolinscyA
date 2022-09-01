@@ -1,6 +1,5 @@
 import os
 from Champions import *
-from importlib import reload
 
 try:
     import tkinter as tk  # python 3
@@ -97,9 +96,6 @@ class SampleApp(tk.Tk):
         else:
             if str(encoded_username) in username_file_r:
                 self.problem.destroy()
-                self.problem = ttk.Label(self, text="")
-                self.problem.configure(text=please_wait)
-                self.problem.grid(row=7, column=2, padx=10, pady=10)
                 while True:
                     password_file_r = password_file.readline()
                     if not password_file_r:
@@ -110,7 +106,7 @@ class SampleApp(tk.Tk):
                                     "C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/account_data_password.txt".format(
                                             computer_username), "r"):
                                 self.problem.destroy()
-                                self.set_current_user(inputted_username)
+                               # self.set_current_user(inputted_username)
                                 self.login_to_main_menu(username_entry, password_entry)
                             else:
                                 breakpoint()
@@ -432,8 +428,6 @@ class MainMenu(tk.Frame):
         invis_label5 = tk.Label(self)
         invis_label6 = tk.Label(self)
         invis_label7 = tk.Label(self)
-        validate_user_button = tk.Button(self, text="Validate User", font=controller.menu_button_font, command=lambda: self.get_current_user(controller, validate_user_button, current_user_label))
-        current_user_label = tk.Label(self)
         buttonDungeon = tk.Button(self, text="Delve into the Dungeon", padx=10, pady=10,
                                   font=controller.menu_button_font,
                                   command=lambda: controller.show_frame("DungeonDelve"))
@@ -446,7 +440,7 @@ class MainMenu(tk.Frame):
         buttonLeaderboard = tk.Button(self, text="Leaderboard", padx=10, pady=10, font=controller.menu_button_font,
                                       command=lambda: controller.show_frame("LeaderboardPage"))
         buttonLogout = tk.Button(self, text="Log Out", padx=10, pady=10, font=controller.menu_button_font,
-                                 command=lambda: controller.mainmenu_to_login(validate_user_button, current_user_label))
+                                 command=lambda: controller.show_frame("LoginMenu"))
         buttonQuit = tk.Button(self, text="Exit game", padx=10, pady=10, font=controller.menu_button_font,
                                command=lambda: controller.breakcode())
         buttonDungeon.grid(row=1, column=2, pady=2, sticky="w")
@@ -456,9 +450,6 @@ class MainMenu(tk.Frame):
         buttonLeaderboard.grid(row=3, column=2, pady=2, sticky="w")
         buttonLogout.grid(row=6, column=2, pady=2, sticky="w")
         buttonQuit.grid(row=7, column=2, pady=2, sticky="w")
-        validate_user_button.grid(row=7, column=2, pady=2, sticky="e")
-        current_user_label.grid(row=7, column=2, pady=2, sticky="e")
-        current_user_label.grid_forget()
         invis_label1.grid(column=1, row=1, padx=50)
         invis_label2.grid(column=1, row=2, padx=50)
         invis_label3.grid(column=1, row=3, padx=50)
@@ -466,15 +457,6 @@ class MainMenu(tk.Frame):
         invis_label5.grid(column=1, row=5, padx=50)
         invis_label6.grid(column=1, row=6, padx=50)
         invis_label7.grid(column=1, row=7, padx=50)
-
-    def get_current_user(self, controller, validate_user_button, current_user_label):
-        user = SampleApp.get_user(self)
-        validate_user_button.grid_forget()
-        current_user_label = tk.Label(self, text="Current User: {}".format(user), font=controller.menu_button_font)
-        current_user_label.grid(row=7, column=2, pady=2, sticky="e")
-        return current_user_label
-
-
 
 
 class DungeonDelve(tk.Frame):
