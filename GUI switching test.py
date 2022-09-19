@@ -56,6 +56,7 @@ class SampleApp(tk.Tk):
         self.destroy()
 
     def login_check_password(self, username_entry, password_entry):
+        global user
         inputted_username = username_entry.get()
         inputted_username.strip()
         inputted_password = password_entry.get()
@@ -68,13 +69,12 @@ class SampleApp(tk.Tk):
         no_pw_warning = "Password is missing"
         no_us_warning = "Username is missing"
         invalid_details = "Username and/or Password is incorrect"
-        please_wait = "Logging in may take a while. Sit back and relax while we work :)"
         self.problem.destroy()
         self.problem = tk.Label(self, text="")
         self.problem.grid(row=7, column=2, padx=10, pady=10)
         username_file_r = username_file.read()
         username_file.close()
-        password_encoder = inputted_username and inputted_password
+        password_encoder = "{}{}".format(inputted_username, inputted_password)
         username_encoder = inputted_username
         encoded_username = username_encoder.encode("utf-8")
         if inputted_password == "":
@@ -100,16 +100,13 @@ class SampleApp(tk.Tk):
                     password_file_r = password_file.readline()
                     if not password_file_r:
                         break
+                    password_file_r = password_file_r.replace("\n", "")
                     try:
                         if bcrypt.check_password_hash(password_file_r, password_encoder):
-                            if password_file_r in open(
-                                    "C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/account_data_password.txt".format(
-                                            computer_username), "r"):
-                                self.problem.destroy()
-                               # self.set_current_user(inputted_username)
-                                self.login_to_main_menu(username_entry, password_entry)
-                            else:
-                                breakpoint()
+                            self.problem.destroy()
+                            user = User(inputted_username)
+                            self.set_current_user(inputted_username)
+                            self.login_to_main_menu(username_entry, password_entry)
                     except:
                         self.problem.destroy()
                         self.problem = ttk.Label(self, text="")
@@ -131,25 +128,23 @@ class SampleApp(tk.Tk):
         current_user = open(
             "C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/account_data_current_username.txt".format(computer_username), "r")
         current_user_r = current_user.readline()
-        for line in current_user_r:
-            user = line
-            current_user.close()
-            return user
+        user = current_user_r
+        current_user.close()
+        return user
 
     def get_user_encoded(self):
         current_user = open(
             "C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/account_data_current_username.txt".format(computer_username), "r")
         current_user_r = current_user.readline()
-        for line in current_user_r:
-            user = line
-            current_user.close()
-            user = user.encode("utf-8")
-            return str(user)
+        user = current_user_r
+        user = user.encode("utf-8")
+        current_user.close()
+        return user
 
     def register_check_password(self, username_entry, password_entry, confirm_password_entry):
         global problem
-        global encoded_username
-        global encoded_password
+        global encode_username
+        global encode_password
         inputted_username = username_entry.get()
         inputted_username.strip()
         inputted_password = password_entry.get()
@@ -183,17 +178,17 @@ class SampleApp(tk.Tk):
                 self.problem.configure(text=no_pw_warning)
                 self.problem.grid(row=3, column=0, padx=10, pady=10)
         elif inputted_confirm_password == inputted_password:
-            password_encoder = inputted_username and inputted_password
+            password_encoder = "{}{}".format(inputted_username, inputted_password)
             username_encoder = inputted_username
-            encoded_username = username_encoder.encode("utf-8")
-            encoded_password = bcrypt.generate_password_hash(password_encoder).decode("utf-8")
+            encode_username = username_encoder.encode("utf-8")
+            encode_password = bcrypt.generate_password_hash(password_encoder).decode("utf-8")
             if inputted_username == "":
                 self.problem.destroy()
                 self.problem = ttk.Label(self, text="")
                 self.problem.configure(text=no_us_warning)
                 self.problem.grid(row=3, column=0, padx=10, pady=10)
             else:
-                if str(encoded_username) in username_file_r:
+                if str(encode_username) in username_file_r:
                     self.problem.destroy()
                     self.problem = ttk.Label(self, text="")
                     self.problem.configure(text=un_unavailable)
@@ -213,26 +208,26 @@ class SampleApp(tk.Tk):
     def user_account_set(self):
         file = open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/account_data_username.txt".format(computer_username), "a")
         file.write("\n")
-        file.write(str(encoded_username))
+        file.write(str(encode_username))
         file.close()
         file = open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/account_data_championTeam_1.txt".format(computer_username),
                     "a")
         file.write("\n")
-        file.write(str(encoded_username) + ", ")
+        file.write(str(encode_username) + ", ")
         file.close()
         file = open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/account_data_championTeam_2.txt".format(computer_username),
                     "a")
         file.write("\n")
-        file.write(str(encoded_username) + ", ")
+        file.write(str(encode_username) + ", ")
         file.close()
         file = open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/account_data_championTeam_3.txt".format(computer_username),
                     "a")
         file.write("\n")
-        file.write(str(encoded_username) + ", ")
+        file.write(str(encode_username) + ", ")
         file.close()
         file = open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/account_data_password.txt".format(computer_username), "a")
         file.write("\n")
-        file.write(str(encoded_password))
+        file.write(str(encode_password))
         file.close()
 
     def final_register_check(self):
@@ -268,8 +263,7 @@ class SampleApp(tk.Tk):
         team_line_1 = ""
         champion_file_1 = open(
             "C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/account_data_championTeam_1.txt".format(computer_username), "r")
-        champion_file_1_r = champion_file_1.readlines()
-        for line in champion_file_1_r:
+        for line in champion_file_1:
             try:
                 if str(user) in line:
                     team_line_1 = line.replace("{}, ".format(str(user)), "")
@@ -282,8 +276,7 @@ class SampleApp(tk.Tk):
         team_line_2 = ""
         champion_file_2 = open(
             "C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/account_data_championTeam_2.txt".format(computer_username), "r")
-        champion_file_2_r = champion_file_2.readlines()
-        for line in champion_file_2_r:
+        for line in champion_file_2:
             try:
                 if str(user) in line:
                     team_line_2 = line.replace("{}, ".format(str(user)), "")
@@ -296,8 +289,7 @@ class SampleApp(tk.Tk):
         team_line_3 = ""
         champion_file_3 = open(
             "C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/account_data_championTeam_3.txt".format(computer_username), "r")
-        champion_file_3_r = champion_file_3.readlines()
-        for line in champion_file_3_r:
+        for line in champion_file_3:
             try:
                 if str(user) in line:
                     team_line_3 = line.replace("{}, ".format(str(user)), "")
@@ -328,6 +320,11 @@ class registery_window(tk.Toplevel):
     def access_user_account_set(self):
         SampleApp.user_account_set(self)
         registery_window.destroy(self)
+
+
+class User():
+    def __init__(self, username):
+        self.username = username
 
 
 class OpeningPage(tk.Frame):
@@ -490,22 +487,40 @@ class DungeonManagement(tk.Frame):
 
 class CreateTeamPage(tk.Frame):
     def __init__(self, parent, controller):
+        global update_page_button
         tk.Frame.__init__(self, parent)
         self.controller = controller
-        user = SampleApp.get_user_encoded(self)
-        champion_team = []
+        label = tk.Label(self, text="Champion Camp", font=controller.title_font)
+        update_page_button = tk.Button(self, text="Access Champion Camp", command=self.update_variables)
+        buttonReturn = tk.Button(self, text="Return to Menu",
+                                 command=lambda: controller.show_frame("MainMenu"))
+        update_page_button.grid(row=2, column=2, sticky="nsew")
+        label.grid(row=1, column=2, sticky="nsew", pady=10)
+        buttonReturn.grid(row=9, column=2)
+
+    def update_variables(self):
+        user = self.get_user()
+        team_1_list_data = []
+        team_2_list_data = []
+        team_3_list_data = []
         team_line_1 = SampleApp.return_users_champion_team1(self, user)
-        champion_team.append(team_line_1)
+        team_1_list_data.append(team_line_1)
         team_line_2 = SampleApp.return_users_champion_team2(self, user)
-        champion_team.append(team_line_2)
+        team_2_list_data.append(team_line_2)
         team_line_3 = SampleApp.return_users_champion_team3(self, user)
-        champion_team.append(team_line_3)
-        team_1_data = champion_team[0]
-        team_2_data = champion_team[1]
-        team_3_data = champion_team[2]
-        decoded_dungeoneer_team1 = self.team_1_decode(team_1_data)
-        decoded_dungeoneer_team2 = self.team_2_decode(team_2_data)
-        decoded_dungeoneer_team3 = self.team_3_decode(team_3_data)
+        team_3_list_data.append(team_line_3)
+        amount_1 = len(team_1_list_data)
+        amount_1 = amount_1 - 1
+        amount_2 = len(team_2_list_data)
+        amount_2 = amount_2 - 1
+        amount_3 = len(team_2_list_data)
+        amount_3 = amount_2 - 1
+        team_1_list_data[team_1_list_data.index(amount_1)] = team_1_list_data[amount_1].replace("\n, ")
+        team_2_list_data[team_2_list_data.index(amount_2)] = team_2_list_data[amount_2].replace("\n, ")
+        team_3_list_data[team_2_list_data.index(amount_3)] = team_3_list_data[amount_3].replace("\n, ")
+        decoded_dungeoneer_team1 = self.team_1_decode(team_1_list_data)
+        decoded_dungeoneer_team2 = self.team_2_decode(team_2_list_data)
+        decoded_dungeoneer_team3 = self.team_3_decode(team_3_list_data)
         team_1_text = self.display_team1(decoded_dungeoneer_team1)
         team_2_text = self.display_team2(decoded_dungeoneer_team2)
         team_3_text = self.display_team3(decoded_dungeoneer_team3)
@@ -515,20 +530,19 @@ class CreateTeamPage(tk.Frame):
         team_1_label = tk.Label(self, text=team_1_text)
         team_2_label = tk.Label(self, text=team_2_text)
         team_3_label = tk.Label(self, text=team_3_text)
-        label = tk.Label(self, text="Champion Camp", font=controller.title_font)
         team_1_button = tk.Button(self, text=team_1_button_text)
         team_2_button = tk.Button(self, text=team_2_button_text)
         team_3_button = tk.Button(self, text=team_3_button_text)
-        buttonReturn = tk.Button(self, text="Return to Menu",
-                                 command=lambda: controller.show_frame("MainMenu"))
-        label.grid(row=1, column=2, sticky="nsew", pady=10)
         team_1_label.grid(row=2, column=2)
         team_2_label.grid(row=4, column=2)
         team_3_label.grid(row=6, column=2)
         team_1_button.grid(row=3, column=2)
         team_2_button.grid(row=5, column=2)
         team_3_button.grid(row=7, column=2)
-        buttonReturn.grid(row=8, column=2)
+        update_page_button.grid_forget()
+        update_page_button_2 = tk.Button(self, text="Refresh Team Page", command=self.update_variables)
+        update_page_button_2.grid(row=8, column=2)
+
 
     def display_team1(self, decoded_dungeoneer_team1):
         team_1_text = ""
@@ -536,6 +550,10 @@ class CreateTeamPage(tk.Frame):
             team_1_text += "\n"
             team_1_text += character
         return team_1_text
+
+    def get_user(self):
+        user = SampleApp.get_user_encoded(self)
+        return user
 
     def display_team2(self, decoded_dungeoneer_team2):
         team_2_text = ""
@@ -581,76 +599,112 @@ class CreateTeamPage(tk.Frame):
                 text = "Edit"
         return text
 
-    def team_1_decode(self, team_1_data):
+    def team_1_decode(self, team_1_list_data):
         decoded_dungeoneer_team1 = []
-        if len(team_1_data) == 0:
+        if len(team_1_list_data) == 0:
             decoded_dungeoneer_team1.append("Empty")
             return decoded_dungeoneer_team1
         else:
-            if len(team_1_data) < 5:
-                for character in team_1_data:
+            if len(team_1_list_data) < 5:
+                for character in team_1_list_data:
                     if character == "C1":
                         decoded_dungeoneer_team1.append("Champion1")
                     if character == "C2":
                         decoded_dungeoneer_team1.append("Champion2")
+                    if character == "C3":
+                        decoded_dungeoneer_team1.append("Champion3")
+                    if character == "C4":
+                        decoded_dungeoneer_team1.append("Champion4")
+                    if character == "C5":
+                        decoded_dungeoneer_team1.append("Champion5")
                     if not character:
                         break
             else:
-                for character in team_1_data:
+                for character in team_1_list_data:
                     if character == "C1":
                         decoded_dungeoneer_team1.append("Champion1")
                     if character == "C2":
                         decoded_dungeoneer_team1.append("Champion2")
+                    if character == "C3":
+                        decoded_dungeoneer_team1.append("Champion3")
+                    if character == "C4":
+                        decoded_dungeoneer_team1.append("Champion4")
+                    if character == "C5":
+                        decoded_dungeoneer_team1.append("Champion5")
         if len(decoded_dungeoneer_team1) < 5:
             while len(decoded_dungeoneer_team1) < 5:
                 decoded_dungeoneer_team1.append(".")
             return decoded_dungeoneer_team1
 
-    def team_2_decode(self, team_2_data):
+    def team_2_decode(self, team_2_list_data):
         decoded_dungeoneer_team2 = []
-        if team_2_data == "":
+        if len(team_2_list_data) == 0:
             decoded_dungeoneer_team2.append("Empty")
             return decoded_dungeoneer_team2
         else:
-            if len(team_2_data) < 5:
-                for character in team_2_data:
+            if len(team_2_list_data) < 5:
+                for character in team_2_list_data:
                     if character == "C1":
                         decoded_dungeoneer_team2.append("Champion1")
                     if character == "C2":
                         decoded_dungeoneer_team2.append("Champion2")
+                    if character == "C3":
+                        decoded_dungeoneer_team2.append("Champion3")
+                    if character == "C4":
+                        decoded_dungeoneer_team2.append("Champion4")
+                    if character == "C5":
+                        decoded_dungeoneer_team2.append("Champion5")
                     if not character:
                         break
             else:
-                for character in team_2_data:
+                for character in team_2_list_data:
                     if character == "C1":
                         decoded_dungeoneer_team2.append("Champion1")
                     if character == "C2":
                         decoded_dungeoneer_team2.append("Champion2")
+                    if character == "C3":
+                        decoded_dungeoneer_team2.append("Champion3")
+                    if character == "C4":
+                        decoded_dungeoneer_team2.append("Champion4")
+                    if character == "C5":
+                        decoded_dungeoneer_team2.append("Champion5")
         if len(decoded_dungeoneer_team2) < 5:
             while len(decoded_dungeoneer_team2) < 5:
                 decoded_dungeoneer_team2.append(".")
             return decoded_dungeoneer_team2
 
-    def team_3_decode(self, team_3_data):
+    def team_3_decode(self, team_3_list_data):
         decoded_dungeoneer_team3 = []
-        if team_3_data == "":
+        if len(team_3_list_data) == 0:
             decoded_dungeoneer_team3.append("Empty")
             return decoded_dungeoneer_team3
         else:
-            if len(team_3_data) < 5:
-                for character in team_3_data:
+            if len(team_3_list_data) < 5:
+                for character in team_3_list_data:
                     if character == "C1":
                         decoded_dungeoneer_team3.append("Champion1")
                     if character == "C2":
                         decoded_dungeoneer_team3.append("Champion2")
+                    if character == "C3":
+                        decoded_dungeoneer_team3.append("Champion3")
+                    if character == "C4":
+                        decoded_dungeoneer_team3.append("Champion4")
+                    if character == "C5":
+                        decoded_dungeoneer_team3.append("Champion5")
                     if not character:
                         break
             else:
-                for character in team_3_data:
+                for character in team_3_list_data:
                     if character == "C1":
                         decoded_dungeoneer_team3.append("Champion1")
                     if character == "C2":
                         decoded_dungeoneer_team3.append("Champion2")
+                    if character == "C3":
+                        decoded_dungeoneer_team3.append("Champion3")
+                    if character == "C4":
+                        decoded_dungeoneer_team3.append("Champion4")
+                    if character == "C5":
+                        decoded_dungeoneer_team3.append("Champion5")
         if len(decoded_dungeoneer_team3) < 5:
             while len(decoded_dungeoneer_team3) < 5:
                 decoded_dungeoneer_team3.append(".")
