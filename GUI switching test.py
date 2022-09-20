@@ -32,7 +32,7 @@ class SampleApp(tk.Tk):
         self.frames = {}
         for F in (
                 OpeningPage, MainMenu, DungeonDelve, CreateTeamPage, CreditPage, How2PlayPage, LeaderboardPage,
-                LoginMenu, RegisterMenu, DungeonManagement):
+                LoginMenu, RegisterMenu, DungeonManagement, Team1SelectionPage):
             page_name = F.__name__
             frame = F(parent=container, controller=self)
             self.frames[page_name] = frame
@@ -303,6 +303,10 @@ class SampleApp(tk.Tk):
         current_user_label.destroy()
         self.show_frame("LoginMenu")
 
+    def teamcreation_to_camp(self):
+        CreateTeamPage.update_variables()
+        self.show_frame("CreateTeamPage")
+
 
 class registery_window(tk.Toplevel):
     def __init__(self, parent):
@@ -490,34 +494,36 @@ class CreateTeamPage(tk.Frame):
         global update_page_button
         tk.Frame.__init__(self, parent)
         self.controller = controller
+        self.update_variables()
         label = tk.Label(self, text="Champion Camp", font=controller.title_font)
-        update_page_button = tk.Button(self, text="Access Champion Camp", command=self.update_variables)
+        team_1_button = tk.Button(self, text=team_1_button_text, command=lambda: controller.show_frame("Team1SelectionPage"))
+        team_2_button = tk.Button(self, text=team_2_button_text, command=lambda: controller.show_frame("Team2SelectionPage"))
+        team_3_button = tk.Button(self, text=team_3_button_text, command=lambda: controller.show_frame("Team3SelectionPage"))
+        update_page_button_2 = tk.Button(self, text="Refresh Team Page", command=self.update_variables)
+        update_page_button_2.grid(row=8, column=2)
         buttonReturn = tk.Button(self, text="Return to Menu",
                                  command=lambda: controller.show_frame("MainMenu"))
-        update_page_button.grid(row=2, column=2, sticky="nsew")
         label.grid(row=1, column=2, sticky="nsew", pady=10)
         buttonReturn.grid(row=9, column=2)
+        team_1_button.grid(row=3, column=2)
+        team_2_button.grid(row=5, column=2)
+        team_3_button.grid(row=7, column=2)
 
     def update_variables(self):
+        global decoded_dungeoneer_team1,decoded_dungeoneer_team2,decoded_dungeoneer_team3,team_1_button_text,team_2_button_text,team_3_button_text
         user = self.get_user()
         team_1_list_data = []
         team_2_list_data = []
         team_3_list_data = []
         team_line_1 = SampleApp.return_users_champion_team1(self, user)
-        team_1_list_data.append(team_line_1)
+        team_line_1 = team_line_1.replace(",", "")
+        team_1_list_data = team_line_1.split()
         team_line_2 = SampleApp.return_users_champion_team2(self, user)
-        team_2_list_data.append(team_line_2)
+        team_line_2 = team_line_2.replace(",", "")
+        team_2_list_data = team_line_2.split()
         team_line_3 = SampleApp.return_users_champion_team3(self, user)
-        team_3_list_data.append(team_line_3)
-        amount_1 = len(team_1_list_data)
-        amount_1 = amount_1 - 1
-        amount_2 = len(team_2_list_data)
-        amount_2 = amount_2 - 1
-        amount_3 = len(team_2_list_data)
-        amount_3 = amount_2 - 1
-        team_1_list_data[team_1_list_data.index(amount_1)] = team_1_list_data[amount_1].replace("\n, ")
-        team_2_list_data[team_2_list_data.index(amount_2)] = team_2_list_data[amount_2].replace("\n, ")
-        team_3_list_data[team_2_list_data.index(amount_3)] = team_3_list_data[amount_3].replace("\n, ")
+        team_line_3 = team_line_3.replace(",", "")
+        team_3_list_data = team_line_3.split()
         decoded_dungeoneer_team1 = self.team_1_decode(team_1_list_data)
         decoded_dungeoneer_team2 = self.team_2_decode(team_2_list_data)
         decoded_dungeoneer_team3 = self.team_3_decode(team_3_list_data)
@@ -530,18 +536,10 @@ class CreateTeamPage(tk.Frame):
         team_1_label = tk.Label(self, text=team_1_text)
         team_2_label = tk.Label(self, text=team_2_text)
         team_3_label = tk.Label(self, text=team_3_text)
-        team_1_button = tk.Button(self, text=team_1_button_text)
-        team_2_button = tk.Button(self, text=team_2_button_text)
-        team_3_button = tk.Button(self, text=team_3_button_text)
         team_1_label.grid(row=2, column=2)
         team_2_label.grid(row=4, column=2)
         team_3_label.grid(row=6, column=2)
-        team_1_button.grid(row=3, column=2)
-        team_2_button.grid(row=5, column=2)
-        team_3_button.grid(row=7, column=2)
-        update_page_button.grid_forget()
-        update_page_button_2 = tk.Button(self, text="Refresh Team Page", command=self.update_variables)
-        update_page_button_2.grid(row=8, column=2)
+
 
 
     def display_team1(self, decoded_dungeoneer_team1):
@@ -631,6 +629,7 @@ class CreateTeamPage(tk.Frame):
                         decoded_dungeoneer_team1.append("Champion4")
                     if character == "C5":
                         decoded_dungeoneer_team1.append("Champion5")
+                return decoded_dungeoneer_team1
         if len(decoded_dungeoneer_team1) < 5:
             while len(decoded_dungeoneer_team1) < 5:
                 decoded_dungeoneer_team1.append(".")
@@ -668,6 +667,7 @@ class CreateTeamPage(tk.Frame):
                         decoded_dungeoneer_team2.append("Champion4")
                     if character == "C5":
                         decoded_dungeoneer_team2.append("Champion5")
+                return decoded_dungeoneer_team2
         if len(decoded_dungeoneer_team2) < 5:
             while len(decoded_dungeoneer_team2) < 5:
                 decoded_dungeoneer_team2.append(".")
@@ -705,10 +705,36 @@ class CreateTeamPage(tk.Frame):
                         decoded_dungeoneer_team3.append("Champion4")
                     if character == "C5":
                         decoded_dungeoneer_team3.append("Champion5")
+                return decoded_dungeoneer_team3
         if len(decoded_dungeoneer_team3) < 5:
             while len(decoded_dungeoneer_team3) < 5:
                 decoded_dungeoneer_team3.append(".")
             return decoded_dungeoneer_team3
+
+
+class Team1SelectionPage(tk.Frame):
+    def __init__(self, parent, controller):
+        global update_pageTSP
+        global returnButtonTSP
+        tk.Frame.__init__(self, parent)
+        self.controller = controller
+        update_pageTSP = tk.Button(self, text="Begin Recruiting for Team 1", command=lambda: self.team_creation(invis_label1, invis_label2), font=controller.menu_button_font)
+        returnButtonTSP = tk.Button(self, text="Cancel", command=lambda: controller.show_frame("CreateTeamPage"), font=controller.menu_button_font)
+        invis_label1 = tk.Label(self)
+        invis_label2 = tk.Label(self)
+        update_pageTSP.grid(row=2, column=2, pady=50)
+        returnButtonTSP.grid(row=4, column=2)
+        invis_label1.grid(row=1, column=1, rowspan=4, pady=50, ipadx=240, ipady=100)
+        invis_label2.grid(row=1, column=2, pady=100)
+
+    def team_creation(self, invis_label1, invis_label2):
+        tank_section_button = tk.Button(self, text="Tanks")
+        dps_section_button = tk.Button(self, text="Damage Dealers")
+        healer_section_button = tk.Button(self, text="Healers")
+        tank_section_button.grid(row=2, column=2, padx=50)
+        dps_section_button.grid(row=2, column=2)
+        healer_section_button.grid(row=2, column=2, padx=100)
+
 
 
 class CreditPage(tk.Frame):
