@@ -720,29 +720,50 @@ class Team1SelectionPage(tk.Frame):
         self.controller = controller
         self.menu_button_font = tkfont.Font(family='Helvetica', size=18, weight="bold")
         self.title_label_font = tkfont.Font(family='Helvetica', size=30, weight="bold")
+        self.small_label_font = tkfont.Font(family='Helvetica', size=12, weight="bold")
         title = tk.Label(self, text="Champion Camp", font=self.title_label_font)
         update_pageTSP = tk.Button(self, text="Begin Recruiting for Team 1", command=lambda: self.team_creation(invis_label1, invis_label2), font=controller.menu_button_font)
-        returnButtonTSP = tk.Button(self, text="Cancel", command=lambda: controller.show_frame("CreateTeamPage"), font=controller.menu_button_font)
+        returnButtonTSP = tk.Button(self, text="Cancel", command=lambda: controller.show_frame("CreateTeamPage"))
         invis_label1 = tk.Label(self)
         invis_label2 = tk.Label(self)
         update_pageTSP.grid(row=2, column=2, pady=50)
         title.grid(row=1, column=2)
-        returnButtonTSP.grid(row=9, column=2)
+        returnButtonTSP.grid(row=12, column=2)
         invis_label1.grid(row=1, column=1, rowspan=4, pady=50, ipadx=240, ipady=100)
         invis_label2.grid(row=1, column=2, pady=100)
 
     def team_creation(self, invis_label1, invis_label2):
+        user = SampleApp.get_user_encoded(self)
+        team_line_1 = []
+        team_line_1 = SampleApp.return_users_champion_team1(self, user)
+        team_line_1 = team_line_1.replace(",", "")
+        team_1_list_data = team_line_1.split()
         invis_label3 = tk.Label(self)
+        CTP = CreateTeamPage
+        decoded_dungeoneer_team1 = CTP.team_1_decode(team_1_list_data)
         tank_section_button = tk.Button(self, text="Tanks", font=self.menu_button_font, width=26, command=self.view_tanks)
         dps_section_button = tk.Button(self, text="Damage Dealers", font=self.menu_button_font, width=26)
         healer_section_button = tk.Button(self, text="Healers", font=self.menu_button_font, width=26)
+        your_team_label = tk.Label(self, text=":Your Team:", font=self.small_label_font)
+        visual_team_label = tk.Label(self, text=self.display_team1(decoded_dungeoneer_team1))
+        confirm_changes_button = tk.Button(self, text="Confirm Changes")
         tank_section_button.grid(row=2, column=1)
         dps_section_button.grid(row=2, column=2, padx=25)
         healer_section_button.grid(row=2, column=3)
         invis_label3.grid(row=2, column=0, padx=6)
+        your_team_label.grid(row=9, column=2)
+        visual_team_label.grid(row=10, column=2)
+        confirm_changes_button.grid(row=11, column=2)
         invis_label1.grid_forget()
         invis_label2.grid_forget()
         update_pageTSP.grid_forget()
+
+    def display_team1(self, decoded_dungeoneer_team1):
+        team_1_text = ""
+        for character in decoded_dungeoneer_team1:
+            team_1_text += character
+            team_1_text += ", "
+        return team_1_text
 
     def view_tanks(self):
         invis_label3 = tk.Label(self)
