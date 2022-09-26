@@ -32,7 +32,7 @@ class SampleApp(tk.Tk):
         self.frames = {}
         for F in (
                 OpeningPage, MainMenu, DungeonDelve, CreateTeamPage, CreditPage, How2PlayPage, LeaderboardPage,
-                LoginMenu, RegisterMenu, DungeonManagement, Team1SelectionPage):
+                LoginMenu, RegisterMenu, DungeonManagement, Team1SelectionPage, Team2SelectionPage, Team3SelectionPage):
             page_name = F.__name__
             frame = F(parent=container, controller=self)
             self.frames[page_name] = frame
@@ -307,6 +307,31 @@ class SampleApp(tk.Tk):
         CreateTeamPage.update_variables()
         self.show_frame("CreateTeamPage")
 
+    def cancel_new_team1(self):
+        Team1SelectionPage.clear_temp_party1(self)
+        self.show_frame("CreateTeamPage")
+
+    def finalise_new_team1(self, root):
+        Team1SelectionPage.save_new_team1(self, root)
+        self.show_frame("CreateTeamPage")
+
+    def cancel_new_team2(self):
+        Team2SelectionPage.clear_temp_party2(self)
+        self.show_frame("CreateTeamPage")
+
+    def finalise_new_team2(self, root):
+        Team2SelectionPage.save_new_team2(self, root)
+        self.show_frame("CreateTeamPage")
+
+    def cancel_new_team3(self):
+        Team3SelectionPage.clear_temp_party3(self)
+        self.show_frame("CreateTeamPage")
+
+    def finalise_new_team3(self, root):
+        Team3SelectionPage.save_new_team3(self, root)
+        self.show_frame("CreateTeamPage")
+
+
 
 class registery_window(tk.Toplevel):
     def __init__(self, parent):
@@ -496,9 +521,12 @@ class CreateTeamPage(tk.Frame):
         self.controller = controller
         self.update_variables()
         label = tk.Label(self, text="Champion Camp", font=controller.title_font)
-        team_1_button = tk.Button(self, text=team_1_button_text, command=lambda: controller.show_frame("Team1SelectionPage"))
-        team_2_button = tk.Button(self, text=team_2_button_text, command=lambda: controller.show_frame("Team2SelectionPage"))
-        team_3_button = tk.Button(self, text=team_3_button_text, command=lambda: controller.show_frame("Team3SelectionPage"))
+        team_1_button = tk.Button(self, text=team_1_button_text,
+                                  command=lambda: controller.show_frame("Team1SelectionPage"))
+        team_2_button = tk.Button(self, text=team_2_button_text,
+                                  command=lambda: controller.show_frame("Team2SelectionPage"))
+        team_3_button = tk.Button(self, text=team_3_button_text,
+                                  command=lambda: controller.show_frame("Team3SelectionPage"))
         update_page_button_2 = tk.Button(self, text="Refresh Team Page", command=self.update_variables)
         update_page_button_2.grid(row=8, column=2)
         buttonReturn = tk.Button(self, text="Return to Menu",
@@ -510,7 +538,7 @@ class CreateTeamPage(tk.Frame):
         team_3_button.grid(row=7, column=2)
 
     def update_variables(self):
-        global decoded_dungeoneer_team1,decoded_dungeoneer_team2,decoded_dungeoneer_team3,team_1_button_text,team_2_button_text,team_3_button_text
+        global decoded_dungeoneer_team1, decoded_dungeoneer_team2, decoded_dungeoneer_team3, team_1_button_text, team_2_button_text, team_3_button_text
         user = self.get_user()
         team_1_list_data = []
         team_2_list_data = []
@@ -539,8 +567,6 @@ class CreateTeamPage(tk.Frame):
         team_1_label.grid(row=2, column=2)
         team_2_label.grid(row=4, column=2)
         team_3_label.grid(row=6, column=2)
-
-
 
     def display_team1(self, decoded_dungeoneer_team1):
         team_1_text = ""
@@ -605,30 +631,90 @@ class CreateTeamPage(tk.Frame):
         else:
             if len(team_1_list_data) < 5:
                 for character in team_1_list_data:
-                    if character == "C1":
-                        decoded_dungeoneer_team1.append("Champion1")
-                    if character == "C2":
-                        decoded_dungeoneer_team1.append("Champion2")
-                    if character == "C3":
-                        decoded_dungeoneer_team1.append("Champion3")
-                    if character == "C4":
-                        decoded_dungeoneer_team1.append("Champion4")
-                    if character == "C5":
-                        decoded_dungeoneer_team1.append("Champion5")
+                    if character == Monk.code:
+                        decoded_dungeoneer_team1.append(Monk.title)
+                    if character == Barbarian.code:
+                        decoded_dungeoneer_team1.append(Barbarian.title)
+                    if character == Veteran_Bodyguard.code:
+                        decoded_dungeoneer_team1.append(Veteran_Bodyguard.title)
+                    if character == Master_Fencer.code:
+                        decoded_dungeoneer_team1.append(Master_Fencer.title)
+                    if character == Berserker.code:
+                        decoded_dungeoneer_team1.append(Berserker.title)
+                    if character == Rogue.code:
+                        decoded_dungeoneer_team1.append(Rogue.title)
+                    if character == Survivalist.code:
+                        decoded_dungeoneer_team1.append(Survivalist.title)
+                    if character == Brawlist.code:
+                        decoded_dungeoneer_team1.append(Brawlist.title)
+                    if character == Academic_Mage.code:
+                        decoded_dungeoneer_team1.append(Academic_Mage.title)
+                    if character == Druid.code:
+                        decoded_dungeoneer_team1.append(Druid.title)
+                    if character == Warlock.code:
+                        decoded_dungeoneer_team1.append(Warlock.title)
+                    if character == Bloodmancer.code:
+                        decoded_dungeoneer_team1.append(Bloodmancer.title)
+                    if character == Paladin.code:
+                        decoded_dungeoneer_team1.append(Paladin.title)
+                    if character == Castle_Ranger.code:
+                        decoded_dungeoneer_team1.append(Castle_Ranger.title)
+                    if character == Thunder_Apprentice.code:
+                        decoded_dungeoneer_team1.append(Thunder_Apprentice.title)
+                    if character == Power_Conduit.code:
+                        decoded_dungeoneer_team1.append(Power_Conduit.title)
+                    if character == Earth_Speaker.code:
+                        decoded_dungeoneer_team1.append(Earth_Speaker.title)
+                    if character == Priest_of_the_Devoted.code:
+                        decoded_dungeoneer_team1.append(Priest_of_the_Devoted.title)
+                    if character == Time_Walker.code:
+                        decoded_dungeoneer_team1.append(Time_Walker.title)
+                    if character == Child_of_Medicine.code:
+                        decoded_dungeoneer_team1.append(Child_of_Medicine.title)
                     if not character:
                         break
             else:
                 for character in team_1_list_data:
-                    if character == "C1":
-                        decoded_dungeoneer_team1.append("Champion1")
-                    if character == "C2":
-                        decoded_dungeoneer_team1.append("Champion2")
-                    if character == "C3":
-                        decoded_dungeoneer_team1.append("Champion3")
-                    if character == "C4":
-                        decoded_dungeoneer_team1.append("Champion4")
-                    if character == "C5":
-                        decoded_dungeoneer_team1.append("Champion5")
+                    if character == Monk.code:
+                        decoded_dungeoneer_team1.append(Monk.title)
+                    if character == Barbarian.code:
+                        decoded_dungeoneer_team1.append(Barbarian.title)
+                    if character == Veteran_Bodyguard.code:
+                        decoded_dungeoneer_team1.append(Veteran_Bodyguard.title)
+                    if character == Master_Fencer.code:
+                        decoded_dungeoneer_team1.append(Master_Fencer.title)
+                    if character == Berserker.code:
+                        decoded_dungeoneer_team1.append(Berserker.title)
+                    if character == Rogue.code:
+                        decoded_dungeoneer_team1.append(Rogue.title)
+                    if character == Survivalist.code:
+                        decoded_dungeoneer_team1.append(Survivalist.title)
+                    if character == Brawlist.code:
+                        decoded_dungeoneer_team1.append(Brawlist.title)
+                    if character == Academic_Mage.code:
+                        decoded_dungeoneer_team1.append(Academic_Mage.title)
+                    if character == Druid.code:
+                        decoded_dungeoneer_team1.append(Druid.title)
+                    if character == Warlock.code:
+                        decoded_dungeoneer_team1.append(Warlock.title)
+                    if character == Bloodmancer.code:
+                        decoded_dungeoneer_team1.append(Bloodmancer.title)
+                    if character == Paladin.code:
+                        decoded_dungeoneer_team1.append(Paladin.title)
+                    if character == Castle_Ranger.code:
+                        decoded_dungeoneer_team1.append(Castle_Ranger.title)
+                    if character == Thunder_Apprentice.code:
+                        decoded_dungeoneer_team1.append(Thunder_Apprentice.title)
+                    if character == Power_Conduit.code:
+                        decoded_dungeoneer_team1.append(Power_Conduit.title)
+                    if character == Earth_Speaker.code:
+                        decoded_dungeoneer_team1.append(Earth_Speaker.title)
+                    if character == Priest_of_the_Devoted.code:
+                        decoded_dungeoneer_team1.append(Priest_of_the_Devoted.title)
+                    if character == Time_Walker.code:
+                        decoded_dungeoneer_team1.append(Time_Walker.title)
+                    if character == Child_of_Medicine.code:
+                        decoded_dungeoneer_team1.append(Child_of_Medicine.title)
                 return decoded_dungeoneer_team1
         if len(decoded_dungeoneer_team1) < 5:
             while len(decoded_dungeoneer_team1) < 5:
@@ -643,30 +729,90 @@ class CreateTeamPage(tk.Frame):
         else:
             if len(team_2_list_data) < 5:
                 for character in team_2_list_data:
-                    if character == "C1":
-                        decoded_dungeoneer_team2.append("Champion1")
-                    if character == "C2":
-                        decoded_dungeoneer_team2.append("Champion2")
-                    if character == "C3":
-                        decoded_dungeoneer_team2.append("Champion3")
-                    if character == "C4":
-                        decoded_dungeoneer_team2.append("Champion4")
-                    if character == "C5":
-                        decoded_dungeoneer_team2.append("Champion5")
+                    if character == Monk.code:
+                        decoded_dungeoneer_team2.append(Monk.title)
+                    if character == Barbarian.code:
+                        decoded_dungeoneer_team2.append(Barbarian.title)
+                    if character == Veteran_Bodyguard.code:
+                        decoded_dungeoneer_team2.append(Veteran_Bodyguard.title)
+                    if character == Master_Fencer.code:
+                        decoded_dungeoneer_team2.append(Master_Fencer.title)
+                    if character == Berserker.code:
+                        decoded_dungeoneer_team2.append(Berserker.title)
+                    if character == Rogue.code:
+                        decoded_dungeoneer_team2.append(Rogue.title)
+                    if character == Survivalist.code:
+                        decoded_dungeoneer_team2.append(Survivalist.title)
+                    if character == Brawlist.code:
+                        decoded_dungeoneer_team2.append(Brawlist.title)
+                    if character == Academic_Mage.code:
+                        decoded_dungeoneer_team2.append(Academic_Mage.title)
+                    if character == Druid.code:
+                        decoded_dungeoneer_team2.append(Druid.title)
+                    if character == Warlock.code:
+                        decoded_dungeoneer_team2.append(Warlock.title)
+                    if character == Bloodmancer.code:
+                        decoded_dungeoneer_team2.append(Bloodmancer.title)
+                    if character == Paladin.code:
+                        decoded_dungeoneer_team2.append(Paladin.title)
+                    if character == Castle_Ranger.code:
+                        decoded_dungeoneer_team2.append(Castle_Ranger.title)
+                    if character == Thunder_Apprentice.code:
+                        decoded_dungeoneer_team2.append(Thunder_Apprentice.title)
+                    if character == Power_Conduit.code:
+                        decoded_dungeoneer_team2.append(Power_Conduit.title)
+                    if character == Earth_Speaker.code:
+                        decoded_dungeoneer_team2.append(Earth_Speaker.title)
+                    if character == Priest_of_the_Devoted.code:
+                        decoded_dungeoneer_team2.append(Priest_of_the_Devoted.title)
+                    if character == Time_Walker.code:
+                        decoded_dungeoneer_team2.append(Time_Walker.title)
+                    if character == Child_of_Medicine.code:
+                        decoded_dungeoneer_team2.append(Child_of_Medicine.title)
                     if not character:
                         break
             else:
                 for character in team_2_list_data:
-                    if character == "C1":
-                        decoded_dungeoneer_team2.append("Champion1")
-                    if character == "C2":
-                        decoded_dungeoneer_team2.append("Champion2")
-                    if character == "C3":
-                        decoded_dungeoneer_team2.append("Champion3")
-                    if character == "C4":
-                        decoded_dungeoneer_team2.append("Champion4")
-                    if character == "C5":
-                        decoded_dungeoneer_team2.append("Champion5")
+                    if character == Monk.code:
+                        decoded_dungeoneer_team2.append(Monk.title)
+                    if character == Barbarian.code:
+                        decoded_dungeoneer_team2.append(Barbarian.title)
+                    if character == Veteran_Bodyguard.code:
+                        decoded_dungeoneer_team2.append(Veteran_Bodyguard.title)
+                    if character == Master_Fencer.code:
+                        decoded_dungeoneer_team2.append(Master_Fencer.title)
+                    if character == Berserker.code:
+                        decoded_dungeoneer_team2.append(Berserker.title)
+                    if character == Rogue.code:
+                        decoded_dungeoneer_team2.append(Rogue.title)
+                    if character == Survivalist.code:
+                        decoded_dungeoneer_team2.append(Survivalist.title)
+                    if character == Brawlist.code:
+                        decoded_dungeoneer_team2.append(Brawlist.title)
+                    if character == Academic_Mage.code:
+                        decoded_dungeoneer_team2.append(Academic_Mage.title)
+                    if character == Druid.code:
+                        decoded_dungeoneer_team2.append(Druid.title)
+                    if character == Warlock.code:
+                        decoded_dungeoneer_team2.append(Warlock.title)
+                    if character == Bloodmancer.code:
+                        decoded_dungeoneer_team2.append(Bloodmancer.title)
+                    if character == Paladin.code:
+                        decoded_dungeoneer_team2.append(Paladin.title)
+                    if character == Castle_Ranger.code:
+                        decoded_dungeoneer_team2.append(Castle_Ranger.title)
+                    if character == Thunder_Apprentice.code:
+                        decoded_dungeoneer_team2.append(Thunder_Apprentice.title)
+                    if character == Power_Conduit.code:
+                        decoded_dungeoneer_team2.append(Power_Conduit.title)
+                    if character == Earth_Speaker.code:
+                        decoded_dungeoneer_team2.append(Earth_Speaker.title)
+                    if character == Priest_of_the_Devoted.code:
+                        decoded_dungeoneer_team2.append(Priest_of_the_Devoted.title)
+                    if character == Time_Walker.code:
+                        decoded_dungeoneer_team2.append(Time_Walker.title)
+                    if character == Child_of_Medicine.code:
+                        decoded_dungeoneer_team2.append(Child_of_Medicine.title)
                 return decoded_dungeoneer_team2
         if len(decoded_dungeoneer_team2) < 5:
             while len(decoded_dungeoneer_team2) < 5:
@@ -681,30 +827,90 @@ class CreateTeamPage(tk.Frame):
         else:
             if len(team_3_list_data) < 5:
                 for character in team_3_list_data:
-                    if character == "C1":
-                        decoded_dungeoneer_team3.append("Champion1")
-                    if character == "C2":
-                        decoded_dungeoneer_team3.append("Champion2")
-                    if character == "C3":
-                        decoded_dungeoneer_team3.append("Champion3")
-                    if character == "C4":
-                        decoded_dungeoneer_team3.append("Champion4")
-                    if character == "C5":
-                        decoded_dungeoneer_team3.append("Champion5")
+                    if character == Monk.code:
+                        decoded_dungeoneer_team3.append(Monk.title)
+                    if character == Barbarian.code:
+                        decoded_dungeoneer_team3.append(Barbarian.title)
+                    if character == Veteran_Bodyguard.code:
+                        decoded_dungeoneer_team3.append(Veteran_Bodyguard.title)
+                    if character == Master_Fencer.code:
+                        decoded_dungeoneer_team3.append(Master_Fencer.title)
+                    if character == Berserker.code:
+                        decoded_dungeoneer_team3.append(Berserker.title)
+                    if character == Rogue.code:
+                        decoded_dungeoneer_team3.append(Rogue.title)
+                    if character == Survivalist.code:
+                        decoded_dungeoneer_team3.append(Survivalist.title)
+                    if character == Brawlist.code:
+                        decoded_dungeoneer_team3.append(Brawlist.title)
+                    if character == Academic_Mage.code:
+                        decoded_dungeoneer_team3.append(Academic_Mage.title)
+                    if character == Druid.code:
+                        decoded_dungeoneer_team3.append(Druid.title)
+                    if character == Warlock.code:
+                        decoded_dungeoneer_team3.append(Warlock.title)
+                    if character == Bloodmancer.code:
+                        decoded_dungeoneer_team3.append(Bloodmancer.title)
+                    if character == Paladin.code:
+                        decoded_dungeoneer_team3.append(Paladin.title)
+                    if character == Castle_Ranger.code:
+                        decoded_dungeoneer_team3.append(Castle_Ranger.title)
+                    if character == Thunder_Apprentice.code:
+                        decoded_dungeoneer_team3.append(Thunder_Apprentice.title)
+                    if character == Power_Conduit.code:
+                        decoded_dungeoneer_team3.append(Power_Conduit.title)
+                    if character == Earth_Speaker.code:
+                        decoded_dungeoneer_team3.append(Earth_Speaker.title)
+                    if character == Priest_of_the_Devoted.code:
+                        decoded_dungeoneer_team3.append(Priest_of_the_Devoted.title)
+                    if character == Time_Walker.code:
+                        decoded_dungeoneer_team3.append(Time_Walker.title)
+                    if character == Child_of_Medicine.code:
+                        decoded_dungeoneer_team3.append(Child_of_Medicine.title)
                     if not character:
                         break
             else:
                 for character in team_3_list_data:
-                    if character == "C1":
-                        decoded_dungeoneer_team3.append("Champion1")
-                    if character == "C2":
-                        decoded_dungeoneer_team3.append("Champion2")
-                    if character == "C3":
-                        decoded_dungeoneer_team3.append("Champion3")
-                    if character == "C4":
-                        decoded_dungeoneer_team3.append("Champion4")
-                    if character == "C5":
-                        decoded_dungeoneer_team3.append("Champion5")
+                    if character == Monk.code:
+                        decoded_dungeoneer_team3.append(Monk.title)
+                    if character == Barbarian.code:
+                        decoded_dungeoneer_team3.append(Barbarian.title)
+                    if character == Veteran_Bodyguard.code:
+                        decoded_dungeoneer_team3.append(Veteran_Bodyguard.title)
+                    if character == Master_Fencer.code:
+                        decoded_dungeoneer_team3.append(Master_Fencer.title)
+                    if character == Berserker.code:
+                        decoded_dungeoneer_team3.append(Berserker.title)
+                    if character == Rogue.code:
+                        decoded_dungeoneer_team3.append(Rogue.title)
+                    if character == Survivalist.code:
+                        decoded_dungeoneer_team3.append(Survivalist.title)
+                    if character == Brawlist.code:
+                        decoded_dungeoneer_team3.append(Brawlist.title)
+                    if character == Academic_Mage.code:
+                        decoded_dungeoneer_team3.append(Academic_Mage.title)
+                    if character == Druid.code:
+                        decoded_dungeoneer_team3.append(Druid.title)
+                    if character == Warlock.code:
+                        decoded_dungeoneer_team3.append(Warlock.title)
+                    if character == Bloodmancer.code:
+                        decoded_dungeoneer_team3.append(Bloodmancer.title)
+                    if character == Paladin.code:
+                        decoded_dungeoneer_team3.append(Paladin.title)
+                    if character == Castle_Ranger.code:
+                        decoded_dungeoneer_team3.append(Castle_Ranger.title)
+                    if character == Thunder_Apprentice.code:
+                        decoded_dungeoneer_team3.append(Thunder_Apprentice.title)
+                    if character == Power_Conduit.code:
+                        decoded_dungeoneer_team3.append(Power_Conduit.title)
+                    if character == Earth_Speaker.code:
+                        decoded_dungeoneer_team3.append(Earth_Speaker.title)
+                    if character == Priest_of_the_Devoted.code:
+                        decoded_dungeoneer_team3.append(Priest_of_the_Devoted.title)
+                    if character == Time_Walker.code:
+                        decoded_dungeoneer_team3.append(Time_Walker.title)
+                    if character == Child_of_Medicine.code:
+                        decoded_dungeoneer_team3.append(Child_of_Medicine.title)
                 return decoded_dungeoneer_team3
         if len(decoded_dungeoneer_team3) < 5:
             while len(decoded_dungeoneer_team3) < 5:
@@ -715,15 +921,16 @@ class CreateTeamPage(tk.Frame):
 class Team1SelectionPage(tk.Frame):
     def __init__(self, parent, controller):
         global update_pageTSP
-        global returnButtonTSP
+        global returnButtonTSP, invis_label1, invis_label2
         tk.Frame.__init__(self, parent)
         self.controller = controller
         self.menu_button_font = tkfont.Font(family='Helvetica', size=18, weight="bold")
         self.title_label_font = tkfont.Font(family='Helvetica', size=30, weight="bold")
         self.small_label_font = tkfont.Font(family='Helvetica', size=12, weight="bold")
         title = tk.Label(self, text="Champion Camp", font=self.title_label_font)
-        update_pageTSP = tk.Button(self, text="Begin Recruiting for Team 1", command=lambda: self.team_creation(invis_label1, invis_label2), font=controller.menu_button_font)
-        returnButtonTSP = tk.Button(self, text="Cancel", command=lambda: controller.show_frame("CreateTeamPage"))
+        update_pageTSP = tk.Button(self, text="Begin Recruiting for Team 1", command=lambda: self.pitstop1(),
+                                   font=controller.menu_button_font)
+        returnButtonTSP = tk.Button(self, text="Cancel", command=lambda: controller.cancel_new_team1())
         invis_label1 = tk.Label(self)
         invis_label2 = tk.Label(self)
         update_pageTSP.grid(row=2, column=2, pady=50)
@@ -732,220 +939,2230 @@ class Team1SelectionPage(tk.Frame):
         invis_label1.grid(row=1, column=1, rowspan=4, pady=50, ipadx=240, ipady=100)
         invis_label2.grid(row=1, column=2, pady=100)
 
-    def team_creation(self, invis_label1, invis_label2):
+    def pitstop1(self):
+        global visual_team_label, temp_party
         user = SampleApp.get_user_encoded(self)
         team_line_1 = []
         team_line_1 = SampleApp.return_users_champion_team1(self, user)
         team_line_1 = team_line_1.replace(",", "")
         team_1_list_data = team_line_1.split()
-        invis_label3 = tk.Label(self)
-        invis_label4= tk.Label(self)
         CTP = CreateTeamPage
-        decoded_dungeoneer_team1 = CTP.team_1_decode(self, team_1_list_data)
-        tank_section_button = tk.Button(self, text="Tanks", font=self.menu_button_font, width=26, command=self.view_tanks)
-        dps_section_button = tk.Button(self, text="Damage Dealers", font=self.menu_button_font, width=26, command=self.view_dps)
-        healer_section_button = tk.Button(self, text="Healers", font=self.menu_button_font, width=26, command=self.view_healer)
+        decoded_dungeoneer_team1CTP = CTP.team_1_decode(self, team_1_list_data)
+        temp_party = decoded_dungeoneer_team1CTP
+        visual_team_label = tk.Label(self, text=self.display_team1(temp_party))
+        visual_team_label.grid(row=11, column=2)
+        self.team_creation1()
+
+    def team_creation1(self):
+        global tank, dps, healer, tank_section_button, dps_section_button, healer_section_button, decoded_dungeoneer_team1CTP
+        tank = False
+        dps = False
+        healer = False
+        invis_label3 = tk.Label(self)
+        invis_label4 = tk.Label(self)
+        tank_section_button = tk.Button(self, text="Tanks", font=self.menu_button_font, width=26,
+                                        command=self.view_tanks1)
+        dps_section_button = tk.Button(self, text="Damage Dealers", font=self.menu_button_font, width=26,
+                                       command=self.view_dps1)
+        healer_section_button = tk.Button(self, text="Healers", font=self.menu_button_font, width=26,
+                                          command=self.view_healer1)
         your_team_label = tk.Label(self, text=":Your Team:", font=self.small_label_font)
-        visual_team_label = tk.Label(self, text=self.display_team1(decoded_dungeoneer_team1))
-        confirm_changes_button = tk.Button(self, text="Confirm Changes")
+        confirm_changes_button = tk.Button(self, text="Confirm Changes", command=self.confirm_new_team1)
         tank_section_button.grid(row=2, column=1)
         dps_section_button.grid(row=2, column=2, padx=25)
         healer_section_button.grid(row=2, column=3)
         invis_label3.grid(row=2, column=0, padx=6)
         invis_label4.grid(row=9, column=2, pady=45)
         your_team_label.grid(row=10, column=2)
-        visual_team_label.grid(row=11, column=2)
         confirm_changes_button.grid(row=12, column=2)
         invis_label1.grid_forget()
         invis_label2.grid_forget()
         update_pageTSP.grid_forget()
 
-    def display_team1(self, decoded_dungeoneer_team1):
+    def display_team1(self, temp_party):
         team_1_text = ""
-        for character in decoded_dungeoneer_team1:
+        i = 0
+        for character in temp_party:
+            if i == 3:
+                team_1_text += "\n"
+            team_1_text += "["
             team_1_text += character
-            team_1_text += ", "
+            team_1_text += "]"
+            i += 1
+        if i != 5:
+            while i < 5:
+                team_1_text += "["
+                team_1_text += "Empty"
+                team_1_text += "]"
+                i += 1
         return team_1_text
 
-    def view_tanks(self):
-        global monk_label, monk_button_add, monk_button_details, barbarian_label, barbarian_button_add,\
+    def view_tanks1(self):
+        global monk_label, monk_button_add, monk_button_details, barbarian_label, barbarian_button_add, \
             barbarian_button_details, bodyguard_label, bodyguard_button_add, bodyguard_button_details, \
-            fencer_label, fencer_button_add, fencer_button_details, invis_label3, invis_label4
-        invis_label3 = tk.Label(self)
-        invis_label4 = tk.Label(self)
-        monk_label = tk.Label(self, text=Monk.name, font=self.menu_button_font)
-        monk_button_add = tk.Button(self, text="Add to Team")
-        monk_button_details = tk.Button(self, text="View Details")
-        barbarian_label = tk.Label(self, text=Barbarian.name, font=self.menu_button_font)
-        barbarian_button_add = tk.Button(self, text="Add to Team")
-        barbarian_button_details = tk.Button(self, text="View Details")
-        bodyguard_label = tk.Label(self, text=Veteran_Bodyguard.name, font=self.menu_button_font)
-        bodyguard_button_add = tk.Button(self, text="Add to Team")
-        bodyguard_button_details = tk.Button(self, text="View Details")
-        fencer_label = tk.Label(self, text=Master_Fencer.name, font=self.menu_button_font)
-        fencer_button_add = tk.Button(self, text="Add to Team")
-        fencer_button_details = tk.Button(self, text="View Details")
-        monk_label.grid(row=4, column=1, sticky="e")
-        monk_button_add.grid(row=5, column=1, sticky="e", padx=75)
-        monk_button_details.grid(row=5, column=1, sticky="e")
-        barbarian_label.grid(row=4, column=3, sticky="w")
-        barbarian_button_add.grid(row=5, column=3, sticky="w")
-        barbarian_button_details.grid(row=5, column=3, sticky="w", padx=80)
-        bodyguard_label.grid(row=7, column=1, sticky="e")
-        bodyguard_button_add.grid(row=8, column=1, sticky="e", padx=75)
-        bodyguard_button_details.grid(row=8, column=1, sticky="e")
-        fencer_label.grid(row=7, column=3, sticky="w")
-        fencer_button_add.grid(row=8, column=3, sticky="w")
-        fencer_button_details.grid(row=8, column=3, sticky="w", padx=80)
-        invis_label3.grid(row=3, column=1, columnspan=3, pady=50)
-        invis_label4.grid(row=6, column=1, columnspan=3, pady=50)
+            fencer_label, fencer_button_add, fencer_button_details, invis_label3, invis_label4, tank, dps, healer
+        if tank == True:
+            return
+        else:
+            if dps == True:
+                berserker_label.destroy()
+                berserker_button_add.destroy()
+                berserker_button_details.destroy()
+                rogue_label.destroy()
+                rogue_button_add.destroy()
+                rogue_button_details.destroy()
+                survivalist_label.destroy()
+                survivalist_button_add.destroy()
+                survivalist_button_details.destroy()
+                brawlist_label.destroy()
+                brawlist_button_add.destroy()
+                brawlist_button_details.destroy()
+                academic_mage_label.destroy()
+                academic_mage_button_add.destroy()
+                academic_mage_button_details.destroy()
+                jungle_druid_label.destroy()
+                jungle_druid_button_add.destroy()
+                jungle_druid_button_details.destroy()
+                warlock_label.destroy()
+                warlock_button_add.destroy()
+                warlock_button_details.destroy()
+                bloodmancer_label.destroy()
+                bloodmancer_button_add.destroy()
+                bloodmancer_button_details.destroy()
+                paladin_label.destroy()
+                paladin_button_add.destroy()
+                paladin_button_details.destroy()
+                castle_ranger_label.destroy()
+                castle_ranger_button_add.destroy()
+                castle_ranger_button_details.destroy()
+                thunder_apprentice_label.destroy()
+                thunder_apprentice_button_add.destroy()
+                thunder_apprentice_button_details.destroy()
+                power_conduit_label.destroy()
+                power_conduit_button_add.destroy()
+                power_conduit_button_details.destroy()
+                melee_label.destroy()
+                magic_label.destroy()
+                mix_label.destroy()
+                dps = False
+            else:
+                dps = False
+            if healer == True:
+                earth_speaker_label.destroy()
+                earth_speaker_button_add.destroy()
+                earth_speaker_button_details.destroy()
+                priest_of_the_devoted_label.destroy()
+                priest_of_the_devoted_button_add.destroy()
+                priest_of_the_devoted_button_details.destroy()
+                time_walker_label.destroy()
+                time_walker_button_add.destroy()
+                time_walker_button_details.destroy()
+                child_of_medicine_label.destroy()
+                child_of_medicine_button_add.destroy()
+                child_of_medicine_button_details.destroy()
+                invis_label3.destroy()
+                invis_label4.destroy()
+                healer = False
+            else:
+                healer = False
+            tank = True
+            invis_label3 = tk.Label(self)
+            invis_label4 = tk.Label(self)
+            monk_label = tk.Label(self, text=Monk.name, font=self.menu_button_font)
+            monk_button_add = tk.Button(self, text="Add to Team",
+                                        command=lambda: self.check_temp_party1(Monk.title, "tank"))
+            monk_button_details = tk.Button(self, text="View Details")
+            barbarian_label = tk.Label(self, text=Barbarian.name, font=self.menu_button_font)
+            barbarian_button_add = tk.Button(self, text="Add to Team",
+                                             command=lambda: self.check_temp_party1(Barbarian.title, "tank"))
+            barbarian_button_details = tk.Button(self, text="View Details")
+            bodyguard_label = tk.Label(self, text=Veteran_Bodyguard.name, font=self.menu_button_font)
+            bodyguard_button_add = tk.Button(self, text="Add to Team",
+                                             command=lambda: self.check_temp_party1(Veteran_Bodyguard.title, "tank"))
+            bodyguard_button_details = tk.Button(self, text="View Details")
+            fencer_label = tk.Label(self, text=Master_Fencer.name, font=self.menu_button_font)
+            fencer_button_add = tk.Button(self, text="Add to Team",
+                                          command=lambda: self.check_temp_party1(Master_Fencer.title, "tank"))
+            fencer_button_details = tk.Button(self, text="View Details")
+            monk_label.grid(row=4, column=1, sticky="e")
+            monk_button_add.grid(row=5, column=1, sticky="e", padx=75)
+            monk_button_details.grid(row=5, column=1, sticky="e")
+            barbarian_label.grid(row=4, column=3, sticky="w")
+            barbarian_button_add.grid(row=5, column=3, sticky="w")
+            barbarian_button_details.grid(row=5, column=3, sticky="w", padx=80)
+            bodyguard_label.grid(row=7, column=1, sticky="e")
+            bodyguard_button_add.grid(row=8, column=1, sticky="e", padx=75)
+            bodyguard_button_details.grid(row=8, column=1, sticky="e")
+            fencer_label.grid(row=7, column=3, sticky="w")
+            fencer_button_add.grid(row=8, column=3, sticky="w")
+            fencer_button_details.grid(row=8, column=3, sticky="w", padx=80)
+            invis_label3.grid(row=3, column=1, columnspan=3, pady=50)
+            invis_label4.grid(row=6, column=1, columnspan=3, pady=50)
 
-    def view_dps(self):
-        global melee_label, magic_label, mix_label, berserker_label, berserker_button_add, berserker_button_details,\
-            rogue_label, rogue_button_add, rogue_button_details, survivalist_label, survivalist_button_add, survivalist_button_details,\
-            brawlist_label, brawlist_button_add, brawlist_button_details, academic_mage_label, academic_mage_button_add, academic_mage_button_details,\
-            jungle_druid_label, jungle_druid_button_add, jungle_druid_button_details, warlock_label, warlock_button_add, warlock_button_details,\
-            bloodmancer_label, bloodmancer_button_add, bloodmancer_button_details, paladin_label, paladin_button_add, paladin_button_details,\
-            castle_ranger_label, castle_ranger_button_add, castle_ranger_button_details, thunder_apprentice_label, thunder_apprentice_button_add, thunder_apprentice_button_details,\
-            power_conduit_label, power_conduit_button_add, power_conduit_button_details
-        monk_label.grid_forget()
-        monk_button_add.grid_forget()
-        monk_button_details.grid_forget()
-        barbarian_label.grid_forget()
-        barbarian_button_add.grid_forget()
-        barbarian_button_details.grid_forget()
-        bodyguard_label.grid_forget()
-        bodyguard_button_add.grid_forget()
-        bodyguard_button_details.grid_forget()
-        fencer_label.grid_forget()
-        fencer_button_add.grid_forget()
-        fencer_button_details.grid_forget()
-        earth_speaker_label.grid_forget()
-        earth_speaker_button_add.grid_forget()
-        earth_speaker_button_details.grid_forget()
-        priest_of_the_devoted_label.grid_forget()
-        priest_of_the_devoted_button_add.grid_forget()
-        priest_of_the_devoted_button_details.grid_forget()
-        time_walker_label.grid_forget()
-        time_walker_button_add.grid_forget()
-        time_walker_button_details.grid_forget()
-        child_of_medicine_label.grid_forget()
-        child_of_medicine_button_add.grid_forget()
-        child_of_medicine_button_details.grid_forget()
-        invis_label3.grid_forget()
-        invis_label4.grid_forget()
-        melee_label = tk.Label(self, text=":Melee:", font=self.menu_button_font)
-        magic_label = tk.Label(self, text=":Magic:", font=self.menu_button_font)
-        mix_label = tk.Label(self, text=":Other:", font=self.menu_button_font)
-        berserker_label = tk.Label(self, text=Berserker.name)
-        berserker_button_add = tk.Button(self, text="Add to Team")
-        berserker_button_details = tk.Button(self, text="View Details")
-        rogue_label = tk.Label(self, text=Rogue.name)
-        rogue_button_add = tk.Button(self, text="Add to Team")
-        rogue_button_details = tk.Button(self, text="View Details")
-        survivalist_label = tk.Label(self, text=Survivalist.name)
-        survivalist_button_add = tk.Button(self, text="Add to Team")
-        survivalist_button_details = tk.Button(self, text="View Details")
-        brawlist_label = tk.Label(self, text=Brawlist.name)
-        brawlist_button_add = tk.Button(self, text="Add to Team")
-        brawlist_button_details = tk.Button(self, text="View Details")
-        academic_mage_label = tk.Label(self, text=Academic_Mage.name)
-        academic_mage_button_add = tk.Button(self, text="Add to Team")
-        academic_mage_button_details = tk.Button(self, text="View Details")
-        jungle_druid_label = tk.Label(self, text=Jungle_Druid.name)
-        jungle_druid_button_add = tk.Button(self, text="Add to Team")
-        jungle_druid_button_details = tk.Button(self, text="View Details")
-        warlock_label = tk.Label(self, text=Warlock.name)
-        warlock_button_add = tk.Button(self, text="Add to Team")
-        warlock_button_details = tk.Button(self, text="View Details")
-        bloodmancer_label = tk.Label(self, text=Bloodmancer.name)
-        bloodmancer_button_add = tk.Button(self, text="Add to Team")
-        bloodmancer_button_details = tk.Button(self, text="View Details")
-        paladin_label = tk.Label(self, text=Paladin.name)
-        paladin_button_add = tk.Button(self, text="Add to Team")
-        paladin_button_details = tk.Button(self, text="View Details")
-        castle_ranger_label = tk.Label(self, text=Castle_Ranger.name)
-        castle_ranger_button_add = tk.Button(self, text="Add to Team")
-        castle_ranger_button_details = tk.Button(self, text="View Details")
-        thunder_apprentice_label = tk.Label(self, text=Thunder_Apprentice.name)
-        thunder_apprentice_button_add = tk.Button(self, text="Add to Team")
-        thunder_apprentice_button_details = tk.Button(self, text="View Details")
-        power_conduit_label = tk.Label(self, text=Power_Conduit.name)
-        power_conduit_button_add = tk.Button(self, text="Add to Team")
-        power_conduit_button_details = tk.Button(self, text="View Details")
-        melee_label.grid(row=3, column=1)
-        magic_label.grid(row=3, column=2)
-        mix_label.grid(row=3, column=3)
-        berserker_label.grid(row=5, column=1, sticky="w")
-        berserker_button_add.grid(row=6, column=1, sticky="w")
-        berserker_button_details.grid(row=6, column=1, sticky="w", padx=80)
-        rogue_label.grid(row=8, column=1, sticky="w")
-        rogue_button_add.grid(row=9, column=1, sticky="w")
-        rogue_button_details.grid(row=9, column=1, sticky="w", padx=80)
-        survivalist_label.grid(row=5, column=1, sticky="e", padx=10)
-        survivalist_button_add.grid(row=6, column=1, sticky="e", padx=85)
-        survivalist_button_details.grid(row=6, column=1, sticky="e", padx=10)
-        brawlist_label.grid(row=8, column=1, sticky="e", padx=10)
-        brawlist_button_add.grid(row=9, column=1, sticky="e", padx=85)
-        brawlist_button_details.grid(row=9, column=1, sticky="e", padx=10)
-        academic_mage_label.grid(row=5, column=2, sticky="w", padx=10)
-        academic_mage_button_add.grid(row=6, column=2, sticky="w", padx=10)
-        academic_mage_button_details.grid(row=6, column=2, sticky="w", padx=90)
-        jungle_druid_label.grid(row=8, column=2, sticky="w", padx=10)
-        jungle_druid_button_add.grid(row=9, column=2, sticky="w", padx=10)
-        jungle_druid_button_details.grid(row=9, column=2, sticky="w", padx=90)
-        warlock_label.grid(row=5, column=2, sticky="e", padx=10)
-        warlock_button_add.grid(row=6, column=2, sticky="e", padx=85)
-        warlock_button_details.grid(row=6, column=2, sticky="e", padx=10)
-        bloodmancer_label.grid(row=8, column=2, sticky="e", padx=10)
-        bloodmancer_button_add.grid(row=9, column=2, sticky="e", padx=85)
-        bloodmancer_button_details.grid(row=9, column=2, sticky="e", padx=10)
-        paladin_label.grid(row=5, column=3, sticky="w", padx=10)
-        paladin_button_add.grid(row=6, column=3, sticky="w", padx=10)
-        paladin_button_details.grid(row=6, column=3, sticky="w", padx=90)
-        castle_ranger_label.grid(row=8, column=3, sticky="w", padx=10)
-        castle_ranger_button_add.grid(row=9, column=3, sticky="w", padx=10)
-        castle_ranger_button_details.grid(row=9, column=3, sticky="w", padx=90)
-        thunder_apprentice_label.grid(row=5, column=3, sticky="e")
-        thunder_apprentice_button_add.grid(row=6, column=3, sticky="e", padx=75)
-        thunder_apprentice_button_details.grid(row=6, column=3, sticky="e")
-        power_conduit_label.grid(row=8, column=3, sticky="e")
-        power_conduit_button_add.grid(row=9, column=3, sticky="e", padx=75)
-        power_conduit_button_details.grid(row=9, column=3, sticky="e")
-        
-    def view_healer(self):
-        global earth_speaker_label, earth_speaker_button_add, earth_speaker_button_details, priest_of_the_devoted_label, priest_of_the_devoted_button_add,\
+    def view_dps1(self):
+        global melee_label, magic_label, mix_label, berserker_label, berserker_button_add, berserker_button_details, \
+            rogue_label, rogue_button_add, rogue_button_details, survivalist_label, survivalist_button_add, survivalist_button_details, \
+            brawlist_label, brawlist_button_add, brawlist_button_details, academic_mage_label, academic_mage_button_add, academic_mage_button_details, \
+            jungle_druid_label, jungle_druid_button_add, jungle_druid_button_details, warlock_label, warlock_button_add, warlock_button_details, \
+            bloodmancer_label, bloodmancer_button_add, bloodmancer_button_details, paladin_label, paladin_button_add, paladin_button_details, \
+            castle_ranger_label, castle_ranger_button_add, castle_ranger_button_details, thunder_apprentice_label, thunder_apprentice_button_add, thunder_apprentice_button_details, \
+            power_conduit_label, power_conduit_button_add, power_conduit_button_details, tank, dps, healer
+        if dps == True:
+            return
+        else:
+            if tank == True:
+                monk_label.destroy()
+                monk_button_add.destroy()
+                monk_button_details.destroy()
+                barbarian_label.destroy()
+                barbarian_button_add.destroy()
+                barbarian_button_details.destroy()
+                bodyguard_label.destroy()
+                bodyguard_button_add.destroy()
+                bodyguard_button_details.destroy()
+                fencer_label.destroy()
+                fencer_button_add.destroy()
+                fencer_button_details.destroy()
+                invis_label3.destroy()
+                invis_label4.destroy()
+                tank = False
+            else:
+                tank = False
+            if healer == True:
+                earth_speaker_label.destroy()
+                earth_speaker_button_add.destroy()
+                earth_speaker_button_details.destroy()
+                priest_of_the_devoted_label.destroy()
+                priest_of_the_devoted_button_add.destroy()
+                priest_of_the_devoted_button_details.destroy()
+                time_walker_label.destroy()
+                time_walker_button_add.destroy()
+                time_walker_button_details.destroy()
+                child_of_medicine_label.destroy()
+                child_of_medicine_button_add.destroy()
+                child_of_medicine_button_details.destroy()
+                invis_label3.destroy()
+                invis_label4.destroy()
+                healer = False
+            else:
+                healer = False
+            dps = True
+            melee_label = tk.Label(self, text=":Melee:", font=self.menu_button_font)
+            magic_label = tk.Label(self, text=":Magic:", font=self.menu_button_font)
+            mix_label = tk.Label(self, text=":Other:", font=self.menu_button_font)
+            berserker_label = tk.Label(self, text=Berserker.name)
+            berserker_button_add = tk.Button(self, text="Add to Team",
+                                             command=lambda: self.check_temp_party1(Berserker.title, "melee"))
+            berserker_button_details = tk.Button(self, text="View Details")
+            rogue_label = tk.Label(self, text=Rogue.name)
+            rogue_button_add = tk.Button(self, text="Add to Team",
+                                         command=lambda: self.check_temp_party1(Rogue.title, "melee"))
+            rogue_button_details = tk.Button(self, text="View Details")
+            survivalist_label = tk.Label(self, text=Survivalist.name)
+            survivalist_button_add = tk.Button(self, text="Add to Team",
+                                               command=lambda: self.check_temp_party1(Survivalist.title, "melee"))
+            survivalist_button_details = tk.Button(self, text="View Details")
+            brawlist_label = tk.Label(self, text=Brawlist.name)
+            brawlist_button_add = tk.Button(self, text="Add to Team",
+                                            command=lambda: self.check_temp_party1(Brawlist.title, "melee"))
+            brawlist_button_details = tk.Button(self, text="View Details")
+            academic_mage_label = tk.Label(self, text=Academic_Mage.name)
+            academic_mage_button_add = tk.Button(self, text="Add to Team",
+                                                 command=lambda: self.check_temp_party1(Academic_Mage.title, "magic"))
+            academic_mage_button_details = tk.Button(self, text="View Details")
+            jungle_druid_label = tk.Label(self, text=Druid.name)
+            jungle_druid_button_add = tk.Button(self, text="Add to Team",
+                                                command=lambda: self.check_temp_party1(Druid.title, "magic"))
+            jungle_druid_button_details = tk.Button(self, text="View Details")
+            warlock_label = tk.Label(self, text=Warlock.name)
+            warlock_button_add = tk.Button(self, text="Add to Team",
+                                           command=lambda: self.check_temp_party1(Warlock.title, "magic"))
+            warlock_button_details = tk.Button(self, text="View Details")
+            bloodmancer_label = tk.Label(self, text=Bloodmancer.name)
+            bloodmancer_button_add = tk.Button(self, text="Add to Team",
+                                               command=lambda: self.check_temp_party1(Bloodmancer.title, "magic"))
+            bloodmancer_button_details = tk.Button(self, text="View Details")
+            paladin_label = tk.Label(self, text=Paladin.name)
+            paladin_button_add = tk.Button(self, text="Add to Team",
+                                           command=lambda: self.check_temp_party1(Paladin.title, "mixed"))
+            paladin_button_details = tk.Button(self, text="View Details")
+            castle_ranger_label = tk.Label(self, text=Castle_Ranger.name)
+            castle_ranger_button_add = tk.Button(self, text="Add to Team",
+                                                 command=lambda: self.check_temp_party1(Castle_Ranger.title, "mixed"))
+            castle_ranger_button_details = tk.Button(self, text="View Details")
+            thunder_apprentice_label = tk.Label(self, text=Thunder_Apprentice.name)
+            thunder_apprentice_button_add = tk.Button(self, text="Add to Team",
+                                                      command=lambda: self.check_temp_party1(Thunder_Apprentice.title,
+                                                                                            "mixed"))
+            thunder_apprentice_button_details = tk.Button(self, text="View Details")
+            power_conduit_label = tk.Label(self, text=Power_Conduit.name)
+            power_conduit_button_add = tk.Button(self, text="Add to Team",
+                                                 command=lambda: self.check_temp_party1(Power_Conduit.title, "mixed"))
+            power_conduit_button_details = tk.Button(self, text="View Details")
+            melee_label.grid(row=3, column=1)
+            magic_label.grid(row=3, column=2)
+            mix_label.grid(row=3, column=3)
+            berserker_label.grid(row=5, column=1, sticky="w")
+            berserker_button_add.grid(row=6, column=1, sticky="w")
+            berserker_button_details.grid(row=6, column=1, sticky="w", padx=80)
+            rogue_label.grid(row=8, column=1, sticky="w")
+            rogue_button_add.grid(row=9, column=1, sticky="w")
+            rogue_button_details.grid(row=9, column=1, sticky="w", padx=80)
+            survivalist_label.grid(row=5, column=1, sticky="e", padx=10)
+            survivalist_button_add.grid(row=6, column=1, sticky="e", padx=85)
+            survivalist_button_details.grid(row=6, column=1, sticky="e", padx=10)
+            brawlist_label.grid(row=8, column=1, sticky="e", padx=10)
+            brawlist_button_add.grid(row=9, column=1, sticky="e", padx=85)
+            brawlist_button_details.grid(row=9, column=1, sticky="e", padx=10)
+            academic_mage_label.grid(row=5, column=2, sticky="w", padx=10)
+            academic_mage_button_add.grid(row=6, column=2, sticky="w", padx=10)
+            academic_mage_button_details.grid(row=6, column=2, sticky="w", padx=90)
+            jungle_druid_label.grid(row=8, column=2, sticky="w", padx=10)
+            jungle_druid_button_add.grid(row=9, column=2, sticky="w", padx=10)
+            jungle_druid_button_details.grid(row=9, column=2, sticky="w", padx=90)
+            warlock_label.grid(row=5, column=2, sticky="e", padx=10)
+            warlock_button_add.grid(row=6, column=2, sticky="e", padx=85)
+            warlock_button_details.grid(row=6, column=2, sticky="e", padx=10)
+            bloodmancer_label.grid(row=8, column=2, sticky="e", padx=10)
+            bloodmancer_button_add.grid(row=9, column=2, sticky="e", padx=85)
+            bloodmancer_button_details.grid(row=9, column=2, sticky="e", padx=10)
+            paladin_label.grid(row=5, column=3, sticky="w", padx=10)
+            paladin_button_add.grid(row=6, column=3, sticky="w", padx=10)
+            paladin_button_details.grid(row=6, column=3, sticky="w", padx=90)
+            castle_ranger_label.grid(row=8, column=3, sticky="w", padx=10)
+            castle_ranger_button_add.grid(row=9, column=3, sticky="w", padx=10)
+            castle_ranger_button_details.grid(row=9, column=3, sticky="w", padx=90)
+            thunder_apprentice_label.grid(row=5, column=3, sticky="e")
+            thunder_apprentice_button_add.grid(row=6, column=3, sticky="e", padx=75)
+            thunder_apprentice_button_details.grid(row=6, column=3, sticky="e")
+            power_conduit_label.grid(row=8, column=3, sticky="e")
+            power_conduit_button_add.grid(row=9, column=3, sticky="e", padx=75)
+            power_conduit_button_details.grid(row=9, column=3, sticky="e")
+
+    def view_healer1(self):
+        global earth_speaker_label, earth_speaker_button_add, earth_speaker_button_details, priest_of_the_devoted_label, priest_of_the_devoted_button_add, \
             priest_of_the_devoted_button_details, time_walker_label, time_walker_button_add, time_walker_button_details, \
-            child_of_medicine_label, child_of_medicine_button_add, child_of_medicine_button_details, invis_label3, invis_label4
+            child_of_medicine_label, child_of_medicine_button_add, child_of_medicine_button_details, invis_label3, invis_label4, tank, dps, healer
+        if healer == True:
+            return
+        else:
+            invis_label3 = tk.Label(self)
+            invis_label4 = tk.Label(self)
+            if tank == True:
+                monk_label.destroy()
+                monk_button_add.destroy()
+                monk_button_details.destroy()
+                barbarian_label.destroy()
+                barbarian_button_add.destroy()
+                barbarian_button_details.destroy()
+                bodyguard_label.destroy()
+                bodyguard_button_add.destroy()
+                bodyguard_button_details.destroy()
+                fencer_label.destroy()
+                fencer_button_add.destroy()
+                fencer_button_details.destroy()
+                invis_label3.destroy()
+                invis_label4.destroy()
+                tank = False
+            else:
+                tank = False
+            if dps == True:
+                berserker_label.destroy()
+                berserker_button_add.destroy()
+                berserker_button_details.destroy()
+                rogue_label.destroy()
+                rogue_button_add.destroy()
+                rogue_button_details.destroy()
+                survivalist_label.destroy()
+                survivalist_button_add.destroy()
+                survivalist_button_details.destroy()
+                brawlist_label.destroy()
+                brawlist_button_add.destroy()
+                brawlist_button_details.destroy()
+                academic_mage_label.destroy()
+                academic_mage_button_add.destroy()
+                academic_mage_button_details.destroy()
+                jungle_druid_label.destroy()
+                jungle_druid_button_add.destroy()
+                jungle_druid_button_details.destroy()
+                warlock_label.destroy()
+                warlock_button_add.destroy()
+                warlock_button_details.destroy()
+                bloodmancer_label.destroy()
+                bloodmancer_button_add.destroy()
+                bloodmancer_button_details.destroy()
+                paladin_label.destroy()
+                paladin_button_add.destroy()
+                paladin_button_details.destroy()
+                castle_ranger_label.destroy()
+                castle_ranger_button_add.destroy()
+                castle_ranger_button_details.destroy()
+                thunder_apprentice_label.destroy()
+                thunder_apprentice_button_add.destroy()
+                thunder_apprentice_button_details.destroy()
+                power_conduit_label.destroy()
+                power_conduit_button_add.destroy()
+                power_conduit_button_details.destroy()
+                melee_label.destroy()
+                magic_label.destroy()
+                mix_label.destroy()
+                dps = False
+            else:
+                dps = False
+            healer = True
+            earth_speaker_label = tk.Label(self, text=Earth_Speaker.name, font=self.menu_button_font)
+            earth_speaker_button_add = tk.Button(self, text="Add to Team",
+                                                 command=lambda: self.check_temp_party1(Earth_Speaker.title, "healer"))
+            earth_speaker_button_details = tk.Button(self, text="View Details")
+            priest_of_the_devoted_label = tk.Label(self, text=Priest_of_the_Devoted.name, font=self.menu_button_font)
+            priest_of_the_devoted_button_add = tk.Button(self, text="Add to Team",
+                                                         command=lambda: self.check_temp_party1(
+                                                             Priest_of_the_Devoted.title, "healer"))
+            priest_of_the_devoted_button_details = tk.Button(self, text="View Details")
+            time_walker_label = tk.Label(self, text=Time_Walker.name, font=self.menu_button_font)
+            time_walker_button_add = tk.Button(self, text="Add to Team",
+                                               command=lambda: self.check_temp_party1(Time_Walker.title, "healer"))
+            time_walker_button_details = tk.Button(self, text="View Details")
+            child_of_medicine_label = tk.Label(self, text=Child_of_Medicine.name, font=self.menu_button_font)
+            child_of_medicine_button_add = tk.Button(self, text="Add to Team",
+                                                     command=lambda: self.check_temp_party1(Child_of_Medicine.title,
+                                                                                           "healer"))
+            child_of_medicine_button_details = tk.Button(self, text="View Details")
+            earth_speaker_label.grid(row=4, column=1, sticky="e")
+            earth_speaker_button_add.grid(row=5, column=1, sticky="e", padx=75)
+            earth_speaker_button_details.grid(row=5, column=1, sticky="e")
+            priest_of_the_devoted_label.grid(row=4, column=3, sticky="w")
+            priest_of_the_devoted_button_add.grid(row=5, column=3, sticky="w")
+            priest_of_the_devoted_button_details.grid(row=5, column=3, sticky="w", padx=80)
+            time_walker_label.grid(row=7, column=1, sticky="e")
+            time_walker_button_add.grid(row=8, column=1, sticky="e", padx=75)
+            time_walker_button_details.grid(row=8, column=1, sticky="e")
+            child_of_medicine_label.grid(row=7, column=3, sticky="w")
+            child_of_medicine_button_add.grid(row=8, column=3, sticky="w")
+            child_of_medicine_button_details.grid(row=8, column=3, sticky="w", padx=80)
+            invis_label3.grid(row=3, column=1, columnspan=3, pady=50)
+            invis_label4.grid(row=6, column=1, columnspan=3, pady=50)
+
+    def check_temp_party1(self, champion, type):
+        global temp_party, yes_buttonCTP, no_buttonCTP, warning_label1CTP, warning_label2CTP, tank, dps, healer, visual_team_label
+        tank_temp_party = []
+        melee_temp_party = []
+        magic_temp_party = []
+        mixed_temp_party = []
+        healer_temp_party = []
+        if champion in temp_party:
+            root = tk.Tk()
+            warning_label = tk.Label(root, text="Sorry, but this character is already assigned in the party")
+            ok_button = tk.Button(root, text="Ok", command=root.destroy)
+            ok_button.grid(row=2, column=1)
+            warning_label.grid(row=1, column=1)
+            visual_team_label.destroy()
+            visual_team_label = tk.Label(self, text=self.display_team1(temp_party))
+            visual_team_label.grid(row=11, column=2)
+        else:
+            if len(temp_party) < 5:
+                for character in temp_party:
+                    if character == Monk.title:
+                        tank_temp_party.append(character)
+                    if character == Barbarian.title:
+                        tank_temp_party.append(character)
+                    if character == Veteran_Bodyguard.title:
+                        tank_temp_party.append(character)
+                    if character == Master_Fencer.title:
+                        tank_temp_party.append(character)
+                    if character == Berserker.title:
+                        melee_temp_party.append(character)
+                    if character == Rogue.title:
+                        melee_temp_party.append(character)
+                    if character == Survivalist.title:
+                        melee_temp_party.append(character)
+                    if character == Brawlist.title:
+                        melee_temp_party.append(character)
+                    if character == Academic_Mage.title:
+                        magic_temp_party.append(character)
+                    if character == Druid.title:
+                        magic_temp_party.append(character)
+                    if character == Warlock.title:
+                        magic_temp_party.append(character)
+                    if character == Bloodmancer.title:
+                        magic_temp_party.append(character)
+                    if character == Paladin.title:
+                        mixed_temp_party.append(character)
+                    if character == Castle_Ranger.title:
+                        mixed_temp_party.append(character)
+                    if character == Thunder_Apprentice.title:
+                        mixed_temp_party.append(character)
+                    if character == Power_Conduit.title:
+                        mixed_temp_party.append(character)
+                    if character == Earth_Speaker.title:
+                        healer_temp_party.append(character)
+                    if character == Priest_of_the_Devoted.title:
+                        healer_temp_party.append(character)
+                    if character == Time_Walker.title:
+                        healer_temp_party.append(character)
+                    if character == Child_of_Medicine.title:
+                        healer_temp_party.append(character)
+                    if character == "Empty":
+                        p = 0
+                if type == "tank":
+                    tank_temp_party.append(champion)
+                    tank_temp_party = sorted(tank_temp_party)
+                elif type == "melee":
+                    melee_temp_party.append(champion)
+                    melee_temp_party = sorted(melee_temp_party)
+                elif type == "magic":
+                    magic_temp_party.append(champion)
+                    magic_temp_party = sorted(magic_temp_party)
+                elif type == "mixed":
+                    mixed_temp_party.append(champion)
+                    mixed_temp_party = sorted(mixed_temp_party)
+                elif type == "healer":
+                    healer_temp_party.append(champion)
+                    healer_temp_party = sorted(healer_temp_party)
+                temp_party = []
+                if tank_temp_party == []:
+                    p = 0
+                else:
+                    for character in tank_temp_party:
+                        temp_party.append(character)
+                if melee_temp_party == []:
+                    p = 0
+                else:
+                    for character in melee_temp_party:
+                        temp_party.append(character)
+                if magic_temp_party == []:
+                    p = 0
+                else:
+                    for character in magic_temp_party:
+                        temp_party.append(character)
+                if mixed_temp_party == []:
+                    p = 0
+                else:
+                    for character in mixed_temp_party:
+                        temp_party.append(character)
+                if healer_temp_party == []:
+                    p = 0
+                else:
+                    for character in healer_temp_party:
+                        temp_party.append(character)
+                visual_team_label.destroy()
+                visual_team_label = tk.Label(self, text=self.display_team1(temp_party))
+                visual_team_label.grid(row=11, column=2)
+            elif len(temp_party) == 5:
+                root = tk.Tk()
+                warning_label1CTP = tk.Label(root, text="The party is currently full!")
+                warning_label2CTP = tk.Label(root, text="Would you like to remove a current party member to make room?")
+                yes_buttonCTP = tk.Button(root, text="Yes",
+                                          command=lambda: self.adding_champions_tempParty1(root, champion))
+                no_buttonCTP = tk.Button(root, text="No", command=lambda: root.destroy())
+                warning_label1CTP.grid(row=1, column=1)
+                warning_label2CTP.grid(row=2, column=1)
+                yes_buttonCTP.grid(row=3, column=1, sticky="w", padx=140)
+                no_buttonCTP.grid(row=3, column=1, sticky="e", padx=140)
+
+    def adding_champions_tempParty1(self, root, champion):
+        global champion1CTP, champion2CTP, champion3CTP, champion4CTP, champion5CTP, cancel_buttonCTP, window_labelCTP
+        yes_buttonCTP.grid_forget()
+        no_buttonCTP.grid_forget()
+        warning_label1CTP.grid_forget()
+        warning_label2CTP.grid_forget()
+        window_labelCTP = tk.Label(root, text="Please choose which champion will be replaced for '{}'".format(champion))
+        champion1CTP = tk.Button(root, text=temp_party[0],
+                                 command=lambda: self.replace_champion1(root, champion, temp_party[0]))
+        champion2CTP = tk.Button(root, text=temp_party[1],
+                                 command=lambda: self.replace_champion1(root, champion, temp_party[1]))
+        champion3CTP = tk.Button(root, text=temp_party[2],
+                                 command=lambda: self.replace_champion1(root, champion, temp_party[2]))
+        champion4CTP = tk.Button(root, text=temp_party[3],
+                                 command=lambda: self.replace_champion1(root, champion, temp_party[3]))
+        champion5CTP = tk.Button(root, text=temp_party[4],
+                                 command=lambda: self.replace_champion1(root, champion, temp_party[4]))
+        cancel_buttonCTP = tk.Button(root, text="Cancel", command=root.destroy, font="bold")
+        window_labelCTP.grid(row=1, column=3)
+        champion1CTP.grid(row=2, column=3)
+        champion2CTP.grid(row=3, column=3)
+        champion3CTP.grid(row=4, column=3)
+        champion4CTP.grid(row=5, column=3)
+        champion5CTP.grid(row=6, column=3)
+        cancel_buttonCTP.grid(row=7, column=3)
+
+    def replace_champion1(self, root, champion, selected):
+        global temp_party, visual_team_label
+        pos = temp_party.index(selected)
+        temp_pos = temp_party[pos]
+        temp_party[pos] = champion
+        champion1CTP.grid_forget()
+        champion2CTP.grid_forget()
+        champion3CTP.grid_forget()
+        champion4CTP.grid_forget()
+        champion5CTP.grid_forget()
+        cancel_buttonCTP.grid_forget()
+        window_labelCTP.grid_forget()
+        window_labelCTP2 = tk.Label(root, text="'{}' has been replaced by '{}'!".format(temp_pos, champion))
+        ok_button = tk.Button(root, text="Ok", command=root.destroy)
+        window_labelCTP2.grid(row=1, column=1)
+        ok_button.grid(row=2, column=1)
+        tank_temp_party = []
+        melee_temp_party = []
+        magic_temp_party = []
+        mixed_temp_party = []
+        healer_temp_party = []
+        for character in temp_party:
+            if character == Monk.title:
+                tank_temp_party.append(character)
+            if character == Barbarian.title:
+                tank_temp_party.append(character)
+            if character == Veteran_Bodyguard.title:
+                tank_temp_party.append(character)
+            if character == Master_Fencer.title:
+                tank_temp_party.append(character)
+            if character == Berserker.title:
+                melee_temp_party.append(character)
+            if character == Rogue.title:
+                melee_temp_party.append(character)
+            if character == Survivalist.title:
+                melee_temp_party.append(character)
+            if character == Brawlist.title:
+                melee_temp_party.append(character)
+            if character == Academic_Mage.title:
+                magic_temp_party.append(character)
+            if character == Druid.title:
+                magic_temp_party.append(character)
+            if character == Warlock.title:
+                magic_temp_party.append(character)
+            if character == Bloodmancer.title:
+                magic_temp_party.append(character)
+            if character == Paladin.title:
+                mixed_temp_party.append(character)
+            if character == Castle_Ranger.title:
+                mixed_temp_party.append(character)
+            if character == Thunder_Apprentice.title:
+                mixed_temp_party.append(character)
+            if character == Power_Conduit.title:
+                mixed_temp_party.append(character)
+            if character == Earth_Speaker.title:
+                healer_temp_party.append(character)
+            if character == Priest_of_the_Devoted.title:
+                healer_temp_party.append(character)
+            if character == Time_Walker.title:
+                healer_temp_party.append(character)
+            if character == Child_of_Medicine.title:
+                healer_temp_party.append(character)
+        temp_party = []
+        if tank_temp_party == []:
+            p = 0
+        else:
+            tank_temp_party = sorted(tank_temp_party)
+            for character in tank_temp_party:
+                temp_party.append(character)
+        if melee_temp_party == []:
+            p = 0
+        else:
+            melee_temp_party = sorted(melee_temp_party)
+            for character in melee_temp_party:
+                temp_party.append(character)
+        if magic_temp_party == []:
+            p = 0
+        else:
+            magic_temp_party = sorted(magic_temp_party)
+            for character in magic_temp_party:
+                temp_party.append(character)
+        if mixed_temp_party == []:
+            p = 0
+        else:
+            mixed_temp_party = sorted(mixed_temp_party)
+            for character in mixed_temp_party:
+                temp_party.append(character)
+        if healer_temp_party == []:
+            p = 0
+        else:
+            healer_temp_party = sorted(healer_temp_party)
+            for character in healer_temp_party:
+                temp_party.append(character)
+        visual_team_label.destroy()
+        visual_team_label = tk.Label(self, text=self.display_team1(temp_party))
+        visual_team_label.grid(row=11, column=2)
+
+    def confirm_new_team1(self):
+        root = tk.Tk()
+        confirmation_label = tk.Label(root, text="Are you sure you want save this group?")
+        yes_buttonCNT = tk.Button(root, text="Yes", command=lambda: SampleApp.finalise_new_team1(self, root))
+        no_buttonCNT = tk.Button(root, text="No", command=lambda: root.destroy())
+        confirmation_label.grid(row=2, column=1)
+        yes_buttonCNT.grid(row=3, column=1, sticky="w", padx=70)
+        no_buttonCNT.grid(row=3, column=1, sticky="e", padx=70)
+
+    def save_new_team1(self, root):
+        i = -1
+        file = open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/account_data_championTeam_1.txt".format(computer_username),"r")
+        file_allLines = file.readlines()
+        user = SampleApp.get_user_encoded(self)
+        user = str(user)
+        for line in file_allLines:
+            i += 1
+            if user in line:
+                coded_temp_party = self.code_party()
+                new_line = "{} {}".format(line, coded_temp_party)
+                file_allLines[i] = new_line
+                file_write = open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/account_data_championTeam_1.txt".format(computer_username),"w")
+                file_write.writelines(file_allLines)
+                file.close()
+                file_write.close()
+                root.destroy()
+                break
+    def code_party(self):
+        coded_temp_party = ""
+        i = 0
+        for character in temp_party:
+            if character == Monk.title:
+                coded_temp_party += Monk.code
+            if character == Barbarian.title:
+                coded_temp_party += Barbarian.code
+            if character == Veteran_Bodyguard.title:
+                coded_temp_party += Veteran_Bodyguard.code
+            if character == Master_Fencer.title:
+                coded_temp_party += Master_Fencer.code
+            if character == Berserker.title:
+                coded_temp_party += Berserker.code
+            if character == Rogue.title:
+                coded_temp_party += Rogue.code
+            if character == Survivalist.title:
+                coded_temp_party += Survivalist.code
+            if character == Brawlist.title:
+                coded_temp_party += Brawlist.code
+            if character == Academic_Mage.title:
+                coded_temp_party += Academic_Mage.code
+            if character == Druid.title:
+                coded_temp_party += Druid.code
+            if character == Warlock.title:
+                coded_temp_party += Warlock.code
+            if character == Bloodmancer.title:
+                coded_temp_party += Bloodmancer.code
+            if character == Paladin.title:
+                coded_temp_party += Paladin.code
+            if character == Castle_Ranger.title:
+                coded_temp_party += Castle_Ranger.code
+            if character == Thunder_Apprentice.title:
+                coded_temp_party += Thunder_Apprentice.code
+            if character == Power_Conduit.title:
+                coded_temp_party += Power_Conduit.code
+            if character == Earth_Speaker.title:
+                coded_temp_party += Earth_Speaker.code
+            if character == Priest_of_the_Devoted.title:
+                coded_temp_party += Priest_of_the_Devoted.code
+            if character == Time_Walker.title:
+                coded_temp_party += Time_Walker.code
+            if character == Child_of_Medicine.title:
+                coded_temp_party += Child_of_Medicine.code
+            if character == "Empty":
+                break
+            i += 1
+            if i <=4:
+                coded_temp_party += ", "
+        return coded_temp_party
+
+
+    def clear_temp_party1(self):
+        global temp_party
+        temp_party = []
+
+
+class Team2SelectionPage(tk.Frame):
+    def __init__(self, parent, controller):
+        global update_pageTSP
+        global returnButtonTSP, invis_label1, invis_label2
+        tk.Frame.__init__(self, parent)
+        self.controller = controller
+        self.menu_button_font = tkfont.Font(family='Helvetica', size=18, weight="bold")
+        self.title_label_font = tkfont.Font(family='Helvetica', size=30, weight="bold")
+        self.small_label_font = tkfont.Font(family='Helvetica', size=12, weight="bold")
+        title = tk.Label(self, text="Champion Camp", font=self.title_label_font)
+        update_pageTSP = tk.Button(self, text="Begin Recruiting for Team 2", command=lambda: self.pitstop2(),
+                                   font=controller.menu_button_font)
+        returnButtonTSP = tk.Button(self, text="Cancel", command=lambda: controller.cancel_new_team2())
+        invis_label1 = tk.Label(self)
+        invis_label2 = tk.Label(self)
+        update_pageTSP.grid(row=2, column=2, pady=50)
+        title.grid(row=1, column=2)
+        returnButtonTSP.grid(row=13, column=2)
+        invis_label1.grid(row=1, column=1, rowspan=4, pady=50, ipadx=240, ipady=100)
+        invis_label2.grid(row=1, column=2, pady=100)
+
+    def pitstop2(self):
+        global visual_team_label, temp_party
+        user = SampleApp.get_user_encoded(self)
+        team_line_2 = []
+        team_line_2 = SampleApp.return_users_champion_team2(self, user)
+        team_line_2 = team_line_2.replace(",", "")
+        team_2_list_data = team_line_2.split()
+        CTP = CreateTeamPage
+        decoded_dungeoneer_team2CTP = CTP.team_2_decode(self, team_2_list_data)
+        temp_party = decoded_dungeoneer_team2CTP
+        visual_team_label = tk.Label(self, text=self.display_team2(temp_party))
+        visual_team_label.grid(row=11, column=2)
+        self.team_creation2()
+
+    def team_creation2(self):
+        global tank, dps, healer, tank_section_button, dps_section_button, healer_section_button, decoded_dungeoneer_team2CTP
+        tank = False
+        dps = False
+        healer = False
         invis_label3 = tk.Label(self)
         invis_label4 = tk.Label(self)
-        earth_speaker_label = tk.Label(self, text=Earth_Speaker.name, font=self.menu_button_font)
-        earth_speaker_button_add = tk.Button(self, text="Add to Team")
-        earth_speaker_button_details = tk.Button(self, text="View Details")
-        priest_of_the_devoted_label = tk.Label(self, text=Priest_of_the_Devoted.name, font=self.menu_button_font)
-        priest_of_the_devoted_button_add = tk.Button(self, text="Add to Team")
-        priest_of_the_devoted_button_details = tk.Button(self, text="View Details")
-        time_walker_label = tk.Label(self, text=Time_Walker.name, font=self.menu_button_font)
-        time_walker_button_add = tk.Button(self, text="Add to Team")
-        time_walker_button_details = tk.Button(self, text="View Details")
-        child_of_medicine_label = tk.Label(self, text=Child_of_Medicine.name, font=self.menu_button_font)
-        child_of_medicine_button_add = tk.Button(self, text="Add to Team")
-        child_of_medicine_button_details = tk.Button(self, text="View Details")
-        earth_speaker_label.grid(row=4, column=1, sticky="e")
-        earth_speaker_button_add.grid(row=5, column=1, sticky="e", padx=75)
-        earth_speaker_button_details.grid(row=5, column=1, sticky="e")
-        priest_of_the_devoted_label.grid(row=4, column=3, sticky="w")
-        priest_of_the_devoted_button_add.grid(row=5, column=3, sticky="w")
-        priest_of_the_devoted_button_details.grid(row=5, column=3, sticky="w", padx=80)
-        time_walker_label.grid(row=7, column=1, sticky="e")
-        time_walker_button_add.grid(row=8, column=1, sticky="e", padx=75)
-        time_walker_button_details.grid(row=8, column=1, sticky="e")
-        child_of_medicine_label.grid(row=7, column=3, sticky="w")
-        child_of_medicine_button_add.grid(row=8, column=3, sticky="w")
-        child_of_medicine_button_details.grid(row=8, column=3, sticky="w", padx=80)
-        invis_label3.grid(row=3, column=1, columnspan=3, pady=50)
-        invis_label4.grid(row=6, column=1, columnspan=3, pady=50)
+        tank_section_button = tk.Button(self, text="Tanks", font=self.menu_button_font, width=26,
+                                        command=self.view_tanks2)
+        dps_section_button = tk.Button(self, text="Damage Dealers", font=self.menu_button_font, width=26,
+                                       command=self.view_dps2)
+        healer_section_button = tk.Button(self, text="Healers", font=self.menu_button_font, width=26,
+                                          command=self.view_healer2)
+        your_team_label = tk.Label(self, text=":Your Team:", font=self.small_label_font)
+        confirm_changes_button = tk.Button(self, text="Confirm Changes", command=self.confirm_new_team2)
+        tank_section_button.grid(row=2, column=2)
+        dps_section_button.grid(row=2, column=1, padx=25)
+        healer_section_button.grid(row=2, column=3)
+        invis_label3.grid(row=2, column=0, padx=6)
+        invis_label4.grid(row=9, column=2, pady=45)
+        your_team_label.grid(row=10, column=2)
+        confirm_changes_button.grid(row=12, column=2)
+        invis_label1.grid_forget()
+        invis_label2.grid_forget()
+        update_pageTSP.grid_forget()
 
+    def display_team2(self, temp_party):
+        team_2_text = ""
+        i = 0
+        for character in temp_party:
+            if i == 3:
+                team_2_text += "\n"
+            team_2_text += "["
+            team_2_text += character
+            team_2_text += "]"
+            i += 1
+        if i != 5:
+            while i < 5:
+                team_2_text += "["
+                team_2_text += "Empty"
+                team_2_text += "]"
+                i += 1
+        return team_2_text
+
+    def view_tanks2(self):
+        global monk_label, monk_button_add, monk_button_details, barbarian_label, barbarian_button_add, \
+            barbarian_button_details, bodyguard_label, bodyguard_button_add, bodyguard_button_details, \
+            fencer_label, fencer_button_add, fencer_button_details, invis_label3, invis_label4, tank, dps, healer
+        if tank == True:
+            return
+        else:
+            if dps == True:
+                berserker_label.destroy()
+                berserker_button_add.destroy()
+                berserker_button_details.destroy()
+                rogue_label.destroy()
+                rogue_button_add.destroy()
+                rogue_button_details.destroy()
+                survivalist_label.destroy()
+                survivalist_button_add.destroy()
+                survivalist_button_details.destroy()
+                brawlist_label.destroy()
+                brawlist_button_add.destroy()
+                brawlist_button_details.destroy()
+                academic_mage_label.destroy()
+                academic_mage_button_add.destroy()
+                academic_mage_button_details.destroy()
+                jungle_druid_label.destroy()
+                jungle_druid_button_add.destroy()
+                jungle_druid_button_details.destroy()
+                warlock_label.destroy()
+                warlock_button_add.destroy()
+                warlock_button_details.destroy()
+                bloodmancer_label.destroy()
+                bloodmancer_button_add.destroy()
+                bloodmancer_button_details.destroy()
+                paladin_label.destroy()
+                paladin_button_add.destroy()
+                paladin_button_details.destroy()
+                castle_ranger_label.destroy()
+                castle_ranger_button_add.destroy()
+                castle_ranger_button_details.destroy()
+                thunder_apprentice_label.destroy()
+                thunder_apprentice_button_add.destroy()
+                thunder_apprentice_button_details.destroy()
+                power_conduit_label.destroy()
+                power_conduit_button_add.destroy()
+                power_conduit_button_details.destroy()
+                melee_label.destroy()
+                magic_label.destroy()
+                mix_label.destroy()
+                dps = False
+            else:
+                dps = False
+            if healer == True:
+                earth_speaker_label.destroy()
+                earth_speaker_button_add.destroy()
+                earth_speaker_button_details.destroy()
+                priest_of_the_devoted_label.destroy()
+                priest_of_the_devoted_button_add.destroy()
+                priest_of_the_devoted_button_details.destroy()
+                time_walker_label.destroy()
+                time_walker_button_add.destroy()
+                time_walker_button_details.destroy()
+                child_of_medicine_label.destroy()
+                child_of_medicine_button_add.destroy()
+                child_of_medicine_button_details.destroy()
+                invis_label3.destroy()
+                invis_label4.destroy()
+                healer = False
+            else:
+                healer = False
+            tank = True
+            invis_label3 = tk.Label(self)
+            invis_label4 = tk.Label(self)
+            monk_label = tk.Label(self, text=Monk.name, font=self.menu_button_font)
+            monk_button_add = tk.Button(self, text="Add to Team",
+                                        command=lambda: self.check_temp_party2(Monk.title, "tank"))
+            monk_button_details = tk.Button(self, text="View Details")
+            barbarian_label = tk.Label(self, text=Barbarian.name, font=self.menu_button_font)
+            barbarian_button_add = tk.Button(self, text="Add to Team",
+                                             command=lambda: self.check_temp_party2(Barbarian.title, "tank"))
+            barbarian_button_details = tk.Button(self, text="View Details")
+            bodyguard_label = tk.Label(self, text=Veteran_Bodyguard.name, font=self.menu_button_font)
+            bodyguard_button_add = tk.Button(self, text="Add to Team",
+                                             command=lambda: self.check_temp_party2(Veteran_Bodyguard.title, "tank"))
+            bodyguard_button_details = tk.Button(self, text="View Details")
+            fencer_label = tk.Label(self, text=Master_Fencer.name, font=self.menu_button_font)
+            fencer_button_add = tk.Button(self, text="Add to Team",
+                                          command=lambda: self.check_temp_party2(Master_Fencer.title, "tank"))
+            fencer_button_details = tk.Button(self, text="View Details")
+            monk_label.grid(row=4, column=1, sticky="e")
+            monk_button_add.grid(row=5, column=1, sticky="e", padx=75)
+            monk_button_details.grid(row=5, column=1, sticky="e")
+            barbarian_label.grid(row=4, column=3, sticky="w")
+            barbarian_button_add.grid(row=5, column=3, sticky="w")
+            barbarian_button_details.grid(row=5, column=3, sticky="w", padx=80)
+            bodyguard_label.grid(row=7, column=1, sticky="e")
+            bodyguard_button_add.grid(row=8, column=1, sticky="e", padx=75)
+            bodyguard_button_details.grid(row=8, column=1, sticky="e")
+            fencer_label.grid(row=7, column=3, sticky="w")
+            fencer_button_add.grid(row=8, column=3, sticky="w")
+            fencer_button_details.grid(row=8, column=3, sticky="w", padx=80)
+            invis_label3.grid(row=3, column=1, columnspan=3, pady=50)
+            invis_label4.grid(row=6, column=1, columnspan=3, pady=50)
+
+    def view_dps2(self):
+        global melee_label, magic_label, mix_label, berserker_label, berserker_button_add, berserker_button_details, \
+            rogue_label, rogue_button_add, rogue_button_details, survivalist_label, survivalist_button_add, survivalist_button_details, \
+            brawlist_label, brawlist_button_add, brawlist_button_details, academic_mage_label, academic_mage_button_add, academic_mage_button_details, \
+            jungle_druid_label, jungle_druid_button_add, jungle_druid_button_details, warlock_label, warlock_button_add, warlock_button_details, \
+            bloodmancer_label, bloodmancer_button_add, bloodmancer_button_details, paladin_label, paladin_button_add, paladin_button_details, \
+            castle_ranger_label, castle_ranger_button_add, castle_ranger_button_details, thunder_apprentice_label, thunder_apprentice_button_add, thunder_apprentice_button_details, \
+            power_conduit_label, power_conduit_button_add, power_conduit_button_details, tank, dps, healer
+        if dps == True:
+            return
+        else:
+            if tank == True:
+                monk_label.destroy()
+                monk_button_add.destroy()
+                monk_button_details.destroy()
+                barbarian_label.destroy()
+                barbarian_button_add.destroy()
+                barbarian_button_details.destroy()
+                bodyguard_label.destroy()
+                bodyguard_button_add.destroy()
+                bodyguard_button_details.destroy()
+                fencer_label.destroy()
+                fencer_button_add.destroy()
+                fencer_button_details.destroy()
+                invis_label3.destroy()
+                invis_label4.destroy()
+                tank = False
+            else:
+                tank = False
+            if healer == True:
+                earth_speaker_label.destroy()
+                earth_speaker_button_add.destroy()
+                earth_speaker_button_details.destroy()
+                priest_of_the_devoted_label.destroy()
+                priest_of_the_devoted_button_add.destroy()
+                priest_of_the_devoted_button_details.destroy()
+                time_walker_label.destroy()
+                time_walker_button_add.destroy()
+                time_walker_button_details.destroy()
+                child_of_medicine_label.destroy()
+                child_of_medicine_button_add.destroy()
+                child_of_medicine_button_details.destroy()
+                invis_label3.destroy()
+                invis_label4.destroy()
+                healer = False
+            else:
+                healer = False
+            dps = True
+            melee_label = tk.Label(self, text=":Melee:", font=self.menu_button_font)
+            magic_label = tk.Label(self, text=":Magic:", font=self.menu_button_font)
+            mix_label = tk.Label(self, text=":Other:", font=self.menu_button_font)
+            berserker_label = tk.Label(self, text=Berserker.name)
+            berserker_button_add = tk.Button(self, text="Add to Team",
+                                             command=lambda: self.check_temp_party2(Berserker.title, "melee"))
+            berserker_button_details = tk.Button(self, text="View Details")
+            rogue_label = tk.Label(self, text=Rogue.name)
+            rogue_button_add = tk.Button(self, text="Add to Team",
+                                         command=lambda: self.check_temp_party2(Rogue.title, "melee"))
+            rogue_button_details = tk.Button(self, text="View Details")
+            survivalist_label = tk.Label(self, text=Survivalist.name)
+            survivalist_button_add = tk.Button(self, text="Add to Team",
+                                               command=lambda: self.check_temp_party2(Survivalist.title, "melee"))
+            survivalist_button_details = tk.Button(self, text="View Details")
+            brawlist_label = tk.Label(self, text=Brawlist.name)
+            brawlist_button_add = tk.Button(self, text="Add to Team",
+                                            command=lambda: self.check_temp_party2(Brawlist.title, "melee"))
+            brawlist_button_details = tk.Button(self, text="View Details")
+            academic_mage_label = tk.Label(self, text=Academic_Mage.name)
+            academic_mage_button_add = tk.Button(self, text="Add to Team",
+                                                 command=lambda: self.check_temp_party2(Academic_Mage.title, "magic"))
+            academic_mage_button_details = tk.Button(self, text="View Details")
+            jungle_druid_label = tk.Label(self, text=Druid.name)
+            jungle_druid_button_add = tk.Button(self, text="Add to Team",
+                                                command=lambda: self.check_temp_party2(Druid.title, "magic"))
+            jungle_druid_button_details = tk.Button(self, text="View Details")
+            warlock_label = tk.Label(self, text=Warlock.name)
+            warlock_button_add = tk.Button(self, text="Add to Team",
+                                           command=lambda: self.check_temp_party2(Warlock.title, "magic"))
+            warlock_button_details = tk.Button(self, text="View Details")
+            bloodmancer_label = tk.Label(self, text=Bloodmancer.name)
+            bloodmancer_button_add = tk.Button(self, text="Add to Team",
+                                               command=lambda: self.check_temp_party2(Bloodmancer.title, "magic"))
+            bloodmancer_button_details = tk.Button(self, text="View Details")
+            paladin_label = tk.Label(self, text=Paladin.name)
+            paladin_button_add = tk.Button(self, text="Add to Team",
+                                           command=lambda: self.check_temp_party2(Paladin.title, "mixed"))
+            paladin_button_details = tk.Button(self, text="View Details")
+            castle_ranger_label = tk.Label(self, text=Castle_Ranger.name)
+            castle_ranger_button_add = tk.Button(self, text="Add to Team",
+                                                 command=lambda: self.check_temp_party2(Castle_Ranger.title, "mixed"))
+            castle_ranger_button_details = tk.Button(self, text="View Details")
+            thunder_apprentice_label = tk.Label(self, text=Thunder_Apprentice.name)
+            thunder_apprentice_button_add = tk.Button(self, text="Add to Team",
+                                                      command=lambda: self.check_temp_party2(Thunder_Apprentice.title,
+                                                                                            "mixed"))
+            thunder_apprentice_button_details = tk.Button(self, text="View Details")
+            power_conduit_label = tk.Label(self, text=Power_Conduit.name)
+            power_conduit_button_add = tk.Button(self, text="Add to Team",
+                                                 command=lambda: self.check_temp_party2(Power_Conduit.title, "mixed"))
+            power_conduit_button_details = tk.Button(self, text="View Details")
+            melee_label.grid(row=3, column=1)
+            magic_label.grid(row=3, column=2)
+            mix_label.grid(row=3, column=3)
+            berserker_label.grid(row=5, column=1, sticky="w")
+            berserker_button_add.grid(row=6, column=1, sticky="w")
+            berserker_button_details.grid(row=6, column=1, sticky="w", padx=80)
+            rogue_label.grid(row=8, column=1, sticky="w")
+            rogue_button_add.grid(row=9, column=1, sticky="w")
+            rogue_button_details.grid(row=9, column=1, sticky="w", padx=80)
+            survivalist_label.grid(row=5, column=1, sticky="e", padx=10)
+            survivalist_button_add.grid(row=6, column=1, sticky="e", padx=85)
+            survivalist_button_details.grid(row=6, column=1, sticky="e", padx=10)
+            brawlist_label.grid(row=8, column=1, sticky="e", padx=10)
+            brawlist_button_add.grid(row=9, column=1, sticky="e", padx=85)
+            brawlist_button_details.grid(row=9, column=1, sticky="e", padx=10)
+            academic_mage_label.grid(row=5, column=2, sticky="w", padx=10)
+            academic_mage_button_add.grid(row=6, column=2, sticky="w", padx=10)
+            academic_mage_button_details.grid(row=6, column=2, sticky="w", padx=90)
+            jungle_druid_label.grid(row=8, column=2, sticky="w", padx=10)
+            jungle_druid_button_add.grid(row=9, column=2, sticky="w", padx=10)
+            jungle_druid_button_details.grid(row=9, column=2, sticky="w", padx=90)
+            warlock_label.grid(row=5, column=2, sticky="e", padx=10)
+            warlock_button_add.grid(row=6, column=2, sticky="e", padx=85)
+            warlock_button_details.grid(row=6, column=2, sticky="e", padx=10)
+            bloodmancer_label.grid(row=8, column=2, sticky="e", padx=10)
+            bloodmancer_button_add.grid(row=9, column=2, sticky="e", padx=85)
+            bloodmancer_button_details.grid(row=9, column=2, sticky="e", padx=10)
+            paladin_label.grid(row=5, column=3, sticky="w", padx=10)
+            paladin_button_add.grid(row=6, column=3, sticky="w", padx=10)
+            paladin_button_details.grid(row=6, column=3, sticky="w", padx=90)
+            castle_ranger_label.grid(row=8, column=3, sticky="w", padx=10)
+            castle_ranger_button_add.grid(row=9, column=3, sticky="w", padx=10)
+            castle_ranger_button_details.grid(row=9, column=3, sticky="w", padx=90)
+            thunder_apprentice_label.grid(row=5, column=3, sticky="e")
+            thunder_apprentice_button_add.grid(row=6, column=3, sticky="e", padx=75)
+            thunder_apprentice_button_details.grid(row=6, column=3, sticky="e")
+            power_conduit_label.grid(row=8, column=3, sticky="e")
+            power_conduit_button_add.grid(row=9, column=3, sticky="e", padx=75)
+            power_conduit_button_details.grid(row=9, column=3, sticky="e")
+
+    def view_healer2(self):
+        global earth_speaker_label, earth_speaker_button_add, earth_speaker_button_details, priest_of_the_devoted_label, priest_of_the_devoted_button_add, \
+            priest_of_the_devoted_button_details, time_walker_label, time_walker_button_add, time_walker_button_details, \
+            child_of_medicine_label, child_of_medicine_button_add, child_of_medicine_button_details, invis_label3, invis_label4, tank, dps, healer
+        if healer == True:
+            return
+        else:
+            invis_label3 = tk.Label(self)
+            invis_label4 = tk.Label(self)
+            if tank == True:
+                monk_label.destroy()
+                monk_button_add.destroy()
+                monk_button_details.destroy()
+                barbarian_label.destroy()
+                barbarian_button_add.destroy()
+                barbarian_button_details.destroy()
+                bodyguard_label.destroy()
+                bodyguard_button_add.destroy()
+                bodyguard_button_details.destroy()
+                fencer_label.destroy()
+                fencer_button_add.destroy()
+                fencer_button_details.destroy()
+                invis_label3.destroy()
+                invis_label4.destroy()
+                tank = False
+            else:
+                tank = False
+            if dps == True:
+                berserker_label.destroy()
+                berserker_button_add.destroy()
+                berserker_button_details.destroy()
+                rogue_label.destroy()
+                rogue_button_add.destroy()
+                rogue_button_details.destroy()
+                survivalist_label.destroy()
+                survivalist_button_add.destroy()
+                survivalist_button_details.destroy()
+                brawlist_label.destroy()
+                brawlist_button_add.destroy()
+                brawlist_button_details.destroy()
+                academic_mage_label.destroy()
+                academic_mage_button_add.destroy()
+                academic_mage_button_details.destroy()
+                jungle_druid_label.destroy()
+                jungle_druid_button_add.destroy()
+                jungle_druid_button_details.destroy()
+                warlock_label.destroy()
+                warlock_button_add.destroy()
+                warlock_button_details.destroy()
+                bloodmancer_label.destroy()
+                bloodmancer_button_add.destroy()
+                bloodmancer_button_details.destroy()
+                paladin_label.destroy()
+                paladin_button_add.destroy()
+                paladin_button_details.destroy()
+                castle_ranger_label.destroy()
+                castle_ranger_button_add.destroy()
+                castle_ranger_button_details.destroy()
+                thunder_apprentice_label.destroy()
+                thunder_apprentice_button_add.destroy()
+                thunder_apprentice_button_details.destroy()
+                power_conduit_label.destroy()
+                power_conduit_button_add.destroy()
+                power_conduit_button_details.destroy()
+                melee_label.destroy()
+                magic_label.destroy()
+                mix_label.destroy()
+                dps = False
+            else:
+                dps = False
+            healer = True
+            earth_speaker_label = tk.Label(self, text=Earth_Speaker.name, font=self.menu_button_font)
+            earth_speaker_button_add = tk.Button(self, text="Add to Team",
+                                                 command=lambda: self.check_temp_party2(Earth_Speaker.title, "healer"))
+            earth_speaker_button_details = tk.Button(self, text="View Details")
+            priest_of_the_devoted_label = tk.Label(self, text=Priest_of_the_Devoted.name, font=self.menu_button_font)
+            priest_of_the_devoted_button_add = tk.Button(self, text="Add to Team",
+                                                         command=lambda: self.check_temp_party2(
+                                                             Priest_of_the_Devoted.title, "healer"))
+            priest_of_the_devoted_button_details = tk.Button(self, text="View Details")
+            time_walker_label = tk.Label(self, text=Time_Walker.name, font=self.menu_button_font)
+            time_walker_button_add = tk.Button(self, text="Add to Team",
+                                               command=lambda: self.check_temp_party2(Time_Walker.title, "healer"))
+            time_walker_button_details = tk.Button(self, text="View Details")
+            child_of_medicine_label = tk.Label(self, text=Child_of_Medicine.name, font=self.menu_button_font)
+            child_of_medicine_button_add = tk.Button(self, text="Add to Team",
+                                                     command=lambda: self.check_temp_party2(Child_of_Medicine.title,
+                                                                                           "healer"))
+            child_of_medicine_button_details = tk.Button(self, text="View Details")
+            earth_speaker_label.grid(row=4, column=1, sticky="e")
+            earth_speaker_button_add.grid(row=5, column=1, sticky="e", padx=75)
+            earth_speaker_button_details.grid(row=5, column=1, sticky="e")
+            priest_of_the_devoted_label.grid(row=4, column=3, sticky="w")
+            priest_of_the_devoted_button_add.grid(row=5, column=3, sticky="w")
+            priest_of_the_devoted_button_details.grid(row=5, column=3, sticky="w", padx=80)
+            time_walker_label.grid(row=7, column=1, sticky="e")
+            time_walker_button_add.grid(row=8, column=1, sticky="e", padx=75)
+            time_walker_button_details.grid(row=8, column=1, sticky="e")
+            child_of_medicine_label.grid(row=7, column=3, sticky="w")
+            child_of_medicine_button_add.grid(row=8, column=3, sticky="w")
+            child_of_medicine_button_details.grid(row=8, column=3, sticky="w", padx=80)
+            invis_label3.grid(row=3, column=1, columnspan=3, pady=50)
+            invis_label4.grid(row=6, column=1, columnspan=3, pady=50)
+
+    def check_temp_party2(self, champion, type):
+        global temp_party, yes_buttonCTP, no_buttonCTP, warning_label1CTP, warning_label2CTP, tank, dps, healer, visual_team_label
+        tank_temp_party = []
+        melee_temp_party = []
+        magic_temp_party = []
+        mixed_temp_party = []
+        healer_temp_party = []
+        if champion in temp_party:
+            root = tk.Tk()
+            warning_label = tk.Label(root, text="Sorry, but this character is already assigned in the party")
+            ok_button = tk.Button(root, text="Ok", command=root.destroy)
+            ok_button.grid(row=2, column=1)
+            warning_label.grid(row=1, column=1)
+            visual_team_label.destroy()
+            visual_team_label = tk.Label(self, text=self.display_team2(temp_party))
+            visual_team_label.grid(row=11, column=2)
+        else:
+            if len(temp_party) < 5:
+                for character in temp_party:
+                    if character == Monk.title:
+                        tank_temp_party.append(character)
+                    if character == Barbarian.title:
+                        tank_temp_party.append(character)
+                    if character == Veteran_Bodyguard.title:
+                        tank_temp_party.append(character)
+                    if character == Master_Fencer.title:
+                        tank_temp_party.append(character)
+                    if character == Berserker.title:
+                        melee_temp_party.append(character)
+                    if character == Rogue.title:
+                        melee_temp_party.append(character)
+                    if character == Survivalist.title:
+                        melee_temp_party.append(character)
+                    if character == Brawlist.title:
+                        melee_temp_party.append(character)
+                    if character == Academic_Mage.title:
+                        magic_temp_party.append(character)
+                    if character == Druid.title:
+                        magic_temp_party.append(character)
+                    if character == Warlock.title:
+                        magic_temp_party.append(character)
+                    if character == Bloodmancer.title:
+                        magic_temp_party.append(character)
+                    if character == Paladin.title:
+                        mixed_temp_party.append(character)
+                    if character == Castle_Ranger.title:
+                        mixed_temp_party.append(character)
+                    if character == Thunder_Apprentice.title:
+                        mixed_temp_party.append(character)
+                    if character == Power_Conduit.title:
+                        mixed_temp_party.append(character)
+                    if character == Earth_Speaker.title:
+                        healer_temp_party.append(character)
+                    if character == Priest_of_the_Devoted.title:
+                        healer_temp_party.append(character)
+                    if character == Time_Walker.title:
+                        healer_temp_party.append(character)
+                    if character == Child_of_Medicine.title:
+                        healer_temp_party.append(character)
+                    if character == "Empty":
+                        p = 0
+                if type == "tank":
+                    tank_temp_party.append(champion)
+                    tank_temp_party = sorted(tank_temp_party)
+                elif type == "melee":
+                    melee_temp_party.append(champion)
+                    melee_temp_party = sorted(melee_temp_party)
+                elif type == "magic":
+                    magic_temp_party.append(champion)
+                    magic_temp_party = sorted(magic_temp_party)
+                elif type == "mixed":
+                    mixed_temp_party.append(champion)
+                    mixed_temp_party = sorted(mixed_temp_party)
+                elif type == "healer":
+                    healer_temp_party.append(champion)
+                    healer_temp_party = sorted(healer_temp_party)
+                temp_party = []
+                if tank_temp_party == []:
+                    p = 0
+                else:
+                    for character in tank_temp_party:
+                        temp_party.append(character)
+                if melee_temp_party == []:
+                    p = 0
+                else:
+                    for character in melee_temp_party:
+                        temp_party.append(character)
+                if magic_temp_party == []:
+                    p = 0
+                else:
+                    for character in magic_temp_party:
+                        temp_party.append(character)
+                if mixed_temp_party == []:
+                    p = 0
+                else:
+                    for character in mixed_temp_party:
+                        temp_party.append(character)
+                if healer_temp_party == []:
+                    p = 0
+                else:
+                    for character in healer_temp_party:
+                        temp_party.append(character)
+                visual_team_label.destroy()
+                visual_team_label = tk.Label(self, text=self.display_team2(temp_party))
+                visual_team_label.grid(row=11, column=2)
+            elif len(temp_party) == 5:
+                root = tk.Tk()
+                warning_label1CTP = tk.Label(root, text="The party is currently full!")
+                warning_label2CTP = tk.Label(root, text="Would you like to remove a current party member to make room?")
+                yes_buttonCTP = tk.Button(root, text="Yes",
+                                          command=lambda: self.adding_champions_tempParty2(root, champion))
+                no_buttonCTP = tk.Button(root, text="No", command=lambda: root.destroy())
+                warning_label1CTP.grid(row=1, column=1)
+                warning_label2CTP.grid(row=2, column=1)
+                yes_buttonCTP.grid(row=3, column=1, sticky="w", padx=140)
+                no_buttonCTP.grid(row=3, column=1, sticky="e", padx=140)
+
+    def adding_champions_tempParty2(self, root, champion):
+        global champion1CTP, champion2CTP, champion3CTP, champion4CTP, champion5CTP, cancel_buttonCTP, window_labelCTP
+        yes_buttonCTP.grid_forget()
+        no_buttonCTP.grid_forget()
+        warning_label1CTP.grid_forget()
+        warning_label2CTP.grid_forget()
+        window_labelCTP = tk.Label(root, text="Please choose which champion will be replaced for '{}'".format(champion))
+        champion1CTP = tk.Button(root, text=temp_party[0],
+                                 command=lambda: self.replace_champion2(root, champion, temp_party[0]))
+        champion2CTP = tk.Button(root, text=temp_party[1],
+                                 command=lambda: self.replace_champion2(root, champion, temp_party[1]))
+        champion3CTP = tk.Button(root, text=temp_party[2],
+                                 command=lambda: self.replace_champion2(root, champion, temp_party[2]))
+        champion4CTP = tk.Button(root, text=temp_party[3],
+                                 command=lambda: self.replace_champion2(root, champion, temp_party[3]))
+        champion5CTP = tk.Button(root, text=temp_party[4],
+                                 command=lambda: self.replace_champion2(root, champion, temp_party[4]))
+        cancel_buttonCTP = tk.Button(root, text="Cancel", command=root.destroy, font="bold")
+        window_labelCTP.grid(row=1, column=3)
+        champion1CTP.grid(row=2, column=3)
+        champion2CTP.grid(row=3, column=3)
+        champion3CTP.grid(row=4, column=3)
+        champion4CTP.grid(row=5, column=3)
+        champion5CTP.grid(row=6, column=3)
+        cancel_buttonCTP.grid(row=7, column=3)
+
+    def replace_champion2(self, root, champion, selected):
+        global temp_party, visual_team_label
+        pos = temp_party.index(selected)
+        temp_pos = temp_party[pos]
+        temp_party[pos] = champion
+        champion1CTP.grid_forget()
+        champion2CTP.grid_forget()
+        champion3CTP.grid_forget()
+        champion4CTP.grid_forget()
+        champion5CTP.grid_forget()
+        cancel_buttonCTP.grid_forget()
+        window_labelCTP.grid_forget()
+        window_labelCTP2 = tk.Label(root, text="'{}' has been replaced by '{}'!".format(temp_pos, champion))
+        ok_button = tk.Button(root, text="Ok", command=root.destroy)
+        window_labelCTP2.grid(row=1, column=1)
+        ok_button.grid(row=2, column=1)
+        tank_temp_party = []
+        melee_temp_party = []
+        magic_temp_party = []
+        mixed_temp_party = []
+        healer_temp_party = []
+        for character in temp_party:
+            if character == Monk.title:
+                tank_temp_party.append(character)
+            if character == Barbarian.title:
+                tank_temp_party.append(character)
+            if character == Veteran_Bodyguard.title:
+                tank_temp_party.append(character)
+            if character == Master_Fencer.title:
+                tank_temp_party.append(character)
+            if character == Berserker.title:
+                melee_temp_party.append(character)
+            if character == Rogue.title:
+                melee_temp_party.append(character)
+            if character == Survivalist.title:
+                melee_temp_party.append(character)
+            if character == Brawlist.title:
+                melee_temp_party.append(character)
+            if character == Academic_Mage.title:
+                magic_temp_party.append(character)
+            if character == Druid.title:
+                magic_temp_party.append(character)
+            if character == Warlock.title:
+                magic_temp_party.append(character)
+            if character == Bloodmancer.title:
+                magic_temp_party.append(character)
+            if character == Paladin.title:
+                mixed_temp_party.append(character)
+            if character == Castle_Ranger.title:
+                mixed_temp_party.append(character)
+            if character == Thunder_Apprentice.title:
+                mixed_temp_party.append(character)
+            if character == Power_Conduit.title:
+                mixed_temp_party.append(character)
+            if character == Earth_Speaker.title:
+                healer_temp_party.append(character)
+            if character == Priest_of_the_Devoted.title:
+                healer_temp_party.append(character)
+            if character == Time_Walker.title:
+                healer_temp_party.append(character)
+            if character == Child_of_Medicine.title:
+                healer_temp_party.append(character)
+        temp_party = []
+        if tank_temp_party == []:
+            p = 0
+        else:
+            tank_temp_party = sorted(tank_temp_party)
+            for character in tank_temp_party:
+                temp_party.append(character)
+        if melee_temp_party == []:
+            p = 0
+        else:
+            melee_temp_party = sorted(melee_temp_party)
+            for character in melee_temp_party:
+                temp_party.append(character)
+        if magic_temp_party == []:
+            p = 0
+        else:
+            magic_temp_party = sorted(magic_temp_party)
+            for character in magic_temp_party:
+                temp_party.append(character)
+        if mixed_temp_party == []:
+            p = 0
+        else:
+            mixed_temp_party = sorted(mixed_temp_party)
+            for character in mixed_temp_party:
+                temp_party.append(character)
+        if healer_temp_party == []:
+            p = 0
+        else:
+            healer_temp_party = sorted(healer_temp_party)
+            for character in healer_temp_party:
+                temp_party.append(character)
+        visual_team_label.destroy()
+        visual_team_label = tk.Label(self, text=self.display_team2(temp_party))
+        visual_team_label.grid(row=11, column=2)
+
+    def confirm_new_team2(self):
+        root = tk.Tk()
+        confirmation_label = tk.Label(root, text="Are you sure you want save this group?")
+        yes_buttonCNT = tk.Button(root, text="Yes", command=lambda: SampleApp.finalise_new_team2(self, root))
+        no_buttonCNT = tk.Button(root, text="No", command=lambda: root.destroy())
+        confirmation_label.grid(row=2, column=1)
+        yes_buttonCNT.grid(row=3, column=1, sticky="w", padx=70)
+        no_buttonCNT.grid(row=3, column=1, sticky="e", padx=70)
+
+    def save_new_team2(self, root):
+        i = -1
+        file = open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/account_data_championTeam_2.txt".format(computer_username),"r")
+        file_allLines = file.readlines()
+        user = SampleApp.get_user_encoded(self)
+        user = str(user)
+        for line in file_allLines:
+            i += 1
+            if user in line:
+                coded_temp_party = self.code_party()
+                new_line = "{} {}".format(line, coded_temp_party)
+                file_allLines[i] = new_line
+                file_write = open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/account_data_championTeam_2.txt".format(computer_username),"w")
+                file_write.writelines(file_allLines)
+                file.close()
+                file_write.close()
+                root.destroy()
+                break
+    def code_party(self):
+        coded_temp_party = ""
+        i = 0
+        for character in temp_party:
+            if character == Monk.title:
+                coded_temp_party += Monk.code
+            if character == Barbarian.title:
+                coded_temp_party += Barbarian.code
+            if character == Veteran_Bodyguard.title:
+                coded_temp_party += Veteran_Bodyguard.code
+            if character == Master_Fencer.title:
+                coded_temp_party += Master_Fencer.code
+            if character == Berserker.title:
+                coded_temp_party += Berserker.code
+            if character == Rogue.title:
+                coded_temp_party += Rogue.code
+            if character == Survivalist.title:
+                coded_temp_party += Survivalist.code
+            if character == Brawlist.title:
+                coded_temp_party += Brawlist.code
+            if character == Academic_Mage.title:
+                coded_temp_party += Academic_Mage.code
+            if character == Druid.title:
+                coded_temp_party += Druid.code
+            if character == Warlock.title:
+                coded_temp_party += Warlock.code
+            if character == Bloodmancer.title:
+                coded_temp_party += Bloodmancer.code
+            if character == Paladin.title:
+                coded_temp_party += Paladin.code
+            if character == Castle_Ranger.title:
+                coded_temp_party += Castle_Ranger.code
+            if character == Thunder_Apprentice.title:
+                coded_temp_party += Thunder_Apprentice.code
+            if character == Power_Conduit.title:
+                coded_temp_party += Power_Conduit.code
+            if character == Earth_Speaker.title:
+                coded_temp_party += Earth_Speaker.code
+            if character == Priest_of_the_Devoted.title:
+                coded_temp_party += Priest_of_the_Devoted.code
+            if character == Time_Walker.title:
+                coded_temp_party += Time_Walker.code
+            if character == Child_of_Medicine.title:
+                coded_temp_party += Child_of_Medicine.code
+            if character == "Empty":
+                break
+            i += 1
+            if i <=4:
+                coded_temp_party += ", "
+        return coded_temp_party
+
+
+    def clear_temp_party2(self):
+        global temp_party
+        temp_party = []
+
+
+class Team3SelectionPage(tk.Frame):
+    def __init__(self, parent, controller):
+        global update_pageTSP
+        global returnButtonTSP, invis_label1, invis_label2
+        tk.Frame.__init__(self, parent)
+        self.controller = controller
+        self.menu_button_font = tkfont.Font(family='Helvetica', size=18, weight="bold")
+        self.title_label_font = tkfont.Font(family='Helvetica', size=30, weight="bold")
+        self.small_label_font = tkfont.Font(family='Helvetica', size=12, weight="bold")
+        title = tk.Label(self, text="Champion Camp", font=self.title_label_font)
+        update_pageTSP = tk.Button(self, text="Begin Recruiting for Team 3", command=lambda: self.pitstop3(),
+                                   font=controller.menu_button_font)
+        returnButtonTSP = tk.Button(self, text="Cancel", command=lambda: controller.cancel_new_team3())
+        invis_label1 = tk.Label(self)
+        invis_label2 = tk.Label(self)
+        update_pageTSP.grid(row=2, column=2, pady=50)
+        title.grid(row=1, column=2)
+        returnButtonTSP.grid(row=13, column=2)
+        invis_label1.grid(row=1, column=1, rowspan=4, pady=50, ipadx=240, ipady=100)
+        invis_label2.grid(row=1, column=2, pady=100)
+
+    def pitstop3(self):
+        global visual_team_label, temp_party
+        user = SampleApp.get_user_encoded(self)
+        team_line_3 = []
+        team_line_3 = SampleApp.return_users_champion_team3(self, user)
+        team_line_3 = team_line_3.replace(",", "")
+        team_3_list_data = team_line_3.split()
+        CTP = CreateTeamPage
+        decoded_dungeoneer_team3CTP = CTP.team_3_decode(self, team_3_list_data)
+        temp_party = decoded_dungeoneer_team3CTP
+        visual_team_label = tk.Label(self, text=self.display_team3(temp_party))
+        visual_team_label.grid(row=11, column=2)
+        self.team_creation3()
+
+    def team_creation3(self):
+        global tank, dps, healer, tank_section_button, dps_section_button, healer_section_button, decoded_dungeoneer_team3CTP
+        tank = False
+        dps = False
+        healer = False
+        invis_label3 = tk.Label(self)
+        invis_label4 = tk.Label(self)
+        tank_section_button = tk.Button(self, text="Tanks", font=self.menu_button_font, width=26,
+                                        command=self.view_tanks3)
+        dps_section_button = tk.Button(self, text="Damage Dealers", font=self.menu_button_font, width=26,
+                                       command=self.view_dps3)
+        healer_section_button = tk.Button(self, text="Healers", font=self.menu_button_font, width=26,
+                                          command=self.view_healer3)
+        your_team_label = tk.Label(self, text=":Your Team:", font=self.small_label_font)
+        confirm_changes_button = tk.Button(self, text="Confirm Changes", command=self.confirm_new_team3)
+        tank_section_button.grid(row=2, column=2)
+        dps_section_button.grid(row=2, column=1, padx=25)
+        healer_section_button.grid(row=2, column=3)
+        invis_label3.grid(row=2, column=0, padx=6)
+        invis_label4.grid(row=9, column=2, pady=45)
+        your_team_label.grid(row=10, column=2)
+        confirm_changes_button.grid(row=12, column=2)
+        invis_label1.grid_forget()
+        invis_label2.grid_forget()
+        update_pageTSP.grid_forget()
+
+    def display_team3(self, temp_party):
+        team_3_text = ""
+        i = 0
+        for character in temp_party:
+            if i == 3:
+                team_3_text += "\n"
+            team_3_text += "["
+            team_3_text += character
+            team_3_text += "]"
+            i += 1
+        if i != 5:
+            while i < 5:
+                team_3_text += "["
+                team_3_text += "Empty"
+                team_3_text += "]"
+                i += 1
+        return team_3_text
+
+    def view_tanks3(self):
+        global monk_label, monk_button_add, monk_button_details, barbarian_label, barbarian_button_add, \
+            barbarian_button_details, bodyguard_label, bodyguard_button_add, bodyguard_button_details, \
+            fencer_label, fencer_button_add, fencer_button_details, invis_label3, invis_label4, tank, dps, healer
+        if tank == True:
+            return
+        else:
+            if dps == True:
+                berserker_label.destroy()
+                berserker_button_add.destroy()
+                berserker_button_details.destroy()
+                rogue_label.destroy()
+                rogue_button_add.destroy()
+                rogue_button_details.destroy()
+                survivalist_label.destroy()
+                survivalist_button_add.destroy()
+                survivalist_button_details.destroy()
+                brawlist_label.destroy()
+                brawlist_button_add.destroy()
+                brawlist_button_details.destroy()
+                academic_mage_label.destroy()
+                academic_mage_button_add.destroy()
+                academic_mage_button_details.destroy()
+                jungle_druid_label.destroy()
+                jungle_druid_button_add.destroy()
+                jungle_druid_button_details.destroy()
+                warlock_label.destroy()
+                warlock_button_add.destroy()
+                warlock_button_details.destroy()
+                bloodmancer_label.destroy()
+                bloodmancer_button_add.destroy()
+                bloodmancer_button_details.destroy()
+                paladin_label.destroy()
+                paladin_button_add.destroy()
+                paladin_button_details.destroy()
+                castle_ranger_label.destroy()
+                castle_ranger_button_add.destroy()
+                castle_ranger_button_details.destroy()
+                thunder_apprentice_label.destroy()
+                thunder_apprentice_button_add.destroy()
+                thunder_apprentice_button_details.destroy()
+                power_conduit_label.destroy()
+                power_conduit_button_add.destroy()
+                power_conduit_button_details.destroy()
+                melee_label.destroy()
+                magic_label.destroy()
+                mix_label.destroy()
+                dps = False
+            else:
+                dps = False
+            if healer == True:
+                earth_speaker_label.destroy()
+                earth_speaker_button_add.destroy()
+                earth_speaker_button_details.destroy()
+                priest_of_the_devoted_label.destroy()
+                priest_of_the_devoted_button_add.destroy()
+                priest_of_the_devoted_button_details.destroy()
+                time_walker_label.destroy()
+                time_walker_button_add.destroy()
+                time_walker_button_details.destroy()
+                child_of_medicine_label.destroy()
+                child_of_medicine_button_add.destroy()
+                child_of_medicine_button_details.destroy()
+                invis_label3.destroy()
+                invis_label4.destroy()
+                healer = False
+            else:
+                healer = False
+            tank = True
+            invis_label3 = tk.Label(self)
+            invis_label4 = tk.Label(self)
+            monk_label = tk.Label(self, text=Monk.name, font=self.menu_button_font)
+            monk_button_add = tk.Button(self, text="Add to Team",
+                                        command=lambda: self.check_temp_party3(Monk.title, "tank"))
+            monk_button_details = tk.Button(self, text="View Details")
+            barbarian_label = tk.Label(self, text=Barbarian.name, font=self.menu_button_font)
+            barbarian_button_add = tk.Button(self, text="Add to Team",
+                                             command=lambda: self.check_temp_party3(Barbarian.title, "tank"))
+            barbarian_button_details = tk.Button(self, text="View Details")
+            bodyguard_label = tk.Label(self, text=Veteran_Bodyguard.name, font=self.menu_button_font)
+            bodyguard_button_add = tk.Button(self, text="Add to Team",
+                                             command=lambda: self.check_temp_party3(Veteran_Bodyguard.title, "tank"))
+            bodyguard_button_details = tk.Button(self, text="View Details")
+            fencer_label = tk.Label(self, text=Master_Fencer.name, font=self.menu_button_font)
+            fencer_button_add = tk.Button(self, text="Add to Team",
+                                          command=lambda: self.check_temp_party3(Master_Fencer.title, "tank"))
+            fencer_button_details = tk.Button(self, text="View Details")
+            monk_label.grid(row=4, column=1, sticky="e")
+            monk_button_add.grid(row=5, column=1, sticky="e", padx=75)
+            monk_button_details.grid(row=5, column=1, sticky="e")
+            barbarian_label.grid(row=4, column=3, sticky="w")
+            barbarian_button_add.grid(row=5, column=3, sticky="w")
+            barbarian_button_details.grid(row=5, column=3, sticky="w", padx=80)
+            bodyguard_label.grid(row=7, column=1, sticky="e")
+            bodyguard_button_add.grid(row=8, column=1, sticky="e", padx=75)
+            bodyguard_button_details.grid(row=8, column=1, sticky="e")
+            fencer_label.grid(row=7, column=3, sticky="w")
+            fencer_button_add.grid(row=8, column=3, sticky="w")
+            fencer_button_details.grid(row=8, column=3, sticky="w", padx=80)
+            invis_label3.grid(row=3, column=1, columnspan=3, pady=50)
+            invis_label4.grid(row=6, column=1, columnspan=3, pady=50)
+
+    def view_dps3(self):
+        global melee_label, magic_label, mix_label, berserker_label, berserker_button_add, berserker_button_details, \
+            rogue_label, rogue_button_add, rogue_button_details, survivalist_label, survivalist_button_add, survivalist_button_details, \
+            brawlist_label, brawlist_button_add, brawlist_button_details, academic_mage_label, academic_mage_button_add, academic_mage_button_details, \
+            jungle_druid_label, jungle_druid_button_add, jungle_druid_button_details, warlock_label, warlock_button_add, warlock_button_details, \
+            bloodmancer_label, bloodmancer_button_add, bloodmancer_button_details, paladin_label, paladin_button_add, paladin_button_details, \
+            castle_ranger_label, castle_ranger_button_add, castle_ranger_button_details, thunder_apprentice_label, thunder_apprentice_button_add, thunder_apprentice_button_details, \
+            power_conduit_label, power_conduit_button_add, power_conduit_button_details, tank, dps, healer
+        if dps == True:
+            return
+        else:
+            if tank == True:
+                monk_label.destroy()
+                monk_button_add.destroy()
+                monk_button_details.destroy()
+                barbarian_label.destroy()
+                barbarian_button_add.destroy()
+                barbarian_button_details.destroy()
+                bodyguard_label.destroy()
+                bodyguard_button_add.destroy()
+                bodyguard_button_details.destroy()
+                fencer_label.destroy()
+                fencer_button_add.destroy()
+                fencer_button_details.destroy()
+                invis_label3.destroy()
+                invis_label4.destroy()
+                tank = False
+            else:
+                tank = False
+            if healer == True:
+                earth_speaker_label.destroy()
+                earth_speaker_button_add.destroy()
+                earth_speaker_button_details.destroy()
+                priest_of_the_devoted_label.destroy()
+                priest_of_the_devoted_button_add.destroy()
+                priest_of_the_devoted_button_details.destroy()
+                time_walker_label.destroy()
+                time_walker_button_add.destroy()
+                time_walker_button_details.destroy()
+                child_of_medicine_label.destroy()
+                child_of_medicine_button_add.destroy()
+                child_of_medicine_button_details.destroy()
+                invis_label3.destroy()
+                invis_label4.destroy()
+                healer = False
+            else:
+                healer = False
+            dps = True
+            melee_label = tk.Label(self, text=":Melee:", font=self.menu_button_font)
+            magic_label = tk.Label(self, text=":Magic:", font=self.menu_button_font)
+            mix_label = tk.Label(self, text=":Other:", font=self.menu_button_font)
+            berserker_label = tk.Label(self, text=Berserker.name)
+            berserker_button_add = tk.Button(self, text="Add to Team",
+                                             command=lambda: self.check_temp_party3(Berserker.title, "melee"))
+            berserker_button_details = tk.Button(self, text="View Details")
+            rogue_label = tk.Label(self, text=Rogue.name)
+            rogue_button_add = tk.Button(self, text="Add to Team",
+                                         command=lambda: self.check_temp_party3(Rogue.title, "melee"))
+            rogue_button_details = tk.Button(self, text="View Details")
+            survivalist_label = tk.Label(self, text=Survivalist.name)
+            survivalist_button_add = tk.Button(self, text="Add to Team",
+                                               command=lambda: self.check_temp_party3(Survivalist.title, "melee"))
+            survivalist_button_details = tk.Button(self, text="View Details")
+            brawlist_label = tk.Label(self, text=Brawlist.name)
+            brawlist_button_add = tk.Button(self, text="Add to Team",
+                                            command=lambda: self.check_temp_party3(Brawlist.title, "melee"))
+            brawlist_button_details = tk.Button(self, text="View Details")
+            academic_mage_label = tk.Label(self, text=Academic_Mage.name)
+            academic_mage_button_add = tk.Button(self, text="Add to Team",
+                                                 command=lambda: self.check_temp_party3(Academic_Mage.title, "magic"))
+            academic_mage_button_details = tk.Button(self, text="View Details")
+            jungle_druid_label = tk.Label(self, text=Druid.name)
+            jungle_druid_button_add = tk.Button(self, text="Add to Team",
+                                                command=lambda: self.check_temp_party3(Druid.title, "magic"))
+            jungle_druid_button_details = tk.Button(self, text="View Details")
+            warlock_label = tk.Label(self, text=Warlock.name)
+            warlock_button_add = tk.Button(self, text="Add to Team",
+                                           command=lambda: self.check_temp_party3(Warlock.title, "magic"))
+            warlock_button_details = tk.Button(self, text="View Details")
+            bloodmancer_label = tk.Label(self, text=Bloodmancer.name)
+            bloodmancer_button_add = tk.Button(self, text="Add to Team",
+                                               command=lambda: self.check_temp_party3(Bloodmancer.title, "magic"))
+            bloodmancer_button_details = tk.Button(self, text="View Details")
+            paladin_label = tk.Label(self, text=Paladin.name)
+            paladin_button_add = tk.Button(self, text="Add to Team",
+                                           command=lambda: self.check_temp_party3(Paladin.title, "mixed"))
+            paladin_button_details = tk.Button(self, text="View Details")
+            castle_ranger_label = tk.Label(self, text=Castle_Ranger.name)
+            castle_ranger_button_add = tk.Button(self, text="Add to Team",
+                                                 command=lambda: self.check_temp_party3(Castle_Ranger.title, "mixed"))
+            castle_ranger_button_details = tk.Button(self, text="View Details")
+            thunder_apprentice_label = tk.Label(self, text=Thunder_Apprentice.name)
+            thunder_apprentice_button_add = tk.Button(self, text="Add to Team",
+                                                      command=lambda: self.check_temp_party3(Thunder_Apprentice.title,
+                                                                                            "mixed"))
+            thunder_apprentice_button_details = tk.Button(self, text="View Details")
+            power_conduit_label = tk.Label(self, text=Power_Conduit.name)
+            power_conduit_button_add = tk.Button(self, text="Add to Team",
+                                                 command=lambda: self.check_temp_party3(Power_Conduit.title, "mixed"))
+            power_conduit_button_details = tk.Button(self, text="View Details")
+            melee_label.grid(row=3, column=1)
+            magic_label.grid(row=3, column=2)
+            mix_label.grid(row=3, column=3)
+            berserker_label.grid(row=5, column=1, sticky="w")
+            berserker_button_add.grid(row=6, column=1, sticky="w")
+            berserker_button_details.grid(row=6, column=1, sticky="w", padx=80)
+            rogue_label.grid(row=8, column=1, sticky="w")
+            rogue_button_add.grid(row=9, column=1, sticky="w")
+            rogue_button_details.grid(row=9, column=1, sticky="w", padx=80)
+            survivalist_label.grid(row=5, column=1, sticky="e", padx=10)
+            survivalist_button_add.grid(row=6, column=1, sticky="e", padx=85)
+            survivalist_button_details.grid(row=6, column=1, sticky="e", padx=10)
+            brawlist_label.grid(row=8, column=1, sticky="e", padx=10)
+            brawlist_button_add.grid(row=9, column=1, sticky="e", padx=85)
+            brawlist_button_details.grid(row=9, column=1, sticky="e", padx=10)
+            academic_mage_label.grid(row=5, column=2, sticky="w", padx=10)
+            academic_mage_button_add.grid(row=6, column=2, sticky="w", padx=10)
+            academic_mage_button_details.grid(row=6, column=2, sticky="w", padx=90)
+            jungle_druid_label.grid(row=8, column=2, sticky="w", padx=10)
+            jungle_druid_button_add.grid(row=9, column=2, sticky="w", padx=10)
+            jungle_druid_button_details.grid(row=9, column=2, sticky="w", padx=90)
+            warlock_label.grid(row=5, column=2, sticky="e", padx=10)
+            warlock_button_add.grid(row=6, column=2, sticky="e", padx=85)
+            warlock_button_details.grid(row=6, column=2, sticky="e", padx=10)
+            bloodmancer_label.grid(row=8, column=2, sticky="e", padx=10)
+            bloodmancer_button_add.grid(row=9, column=2, sticky="e", padx=85)
+            bloodmancer_button_details.grid(row=9, column=2, sticky="e", padx=10)
+            paladin_label.grid(row=5, column=3, sticky="w", padx=10)
+            paladin_button_add.grid(row=6, column=3, sticky="w", padx=10)
+            paladin_button_details.grid(row=6, column=3, sticky="w", padx=90)
+            castle_ranger_label.grid(row=8, column=3, sticky="w", padx=10)
+            castle_ranger_button_add.grid(row=9, column=3, sticky="w", padx=10)
+            castle_ranger_button_details.grid(row=9, column=3, sticky="w", padx=90)
+            thunder_apprentice_label.grid(row=5, column=3, sticky="e")
+            thunder_apprentice_button_add.grid(row=6, column=3, sticky="e", padx=75)
+            thunder_apprentice_button_details.grid(row=6, column=3, sticky="e")
+            power_conduit_label.grid(row=8, column=3, sticky="e")
+            power_conduit_button_add.grid(row=9, column=3, sticky="e", padx=75)
+            power_conduit_button_details.grid(row=9, column=3, sticky="e")
+
+    def view_healer3(self):
+        global earth_speaker_label, earth_speaker_button_add, earth_speaker_button_details, priest_of_the_devoted_label, priest_of_the_devoted_button_add, \
+            priest_of_the_devoted_button_details, time_walker_label, time_walker_button_add, time_walker_button_details, \
+            child_of_medicine_label, child_of_medicine_button_add, child_of_medicine_button_details, invis_label3, invis_label4, tank, dps, healer
+        if healer == True:
+            return
+        else:
+            invis_label3 = tk.Label(self)
+            invis_label4 = tk.Label(self)
+            if tank == True:
+                monk_label.destroy()
+                monk_button_add.destroy()
+                monk_button_details.destroy()
+                barbarian_label.destroy()
+                barbarian_button_add.destroy()
+                barbarian_button_details.destroy()
+                bodyguard_label.destroy()
+                bodyguard_button_add.destroy()
+                bodyguard_button_details.destroy()
+                fencer_label.destroy()
+                fencer_button_add.destroy()
+                fencer_button_details.destroy()
+                invis_label3.destroy()
+                invis_label4.destroy()
+                tank = False
+            else:
+                tank = False
+            if dps == True:
+                berserker_label.destroy()
+                berserker_button_add.destroy()
+                berserker_button_details.destroy()
+                rogue_label.destroy()
+                rogue_button_add.destroy()
+                rogue_button_details.destroy()
+                survivalist_label.destroy()
+                survivalist_button_add.destroy()
+                survivalist_button_details.destroy()
+                brawlist_label.destroy()
+                brawlist_button_add.destroy()
+                brawlist_button_details.destroy()
+                academic_mage_label.destroy()
+                academic_mage_button_add.destroy()
+                academic_mage_button_details.destroy()
+                jungle_druid_label.destroy()
+                jungle_druid_button_add.destroy()
+                jungle_druid_button_details.destroy()
+                warlock_label.destroy()
+                warlock_button_add.destroy()
+                warlock_button_details.destroy()
+                bloodmancer_label.destroy()
+                bloodmancer_button_add.destroy()
+                bloodmancer_button_details.destroy()
+                paladin_label.destroy()
+                paladin_button_add.destroy()
+                paladin_button_details.destroy()
+                castle_ranger_label.destroy()
+                castle_ranger_button_add.destroy()
+                castle_ranger_button_details.destroy()
+                thunder_apprentice_label.destroy()
+                thunder_apprentice_button_add.destroy()
+                thunder_apprentice_button_details.destroy()
+                power_conduit_label.destroy()
+                power_conduit_button_add.destroy()
+                power_conduit_button_details.destroy()
+                melee_label.destroy()
+                magic_label.destroy()
+                mix_label.destroy()
+                dps = False
+            else:
+                dps = False
+            healer = True
+            earth_speaker_label = tk.Label(self, text=Earth_Speaker.name, font=self.menu_button_font)
+            earth_speaker_button_add = tk.Button(self, text="Add to Team",
+                                                 command=lambda: self.check_temp_party3(Earth_Speaker.title, "healer"))
+            earth_speaker_button_details = tk.Button(self, text="View Details")
+            priest_of_the_devoted_label = tk.Label(self, text=Priest_of_the_Devoted.name, font=self.menu_button_font)
+            priest_of_the_devoted_button_add = tk.Button(self, text="Add to Team",
+                                                         command=lambda: self.check_temp_party3(
+                                                             Priest_of_the_Devoted.title, "healer"))
+            priest_of_the_devoted_button_details = tk.Button(self, text="View Details")
+            time_walker_label = tk.Label(self, text=Time_Walker.name, font=self.menu_button_font)
+            time_walker_button_add = tk.Button(self, text="Add to Team",
+                                               command=lambda: self.check_temp_party3(Time_Walker.title, "healer"))
+            time_walker_button_details = tk.Button(self, text="View Details")
+            child_of_medicine_label = tk.Label(self, text=Child_of_Medicine.name, font=self.menu_button_font)
+            child_of_medicine_button_add = tk.Button(self, text="Add to Team",
+                                                     command=lambda: self.check_temp_party3(Child_of_Medicine.title,
+                                                                                           "healer"))
+            child_of_medicine_button_details = tk.Button(self, text="View Details")
+            earth_speaker_label.grid(row=4, column=1, sticky="e")
+            earth_speaker_button_add.grid(row=5, column=1, sticky="e", padx=75)
+            earth_speaker_button_details.grid(row=5, column=1, sticky="e")
+            priest_of_the_devoted_label.grid(row=4, column=3, sticky="w")
+            priest_of_the_devoted_button_add.grid(row=5, column=3, sticky="w")
+            priest_of_the_devoted_button_details.grid(row=5, column=3, sticky="w", padx=80)
+            time_walker_label.grid(row=7, column=1, sticky="e")
+            time_walker_button_add.grid(row=8, column=1, sticky="e", padx=75)
+            time_walker_button_details.grid(row=8, column=1, sticky="e")
+            child_of_medicine_label.grid(row=7, column=3, sticky="w")
+            child_of_medicine_button_add.grid(row=8, column=3, sticky="w")
+            child_of_medicine_button_details.grid(row=8, column=3, sticky="w", padx=80)
+            invis_label3.grid(row=3, column=1, columnspan=3, pady=50)
+            invis_label4.grid(row=6, column=1, columnspan=3, pady=50)
+
+    def check_temp_party3(self, champion, type):
+        global temp_party, yes_buttonCTP, no_buttonCTP, warning_label1CTP, warning_label2CTP, tank, dps, healer, visual_team_label
+        tank_temp_party = []
+        melee_temp_party = []
+        magic_temp_party = []
+        mixed_temp_party = []
+        healer_temp_party = []
+        if champion in temp_party:
+            root = tk.Tk()
+            warning_label = tk.Label(root, text="Sorry, but this character is already assigned in the party")
+            ok_button = tk.Button(root, text="Ok", command=root.destroy)
+            ok_button.grid(row=2, column=1)
+            warning_label.grid(row=1, column=1)
+            visual_team_label.destroy()
+            visual_team_label = tk.Label(self, text=self.display_team3(temp_party))
+            visual_team_label.grid(row=11, column=2)
+        else:
+            if len(temp_party) < 5:
+                for character in temp_party:
+                    if character == Monk.title:
+                        tank_temp_party.append(character)
+                    if character == Barbarian.title:
+                        tank_temp_party.append(character)
+                    if character == Veteran_Bodyguard.title:
+                        tank_temp_party.append(character)
+                    if character == Master_Fencer.title:
+                        tank_temp_party.append(character)
+                    if character == Berserker.title:
+                        melee_temp_party.append(character)
+                    if character == Rogue.title:
+                        melee_temp_party.append(character)
+                    if character == Survivalist.title:
+                        melee_temp_party.append(character)
+                    if character == Brawlist.title:
+                        melee_temp_party.append(character)
+                    if character == Academic_Mage.title:
+                        magic_temp_party.append(character)
+                    if character == Druid.title:
+                        magic_temp_party.append(character)
+                    if character == Warlock.title:
+                        magic_temp_party.append(character)
+                    if character == Bloodmancer.title:
+                        magic_temp_party.append(character)
+                    if character == Paladin.title:
+                        mixed_temp_party.append(character)
+                    if character == Castle_Ranger.title:
+                        mixed_temp_party.append(character)
+                    if character == Thunder_Apprentice.title:
+                        mixed_temp_party.append(character)
+                    if character == Power_Conduit.title:
+                        mixed_temp_party.append(character)
+                    if character == Earth_Speaker.title:
+                        healer_temp_party.append(character)
+                    if character == Priest_of_the_Devoted.title:
+                        healer_temp_party.append(character)
+                    if character == Time_Walker.title:
+                        healer_temp_party.append(character)
+                    if character == Child_of_Medicine.title:
+                        healer_temp_party.append(character)
+                    if character == "Empty":
+                        p = 0
+                if type == "tank":
+                    tank_temp_party.append(champion)
+                    tank_temp_party = sorted(tank_temp_party)
+                elif type == "melee":
+                    melee_temp_party.append(champion)
+                    melee_temp_party = sorted(melee_temp_party)
+                elif type == "magic":
+                    magic_temp_party.append(champion)
+                    magic_temp_party = sorted(magic_temp_party)
+                elif type == "mixed":
+                    mixed_temp_party.append(champion)
+                    mixed_temp_party = sorted(mixed_temp_party)
+                elif type == "healer":
+                    healer_temp_party.append(champion)
+                    healer_temp_party = sorted(healer_temp_party)
+                temp_party = []
+                if tank_temp_party == []:
+                    p = 0
+                else:
+                    for character in tank_temp_party:
+                        temp_party.append(character)
+                if melee_temp_party == []:
+                    p = 0
+                else:
+                    for character in melee_temp_party:
+                        temp_party.append(character)
+                if magic_temp_party == []:
+                    p = 0
+                else:
+                    for character in magic_temp_party:
+                        temp_party.append(character)
+                if mixed_temp_party == []:
+                    p = 0
+                else:
+                    for character in mixed_temp_party:
+                        temp_party.append(character)
+                if healer_temp_party == []:
+                    p = 0
+                else:
+                    for character in healer_temp_party:
+                        temp_party.append(character)
+                visual_team_label.destroy()
+                visual_team_label = tk.Label(self, text=self.display_team3(temp_party))
+                visual_team_label.grid(row=11, column=2)
+            elif len(temp_party) == 5:
+                root = tk.Tk()
+                warning_label1CTP = tk.Label(root, text="The party is currently full!")
+                warning_label2CTP = tk.Label(root, text="Would you like to remove a current party member to make room?")
+                yes_buttonCTP = tk.Button(root, text="Yes",
+                                          command=lambda: self.adding_champions_tempParty3(root, champion))
+                no_buttonCTP = tk.Button(root, text="No", command=lambda: root.destroy())
+                warning_label1CTP.grid(row=1, column=1)
+                warning_label2CTP.grid(row=2, column=1)
+                yes_buttonCTP.grid(row=3, column=1, sticky="w", padx=140)
+                no_buttonCTP.grid(row=3, column=1, sticky="e", padx=140)
+
+    def adding_champions_tempParty3(self, root, champion):
+        global champion1CTP, champion2CTP, champion3CTP, champion4CTP, champion5CTP, cancel_buttonCTP, window_labelCTP
+        yes_buttonCTP.grid_forget()
+        no_buttonCTP.grid_forget()
+        warning_label1CTP.grid_forget()
+        warning_label2CTP.grid_forget()
+        window_labelCTP = tk.Label(root, text="Please choose which champion will be replaced for '{}'".format(champion))
+        champion1CTP = tk.Button(root, text=temp_party[0],
+                                 command=lambda: self.replace_champion3(root, champion, temp_party[0]))
+        champion2CTP = tk.Button(root, text=temp_party[1],
+                                 command=lambda: self.replace_champion3(root, champion, temp_party[1]))
+        champion3CTP = tk.Button(root, text=temp_party[2],
+                                 command=lambda: self.replace_champion3(root, champion, temp_party[2]))
+        champion4CTP = tk.Button(root, text=temp_party[3],
+                                 command=lambda: self.replace_champion3(root, champion, temp_party[3]))
+        champion5CTP = tk.Button(root, text=temp_party[4],
+                                 command=lambda: self.replace_champion3(root, champion, temp_party[4]))
+        cancel_buttonCTP = tk.Button(root, text="Cancel", command=root.destroy, font="bold")
+        window_labelCTP.grid(row=1, column=3)
+        champion1CTP.grid(row=2, column=3)
+        champion2CTP.grid(row=3, column=3)
+        champion3CTP.grid(row=4, column=3)
+        champion4CTP.grid(row=5, column=3)
+        champion5CTP.grid(row=6, column=3)
+        cancel_buttonCTP.grid(row=7, column=3)
+
+    def replace_champion3(self, root, champion, selected):
+        global temp_party, visual_team_label
+        pos = temp_party.index(selected)
+        temp_pos = temp_party[pos]
+        temp_party[pos] = champion
+        champion1CTP.grid_forget()
+        champion2CTP.grid_forget()
+        champion3CTP.grid_forget()
+        champion4CTP.grid_forget()
+        champion5CTP.grid_forget()
+        cancel_buttonCTP.grid_forget()
+        window_labelCTP.grid_forget()
+        window_labelCTP2 = tk.Label(root, text="'{}' has been replaced by '{}'!".format(temp_pos, champion))
+        ok_button = tk.Button(root, text="Ok", command=root.destroy)
+        window_labelCTP2.grid(row=1, column=1)
+        ok_button.grid(row=2, column=1)
+        tank_temp_party = []
+        melee_temp_party = []
+        magic_temp_party = []
+        mixed_temp_party = []
+        healer_temp_party = []
+        for character in temp_party:
+            if character == Monk.title:
+                tank_temp_party.append(character)
+            if character == Barbarian.title:
+                tank_temp_party.append(character)
+            if character == Veteran_Bodyguard.title:
+                tank_temp_party.append(character)
+            if character == Master_Fencer.title:
+                tank_temp_party.append(character)
+            if character == Berserker.title:
+                melee_temp_party.append(character)
+            if character == Rogue.title:
+                melee_temp_party.append(character)
+            if character == Survivalist.title:
+                melee_temp_party.append(character)
+            if character == Brawlist.title:
+                melee_temp_party.append(character)
+            if character == Academic_Mage.title:
+                magic_temp_party.append(character)
+            if character == Druid.title:
+                magic_temp_party.append(character)
+            if character == Warlock.title:
+                magic_temp_party.append(character)
+            if character == Bloodmancer.title:
+                magic_temp_party.append(character)
+            if character == Paladin.title:
+                mixed_temp_party.append(character)
+            if character == Castle_Ranger.title:
+                mixed_temp_party.append(character)
+            if character == Thunder_Apprentice.title:
+                mixed_temp_party.append(character)
+            if character == Power_Conduit.title:
+                mixed_temp_party.append(character)
+            if character == Earth_Speaker.title:
+                healer_temp_party.append(character)
+            if character == Priest_of_the_Devoted.title:
+                healer_temp_party.append(character)
+            if character == Time_Walker.title:
+                healer_temp_party.append(character)
+            if character == Child_of_Medicine.title:
+                healer_temp_party.append(character)
+        temp_party = []
+        if tank_temp_party == []:
+            p = 0
+        else:
+            tank_temp_party = sorted(tank_temp_party)
+            for character in tank_temp_party:
+                temp_party.append(character)
+        if melee_temp_party == []:
+            p = 0
+        else:
+            melee_temp_party = sorted(melee_temp_party)
+            for character in melee_temp_party:
+                temp_party.append(character)
+        if magic_temp_party == []:
+            p = 0
+        else:
+            magic_temp_party = sorted(magic_temp_party)
+            for character in magic_temp_party:
+                temp_party.append(character)
+        if mixed_temp_party == []:
+            p = 0
+        else:
+            mixed_temp_party = sorted(mixed_temp_party)
+            for character in mixed_temp_party:
+                temp_party.append(character)
+        if healer_temp_party == []:
+            p = 0
+        else:
+            healer_temp_party = sorted(healer_temp_party)
+            for character in healer_temp_party:
+                temp_party.append(character)
+        visual_team_label.destroy()
+        visual_team_label = tk.Label(self, text=self.display_team3(temp_party))
+        visual_team_label.grid(row=11, column=2)
+
+    def confirm_new_team3(self):
+        root = tk.Tk()
+        confirmation_label = tk.Label(root, text="Are you sure you want save this group?")
+        yes_buttonCNT = tk.Button(root, text="Yes", command=lambda: SampleApp.finalise_new_team3(self, root))
+        no_buttonCNT = tk.Button(root, text="No", command=lambda: root.destroy())
+        confirmation_label.grid(row=2, column=1)
+        yes_buttonCNT.grid(row=3, column=1, sticky="w", padx=70)
+        no_buttonCNT.grid(row=3, column=1, sticky="e", padx=70)
+
+    def save_new_team3(self, root):
+        i = -1
+        file = open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/account_data_championTeam_3.txt".format(computer_username),"r")
+        file_allLines = file.readlines()
+        user = SampleApp.get_user_encoded(self)
+        user = str(user)
+        for line in file_allLines:
+            i += 1
+            if user in line:
+                coded_temp_party = self.code_party()
+                new_line = "{} {}".format(line, coded_temp_party)
+                file_allLines[i] = new_line
+                file_write = open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/account_data_championTeam_3.txt".format(computer_username),"w")
+                file_write.writelines(file_allLines)
+                file.close()
+                file_write.close()
+                root.destroy()
+                break
+    def code_party(self):
+        coded_temp_party = ""
+        i = 0
+        for character in temp_party:
+            if character == Monk.title:
+                coded_temp_party += Monk.code
+            if character == Barbarian.title:
+                coded_temp_party += Barbarian.code
+            if character == Veteran_Bodyguard.title:
+                coded_temp_party += Veteran_Bodyguard.code
+            if character == Master_Fencer.title:
+                coded_temp_party += Master_Fencer.code
+            if character == Berserker.title:
+                coded_temp_party += Berserker.code
+            if character == Rogue.title:
+                coded_temp_party += Rogue.code
+            if character == Survivalist.title:
+                coded_temp_party += Survivalist.code
+            if character == Brawlist.title:
+                coded_temp_party += Brawlist.code
+            if character == Academic_Mage.title:
+                coded_temp_party += Academic_Mage.code
+            if character == Druid.title:
+                coded_temp_party += Druid.code
+            if character == Warlock.title:
+                coded_temp_party += Warlock.code
+            if character == Bloodmancer.title:
+                coded_temp_party += Bloodmancer.code
+            if character == Paladin.title:
+                coded_temp_party += Paladin.code
+            if character == Castle_Ranger.title:
+                coded_temp_party += Castle_Ranger.code
+            if character == Thunder_Apprentice.title:
+                coded_temp_party += Thunder_Apprentice.code
+            if character == Power_Conduit.title:
+                coded_temp_party += Power_Conduit.code
+            if character == Earth_Speaker.title:
+                coded_temp_party += Earth_Speaker.code
+            if character == Priest_of_the_Devoted.title:
+                coded_temp_party += Priest_of_the_Devoted.code
+            if character == Time_Walker.title:
+                coded_temp_party += Time_Walker.code
+            if character == Child_of_Medicine.title:
+                coded_temp_party += Child_of_Medicine.code
+            if character == "Empty":
+                break
+            i += 1
+            if i <=4:
+                coded_temp_party += ", "
+        return coded_temp_party
+
+
+    def clear_temp_party3(self):
+        global temp_party
+        temp_party = []
 
 class CreditPage(tk.Frame):
     def __init__(self, parent, controller):
