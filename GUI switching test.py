@@ -1162,6 +1162,7 @@ class GameFrame(tk.Frame):
         champion5_small_external_buffs = [0]
         champion5_big_external_buffs = [0]
         global palm_strike_requirements, leg_sweep_requirements, harmonize_requirements, pressure_points_requirements, \
+            monk_staggered_damage_list1, monk_staggered_damage_list2, monk_staggered_damage_list3, \
             bloodthirst_requirements, pulverize_requirements, challenging_shout_requirements, impactful_boast_requirements, \
             shield_bash_requirements, trainwreck_requirements, fortification_requirements, block_requirements, \
             pierce_requirements, disruptive_slash_requirements, parry_requirements, elusive_measures_requirements
@@ -1170,6 +1171,9 @@ class GameFrame(tk.Frame):
         leg_sweep_requirements = [30, 0, 2, 0]
         harmonize_requirements = [50, 0, 0, 0]
         pressure_points_requirements = [30, 0, 5, 0]
+        monk_staggered_damage_list1 = []
+        monk_staggered_damage_list2 = []
+        monk_staggered_damage_list3 = []
         # Barbarian Abiltities:
         bloodthirst_requirements = [0, 0, 0, 30]
         pulverize_requirements = [20, 0, 0, 0]
@@ -1186,14 +1190,21 @@ class GameFrame(tk.Frame):
         parry_requirements = [0, 0, 2, 0]
         elusive_measures_requirements = [0, 0, 1, 0]
         global raging_blow_requirements, rampage_requirements, enrage_requirements, reckless_flurry_requirements, \
+            champion1_enrage, champion2_enrage, champion3_enrage, champion4_enrage, champion5_enrage, \
             serrated_slash_requirements, eviscerate_requirements, garrote_requirements, exploit_weakness_requirements, \
             spear_thrust_requirements, scrap_bomb_requirements, play_dead_requirements, rushed_rest_requirements, \
+            champion1_play_dead, champion2_play_dead, champion3_play_dead, champion4_play_dead, champion5_play_dead, \
             tactical_punch_requirements, uppercut_requirements, defensive_stance_requirements, rushdown_requirements
         # Berserker Abilities
         raging_blow_requirements = [0, 0, 0, 40]
         rampage_requirements = [80, 0, 0, 0]
         enrage_requirements = [0, 0, 0, 30]
         reckless_flurry_requirements = [40, 0, 2, 0]
+        champion1_enrage = []
+        champion2_enrage = []
+        champion3_enrage = []
+        champion4_enrage = []
+        champion5_enrage = []
         # Rogue Abilities
         serrated_slash_requirements = [0, 0, 0, 0]
         eviscerate_requirements = [0, 0, 2, 0]
@@ -1204,6 +1215,11 @@ class GameFrame(tk.Frame):
         scrap_bomb_requirements = [0, 0, 2, 0]
         play_dead_requirements = [0, 0, 3, 0]
         rushed_rest_requirements = [0, 0, 2, 0]
+        champion1_play_dead = []
+        champion2_play_dead = []
+        champion3_play_dead = []
+        champion4_play_dead = []
+        champion5_play_dead = []
         # Brawlist Abilties
         tactical_punch_requirements = [0, 0, 0, 0]
         uppercut_requirements = [0, 0, 2, 0]
@@ -1233,8 +1249,8 @@ class GameFrame(tk.Frame):
         blood_spike_requirements = [200, 0, 0, 0]
         blood_boil_requirements = [0, 0, 3, 0]
         enharden_nerves_requirements = [0, 0, 2, 0]
-        global overhand_justice_requirements, righteous_blow_requirements, aura_of_power_requirements, aura_of_protection_requirements, \
-            steady_shot_requirements, power_opt_requirements, equip_iron_cast_arrows_requirements, equip_tracker_tipped_arrows_requirements, \
+        global overhand_justice_requirements, righteous_blow_requirements, aura_of_power_requirements, aura_of_protection_requirements, champion1_aura, champion2_aura, champion3_aura, champion4_aura, champion5_aura, \
+            steady_shot_requirements, power_opt_requirements, equip_iron_cast_arrows_requirements, equip_tracker_tipped_arrows_requirements, current_arrow_type, \
             lightning_bolt_requirements, chain_lightning_requirements, crashing_boom_requirements, thunderous_vigor_requirements, \
             muscle_enlarger_requirements, mistic_bloom_requirements, power_surge_requirements, full_potential_requirements
         # Paladin Abilities
@@ -1242,11 +1258,18 @@ class GameFrame(tk.Frame):
         righteous_blow_requirements = [0, 0, 2, 0]
         aura_of_power_requirements = [0, 0, 1, 0]
         aura_of_protection_requirements = [0, 0, 1, 0]
+        champion1_aura = [1]
+        champion2_aura = [1]
+        champion3_aura = [1]
+        champion4_aura = [1]
+        champion5_aura = [1]
+
         # Castle Ranger Abilitites
         steady_shot_requirements = [0, 0, 0, 0]
         power_opt_requirements = [0, 0, 1, 0]
         equip_iron_cast_arrows_requirements = [0, 0, 1, 0]
         equip_tracker_tipped_arrows_requirements = [0, 0, 1, 0]
+        current_arrow_type = "Iron-cast"
         # Thunder Apprentice Abilities
         lightning_bolt_requirements = [0, 0, 0, 0]
         chain_lightning_requirements = [0, 0, 0, 0]
@@ -1259,7 +1282,8 @@ class GameFrame(tk.Frame):
         full_potential_requirements = [3, 0, 0, 0]
         global rock_barrage_requirements, healing_surge_requirements, rejuvenating_whirlpool_requirements, boulder_cocoon_requirements, \
             shimmering_bolt_requirements, divine_smite_requirements, healing_light_requirements, diffracting_nova_requirements, \
-            cybernetic_blast_requirements, nanoheal_bots_requirements, reverse_wounds_requirements, alter_time_requirements, \
+            cybernetic_blast_requirements, nanoheal_bots_requirements, reverse_wounds_requirements, alter_time_requirements,\
+            champion1_lastRound_damageTaken, champion2_lastRound_damageTaken, champion3_lastRound_damageTaken, champion4_lastRound_damageTaken,champion5_lastRound_damageTaken, \
             throw_scissors_requirements, bandage_wound_requirements, perfected_herbal_tea_requirements, g3t_jaxd_requirements
         # Earth Speaker Abilities
         rock_barrage_requirements = [0, 0, 0, 30]
@@ -1276,6 +1300,11 @@ class GameFrame(tk.Frame):
         nanoheal_bots_requirements = [20, 0, 0, 0]
         reverse_wounds_requirements = [50, 0, 0, 0]
         alter_time_requirements = [180, 0, 5, 0]
+        champion1_lastRound_damageTaken = 0
+        champion2_lastRound_damageTaken = 0
+        champion3_lastRound_damageTaken = 0
+        champion4_lastRound_damageTaken = 0
+        champion5_lastRound_damageTaken = 0
         # Child of Medicine Abilities
         throw_scissors_requirements = [0, 0, 0, 0]
         bandage_wound_requirements = [0, 0, 0, 0]
@@ -2874,7 +2903,7 @@ class GameFrame(tk.Frame):
             ai4_SerraSlashDot, ai5_SerraSlashDot, ai1_garroteDot, ai2_garroteDot, ai3_garroteDot, ai4_garroteDot, ai5_garroteDot, \
             ai1_EviscerDot, ai2_EviscerDot, ai3_EviscerDot, ai4_EviscerDot, ai5_EviscerDot, \
             ai1_statuses, ai2_statuses, ai3_statuses, ai4_statuses, ai5_statuses, \
-            ai1_hp, ai2_hp, ai3_hp, ai4_hp, ai5_hp, \
+            ai1_hp, ai2_hp, ai3_hp, ai4_hp, ai5_hp, monk_staggered_damage_list1, monk_staggered_damage_list2, monk_staggered_damage_list3, \
             champion1_hp, champion2_hp, champion3_hp,champion4_hp, champion5_hp
 
         if combat_results == "win":
@@ -2893,44 +2922,44 @@ class GameFrame(tk.Frame):
             elif AI_SPAWNED == 5:
                 monster_list = [1,2,3,4,5]
             for monster_var in monster_list:
-                if monster_var == $:
-                    if ai$_hp == 0:
+                if monster_var == 1:
+                    if ai1_hp == 0:
                         continue
-                    if len(ai$_pricked) != 0:
-                        ai$_hp = ai$_hp - ai$_pricked[0]
-                        if ai$_hp < 0:
-                            ai$_hp = 0
+                    if len(ai1_pricked) != 0:
+                        ai1_hp = ai1_hp - ai1_pricked[0]
+                        if ai1_hp < 0:
+                            ai1_hp = 0
                             continue
-                    if ai$_burnDot[1] != 0:
-                        ai$_hp = ai$_hp - ai$_burnDot[0]
-                        ai$_burnDot[1] = ai$_burnDot[1] - 1
-                        if ai$_hp < 0:
-                            ai$_hp = 0
+                    if ai1_burnDot[1] != 0:
+                        ai1_hp = ai1_hp - ai1_burnDot[0]
+                        ai1_burnDot[1] = ai1_burnDot[1] - 1
+                        if ai1_hp < 0:
+                            ai1_hp = 0
                             continue
-                    if ai$_SerraSlashDot[1] != 0:
-                        ai$_hp = ai$_hp - ai$_SerraSlashDot[0]
-                        ai$_SerraSlashDot[1] = ai$_SerraSlashDot[1] - 1
-                        if ai$_hp < 0:
-                            ai$_hp = 0
+                    if ai1_SerraSlashDot[1] != 0:
+                        ai1_hp = ai1_hp - ai1_SerraSlashDot[0]
+                        ai1_SerraSlashDot[1] = ai1_SerraSlashDot[1] - 1
+                        if ai1_hp < 0:
+                            ai1_hp = 0
                             continue
-                    if ai$_EviscerDot[1] != 0:
-                        ai$_hp = ai$_hp - ai$_EviscerDot[0]
-                        ai$_EviscerDot[1] = ai$_EviscerDot[1] - 1
-                        if ai$_hp < 0:
-                            ai$_hp = 0
+                    if ai1_EviscerDot[1] != 0:
+                        ai1_hp = ai1_hp - ai1_EviscerDot[0]
+                        ai1_EviscerDot[1] = ai1_EviscerDot[1] - 1
+                        if ai1_hp < 0:
+                            ai1_hp = 0
                             continue
-                    if ai$_garroteDot[1] != 0:
-                        ai$_hp = ai$_hp - ai$_garroteDot[0]
-                        ai$_garroteDot[1] = ai$_garroteDot[1] - 1
-                        if ai$_hp < 0:
-                            ai$_hp = 0
+                    if ai1_garroteDot[1] != 0:
+                        ai1_hp = ai1_hp - ai1_garroteDot[0]
+                        ai1_garroteDot[1] = ai1_garroteDot[1] - 1
+                        if ai1_hp < 0:
+                            ai1_hp = 0
                             continue
-                    if ai$_stun != 0:
+                    if ai1_stun != 0:
                         continue
-                    if ai$_taunt[1] != 0:
+                    elif ai1_taunt[1] != 0:
                         taunter_counter = 1
                         for champion in CHAMPION_LIST:
-                            if champion == ai$_taunt[0]:
+                            if champion == ai1_taunt[0]:
                                 break
                             taunter_counter += 1
                         if taunter_counter == 1:
@@ -2947,11 +2976,11 @@ class GameFrame(tk.Frame):
                                         guard_list.append(100)
                                     guard_list = sorted(guard_list, reverse=True)
                                     if guard_list[0] == 101:
-                                        ai$_hp = ai$_hp - ai1_attack[1]
+                                        ai1_hp = ai1_hp - ai1_attack[1]
                                         if champion1_thorns[0] == 1:
-                                            ai$_hp = ai$_hp - 200
-                                        if ai$_hp < 0:
-                                            ai$_hp = 0
+                                            ai1_hp = ai1_hp - 200
+                                        if ai1_hp < 0:
+                                            ai1_hp = 0
                                     if guard_list[0] == 100:
                                         champion1_hp = champion1_hp
                                     if guard_list[0] == 99:
@@ -2959,30 +2988,2478 @@ class GameFrame(tk.Frame):
                                         for champions in CHAMPION_LIST:
                                             if champions == VETERAN_BODYGUARD.name:
                                                 break
-                                            bodyguard_counter
+                                            bodyguard_counter += 1
                                         if bodyguard_counter == 1:
-                                            champion1_hp = champion1_hp - (ai$_attack[1] * 0.4)
-                                        if bodyguard_counter == 2:
-                                            champion2_hp = champion2_hp - (ai$_attack[1] * 0.4)
-                                        if bodyguard_counter == 3:
-                                            champion3_hp = champion3_hp - (ai$_attack[1] * 0.4)
-                                        if bodyguard_counter == 4:
-                                            champion4_hp = champion4_hp - (ai$_attack[1] * 0.4)
-                                        if bodyguard_counter == 5:
-                                            champion5_hp = champion5_hp - (ai$_attack[1] * 0.4)
-                            if CHAMPION_LIST[0] == MONK.name:
-                                staggered_damage = ai$_attack[1] / 3
+                                            champion1_hp = champion1_hp - self.calculate_ai_damage(1, 1)
+                                            if champion1_hp < 0:
+                                                champion1_hp = 0
+                                        elif bodyguard_counter == 2:
+                                            champion2_hp = champion2_hp - self.calculate_ai_damage(2, 1)
+                                            if champion2_hp < 0:
+                                                champion2_hp = 0
+                                        elif bodyguard_counter == 3:
+                                            champion3_hp = champion3_hp - self.calculate_ai_damage(3, 1)
+                                            if champion3_hp < 0:
+                                                champion3_hp = 0
+                                        elif bodyguard_counter == 4:
+                                            champion4_hp = champion4_hp - self.calculate_ai_damage(4, 1)
+                                            if champion4_hp < 0:
+                                                champion4_hp = 0
+                                        elif bodyguard_counter == 5:
+                                            champion5_hp = champion5_hp - self.calculate_ai_damage(5, 1)
+                                            if champion5_hp < 0:
+                                                champion5_hp = 0
+                            elif CHAMPION_LIST[0] == MONK.name:
+                                staggered_damage = (self.calculate_ai_damage(1, 1) / 3)
                                 if len(monk_staggered_damage_list1) == 0:
-                                    monk_staggered_damage_list1
-
-
-
-
-
-
+                                    monk_staggered_damage_list1 = [staggered_damage, 3]
+                                else:
+                                    if len(monk_staggered_damage_list2) == 0:
+                                        monk_staggered_damage_list2 = [staggered_damage, 3]
+                                    else:
+                                        if len(monk_staggered_damage_list3) == 0:
+                                            monk_staggered_damage_list3 = [staggered_damage, 3]
+                                staggered_damage_list = [0, 0, 0]
+                                if len(monk_staggered_damage_list1) != 0:
+                                    staggered_damage_list[0] = monk_staggered_damage_list1[0]
+                                if len(monk_staggered_damage_list2) != 0:
+                                    staggered_damage_list[1] = monk_staggered_damage_list2[0]
+                                if len(monk_staggered_damage_list3) != 0:
+                                    staggered_damage_list[2] = monk_staggered_damage_list3[0]
+                                    champion1_hp = champion1_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3])
+                                if champion1_hp < 0:
+                                    champion1_hp = 0
+                            else:
+                                champion1_hp = champion1_hp - self.calculate_ai_damage(1, 1)
+                                if champion1_hp < 0:
+                                    champion1_hp = 0
+                        elif taunter_counter == 2:
+                            if len(champion2_guarded) != 0:
+                                guard_list = []
+                                for guards in champion2_guarded:
+                                    if guards == "Block":
+                                        guard_list.append(99)
+                                    if guards == "Parry":
+                                        guard_list.append(101)
+                                    if guards == "Boulder":
+                                        guard_list.append(100)
+                                    if guards == "Elusive Measures":
+                                        guard_list.append(100)
+                                    guard_list = sorted(guard_list, reverse=True)
+                                    if guard_list[0] == 101:
+                                        ai1_hp = ai1_hp - ai1_attack[1]
+                                        if champion2_thorns[0] == 1:
+                                            ai1_hp = ai1_hp - 200
+                                        if ai1_hp < 0:
+                                            ai1_hp = 0
+                                    if guard_list[0] == 100:
+                                        champion2_hp = champion2_hp
+                                    if guard_list[0] == 99:
+                                        bodyguard_counter = 1
+                                        for champions in CHAMPION_LIST:
+                                            if champions == VETERAN_BODYGUARD.name:
+                                                break
+                                            bodyguard_counter += 1
+                                        if bodyguard_counter == 1:
+                                            champion1_hp = champion1_hp - self.calculate_ai_damage(1, 1)
+                                            if champion1_hp < 0:
+                                                champion1_hp = 0
+                                        elif bodyguard_counter == 2:
+                                            champion2_hp = champion2_hp - self.calculate_ai_damage(2, 1)
+                                            if champion2_hp < 0:
+                                                champion2_hp = 0
+                                        elif bodyguard_counter == 3:
+                                            champion3_hp = champion3_hp - self.calculate_ai_damage(3, 1)
+                                            if champion3_hp < 0:
+                                                champion3_hp = 0
+                                        elif bodyguard_counter == 4:
+                                            champion4_hp = champion4_hp - self.calculate_ai_damage(4, 1)
+                                            if champion4_hp < 0:
+                                                champion4_hp = 0
+                                        elif bodyguard_counter == 5:
+                                            champion5_hp = champion5_hp - self.calculate_ai_damage(5, 1)
+                                            if champion5_hp < 0:
+                                                champion5_hp = 0
+                            elif CHAMPION_LIST[1] == MONK.name:
+                                staggered_damage = (self.calculate_ai_damage(1, 1) / 3)
+                                if len(monk_staggered_damage_list1) == 0:
+                                    monk_staggered_damage_list1 = [staggered_damage, 3]
+                                else:
+                                    if len(monk_staggered_damage_list2) == 0:
+                                        monk_staggered_damage_list2 = [staggered_damage, 3]
+                                    else:
+                                        if len(monk_staggered_damage_list3) == 0:
+                                            monk_staggered_damage_list3 = [staggered_damage, 3]
+                                staggered_damage_list = [0, 0, 0]
+                                if len(monk_staggered_damage_list1) != 0:
+                                    staggered_damage_list[0] = monk_staggered_damage_list1[0]
+                                if len(monk_staggered_damage_list2) != 0:
+                                    staggered_damage_list[1] = monk_staggered_damage_list2[0]
+                                if len(monk_staggered_damage_list3) != 0:
+                                    staggered_damage_list[2] = monk_staggered_damage_list3[0]
+                                    champion2_hp = champion2_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3])
+                                if champion2_hp < 0:
+                                    champion2_hp = 0
+                            else:
+                                champion2_hp = champion2_hp - self.calculate_ai_damage(2, 1)
+                                if champion2_hp < 0:
+                                    champion2_hp = 0
+                        elif taunter_counter == 3:
+                            if len(champion3_guarded) != 0:
+                                guard_list = []
+                                for guards in champion3_guarded:
+                                    if guards == "Block":
+                                        guard_list.append(99)
+                                    if guards == "Parry":
+                                        guard_list.append(101)
+                                    if guards == "Boulder":
+                                        guard_list.append(100)
+                                    if guards == "Elusive Measures":
+                                        guard_list.append(100)
+                                    guard_list = sorted(guard_list, reverse=True)
+                                    if guard_list[0] == 101:
+                                        ai1_hp = ai1_hp - ai1_attack[1]
+                                        if champion3_thorns[0] == 1:
+                                            ai1_hp = ai1_hp - 200
+                                        if ai1_hp < 0:
+                                            ai1_hp = 0
+                                    if guard_list[0] == 100:
+                                        champion3_hp = champion3_hp
+                                    if guard_list[0] == 99:
+                                        bodyguard_counter = 1
+                                        for champions in CHAMPION_LIST:
+                                            if champions == VETERAN_BODYGUARD.name:
+                                                break
+                                            bodyguard_counter += 1
+                                        if bodyguard_counter == 1:
+                                            champion1_hp = champion1_hp - self.calculate_ai_damage(1, 1)
+                                            if champion1_hp < 0:
+                                                champion1_hp = 0
+                                        elif bodyguard_counter == 2:
+                                            champion2_hp = champion2_hp - self.calculate_ai_damage(2, 1)
+                                            if champion2_hp < 0:
+                                                champion2_hp = 0
+                                        elif bodyguard_counter == 3:
+                                            champion3_hp = champion3_hp - self.calculate_ai_damage(3, 1)
+                                            if champion3_hp < 0:
+                                                champion3_hp = 0
+                                        elif bodyguard_counter == 4:
+                                            champion4_hp = champion4_hp - self.calculate_ai_damage(4, 1)
+                                            if champion4_hp < 0:
+                                                champion4_hp = 0
+                                        elif bodyguard_counter == 5:
+                                            champion5_hp = champion5_hp - self.calculate_ai_damage(5, 1)
+                                            if champion5_hp < 0:
+                                                champion5_hp = 0
+                            elif CHAMPION_LIST[2] == MONK.name:
+                                staggered_damage = (self.calculate_ai_damage(1, 1) / 3)
+                                if len(monk_staggered_damage_list1) == 0:
+                                    monk_staggered_damage_list1 = [staggered_damage, 3]
+                                else:
+                                    if len(monk_staggered_damage_list2) == 0:
+                                        monk_staggered_damage_list2 = [staggered_damage, 3]
+                                    else:
+                                        if len(monk_staggered_damage_list3) == 0:
+                                            monk_staggered_damage_list3 = [staggered_damage, 3]
+                                staggered_damage_list = [0, 0, 0]
+                                if len(monk_staggered_damage_list1) != 0:
+                                    staggered_damage_list[0] = monk_staggered_damage_list1[0]
+                                if len(monk_staggered_damage_list2) != 0:
+                                    staggered_damage_list[1] = monk_staggered_damage_list2[0]
+                                if len(monk_staggered_damage_list3) != 0:
+                                    staggered_damage_list[2] = monk_staggered_damage_list3[0]
+                                    champion3_hp = champion3_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3])
+                                if champion3_hp < 0:
+                                    champion3_hp = 0
+                            else:
+                                champion3_hp = champion3_hp - self.calculate_ai_damage(3, 1)
+                                if champion3_hp < 0:
+                                    champion3_hp = 0
+                        elif taunter_counter == 4:
+                            if len(champion4_guarded) != 0:
+                                guard_list = []
+                                for guards in champion4_guarded:
+                                    if guards == "Block":
+                                        guard_list.append(99)
+                                    if guards == "Parry":
+                                        guard_list.append(101)
+                                    if guards == "Boulder":
+                                        guard_list.append(100)
+                                    if guards == "Elusive Measures":
+                                        guard_list.append(100)
+                                    guard_list = sorted(guard_list, reverse=True)
+                                    if guard_list[0] == 101:
+                                        ai1_hp = ai1_hp - ai1_attack[1]
+                                        if champion4_thorns[0] == 1:
+                                            ai1_hp = ai1_hp - 200
+                                        if ai1_hp < 0:
+                                            ai1_hp = 0
+                                    if guard_list[0] == 100:
+                                        champion4_hp = champion4_hp
+                                    if guard_list[0] == 99:
+                                        bodyguard_counter = 1
+                                        for champions in CHAMPION_LIST:
+                                            if champions == VETERAN_BODYGUARD.name:
+                                                break
+                                            bodyguard_counter += 1
+                                        if bodyguard_counter == 1:
+                                            champion1_hp = champion1_hp - self.calculate_ai_damage(1, 1)
+                                            if champion1_hp < 0:
+                                                champion1_hp = 0
+                                        elif bodyguard_counter == 2:
+                                            champion2_hp = champion2_hp - self.calculate_ai_damage(2, 1)
+                                            if champion2_hp < 0:
+                                                champion2_hp = 0
+                                        elif bodyguard_counter == 3:
+                                            champion3_hp = champion3_hp - self.calculate_ai_damage(3, 1)
+                                            if champion3_hp < 0:
+                                                champion3_hp = 0
+                                        elif bodyguard_counter == 4:
+                                            champion4_hp = champion4_hp - self.calculate_ai_damage(4, 1)
+                                            if champion4_hp < 0:
+                                                champion4_hp = 0
+                                        elif bodyguard_counter == 5:
+                                            champion5_hp = champion5_hp - self.calculate_ai_damage(5, 1)
+                                            if champion5_hp < 0:
+                                                champion5_hp = 0
+                            elif CHAMPION_LIST[3] == MONK.name:
+                                staggered_damage = (self.calculate_ai_damage(1, 1) / 3)
+                                if len(monk_staggered_damage_list1) == 0:
+                                    monk_staggered_damage_list1 = [staggered_damage, 3]
+                                else:
+                                    if len(monk_staggered_damage_list2) == 0:
+                                        monk_staggered_damage_list2 = [staggered_damage, 3]
+                                    else:
+                                        if len(monk_staggered_damage_list3) == 0:
+                                            monk_staggered_damage_list3 = [staggered_damage, 3]
+                                staggered_damage_list = [0, 0, 0]
+                                if len(monk_staggered_damage_list1) != 0:
+                                    staggered_damage_list[0] = monk_staggered_damage_list1[0]
+                                if len(monk_staggered_damage_list2) != 0:
+                                    staggered_damage_list[1] = monk_staggered_damage_list2[0]
+                                if len(monk_staggered_damage_list3) != 0:
+                                    staggered_damage_list[2] = monk_staggered_damage_list3[0]
+                                    champion4_hp = champion4_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3])
+                                if champion4_hp < 0:
+                                    champion4_hp = 0
+                            else:
+                                champion4_hp = champion4_hp - self.calculate_ai_damage(4, 1)
+                                if champion4_hp < 0:
+                                    champion4_hp = 0
+                        elif taunter_counter == 5:
+                            if len(champion5_guarded) != 0:
+                                guard_list = []
+                                for guards in champion5_guarded:
+                                    if guards == "Block":
+                                        guard_list.append(99)
+                                    if guards == "Parry":
+                                        guard_list.append(101)
+                                    if guards == "Boulder":
+                                        guard_list.append(100)
+                                    if guards == "Elusive Measures":
+                                        guard_list.append(100)
+                                    guard_list = sorted(guard_list, reverse=True)
+                                    if guard_list[0] == 101:
+                                        ai1_hp = ai1_hp - ai1_attack[1]
+                                        if champion5_thorns[0] == 1:
+                                            ai1_hp = ai1_hp - 200
+                                        if ai1_hp < 0:
+                                            ai1_hp = 0
+                                    if guard_list[0] == 100:
+                                        champion5_hp = champion5_hp
+                                    if guard_list[0] == 99:
+                                        bodyguard_counter = 1
+                                        for champions in CHAMPION_LIST:
+                                            if champions == VETERAN_BODYGUARD.name:
+                                                break
+                                            bodyguard_counter += 1
+                                        if bodyguard_counter == 1:
+                                            champion1_hp = champion1_hp - self.calculate_ai_damage(1, 1)
+                                            if champion1_hp < 0:
+                                                champion1_hp = 0
+                                        elif bodyguard_counter == 2:
+                                            champion2_hp = champion2_hp - self.calculate_ai_damage(2, 1)
+                                            if champion2_hp < 0:
+                                                champion2_hp = 0
+                                        elif bodyguard_counter == 3:
+                                            champion3_hp = champion3_hp - self.calculate_ai_damage(3, 1)
+                                            if champion3_hp < 0:
+                                                champion3_hp = 0
+                                        elif bodyguard_counter == 4:
+                                            champion4_hp = champion4_hp - self.calculate_ai_damage(4, 1)
+                                            if champion4_hp < 0:
+                                                champion4_hp = 0
+                                        elif bodyguard_counter == 5:
+                                            champion5_hp = champion5_hp - self.calculate_ai_damage(5, 1)
+                                            if champion5_hp < 0:
+                                                champion5_hp = 0
+                            elif CHAMPION_LIST[4] == MONK.name:
+                                staggered_damage = (self.calculate_ai_damage(1, 1) / 3)
+                                if len(monk_staggered_damage_list1) == 0:
+                                    monk_staggered_damage_list1 = [staggered_damage, 3]
+                                else:
+                                    if len(monk_staggered_damage_list2) == 0:
+                                        monk_staggered_damage_list2 = [staggered_damage, 3]
+                                    else:
+                                        if len(monk_staggered_damage_list3) == 0:
+                                            monk_staggered_damage_list3 = [staggered_damage, 3]
+                                staggered_damage_list = [0, 0, 0]
+                                if len(monk_staggered_damage_list1) != 0:
+                                    staggered_damage_list[0] = monk_staggered_damage_list1[0]
+                                if len(monk_staggered_damage_list2) != 0:
+                                    staggered_damage_list[1] = monk_staggered_damage_list2[0]
+                                if len(monk_staggered_damage_list3) != 0:
+                                    staggered_damage_list[2] = monk_staggered_damage_list3[0]
+                                    champion5_hp = champion5_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3])
+                                if champion5_hp < 0:
+                                    champion5_hp = 0
+                            else:
+                                champion5_hp = champion5_hp - self.calculate_ai_damage(5, 1)
+                                if champion5_hp < 0:
+                                    champion5_hp = 0
+                        ai1_taunt[1] = ai1_taunt[1] - 1
+                    else:
+                        if "Everyone" in ai1_attack_intention:
+                            if champion1_hp != 0:
+                                champion1_hp = champion1_hp - self.calculate_ai_damage(1, 1)
+                                if champion1_hp < 0:
+                                    champion1_hp = 0
+                            if champion2_hp != 0:
+                                champion2_hp = champion2_hp - self.calculate_ai_damage(1, 1)
+                                if champion2_hp < 0:
+                                    champion2_hp = 0
+                            if champion3_hp != 0:
+                                champion3_hp = champion3_hp - self.calculate_ai_damage(1, 1)
+                                if champion3_hp < 0:
+                                    champion3_hp = 0
+                            if champion4_hp != 0:
+                                champion4_hp = champion4_hp - self.calculate_ai_damage(1, 1)
+                                if champion4_hp < 0:
+                                    champion4_hp = 0
+                            if champion5_hp != 0:
+                                champion5_hp = champion5_hp - self.calculate_ai_damage(1, 1)
+                                if champion5_hp < 0:
+                                    champion5_hp = 0
+                        else:
+                            for indiv_champion in CHAMPION_LIST:
+                                if indiv_champion in ai1_attack_intention:
+                                    counter = 1
+                                    for indivi_champion in CHAMPION_LIST:
+                                        if  indiv_champion == indivi_champion:
+                                            break
+                                        counter += 1
+                                    if counter == 1:
+                                        champion1_hp = champion1_hp - self.calculate_ai_damage(1, 1)
+                                    if counter == 2:
+                                        champion2_hp = champion2_hp - self.calculate_ai_damage(2, 1)
+                                    if counter == 3:
+                                        champion3_hp = champion3_hp - self.calculate_ai_damage(3, 1)
+                                    if counter == 4:
+                                        champion4_hp = champion4_hp - self.calculate_ai_damage(4, 1)
+                                    if counter == 5:
+                                        champion5_hp = champion5_hp - self.calculate_ai_damage(5, 1)
+                if monster_var == 2:
+                    if ai2_hp == 0:
+                        continue
+                    if len(ai2_pricked) != 0:
+                        ai2_hp = ai2_hp - ai2_pricked[0]
+                        if ai2_hp < 0:
+                            ai2_hp = 0
+                            continue
+                    if ai2_burnDot[1] != 0:
+                        ai2_hp = ai2_hp - ai2_burnDot[0]
+                        ai2_burnDot[1] = ai2_burnDot[1] - 1
+                        if ai2_hp < 0:
+                            ai2_hp = 0
+                            continue
+                    if ai2_SerraSlashDot[1] != 0:
+                        ai2_hp = ai2_hp - ai2_SerraSlashDot[0]
+                        ai2_SerraSlashDot[1] = ai2_SerraSlashDot[1] - 1
+                        if ai2_hp < 0:
+                            ai2_hp = 0
+                            continue
+                    if ai2_EviscerDot[1] != 0:
+                        ai2_hp = ai2_hp - ai2_EviscerDot[0]
+                        ai2_EviscerDot[1] = ai2_EviscerDot[1] - 1
+                        if ai2_hp < 0:
+                            ai2_hp = 0
+                            continue
+                    if ai2_garroteDot[1] != 0:
+                        ai2_hp = ai2_hp - ai2_garroteDot[0]
+                        ai2_garroteDot[1] = ai2_garroteDot[1] - 1
+                        if ai2_hp < 0:
+                            ai2_hp = 0
+                            continue
+                    if ai2_stun != 0:
+                        continue
+                    elif ai2_taunt[1] != 0:
+                        taunter_counter = 1
+                        for champion in CHAMPION_LIST:
+                            if champion == ai2_taunt[0]:
+                                break
+                            taunter_counter += 1
+                        if taunter_counter == 1:
+                            if len(champion1_guarded) != 0:
+                                guard_list = []
+                                for guards in champion1_guarded:
+                                    if guards == "Block":
+                                        guard_list.append(99)
+                                    if guards == "Parry":
+                                        guard_list.append(101)
+                                    if guards == "Boulder":
+                                        guard_list.append(100)
+                                    if guards == "Elusive Measures":
+                                        guard_list.append(100)
+                                    guard_list = sorted(guard_list, reverse=True)
+                                    if guard_list[0] == 101:
+                                        ai2_hp = ai2_hp - ai2_attack[1]
+                                        if champion1_thorns[0] == 1:
+                                            ai2_hp = ai2_hp - 200
+                                        if ai2_hp < 0:
+                                            ai2_hp = 0
+                                    if guard_list[0] == 100:
+                                        champion1_hp = champion1_hp
+                                    if guard_list[0] == 99:
+                                        bodyguard_counter = 1
+                                        for champions in CHAMPION_LIST:
+                                            if champions == VETERAN_BODYGUARD.name:
+                                                break
+                                            bodyguard_counter += 1
+                                        if bodyguard_counter == 1:
+                                            champion1_hp = champion1_hp - self.calculate_ai_damage(1, 2)
+                                            if champion1_hp < 0:
+                                                champion1_hp = 0
+                                        elif bodyguard_counter == 2:
+                                            champion2_hp = champion2_hp - self.calculate_ai_damage(2, 2)
+                                            if champion2_hp < 0:
+                                                champion2_hp = 0
+                                        elif bodyguard_counter == 3:
+                                            champion3_hp = champion3_hp - self.calculate_ai_damage(3, 2)
+                                            if champion3_hp < 0:
+                                                champion3_hp = 0
+                                        elif bodyguard_counter == 4:
+                                            champion4_hp = champion4_hp - self.calculate_ai_damage(4, 2)
+                                            if champion4_hp < 0:
+                                                champion4_hp = 0
+                                        elif bodyguard_counter == 5:
+                                            champion5_hp = champion5_hp - self.calculate_ai_damage(5, 2)
+                                            if champion5_hp < 0:
+                                                champion5_hp = 0
+                            elif CHAMPION_LIST[0] == MONK.name:
+                                staggered_damage = (self.calculate_ai_damage(1, 2) / 3)
+                                if len(monk_staggered_damage_list1) == 0:
+                                    monk_staggered_damage_list1 = [staggered_damage, 3]
+                                else:
+                                    if len(monk_staggered_damage_list2) == 0:
+                                        monk_staggered_damage_list2 = [staggered_damage, 3]
+                                    else:
+                                        if len(monk_staggered_damage_list3) == 0:
+                                            monk_staggered_damage_list3 = [staggered_damage, 3]
+                                staggered_damage_list = [0, 0, 0]
+                                if len(monk_staggered_damage_list1) != 0:
+                                    staggered_damage_list[0] = monk_staggered_damage_list1[0]
+                                if len(monk_staggered_damage_list2) != 0:
+                                    staggered_damage_list[1] = monk_staggered_damage_list2[0]
+                                if len(monk_staggered_damage_list3) != 0:
+                                    staggered_damage_list[2] = monk_staggered_damage_list3[0]
+                                    champion1_hp = champion1_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3])
+                                if champion1_hp < 0:
+                                    champion1_hp = 0
+                            else:
+                                champion1_hp = champion1_hp - self.calculate_ai_damage(1, 2)
+                                if champion1_hp < 0:
+                                    champion1_hp = 0
+                        elif taunter_counter == 2:
+                            if len(champion2_guarded) != 0:
+                                guard_list = []
+                                for guards in champion2_guarded:
+                                    if guards == "Block":
+                                        guard_list.append(99)
+                                    if guards == "Parry":
+                                        guard_list.append(101)
+                                    if guards == "Boulder":
+                                        guard_list.append(100)
+                                    if guards == "Elusive Measures":
+                                        guard_list.append(100)
+                                    guard_list = sorted(guard_list, reverse=True)
+                                    if guard_list[0] == 101:
+                                        ai2_hp = ai2_hp - ai2_attack[1]
+                                        if champion2_thorns[0] == 1:
+                                            ai2_hp = ai2_hp - 200
+                                        if ai2_hp < 0:
+                                            ai2_hp = 0
+                                    if guard_list[0] == 100:
+                                        champion2_hp = champion2_hp
+                                    if guard_list[0] == 99:
+                                        bodyguard_counter = 1
+                                        for champions in CHAMPION_LIST:
+                                            if champions == VETERAN_BODYGUARD.name:
+                                                break
+                                            bodyguard_counter += 1
+                                        if bodyguard_counter == 1:
+                                            champion1_hp = champion1_hp - self.calculate_ai_damage(1, 2)
+                                            if champion1_hp < 0:
+                                                champion1_hp = 0
+                                        elif bodyguard_counter == 2:
+                                            champion2_hp = champion2_hp - self.calculate_ai_damage(2, 2)
+                                            if champion2_hp < 0:
+                                                champion2_hp = 0
+                                        elif bodyguard_counter == 3:
+                                            champion3_hp = champion3_hp - self.calculate_ai_damage(3, 2)
+                                            if champion3_hp < 0:
+                                                champion3_hp = 0
+                                        elif bodyguard_counter == 4:
+                                            champion4_hp = champion4_hp - self.calculate_ai_damage(4, 2)
+                                            if champion4_hp < 0:
+                                                champion4_hp = 0
+                                        elif bodyguard_counter == 5:
+                                            champion5_hp = champion5_hp - self.calculate_ai_damage(5, 2)
+                                            if champion5_hp < 0:
+                                                champion5_hp = 0
+                            elif CHAMPION_LIST[1] == MONK.name:
+                                staggered_damage = (self.calculate_ai_damage(1, 2) / 3)
+                                if len(monk_staggered_damage_list1) == 0:
+                                    monk_staggered_damage_list1 = [staggered_damage, 3]
+                                else:
+                                    if len(monk_staggered_damage_list2) == 0:
+                                        monk_staggered_damage_list2 = [staggered_damage, 3]
+                                    else:
+                                        if len(monk_staggered_damage_list3) == 0:
+                                            monk_staggered_damage_list3 = [staggered_damage, 3]
+                                staggered_damage_list = [0, 0, 0]
+                                if len(monk_staggered_damage_list1) != 0:
+                                    staggered_damage_list[0] = monk_staggered_damage_list1[0]
+                                if len(monk_staggered_damage_list2) != 0:
+                                    staggered_damage_list[1] = monk_staggered_damage_list2[0]
+                                if len(monk_staggered_damage_list3) != 0:
+                                    staggered_damage_list[2] = monk_staggered_damage_list3[0]
+                                    champion2_hp = champion2_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3])
+                                if champion2_hp < 0:
+                                    champion2_hp = 0
+                            else:
+                                champion2_hp = champion2_hp - self.calculate_ai_damage(2, 2)
+                                if champion2_hp < 0:
+                                    champion2_hp = 0
+                        elif taunter_counter == 3:
+                            if len(champion3_guarded) != 0:
+                                guard_list = []
+                                for guards in champion3_guarded:
+                                    if guards == "Block":
+                                        guard_list.append(99)
+                                    if guards == "Parry":
+                                        guard_list.append(101)
+                                    if guards == "Boulder":
+                                        guard_list.append(100)
+                                    if guards == "Elusive Measures":
+                                        guard_list.append(100)
+                                    guard_list = sorted(guard_list, reverse=True)
+                                    if guard_list[0] == 101:
+                                        ai2_hp = ai2_hp - ai2_attack[1]
+                                        if champion3_thorns[0] == 1:
+                                            ai2_hp = ai2_hp - 200
+                                        if ai2_hp < 0:
+                                            ai2_hp = 0
+                                    if guard_list[0] == 100:
+                                        champion3_hp = champion3_hp
+                                    if guard_list[0] == 99:
+                                        bodyguard_counter = 1
+                                        for champions in CHAMPION_LIST:
+                                            if champions == VETERAN_BODYGUARD.name:
+                                                break
+                                            bodyguard_counter += 1
+                                        if bodyguard_counter == 1:
+                                            champion1_hp = champion1_hp - self.calculate_ai_damage(1, 2)
+                                            if champion1_hp < 0:
+                                                champion1_hp = 0
+                                        elif bodyguard_counter == 2:
+                                            champion2_hp = champion2_hp - self.calculate_ai_damage(2, 2)
+                                            if champion2_hp < 0:
+                                                champion2_hp = 0
+                                        elif bodyguard_counter == 3:
+                                            champion3_hp = champion3_hp - self.calculate_ai_damage(3, 2)
+                                            if champion3_hp < 0:
+                                                champion3_hp = 0
+                                        elif bodyguard_counter == 4:
+                                            champion4_hp = champion4_hp - self.calculate_ai_damage(4, 2)
+                                            if champion4_hp < 0:
+                                                champion4_hp = 0
+                                        elif bodyguard_counter == 5:
+                                            champion5_hp = champion5_hp - self.calculate_ai_damage(5, 2)
+                                            if champion5_hp < 0:
+                                                champion5_hp = 0
+                            elif CHAMPION_LIST[2] == MONK.name:
+                                staggered_damage = (self.calculate_ai_damage(1, 2) / 3)
+                                if len(monk_staggered_damage_list1) == 0:
+                                    monk_staggered_damage_list1 = [staggered_damage, 3]
+                                else:
+                                    if len(monk_staggered_damage_list2) == 0:
+                                        monk_staggered_damage_list2 = [staggered_damage, 3]
+                                    else:
+                                        if len(monk_staggered_damage_list3) == 0:
+                                            monk_staggered_damage_list3 = [staggered_damage, 3]
+                                staggered_damage_list = [0, 0, 0]
+                                if len(monk_staggered_damage_list1) != 0:
+                                    staggered_damage_list[0] = monk_staggered_damage_list1[0]
+                                if len(monk_staggered_damage_list2) != 0:
+                                    staggered_damage_list[1] = monk_staggered_damage_list2[0]
+                                if len(monk_staggered_damage_list3) != 0:
+                                    staggered_damage_list[2] = monk_staggered_damage_list3[0]
+                                    champion3_hp = champion3_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3])
+                                if champion3_hp < 0:
+                                    champion3_hp = 0
+                            else:
+                                champion3_hp = champion3_hp - self.calculate_ai_damage(3, 2)
+                                if champion3_hp < 0:
+                                    champion3_hp = 0
+                        elif taunter_counter == 4:
+                            if len(champion4_guarded) != 0:
+                                guard_list = []
+                                for guards in champion4_guarded:
+                                    if guards == "Block":
+                                        guard_list.append(99)
+                                    if guards == "Parry":
+                                        guard_list.append(101)
+                                    if guards == "Boulder":
+                                        guard_list.append(100)
+                                    if guards == "Elusive Measures":
+                                        guard_list.append(100)
+                                    guard_list = sorted(guard_list, reverse=True)
+                                    if guard_list[0] == 101:
+                                        ai2_hp = ai2_hp - ai2_attack[1]
+                                        if champion4_thorns[0] == 1:
+                                            ai2_hp = ai2_hp - 200
+                                        if ai2_hp < 0:
+                                            ai2_hp = 0
+                                    if guard_list[0] == 100:
+                                        champion4_hp = champion4_hp
+                                    if guard_list[0] == 99:
+                                        bodyguard_counter = 1
+                                        for champions in CHAMPION_LIST:
+                                            if champions == VETERAN_BODYGUARD.name:
+                                                break
+                                            bodyguard_counter += 1
+                                        if bodyguard_counter == 1:
+                                            champion1_hp = champion1_hp - self.calculate_ai_damage(1, 2)
+                                            if champion1_hp < 0:
+                                                champion1_hp = 0
+                                        elif bodyguard_counter == 2:
+                                            champion2_hp = champion2_hp - self.calculate_ai_damage(2, 2)
+                                            if champion2_hp < 0:
+                                                champion2_hp = 0
+                                        elif bodyguard_counter == 3:
+                                            champion3_hp = champion3_hp - self.calculate_ai_damage(3, 2)
+                                            if champion3_hp < 0:
+                                                champion3_hp = 0
+                                        elif bodyguard_counter == 4:
+                                            champion4_hp = champion4_hp - self.calculate_ai_damage(4, 2)
+                                            if champion4_hp < 0:
+                                                champion4_hp = 0
+                                        elif bodyguard_counter == 5:
+                                            champion5_hp = champion5_hp - self.calculate_ai_damage(5, 2)
+                                            if champion5_hp < 0:
+                                                champion5_hp = 0
+                            elif CHAMPION_LIST[3] == MONK.name:
+                                staggered_damage = (self.calculate_ai_damage(1, 2) / 3)
+                                if len(monk_staggered_damage_list1) == 0:
+                                    monk_staggered_damage_list1 = [staggered_damage, 3]
+                                else:
+                                    if len(monk_staggered_damage_list2) == 0:
+                                        monk_staggered_damage_list2 = [staggered_damage, 3]
+                                    else:
+                                        if len(monk_staggered_damage_list3) == 0:
+                                            monk_staggered_damage_list3 = [staggered_damage, 3]
+                                staggered_damage_list = [0, 0, 0]
+                                if len(monk_staggered_damage_list1) != 0:
+                                    staggered_damage_list[0] = monk_staggered_damage_list1[0]
+                                if len(monk_staggered_damage_list2) != 0:
+                                    staggered_damage_list[1] = monk_staggered_damage_list2[0]
+                                if len(monk_staggered_damage_list3) != 0:
+                                    staggered_damage_list[2] = monk_staggered_damage_list3[0]
+                                    champion4_hp = champion4_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3])
+                                if champion4_hp < 0:
+                                    champion4_hp = 0
+                            else:
+                                champion4_hp = champion4_hp - self.calculate_ai_damage(4, 2)
+                                if champion4_hp < 0:
+                                    champion4_hp = 0
+                        elif taunter_counter == 5:
+                            if len(champion5_guarded) != 0:
+                                guard_list = []
+                                for guards in champion5_guarded:
+                                    if guards == "Block":
+                                        guard_list.append(99)
+                                    if guards == "Parry":
+                                        guard_list.append(101)
+                                    if guards == "Boulder":
+                                        guard_list.append(100)
+                                    if guards == "Elusive Measures":
+                                        guard_list.append(100)
+                                    guard_list = sorted(guard_list, reverse=True)
+                                    if guard_list[0] == 101:
+                                        ai2_hp = ai2_hp - ai2_attack[1]
+                                        if champion5_thorns[0] == 1:
+                                            ai2_hp = ai2_hp - 200
+                                        if ai2_hp < 0:
+                                            ai2_hp = 0
+                                    if guard_list[0] == 100:
+                                        champion5_hp = champion5_hp
+                                    if guard_list[0] == 99:
+                                        bodyguard_counter = 1
+                                        for champions in CHAMPION_LIST:
+                                            if champions == VETERAN_BODYGUARD.name:
+                                                break
+                                            bodyguard_counter += 1
+                                        if bodyguard_counter == 1:
+                                            champion1_hp = champion1_hp - self.calculate_ai_damage(1, 2)
+                                            if champion1_hp < 0:
+                                                champion1_hp = 0
+                                        elif bodyguard_counter == 2:
+                                            champion2_hp = champion2_hp - self.calculate_ai_damage(2, 2)
+                                            if champion2_hp < 0:
+                                                champion2_hp = 0
+                                        elif bodyguard_counter == 3:
+                                            champion3_hp = champion3_hp - self.calculate_ai_damage(3, 2)
+                                            if champion3_hp < 0:
+                                                champion3_hp = 0
+                                        elif bodyguard_counter == 4:
+                                            champion4_hp = champion4_hp - self.calculate_ai_damage(4, 2)
+                                            if champion4_hp < 0:
+                                                champion4_hp = 0
+                                        elif bodyguard_counter == 5:
+                                            champion5_hp = champion5_hp - self.calculate_ai_damage(5, 2)
+                                            if champion5_hp < 0:
+                                                champion5_hp = 0
+                            elif CHAMPION_LIST[4] == MONK.name:
+                                staggered_damage = (self.calculate_ai_damage(1, 2) / 3)
+                                if len(monk_staggered_damage_list1) == 0:
+                                    monk_staggered_damage_list1 = [staggered_damage, 3]
+                                else:
+                                    if len(monk_staggered_damage_list2) == 0:
+                                        monk_staggered_damage_list2 = [staggered_damage, 3]
+                                    else:
+                                        if len(monk_staggered_damage_list3) == 0:
+                                            monk_staggered_damage_list3 = [staggered_damage, 3]
+                                staggered_damage_list = [0, 0, 0]
+                                if len(monk_staggered_damage_list1) != 0:
+                                    staggered_damage_list[0] = monk_staggered_damage_list1[0]
+                                if len(monk_staggered_damage_list2) != 0:
+                                    staggered_damage_list[1] = monk_staggered_damage_list2[0]
+                                if len(monk_staggered_damage_list3) != 0:
+                                    staggered_damage_list[2] = monk_staggered_damage_list3[0]
+                                    champion5_hp = champion5_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3])
+                                if champion5_hp < 0:
+                                    champion5_hp = 0
+                            else:
+                                champion5_hp = champion5_hp - self.calculate_ai_damage(5, 2)
+                                if champion5_hp < 0:
+                                    champion5_hp = 0
+                        ai2_taunt[1] = ai2_taunt[1] - 1
+                    else:
+                        if "Everyone" in ai2_attack_intention:
+                            if champion1_hp != 0:
+                                champion1_hp = champion1_hp - self.calculate_ai_damage(1, 2)
+                                if champion1_hp < 0:
+                                    champion1_hp = 0
+                            if champion2_hp != 0:
+                                champion2_hp = champion2_hp - self.calculate_ai_damage(1, 2)
+                                if champion2_hp < 0:
+                                    champion2_hp = 0
+                            if champion3_hp != 0:
+                                champion3_hp = champion3_hp - self.calculate_ai_damage(1, 2)
+                                if champion3_hp < 0:
+                                    champion3_hp = 0
+                            if champion4_hp != 0:
+                                champion4_hp = champion4_hp - self.calculate_ai_damage(1, 2)
+                                if champion4_hp < 0:
+                                    champion4_hp = 0
+                            if champion5_hp != 0:
+                                champion5_hp = champion5_hp - self.calculate_ai_damage(1, 2)
+                                if champion5_hp < 0:
+                                    champion5_hp = 0
+                        else:
+                            for indiv_champion in CHAMPION_LIST:
+                                if indiv_champion in ai2_attack_intention:
+                                    counter = 1
+                                    for indivi_champion in CHAMPION_LIST:
+                                        if  indiv_champion == indivi_champion:
+                                            break
+                                        counter += 1
+                                    if counter == 1:
+                                        champion1_hp = champion1_hp - self.calculate_ai_damage(1, 2)
+                                    if counter == 2:
+                                        champion2_hp = champion2_hp - self.calculate_ai_damage(2, 2)
+                                    if counter == 3:
+                                        champion3_hp = champion3_hp - self.calculate_ai_damage(3, 2)
+                                    if counter == 4:
+                                        champion4_hp = champion4_hp - self.calculate_ai_damage(4, 2)
+                                    if counter == 5:
+                                        champion5_hp = champion5_hp - self.calculate_ai_damage(5, 2)
+                if monster_var == 3:
+                    if ai3_hp == 0:
+                        continue
+                    if len(ai3_pricked) != 0:
+                        ai3_hp = ai3_hp - ai3_pricked[0]
+                        if ai3_hp < 0:
+                            ai3_hp = 0
+                            continue
+                    if ai3_burnDot[1] != 0:
+                        ai3_hp = ai3_hp - ai3_burnDot[0]
+                        ai3_burnDot[1] = ai3_burnDot[1] - 1
+                        if ai3_hp < 0:
+                            ai3_hp = 0
+                            continue
+                    if ai3_SerraSlashDot[1] != 0:
+                        ai3_hp = ai3_hp - ai3_SerraSlashDot[0]
+                        ai3_SerraSlashDot[1] = ai3_SerraSlashDot[1] - 1
+                        if ai3_hp < 0:
+                            ai3_hp = 0
+                            continue
+                    if ai3_EviscerDot[1] != 0:
+                        ai3_hp = ai3_hp - ai3_EviscerDot[0]
+                        ai3_EviscerDot[1] = ai3_EviscerDot[1] - 1
+                        if ai3_hp < 0:
+                            ai3_hp = 0
+                            continue
+                    if ai3_garroteDot[1] != 0:
+                        ai3_hp = ai3_hp - ai3_garroteDot[0]
+                        ai3_garroteDot[1] = ai3_garroteDot[1] - 1
+                        if ai3_hp < 0:
+                            ai3_hp = 0
+                            continue
+                    if ai3_stun != 0:
+                        continue
+                    elif ai3_taunt[1] != 0:
+                        taunter_counter = 1
+                        for champion in CHAMPION_LIST:
+                            if champion == ai3_taunt[0]:
+                                break
+                            taunter_counter += 1
+                        if taunter_counter == 1:
+                            if len(champion1_guarded) != 0:
+                                guard_list = []
+                                for guards in champion1_guarded:
+                                    if guards == "Block":
+                                        guard_list.append(99)
+                                    if guards == "Parry":
+                                        guard_list.append(101)
+                                    if guards == "Boulder":
+                                        guard_list.append(100)
+                                    if guards == "Elusive Measures":
+                                        guard_list.append(100)
+                                    guard_list = sorted(guard_list, reverse=True)
+                                    if guard_list[0] == 101:
+                                        ai3_hp = ai3_hp - ai3_attack[1]
+                                        if champion1_thorns[0] == 1:
+                                            ai3_hp = ai3_hp - 200
+                                        if ai3_hp < 0:
+                                            ai3_hp = 0
+                                    if guard_list[0] == 100:
+                                        champion1_hp = champion1_hp
+                                    if guard_list[0] == 99:
+                                        bodyguard_counter = 1
+                                        for champions in CHAMPION_LIST:
+                                            if champions == VETERAN_BODYGUARD.name:
+                                                break
+                                            bodyguard_counter += 1
+                                        if bodyguard_counter == 1:
+                                            champion1_hp = champion1_hp - self.calculate_ai_damage(1, 3)
+                                            if champion1_hp < 0:
+                                                champion1_hp = 0
+                                        elif bodyguard_counter == 2:
+                                            champion2_hp = champion2_hp - self.calculate_ai_damage(2, 3)
+                                            if champion2_hp < 0:
+                                                champion2_hp = 0
+                                        elif bodyguard_counter == 3:
+                                            champion3_hp = champion3_hp - self.calculate_ai_damage(3, 3)
+                                            if champion3_hp < 0:
+                                                champion3_hp = 0
+                                        elif bodyguard_counter == 4:
+                                            champion4_hp = champion4_hp - self.calculate_ai_damage(4, 3)
+                                            if champion4_hp < 0:
+                                                champion4_hp = 0
+                                        elif bodyguard_counter == 5:
+                                            champion5_hp = champion5_hp - self.calculate_ai_damage(5, 3)
+                                            if champion5_hp < 0:
+                                                champion5_hp = 0
+                            elif CHAMPION_LIST[0] == MONK.name:
+                                staggered_damage = (self.calculate_ai_damage(1, 3) / 3)
+                                if len(monk_staggered_damage_list1) == 0:
+                                    monk_staggered_damage_list1 = [staggered_damage, 3]
+                                else:
+                                    if len(monk_staggered_damage_list2) == 0:
+                                        monk_staggered_damage_list2 = [staggered_damage, 3]
+                                    else:
+                                        if len(monk_staggered_damage_list3) == 0:
+                                            monk_staggered_damage_list3 = [staggered_damage, 3]
+                                staggered_damage_list = [0, 0, 0]
+                                if len(monk_staggered_damage_list1) != 0:
+                                    staggered_damage_list[0] = monk_staggered_damage_list1[0]
+                                if len(monk_staggered_damage_list2) != 0:
+                                    staggered_damage_list[1] = monk_staggered_damage_list2[0]
+                                if len(monk_staggered_damage_list3) != 0:
+                                    staggered_damage_list[2] = monk_staggered_damage_list3[0]
+                                    champion1_hp = champion1_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3])
+                                if champion1_hp < 0:
+                                    champion1_hp = 0
+                            else:
+                                champion1_hp = champion1_hp - self.calculate_ai_damage(1, 3)
+                                if champion1_hp < 0:
+                                    champion1_hp = 0
+                        elif taunter_counter == 2:
+                            if len(champion2_guarded) != 0:
+                                guard_list = []
+                                for guards in champion2_guarded:
+                                    if guards == "Block":
+                                        guard_list.append(99)
+                                    if guards == "Parry":
+                                        guard_list.append(101)
+                                    if guards == "Boulder":
+                                        guard_list.append(100)
+                                    if guards == "Elusive Measures":
+                                        guard_list.append(100)
+                                    guard_list = sorted(guard_list, reverse=True)
+                                    if guard_list[0] == 101:
+                                        ai3_hp = ai3_hp - ai3_attack[1]
+                                        if champion2_thorns[0] == 1:
+                                            ai3_hp = ai3_hp - 200
+                                        if ai3_hp < 0:
+                                            ai3_hp = 0
+                                    if guard_list[0] == 100:
+                                        champion2_hp = champion2_hp
+                                    if guard_list[0] == 99:
+                                        bodyguard_counter = 1
+                                        for champions in CHAMPION_LIST:
+                                            if champions == VETERAN_BODYGUARD.name:
+                                                break
+                                            bodyguard_counter += 1
+                                        if bodyguard_counter == 1:
+                                            champion1_hp = champion1_hp - self.calculate_ai_damage(1, 3)
+                                            if champion1_hp < 0:
+                                                champion1_hp = 0
+                                        elif bodyguard_counter == 2:
+                                            champion2_hp = champion2_hp - self.calculate_ai_damage(2, 3)
+                                            if champion2_hp < 0:
+                                                champion2_hp = 0
+                                        elif bodyguard_counter == 3:
+                                            champion3_hp = champion3_hp - self.calculate_ai_damage(3, 3)
+                                            if champion3_hp < 0:
+                                                champion3_hp = 0
+                                        elif bodyguard_counter == 4:
+                                            champion4_hp = champion4_hp - self.calculate_ai_damage(4, 3)
+                                            if champion4_hp < 0:
+                                                champion4_hp = 0
+                                        elif bodyguard_counter == 5:
+                                            champion5_hp = champion5_hp - self.calculate_ai_damage(5, 3)
+                                            if champion5_hp < 0:
+                                                champion5_hp = 0
+                            elif CHAMPION_LIST[1] == MONK.name:
+                                staggered_damage = (self.calculate_ai_damage(1, 3) / 3)
+                                if len(monk_staggered_damage_list1) == 0:
+                                    monk_staggered_damage_list1 = [staggered_damage, 3]
+                                else:
+                                    if len(monk_staggered_damage_list2) == 0:
+                                        monk_staggered_damage_list2 = [staggered_damage, 3]
+                                    else:
+                                        if len(monk_staggered_damage_list3) == 0:
+                                            monk_staggered_damage_list3 = [staggered_damage, 3]
+                                staggered_damage_list = [0, 0, 0]
+                                if len(monk_staggered_damage_list1) != 0:
+                                    staggered_damage_list[0] = monk_staggered_damage_list1[0]
+                                if len(monk_staggered_damage_list2) != 0:
+                                    staggered_damage_list[1] = monk_staggered_damage_list2[0]
+                                if len(monk_staggered_damage_list3) != 0:
+                                    staggered_damage_list[2] = monk_staggered_damage_list3[0]
+                                    champion2_hp = champion2_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3])
+                                if champion2_hp < 0:
+                                    champion2_hp = 0
+                            else:
+                                champion2_hp = champion2_hp - self.calculate_ai_damage(2, 3)
+                                if champion2_hp < 0:
+                                    champion2_hp = 0
+                        elif taunter_counter == 3:
+                            if len(champion3_guarded) != 0:
+                                guard_list = []
+                                for guards in champion3_guarded:
+                                    if guards == "Block":
+                                        guard_list.append(99)
+                                    if guards == "Parry":
+                                        guard_list.append(101)
+                                    if guards == "Boulder":
+                                        guard_list.append(100)
+                                    if guards == "Elusive Measures":
+                                        guard_list.append(100)
+                                    guard_list = sorted(guard_list, reverse=True)
+                                    if guard_list[0] == 101:
+                                        ai3_hp = ai3_hp - ai3_attack[1]
+                                        if champion3_thorns[0] == 1:
+                                            ai3_hp = ai3_hp - 200
+                                        if ai3_hp < 0:
+                                            ai3_hp = 0
+                                    if guard_list[0] == 100:
+                                        champion3_hp = champion3_hp
+                                    if guard_list[0] == 99:
+                                        bodyguard_counter = 1
+                                        for champions in CHAMPION_LIST:
+                                            if champions == VETERAN_BODYGUARD.name:
+                                                break
+                                            bodyguard_counter += 1
+                                        if bodyguard_counter == 1:
+                                            champion1_hp = champion1_hp - self.calculate_ai_damage(1, 3)
+                                            if champion1_hp < 0:
+                                                champion1_hp = 0
+                                        elif bodyguard_counter == 2:
+                                            champion2_hp = champion2_hp - self.calculate_ai_damage(2, 3)
+                                            if champion2_hp < 0:
+                                                champion2_hp = 0
+                                        elif bodyguard_counter == 3:
+                                            champion3_hp = champion3_hp - self.calculate_ai_damage(3, 3)
+                                            if champion3_hp < 0:
+                                                champion3_hp = 0
+                                        elif bodyguard_counter == 4:
+                                            champion4_hp = champion4_hp - self.calculate_ai_damage(4, 3)
+                                            if champion4_hp < 0:
+                                                champion4_hp = 0
+                                        elif bodyguard_counter == 5:
+                                            champion5_hp = champion5_hp - self.calculate_ai_damage(5, 3)
+                                            if champion5_hp < 0:
+                                                champion5_hp = 0
+                            elif CHAMPION_LIST[2] == MONK.name:
+                                staggered_damage = (self.calculate_ai_damage(1, 3) / 3)
+                                if len(monk_staggered_damage_list1) == 0:
+                                    monk_staggered_damage_list1 = [staggered_damage, 3]
+                                else:
+                                    if len(monk_staggered_damage_list2) == 0:
+                                        monk_staggered_damage_list2 = [staggered_damage, 3]
+                                    else:
+                                        if len(monk_staggered_damage_list3) == 0:
+                                            monk_staggered_damage_list3 = [staggered_damage, 3]
+                                staggered_damage_list = [0, 0, 0]
+                                if len(monk_staggered_damage_list1) != 0:
+                                    staggered_damage_list[0] = monk_staggered_damage_list1[0]
+                                if len(monk_staggered_damage_list2) != 0:
+                                    staggered_damage_list[1] = monk_staggered_damage_list2[0]
+                                if len(monk_staggered_damage_list3) != 0:
+                                    staggered_damage_list[2] = monk_staggered_damage_list3[0]
+                                    champion3_hp = champion3_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3])
+                                if champion3_hp < 0:
+                                    champion3_hp = 0
+                            else:
+                                champion3_hp = champion3_hp - self.calculate_ai_damage(3, 3)
+                                if champion3_hp < 0:
+                                    champion3_hp = 0
+                        elif taunter_counter == 4:
+                            if len(champion4_guarded) != 0:
+                                guard_list = []
+                                for guards in champion4_guarded:
+                                    if guards == "Block":
+                                        guard_list.append(99)
+                                    if guards == "Parry":
+                                        guard_list.append(101)
+                                    if guards == "Boulder":
+                                        guard_list.append(100)
+                                    if guards == "Elusive Measures":
+                                        guard_list.append(100)
+                                    guard_list = sorted(guard_list, reverse=True)
+                                    if guard_list[0] == 101:
+                                        ai3_hp = ai3_hp - ai3_attack[1]
+                                        if champion4_thorns[0] == 1:
+                                            ai3_hp = ai3_hp - 200
+                                        if ai3_hp < 0:
+                                            ai3_hp = 0
+                                    if guard_list[0] == 100:
+                                        champion4_hp = champion4_hp
+                                    if guard_list[0] == 99:
+                                        bodyguard_counter = 1
+                                        for champions in CHAMPION_LIST:
+                                            if champions == VETERAN_BODYGUARD.name:
+                                                break
+                                            bodyguard_counter += 1
+                                        if bodyguard_counter == 1:
+                                            champion1_hp = champion1_hp - self.calculate_ai_damage(1, 3)
+                                            if champion1_hp < 0:
+                                                champion1_hp = 0
+                                        elif bodyguard_counter == 2:
+                                            champion2_hp = champion2_hp - self.calculate_ai_damage(2, 3)
+                                            if champion2_hp < 0:
+                                                champion2_hp = 0
+                                        elif bodyguard_counter == 3:
+                                            champion3_hp = champion3_hp - self.calculate_ai_damage(3, 3)
+                                            if champion3_hp < 0:
+                                                champion3_hp = 0
+                                        elif bodyguard_counter == 4:
+                                            champion4_hp = champion4_hp - self.calculate_ai_damage(4, 3)
+                                            if champion4_hp < 0:
+                                                champion4_hp = 0
+                                        elif bodyguard_counter == 5:
+                                            champion5_hp = champion5_hp - self.calculate_ai_damage(5, 3)
+                                            if champion5_hp < 0:
+                                                champion5_hp = 0
+                            elif CHAMPION_LIST[3] == MONK.name:
+                                staggered_damage = (self.calculate_ai_damage(1, 3) / 3)
+                                if len(monk_staggered_damage_list1) == 0:
+                                    monk_staggered_damage_list1 = [staggered_damage, 3]
+                                else:
+                                    if len(monk_staggered_damage_list2) == 0:
+                                        monk_staggered_damage_list2 = [staggered_damage, 3]
+                                    else:
+                                        if len(monk_staggered_damage_list3) == 0:
+                                            monk_staggered_damage_list3 = [staggered_damage, 3]
+                                staggered_damage_list = [0, 0, 0]
+                                if len(monk_staggered_damage_list1) != 0:
+                                    staggered_damage_list[0] = monk_staggered_damage_list1[0]
+                                if len(monk_staggered_damage_list2) != 0:
+                                    staggered_damage_list[1] = monk_staggered_damage_list2[0]
+                                if len(monk_staggered_damage_list3) != 0:
+                                    staggered_damage_list[2] = monk_staggered_damage_list3[0]
+                                    champion4_hp = champion4_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3])
+                                if champion4_hp < 0:
+                                    champion4_hp = 0
+                            else:
+                                champion4_hp = champion4_hp - self.calculate_ai_damage(4, 3)
+                                if champion4_hp < 0:
+                                    champion4_hp = 0
+                        elif taunter_counter == 5:
+                            if len(champion5_guarded) != 0:
+                                guard_list = []
+                                for guards in champion5_guarded:
+                                    if guards == "Block":
+                                        guard_list.append(99)
+                                    if guards == "Parry":
+                                        guard_list.append(101)
+                                    if guards == "Boulder":
+                                        guard_list.append(100)
+                                    if guards == "Elusive Measures":
+                                        guard_list.append(100)
+                                    guard_list = sorted(guard_list, reverse=True)
+                                    if guard_list[0] == 101:
+                                        ai3_hp = ai3_hp - ai3_attack[1]
+                                        if champion5_thorns[0] == 1:
+                                            ai3_hp = ai3_hp - 200
+                                        if ai3_hp < 0:
+                                            ai3_hp = 0
+                                    if guard_list[0] == 100:
+                                        champion5_hp = champion5_hp
+                                    if guard_list[0] == 99:
+                                        bodyguard_counter = 1
+                                        for champions in CHAMPION_LIST:
+                                            if champions == VETERAN_BODYGUARD.name:
+                                                break
+                                            bodyguard_counter += 1
+                                        if bodyguard_counter == 1:
+                                            champion1_hp = champion1_hp - self.calculate_ai_damage(1, 3)
+                                            if champion1_hp < 0:
+                                                champion1_hp = 0
+                                        elif bodyguard_counter == 2:
+                                            champion2_hp = champion2_hp - self.calculate_ai_damage(2, 3)
+                                            if champion2_hp < 0:
+                                                champion2_hp = 0
+                                        elif bodyguard_counter == 3:
+                                            champion3_hp = champion3_hp - self.calculate_ai_damage(3, 3)
+                                            if champion3_hp < 0:
+                                                champion3_hp = 0
+                                        elif bodyguard_counter == 4:
+                                            champion4_hp = champion4_hp - self.calculate_ai_damage(4, 3)
+                                            if champion4_hp < 0:
+                                                champion4_hp = 0
+                                        elif bodyguard_counter == 5:
+                                            champion5_hp = champion5_hp - self.calculate_ai_damage(5, 3)
+                                            if champion5_hp < 0:
+                                                champion5_hp = 0
+                            elif CHAMPION_LIST[4] == MONK.name:
+                                staggered_damage = (self.calculate_ai_damage(1, 3) / 3)
+                                if len(monk_staggered_damage_list1) == 0:
+                                    monk_staggered_damage_list1 = [staggered_damage, 3]
+                                else:
+                                    if len(monk_staggered_damage_list2) == 0:
+                                        monk_staggered_damage_list2 = [staggered_damage, 3]
+                                    else:
+                                        if len(monk_staggered_damage_list3) == 0:
+                                            monk_staggered_damage_list3 = [staggered_damage, 3]
+                                staggered_damage_list = [0, 0, 0]
+                                if len(monk_staggered_damage_list1) != 0:
+                                    staggered_damage_list[0] = monk_staggered_damage_list1[0]
+                                if len(monk_staggered_damage_list2) != 0:
+                                    staggered_damage_list[1] = monk_staggered_damage_list2[0]
+                                if len(monk_staggered_damage_list3) != 0:
+                                    staggered_damage_list[2] = monk_staggered_damage_list3[0]
+                                    champion5_hp = champion5_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3])
+                                if champion5_hp < 0:
+                                    champion5_hp = 0
+                            else:
+                                champion5_hp = champion5_hp - self.calculate_ai_damage(5, 3)
+                                if champion5_hp < 0:
+                                    champion5_hp = 0
+                        ai3_taunt[1] = ai3_taunt[1] - 1
+                    else:
+                        if "Everyone" in ai3_attack_intention:
+                            if champion1_hp != 0:
+                                champion1_hp = champion1_hp - self.calculate_ai_damage(1, 3)
+                                if champion1_hp < 0:
+                                    champion1_hp = 0
+                            if champion2_hp != 0:
+                                champion2_hp = champion2_hp - self.calculate_ai_damage(1, 3)
+                                if champion2_hp < 0:
+                                    champion2_hp = 0
+                            if champion3_hp != 0:
+                                champion3_hp = champion3_hp - self.calculate_ai_damage(1, 3)
+                                if champion3_hp < 0:
+                                    champion3_hp = 0
+                            if champion4_hp != 0:
+                                champion4_hp = champion4_hp - self.calculate_ai_damage(1, 3)
+                                if champion4_hp < 0:
+                                    champion4_hp = 0
+                            if champion5_hp != 0:
+                                champion5_hp = champion5_hp - self.calculate_ai_damage(1, 3)
+                                if champion5_hp < 0:
+                                    champion5_hp = 0
+                        else:
+                            for indiv_champion in CHAMPION_LIST:
+                                if indiv_champion in ai3_attack_intention:
+                                    counter = 1
+                                    for indivi_champion in CHAMPION_LIST:
+                                        if  indiv_champion == indivi_champion:
+                                            break
+                                        counter += 1
+                                    if counter == 1:
+                                        champion1_hp = champion1_hp - self.calculate_ai_damage(1, 3)
+                                    if counter == 2:
+                                        champion2_hp = champion2_hp - self.calculate_ai_damage(2, 3)
+                                    if counter == 3:
+                                        champion3_hp = champion3_hp - self.calculate_ai_damage(3, 3)
+                                    if counter == 4:
+                                        champion4_hp = champion4_hp - self.calculate_ai_damage(4, 3)
+                                    if counter == 5:
+                                        champion5_hp = champion5_hp - self.calculate_ai_damage(5, 3)
+                if monster_var == 4:
+                    if ai4_hp == 0:
+                        continue
+                    if len(ai4_pricked) != 0:
+                        ai4_hp = ai4_hp - ai4_pricked[0]
+                        if ai4_hp < 0:
+                            ai4_hp = 0
+                            continue
+                    if ai4_burnDot[1] != 0:
+                        ai4_hp = ai4_hp - ai4_burnDot[0]
+                        ai4_burnDot[1] = ai4_burnDot[1] - 1
+                        if ai4_hp < 0:
+                            ai4_hp = 0
+                            continue
+                    if ai4_SerraSlashDot[1] != 0:
+                        ai4_hp = ai4_hp - ai4_SerraSlashDot[0]
+                        ai4_SerraSlashDot[1] = ai4_SerraSlashDot[1] - 1
+                        if ai4_hp < 0:
+                            ai4_hp = 0
+                            continue
+                    if ai4_EviscerDot[1] != 0:
+                        ai4_hp = ai4_hp - ai4_EviscerDot[0]
+                        ai4_EviscerDot[1] = ai4_EviscerDot[1] - 1
+                        if ai4_hp < 0:
+                            ai4_hp = 0
+                            continue
+                    if ai4_garroteDot[1] != 0:
+                        ai4_hp = ai4_hp - ai4_garroteDot[0]
+                        ai4_garroteDot[1] = ai4_garroteDot[1] - 1
+                        if ai4_hp < 0:
+                            ai4_hp = 0
+                            continue
+                    if ai4_stun != 0:
+                        continue
+                    elif ai4_taunt[1] != 0:
+                        taunter_counter = 1
+                        for champion in CHAMPION_LIST:
+                            if champion == ai4_taunt[0]:
+                                break
+                            taunter_counter += 1
+                        if taunter_counter == 1:
+                            if len(champion1_guarded) != 0:
+                                guard_list = []
+                                for guards in champion1_guarded:
+                                    if guards == "Block":
+                                        guard_list.append(99)
+                                    if guards == "Parry":
+                                        guard_list.append(101)
+                                    if guards == "Boulder":
+                                        guard_list.append(100)
+                                    if guards == "Elusive Measures":
+                                        guard_list.append(100)
+                                    guard_list = sorted(guard_list, reverse=True)
+                                    if guard_list[0] == 101:
+                                        ai4_hp = ai4_hp - ai4_attack[1]
+                                        if champion1_thorns[0] == 1:
+                                            ai4_hp = ai4_hp - 200
+                                        if ai4_hp < 0:
+                                            ai4_hp = 0
+                                    if guard_list[0] == 100:
+                                        champion1_hp = champion1_hp
+                                    if guard_list[0] == 99:
+                                        bodyguard_counter = 1
+                                        for champions in CHAMPION_LIST:
+                                            if champions == VETERAN_BODYGUARD.name:
+                                                break
+                                            bodyguard_counter += 1
+                                        if bodyguard_counter == 1:
+                                            champion1_hp = champion1_hp - self.calculate_ai_damage(1, 4)
+                                            if champion1_hp < 0:
+                                                champion1_hp = 0
+                                        elif bodyguard_counter == 2:
+                                            champion2_hp = champion2_hp - self.calculate_ai_damage(2, 4)
+                                            if champion2_hp < 0:
+                                                champion2_hp = 0
+                                        elif bodyguard_counter == 3:
+                                            champion3_hp = champion3_hp - self.calculate_ai_damage(3, 4)
+                                            if champion3_hp < 0:
+                                                champion3_hp = 0
+                                        elif bodyguard_counter == 4:
+                                            champion4_hp = champion4_hp - self.calculate_ai_damage(4, 4)
+                                            if champion4_hp < 0:
+                                                champion4_hp = 0
+                                        elif bodyguard_counter == 5:
+                                            champion5_hp = champion5_hp - self.calculate_ai_damage(5, 4)
+                                            if champion5_hp < 0:
+                                                champion5_hp = 0
+                            elif CHAMPION_LIST[0] == MONK.name:
+                                staggered_damage = (self.calculate_ai_damage(1, 4) / 3)
+                                if len(monk_staggered_damage_list1) == 0:
+                                    monk_staggered_damage_list1 = [staggered_damage, 3]
+                                else:
+                                    if len(monk_staggered_damage_list2) == 0:
+                                        monk_staggered_damage_list2 = [staggered_damage, 3]
+                                    else:
+                                        if len(monk_staggered_damage_list3) == 0:
+                                            monk_staggered_damage_list3 = [staggered_damage, 3]
+                                staggered_damage_list = [0, 0, 0]
+                                if len(monk_staggered_damage_list1) != 0:
+                                    staggered_damage_list[0] = monk_staggered_damage_list1[0]
+                                if len(monk_staggered_damage_list2) != 0:
+                                    staggered_damage_list[1] = monk_staggered_damage_list2[0]
+                                if len(monk_staggered_damage_list3) != 0:
+                                    staggered_damage_list[2] = monk_staggered_damage_list3[0]
+                                    champion1_hp = champion1_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3])
+                                if champion1_hp < 0:
+                                    champion1_hp = 0
+                            else:
+                                champion1_hp = champion1_hp - self.calculate_ai_damage(1, 4)
+                                if champion1_hp < 0:
+                                    champion1_hp = 0
+                        elif taunter_counter == 2:
+                            if len(champion2_guarded) != 0:
+                                guard_list = []
+                                for guards in champion2_guarded:
+                                    if guards == "Block":
+                                        guard_list.append(99)
+                                    if guards == "Parry":
+                                        guard_list.append(101)
+                                    if guards == "Boulder":
+                                        guard_list.append(100)
+                                    if guards == "Elusive Measures":
+                                        guard_list.append(100)
+                                    guard_list = sorted(guard_list, reverse=True)
+                                    if guard_list[0] == 101:
+                                        ai4_hp = ai4_hp - ai4_attack[1]
+                                        if champion2_thorns[0] == 1:
+                                            ai4_hp = ai4_hp - 200
+                                        if ai4_hp < 0:
+                                            ai4_hp = 0
+                                    if guard_list[0] == 100:
+                                        champion2_hp = champion2_hp
+                                    if guard_list[0] == 99:
+                                        bodyguard_counter = 1
+                                        for champions in CHAMPION_LIST:
+                                            if champions == VETERAN_BODYGUARD.name:
+                                                break
+                                            bodyguard_counter += 1
+                                        if bodyguard_counter == 1:
+                                            champion1_hp = champion1_hp - self.calculate_ai_damage(1, 4)
+                                            if champion1_hp < 0:
+                                                champion1_hp = 0
+                                        elif bodyguard_counter == 2:
+                                            champion2_hp = champion2_hp - self.calculate_ai_damage(2, 4)
+                                            if champion2_hp < 0:
+                                                champion2_hp = 0
+                                        elif bodyguard_counter == 3:
+                                            champion3_hp = champion3_hp - self.calculate_ai_damage(3, 4)
+                                            if champion3_hp < 0:
+                                                champion3_hp = 0
+                                        elif bodyguard_counter == 4:
+                                            champion4_hp = champion4_hp - self.calculate_ai_damage(4, 4)
+                                            if champion4_hp < 0:
+                                                champion4_hp = 0
+                                        elif bodyguard_counter == 5:
+                                            champion5_hp = champion5_hp - self.calculate_ai_damage(5, 4)
+                                            if champion5_hp < 0:
+                                                champion5_hp = 0
+                            elif CHAMPION_LIST[1] == MONK.name:
+                                staggered_damage = (self.calculate_ai_damage(1, 4) / 3)
+                                if len(monk_staggered_damage_list1) == 0:
+                                    monk_staggered_damage_list1 = [staggered_damage, 3]
+                                else:
+                                    if len(monk_staggered_damage_list2) == 0:
+                                        monk_staggered_damage_list2 = [staggered_damage, 3]
+                                    else:
+                                        if len(monk_staggered_damage_list3) == 0:
+                                            monk_staggered_damage_list3 = [staggered_damage, 3]
+                                staggered_damage_list = [0, 0, 0]
+                                if len(monk_staggered_damage_list1) != 0:
+                                    staggered_damage_list[0] = monk_staggered_damage_list1[0]
+                                if len(monk_staggered_damage_list2) != 0:
+                                    staggered_damage_list[1] = monk_staggered_damage_list2[0]
+                                if len(monk_staggered_damage_list3) != 0:
+                                    staggered_damage_list[2] = monk_staggered_damage_list3[0]
+                                    champion2_hp = champion2_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3])
+                                if champion2_hp < 0:
+                                    champion2_hp = 0
+                            else:
+                                champion2_hp = champion2_hp - self.calculate_ai_damage(2, 4)
+                                if champion2_hp < 0:
+                                    champion2_hp = 0
+                        elif taunter_counter == 3:
+                            if len(champion3_guarded) != 0:
+                                guard_list = []
+                                for guards in champion3_guarded:
+                                    if guards == "Block":
+                                        guard_list.append(99)
+                                    if guards == "Parry":
+                                        guard_list.append(101)
+                                    if guards == "Boulder":
+                                        guard_list.append(100)
+                                    if guards == "Elusive Measures":
+                                        guard_list.append(100)
+                                    guard_list = sorted(guard_list, reverse=True)
+                                    if guard_list[0] == 101:
+                                        ai4_hp = ai4_hp - ai4_attack[1]
+                                        if champion3_thorns[0] == 1:
+                                            ai4_hp = ai4_hp - 200
+                                        if ai4_hp < 0:
+                                            ai4_hp = 0
+                                    if guard_list[0] == 100:
+                                        champion3_hp = champion3_hp
+                                    if guard_list[0] == 99:
+                                        bodyguard_counter = 1
+                                        for champions in CHAMPION_LIST:
+                                            if champions == VETERAN_BODYGUARD.name:
+                                                break
+                                            bodyguard_counter += 1
+                                        if bodyguard_counter == 1:
+                                            champion1_hp = champion1_hp - self.calculate_ai_damage(1, 4)
+                                            if champion1_hp < 0:
+                                                champion1_hp = 0
+                                        elif bodyguard_counter == 2:
+                                            champion2_hp = champion2_hp - self.calculate_ai_damage(2, 4)
+                                            if champion2_hp < 0:
+                                                champion2_hp = 0
+                                        elif bodyguard_counter == 3:
+                                            champion3_hp = champion3_hp - self.calculate_ai_damage(3, 4)
+                                            if champion3_hp < 0:
+                                                champion3_hp = 0
+                                        elif bodyguard_counter == 4:
+                                            champion4_hp = champion4_hp - self.calculate_ai_damage(4, 4)
+                                            if champion4_hp < 0:
+                                                champion4_hp = 0
+                                        elif bodyguard_counter == 5:
+                                            champion5_hp = champion5_hp - self.calculate_ai_damage(5, 4)
+                                            if champion5_hp < 0:
+                                                champion5_hp = 0
+                            elif CHAMPION_LIST[2] == MONK.name:
+                                staggered_damage = (self.calculate_ai_damage(1, 4) / 3)
+                                if len(monk_staggered_damage_list1) == 0:
+                                    monk_staggered_damage_list1 = [staggered_damage, 3]
+                                else:
+                                    if len(monk_staggered_damage_list2) == 0:
+                                        monk_staggered_damage_list2 = [staggered_damage, 3]
+                                    else:
+                                        if len(monk_staggered_damage_list3) == 0:
+                                            monk_staggered_damage_list3 = [staggered_damage, 3]
+                                staggered_damage_list = [0, 0, 0]
+                                if len(monk_staggered_damage_list1) != 0:
+                                    staggered_damage_list[0] = monk_staggered_damage_list1[0]
+                                if len(monk_staggered_damage_list2) != 0:
+                                    staggered_damage_list[1] = monk_staggered_damage_list2[0]
+                                if len(monk_staggered_damage_list3) != 0:
+                                    staggered_damage_list[2] = monk_staggered_damage_list3[0]
+                                    champion3_hp = champion3_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3])
+                                if champion3_hp < 0:
+                                    champion3_hp = 0
+                            else:
+                                champion3_hp = champion3_hp - self.calculate_ai_damage(3, 4)
+                                if champion3_hp < 0:
+                                    champion3_hp = 0
+                        elif taunter_counter == 4:
+                            if len(champion4_guarded) != 0:
+                                guard_list = []
+                                for guards in champion4_guarded:
+                                    if guards == "Block":
+                                        guard_list.append(99)
+                                    if guards == "Parry":
+                                        guard_list.append(101)
+                                    if guards == "Boulder":
+                                        guard_list.append(100)
+                                    if guards == "Elusive Measures":
+                                        guard_list.append(100)
+                                    guard_list = sorted(guard_list, reverse=True)
+                                    if guard_list[0] == 101:
+                                        ai4_hp = ai4_hp - ai4_attack[1]
+                                        if champion4_thorns[0] == 1:
+                                            ai4_hp = ai4_hp - 200
+                                        if ai4_hp < 0:
+                                            ai4_hp = 0
+                                    if guard_list[0] == 100:
+                                        champion4_hp = champion4_hp
+                                    if guard_list[0] == 99:
+                                        bodyguard_counter = 1
+                                        for champions in CHAMPION_LIST:
+                                            if champions == VETERAN_BODYGUARD.name:
+                                                break
+                                            bodyguard_counter += 1
+                                        if bodyguard_counter == 1:
+                                            champion1_hp = champion1_hp - self.calculate_ai_damage(1, 4)
+                                            if champion1_hp < 0:
+                                                champion1_hp = 0
+                                        elif bodyguard_counter == 2:
+                                            champion2_hp = champion2_hp - self.calculate_ai_damage(2, 4)
+                                            if champion2_hp < 0:
+                                                champion2_hp = 0
+                                        elif bodyguard_counter == 3:
+                                            champion3_hp = champion3_hp - self.calculate_ai_damage(3, 4)
+                                            if champion3_hp < 0:
+                                                champion3_hp = 0
+                                        elif bodyguard_counter == 4:
+                                            champion4_hp = champion4_hp - self.calculate_ai_damage(4, 4)
+                                            if champion4_hp < 0:
+                                                champion4_hp = 0
+                                        elif bodyguard_counter == 5:
+                                            champion5_hp = champion5_hp - self.calculate_ai_damage(5, 4)
+                                            if champion5_hp < 0:
+                                                champion5_hp = 0
+                            elif CHAMPION_LIST[3] == MONK.name:
+                                staggered_damage = (self.calculate_ai_damage(1, 4) / 3)
+                                if len(monk_staggered_damage_list1) == 0:
+                                    monk_staggered_damage_list1 = [staggered_damage, 3]
+                                else:
+                                    if len(monk_staggered_damage_list2) == 0:
+                                        monk_staggered_damage_list2 = [staggered_damage, 3]
+                                    else:
+                                        if len(monk_staggered_damage_list3) == 0:
+                                            monk_staggered_damage_list3 = [staggered_damage, 3]
+                                staggered_damage_list = [0, 0, 0]
+                                if len(monk_staggered_damage_list1) != 0:
+                                    staggered_damage_list[0] = monk_staggered_damage_list1[0]
+                                if len(monk_staggered_damage_list2) != 0:
+                                    staggered_damage_list[1] = monk_staggered_damage_list2[0]
+                                if len(monk_staggered_damage_list3) != 0:
+                                    staggered_damage_list[2] = monk_staggered_damage_list3[0]
+                                    champion4_hp = champion4_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3])
+                                if champion4_hp < 0:
+                                    champion4_hp = 0
+                            else:
+                                champion4_hp = champion4_hp - self.calculate_ai_damage(4, 4)
+                                if champion4_hp < 0:
+                                    champion4_hp = 0
+                        elif taunter_counter == 5:
+                            if len(champion5_guarded) != 0:
+                                guard_list = []
+                                for guards in champion5_guarded:
+                                    if guards == "Block":
+                                        guard_list.append(99)
+                                    if guards == "Parry":
+                                        guard_list.append(101)
+                                    if guards == "Boulder":
+                                        guard_list.append(100)
+                                    if guards == "Elusive Measures":
+                                        guard_list.append(100)
+                                    guard_list = sorted(guard_list, reverse=True)
+                                    if guard_list[0] == 101:
+                                        ai4_hp = ai4_hp - ai4_attack[1]
+                                        if champion5_thorns[0] == 1:
+                                            ai4_hp = ai4_hp - 200
+                                        if ai4_hp < 0:
+                                            ai4_hp = 0
+                                    if guard_list[0] == 100:
+                                        champion5_hp = champion5_hp
+                                    if guard_list[0] == 99:
+                                        bodyguard_counter = 1
+                                        for champions in CHAMPION_LIST:
+                                            if champions == VETERAN_BODYGUARD.name:
+                                                break
+                                            bodyguard_counter += 1
+                                        if bodyguard_counter == 1:
+                                            champion1_hp = champion1_hp - self.calculate_ai_damage(1, 4)
+                                            if champion1_hp < 0:
+                                                champion1_hp = 0
+                                        elif bodyguard_counter == 2:
+                                            champion2_hp = champion2_hp - self.calculate_ai_damage(2, 4)
+                                            if champion2_hp < 0:
+                                                champion2_hp = 0
+                                        elif bodyguard_counter == 3:
+                                            champion3_hp = champion3_hp - self.calculate_ai_damage(3, 4)
+                                            if champion3_hp < 0:
+                                                champion3_hp = 0
+                                        elif bodyguard_counter == 4:
+                                            champion4_hp = champion4_hp - self.calculate_ai_damage(4, 4)
+                                            if champion4_hp < 0:
+                                                champion4_hp = 0
+                                        elif bodyguard_counter == 5:
+                                            champion5_hp = champion5_hp - self.calculate_ai_damage(5, 4)
+                                            if champion5_hp < 0:
+                                                champion5_hp = 0
+                            elif CHAMPION_LIST[4] == MONK.name:
+                                staggered_damage = (self.calculate_ai_damage(1, 4) / 3)
+                                if len(monk_staggered_damage_list1) == 0:
+                                    monk_staggered_damage_list1 = [staggered_damage, 3]
+                                else:
+                                    if len(monk_staggered_damage_list2) == 0:
+                                        monk_staggered_damage_list2 = [staggered_damage, 3]
+                                    else:
+                                        if len(monk_staggered_damage_list3) == 0:
+                                            monk_staggered_damage_list3 = [staggered_damage, 3]
+                                staggered_damage_list = [0, 0, 0]
+                                if len(monk_staggered_damage_list1) != 0:
+                                    staggered_damage_list[0] = monk_staggered_damage_list1[0]
+                                if len(monk_staggered_damage_list2) != 0:
+                                    staggered_damage_list[1] = monk_staggered_damage_list2[0]
+                                if len(monk_staggered_damage_list3) != 0:
+                                    staggered_damage_list[2] = monk_staggered_damage_list3[0]
+                                    champion5_hp = champion5_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3])
+                                if champion5_hp < 0:
+                                    champion5_hp = 0
+                            else:
+                                champion5_hp = champion5_hp - self.calculate_ai_damage(5, 4)
+                                if champion5_hp < 0:
+                                    champion5_hp = 0
+                        ai4_taunt[1] = ai4_taunt[1] - 1
+                    else:
+                        if "Everyone" in ai4_attack_intention:
+                            if champion1_hp != 0:
+                                champion1_hp = champion1_hp - self.calculate_ai_damage(1, 4)
+                                if champion1_hp < 0:
+                                    champion1_hp = 0
+                            if champion2_hp != 0:
+                                champion2_hp = champion2_hp - self.calculate_ai_damage(1, 4)
+                                if champion2_hp < 0:
+                                    champion2_hp = 0
+                            if champion3_hp != 0:
+                                champion3_hp = champion3_hp - self.calculate_ai_damage(1, 4)
+                                if champion3_hp < 0:
+                                    champion3_hp = 0
+                            if champion4_hp != 0:
+                                champion4_hp = champion4_hp - self.calculate_ai_damage(1, 4)
+                                if champion4_hp < 0:
+                                    champion4_hp = 0
+                            if champion5_hp != 0:
+                                champion5_hp = champion5_hp - self.calculate_ai_damage(1, 4)
+                                if champion5_hp < 0:
+                                    champion5_hp = 0
+                        else:
+                            for indiv_champion in CHAMPION_LIST:
+                                if indiv_champion in ai4_attack_intention:
+                                    counter = 1
+                                    for indivi_champion in CHAMPION_LIST:
+                                        if  indiv_champion == indivi_champion:
+                                            break
+                                        counter += 1
+                                    if counter == 1:
+                                        champion1_hp = champion1_hp - self.calculate_ai_damage(1, 4)
+                                    if counter == 2:
+                                        champion2_hp = champion2_hp - self.calculate_ai_damage(2, 4)
+                                    if counter == 3:
+                                        champion3_hp = champion3_hp - self.calculate_ai_damage(3, 4)
+                                    if counter == 4:
+                                        champion4_hp = champion4_hp - self.calculate_ai_damage(4, 4)
+                                    if counter == 5:
+                                        champion5_hp = champion5_hp - self.calculate_ai_damage(5, 4)
+                if monster_var == 5:
+                    if ai5_hp == 0:
+                        continue
+                    if len(ai5_pricked) != 0:
+                        ai5_hp = ai5_hp - ai5_pricked[0]
+                        if ai5_hp < 0:
+                            ai5_hp = 0
+                            continue
+                    if ai5_burnDot[1] != 0:
+                        ai5_hp = ai5_hp - ai5_burnDot[0]
+                        ai5_burnDot[1] = ai5_burnDot[1] - 1
+                        if ai5_hp < 0:
+                            ai5_hp = 0
+                            continue
+                    if ai5_SerraSlashDot[1] != 0:
+                        ai5_hp = ai5_hp - ai5_SerraSlashDot[0]
+                        ai5_SerraSlashDot[1] = ai5_SerraSlashDot[1] - 1
+                        if ai5_hp < 0:
+                            ai5_hp = 0
+                            continue
+                    if ai5_EviscerDot[1] != 0:
+                        ai5_hp = ai5_hp - ai5_EviscerDot[0]
+                        ai5_EviscerDot[1] = ai5_EviscerDot[1] - 1
+                        if ai5_hp < 0:
+                            ai5_hp = 0
+                            continue
+                    if ai5_garroteDot[1] != 0:
+                        ai5_hp = ai5_hp - ai5_garroteDot[0]
+                        ai5_garroteDot[1] = ai5_garroteDot[1] - 1
+                        if ai5_hp < 0:
+                            ai5_hp = 0
+                            continue
+                    if ai5_stun != 0:
+                        continue
+                    elif ai5_taunt[1] != 0:
+                        taunter_counter = 1
+                        for champion in CHAMPION_LIST:
+                            if champion == ai5_taunt[0]:
+                                break
+                            taunter_counter += 1
+                        if taunter_counter == 1:
+                            if len(champion1_guarded) != 0:
+                                guard_list = []
+                                for guards in champion1_guarded:
+                                    if guards == "Block":
+                                        guard_list.append(99)
+                                    if guards == "Parry":
+                                        guard_list.append(101)
+                                    if guards == "Boulder":
+                                        guard_list.append(100)
+                                    if guards == "Elusive Measures":
+                                        guard_list.append(100)
+                                    guard_list = sorted(guard_list, reverse=True)
+                                    if guard_list[0] == 101:
+                                        ai5_hp = ai5_hp - ai5_attack[1]
+                                        if champion1_thorns[0] == 1:
+                                            ai5_hp = ai5_hp - 200
+                                        if ai5_hp < 0:
+                                            ai5_hp = 0
+                                    if guard_list[0] == 100:
+                                        champion1_hp = champion1_hp
+                                    if guard_list[0] == 99:
+                                        bodyguard_counter = 1
+                                        for champions in CHAMPION_LIST:
+                                            if champions == VETERAN_BODYGUARD.name:
+                                                break
+                                            bodyguard_counter += 1
+                                        if bodyguard_counter == 1:
+                                            champion1_hp = champion1_hp - self.calculate_ai_damage(1, 5)
+                                            if champion1_hp < 0:
+                                                champion1_hp = 0
+                                        elif bodyguard_counter == 2:
+                                            champion2_hp = champion2_hp - self.calculate_ai_damage(2, 5)
+                                            if champion2_hp < 0:
+                                                champion2_hp = 0
+                                        elif bodyguard_counter == 3:
+                                            champion3_hp = champion3_hp - self.calculate_ai_damage(3, 5)
+                                            if champion3_hp < 0:
+                                                champion3_hp = 0
+                                        elif bodyguard_counter == 4:
+                                            champion4_hp = champion4_hp - self.calculate_ai_damage(4, 5)
+                                            if champion4_hp < 0:
+                                                champion4_hp = 0
+                                        elif bodyguard_counter == 5:
+                                            champion5_hp = champion5_hp - self.calculate_ai_damage(5, 5)
+                                            if champion5_hp < 0:
+                                                champion5_hp = 0
+                            elif CHAMPION_LIST[0] == MONK.name:
+                                staggered_damage = (self.calculate_ai_damage(1, 5) / 3)
+                                if len(monk_staggered_damage_list1) == 0:
+                                    monk_staggered_damage_list1 = [staggered_damage, 3]
+                                else:
+                                    if len(monk_staggered_damage_list2) == 0:
+                                        monk_staggered_damage_list2 = [staggered_damage, 3]
+                                    else:
+                                        if len(monk_staggered_damage_list3) == 0:
+                                            monk_staggered_damage_list3 = [staggered_damage, 3]
+                                staggered_damage_list = [0, 0, 0]
+                                if len(monk_staggered_damage_list1) != 0:
+                                    staggered_damage_list[0] = monk_staggered_damage_list1[0]
+                                if len(monk_staggered_damage_list2) != 0:
+                                    staggered_damage_list[1] = monk_staggered_damage_list2[0]
+                                if len(monk_staggered_damage_list3) != 0:
+                                    staggered_damage_list[2] = monk_staggered_damage_list3[0]
+                                    champion1_hp = champion1_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3])
+                                if champion1_hp < 0:
+                                    champion1_hp = 0
+                            else:
+                                champion1_hp = champion1_hp - self.calculate_ai_damage(1, 5)
+                                if champion1_hp < 0:
+                                    champion1_hp = 0
+                        elif taunter_counter == 2:
+                            if len(champion2_guarded) != 0:
+                                guard_list = []
+                                for guards in champion2_guarded:
+                                    if guards == "Block":
+                                        guard_list.append(99)
+                                    if guards == "Parry":
+                                        guard_list.append(101)
+                                    if guards == "Boulder":
+                                        guard_list.append(100)
+                                    if guards == "Elusive Measures":
+                                        guard_list.append(100)
+                                    guard_list = sorted(guard_list, reverse=True)
+                                    if guard_list[0] == 101:
+                                        ai5_hp = ai5_hp - ai5_attack[1]
+                                        if champion2_thorns[0] == 1:
+                                            ai5_hp = ai5_hp - 200
+                                        if ai5_hp < 0:
+                                            ai5_hp = 0
+                                    if guard_list[0] == 100:
+                                        champion2_hp = champion2_hp
+                                    if guard_list[0] == 99:
+                                        bodyguard_counter = 1
+                                        for champions in CHAMPION_LIST:
+                                            if champions == VETERAN_BODYGUARD.name:
+                                                break
+                                            bodyguard_counter += 1
+                                        if bodyguard_counter == 1:
+                                            champion1_hp = champion1_hp - self.calculate_ai_damage(1, 5)
+                                            if champion1_hp < 0:
+                                                champion1_hp = 0
+                                        elif bodyguard_counter == 2:
+                                            champion2_hp = champion2_hp - self.calculate_ai_damage(2, 5)
+                                            if champion2_hp < 0:
+                                                champion2_hp = 0
+                                        elif bodyguard_counter == 3:
+                                            champion3_hp = champion3_hp - self.calculate_ai_damage(3, 5)
+                                            if champion3_hp < 0:
+                                                champion3_hp = 0
+                                        elif bodyguard_counter == 4:
+                                            champion4_hp = champion4_hp - self.calculate_ai_damage(4, 5)
+                                            if champion4_hp < 0:
+                                                champion4_hp = 0
+                                        elif bodyguard_counter == 5:
+                                            champion5_hp = champion5_hp - self.calculate_ai_damage(5, 5)
+                                            if champion5_hp < 0:
+                                                champion5_hp = 0
+                            elif CHAMPION_LIST[1] == MONK.name:
+                                staggered_damage = (self.calculate_ai_damage(1, 5) / 3)
+                                if len(monk_staggered_damage_list1) == 0:
+                                    monk_staggered_damage_list1 = [staggered_damage, 3]
+                                else:
+                                    if len(monk_staggered_damage_list2) == 0:
+                                        monk_staggered_damage_list2 = [staggered_damage, 3]
+                                    else:
+                                        if len(monk_staggered_damage_list3) == 0:
+                                            monk_staggered_damage_list3 = [staggered_damage, 3]
+                                staggered_damage_list = [0, 0, 0]
+                                if len(monk_staggered_damage_list1) != 0:
+                                    staggered_damage_list[0] = monk_staggered_damage_list1[0]
+                                if len(monk_staggered_damage_list2) != 0:
+                                    staggered_damage_list[1] = monk_staggered_damage_list2[0]
+                                if len(monk_staggered_damage_list3) != 0:
+                                    staggered_damage_list[2] = monk_staggered_damage_list3[0]
+                                    champion2_hp = champion2_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3])
+                                if champion2_hp < 0:
+                                    champion2_hp = 0
+                            else:
+                                champion2_hp = champion2_hp - self.calculate_ai_damage(2, 5)
+                                if champion2_hp < 0:
+                                    champion2_hp = 0
+                        elif taunter_counter == 3:
+                            if len(champion3_guarded) != 0:
+                                guard_list = []
+                                for guards in champion3_guarded:
+                                    if guards == "Block":
+                                        guard_list.append(99)
+                                    if guards == "Parry":
+                                        guard_list.append(101)
+                                    if guards == "Boulder":
+                                        guard_list.append(100)
+                                    if guards == "Elusive Measures":
+                                        guard_list.append(100)
+                                    guard_list = sorted(guard_list, reverse=True)
+                                    if guard_list[0] == 101:
+                                        ai5_hp = ai5_hp - ai5_attack[1]
+                                        if champion3_thorns[0] == 1:
+                                            ai5_hp = ai5_hp - 200
+                                        if ai5_hp < 0:
+                                            ai5_hp = 0
+                                    if guard_list[0] == 100:
+                                        champion3_hp = champion3_hp
+                                    if guard_list[0] == 99:
+                                        bodyguard_counter = 1
+                                        for champions in CHAMPION_LIST:
+                                            if champions == VETERAN_BODYGUARD.name:
+                                                break
+                                            bodyguard_counter += 1
+                                        if bodyguard_counter == 1:
+                                            champion1_hp = champion1_hp - self.calculate_ai_damage(1, 5)
+                                            if champion1_hp < 0:
+                                                champion1_hp = 0
+                                        elif bodyguard_counter == 2:
+                                            champion2_hp = champion2_hp - self.calculate_ai_damage(2, 5)
+                                            if champion2_hp < 0:
+                                                champion2_hp = 0
+                                        elif bodyguard_counter == 3:
+                                            champion3_hp = champion3_hp - self.calculate_ai_damage(3, 5)
+                                            if champion3_hp < 0:
+                                                champion3_hp = 0
+                                        elif bodyguard_counter == 4:
+                                            champion4_hp = champion4_hp - self.calculate_ai_damage(4, 5)
+                                            if champion4_hp < 0:
+                                                champion4_hp = 0
+                                        elif bodyguard_counter == 5:
+                                            champion5_hp = champion5_hp - self.calculate_ai_damage(5, 5)
+                                            if champion5_hp < 0:
+                                                champion5_hp = 0
+                            elif CHAMPION_LIST[2] == MONK.name:
+                                staggered_damage = (self.calculate_ai_damage(1, 5) / 3)
+                                if len(monk_staggered_damage_list1) == 0:
+                                    monk_staggered_damage_list1 = [staggered_damage, 3]
+                                else:
+                                    if len(monk_staggered_damage_list2) == 0:
+                                        monk_staggered_damage_list2 = [staggered_damage, 3]
+                                    else:
+                                        if len(monk_staggered_damage_list3) == 0:
+                                            monk_staggered_damage_list3 = [staggered_damage, 3]
+                                staggered_damage_list = [0, 0, 0]
+                                if len(monk_staggered_damage_list1) != 0:
+                                    staggered_damage_list[0] = monk_staggered_damage_list1[0]
+                                if len(monk_staggered_damage_list2) != 0:
+                                    staggered_damage_list[1] = monk_staggered_damage_list2[0]
+                                if len(monk_staggered_damage_list3) != 0:
+                                    staggered_damage_list[2] = monk_staggered_damage_list3[0]
+                                    champion3_hp = champion3_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3])
+                                if champion3_hp < 0:
+                                    champion3_hp = 0
+                            else:
+                                champion3_hp = champion3_hp - self.calculate_ai_damage(3, 5)
+                                if champion3_hp < 0:
+                                    champion3_hp = 0
+                        elif taunter_counter == 4:
+                            if len(champion4_guarded) != 0:
+                                guard_list = []
+                                for guards in champion4_guarded:
+                                    if guards == "Block":
+                                        guard_list.append(99)
+                                    if guards == "Parry":
+                                        guard_list.append(101)
+                                    if guards == "Boulder":
+                                        guard_list.append(100)
+                                    if guards == "Elusive Measures":
+                                        guard_list.append(100)
+                                    guard_list = sorted(guard_list, reverse=True)
+                                    if guard_list[0] == 101:
+                                        ai5_hp = ai5_hp - ai5_attack[1]
+                                        if champion4_thorns[0] == 1:
+                                            ai5_hp = ai5_hp - 200
+                                        if ai5_hp < 0:
+                                            ai5_hp = 0
+                                    if guard_list[0] == 100:
+                                        champion4_hp = champion4_hp
+                                    if guard_list[0] == 99:
+                                        bodyguard_counter = 1
+                                        for champions in CHAMPION_LIST:
+                                            if champions == VETERAN_BODYGUARD.name:
+                                                break
+                                            bodyguard_counter += 1
+                                        if bodyguard_counter == 1:
+                                            champion1_hp = champion1_hp - self.calculate_ai_damage(1, 5)
+                                            if champion1_hp < 0:
+                                                champion1_hp = 0
+                                        elif bodyguard_counter == 2:
+                                            champion2_hp = champion2_hp - self.calculate_ai_damage(2, 5)
+                                            if champion2_hp < 0:
+                                                champion2_hp = 0
+                                        elif bodyguard_counter == 3:
+                                            champion3_hp = champion3_hp - self.calculate_ai_damage(3, 5)
+                                            if champion3_hp < 0:
+                                                champion3_hp = 0
+                                        elif bodyguard_counter == 4:
+                                            champion4_hp = champion4_hp - self.calculate_ai_damage(4, 5)
+                                            if champion4_hp < 0:
+                                                champion4_hp = 0
+                                        elif bodyguard_counter == 5:
+                                            champion5_hp = champion5_hp - self.calculate_ai_damage(5, 5)
+                                            if champion5_hp < 0:
+                                                champion5_hp = 0
+                            elif CHAMPION_LIST[3] == MONK.name:
+                                staggered_damage = (self.calculate_ai_damage(1, 5) / 3)
+                                if len(monk_staggered_damage_list1) == 0:
+                                    monk_staggered_damage_list1 = [staggered_damage, 3]
+                                else:
+                                    if len(monk_staggered_damage_list2) == 0:
+                                        monk_staggered_damage_list2 = [staggered_damage, 3]
+                                    else:
+                                        if len(monk_staggered_damage_list3) == 0:
+                                            monk_staggered_damage_list3 = [staggered_damage, 3]
+                                staggered_damage_list = [0, 0, 0]
+                                if len(monk_staggered_damage_list1) != 0:
+                                    staggered_damage_list[0] = monk_staggered_damage_list1[0]
+                                if len(monk_staggered_damage_list2) != 0:
+                                    staggered_damage_list[1] = monk_staggered_damage_list2[0]
+                                if len(monk_staggered_damage_list3) != 0:
+                                    staggered_damage_list[2] = monk_staggered_damage_list3[0]
+                                    champion4_hp = champion4_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3])
+                                if champion4_hp < 0:
+                                    champion4_hp = 0
+                            else:
+                                champion4_hp = champion4_hp - self.calculate_ai_damage(4, 5)
+                                if champion4_hp < 0:
+                                    champion4_hp = 0
+                        elif taunter_counter == 5:
+                            if len(champion5_guarded) != 0:
+                                guard_list = []
+                                for guards in champion5_guarded:
+                                    if guards == "Block":
+                                        guard_list.append(99)
+                                    if guards == "Parry":
+                                        guard_list.append(101)
+                                    if guards == "Boulder":
+                                        guard_list.append(100)
+                                    if guards == "Elusive Measures":
+                                        guard_list.append(100)
+                                    guard_list = sorted(guard_list, reverse=True)
+                                    if guard_list[0] == 101:
+                                        ai5_hp = ai5_hp - ai5_attack[1]
+                                        if champion5_thorns[0] == 1:
+                                            ai5_hp = ai5_hp - 200
+                                        if ai5_hp < 0:
+                                            ai5_hp = 0
+                                    if guard_list[0] == 100:
+                                        champion5_hp = champion5_hp
+                                    if guard_list[0] == 99:
+                                        bodyguard_counter = 1
+                                        for champions in CHAMPION_LIST:
+                                            if champions == VETERAN_BODYGUARD.name:
+                                                break
+                                            bodyguard_counter += 1
+                                        if bodyguard_counter == 1:
+                                            champion1_hp = champion1_hp - self.calculate_ai_damage(1, 5)
+                                            if champion1_hp < 0:
+                                                champion1_hp = 0
+                                        elif bodyguard_counter == 2:
+                                            champion2_hp = champion2_hp - self.calculate_ai_damage(2, 5)
+                                            if champion2_hp < 0:
+                                                champion2_hp = 0
+                                        elif bodyguard_counter == 3:
+                                            champion3_hp = champion3_hp - self.calculate_ai_damage(3, 5)
+                                            if champion3_hp < 0:
+                                                champion3_hp = 0
+                                        elif bodyguard_counter == 4:
+                                            champion4_hp = champion4_hp - self.calculate_ai_damage(4, 5)
+                                            if champion4_hp < 0:
+                                                champion4_hp = 0
+                                        elif bodyguard_counter == 5:
+                                            champion5_hp = champion5_hp - self.calculate_ai_damage(5, 5)
+                                            if champion5_hp < 0:
+                                                champion5_hp = 0
+                            elif CHAMPION_LIST[4] == MONK.name:
+                                staggered_damage = (self.calculate_ai_damage(1, 5) / 3)
+                                if len(monk_staggered_damage_list1) == 0:
+                                    monk_staggered_damage_list1 = [staggered_damage, 3]
+                                else:
+                                    if len(monk_staggered_damage_list2) == 0:
+                                        monk_staggered_damage_list2 = [staggered_damage, 3]
+                                    else:
+                                        if len(monk_staggered_damage_list3) == 0:
+                                            monk_staggered_damage_list3 = [staggered_damage, 3]
+                                staggered_damage_list = [0, 0, 0]
+                                if len(monk_staggered_damage_list1) != 0:
+                                    staggered_damage_list[0] = monk_staggered_damage_list1[0]
+                                if len(monk_staggered_damage_list2) != 0:
+                                    staggered_damage_list[1] = monk_staggered_damage_list2[0]
+                                if len(monk_staggered_damage_list3) != 0:
+                                    staggered_damage_list[2] = monk_staggered_damage_list3[0]
+                                    champion5_hp = champion5_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3])
+                                if champion5_hp < 0:
+                                    champion5_hp = 0
+                            else:
+                                champion5_hp = champion5_hp - self.calculate_ai_damage(5, 5)
+                                if champion5_hp < 0:
+                                    champion5_hp = 0
+                        ai5_taunt[1] = ai5_taunt[1] - 1
+                    else:
+                        if "Everyone" in ai5_attack_intention:
+                            if champion1_hp != 0:
+                                champion1_hp = champion1_hp - self.calculate_ai_damage(1, 5)
+                                if champion1_hp < 0:
+                                    champion1_hp = 0
+                            if champion2_hp != 0:
+                                champion2_hp = champion2_hp - self.calculate_ai_damage(1, 5)
+                                if champion2_hp < 0:
+                                    champion2_hp = 0
+                            if champion3_hp != 0:
+                                champion3_hp = champion3_hp - self.calculate_ai_damage(1, 5)
+                                if champion3_hp < 0:
+                                    champion3_hp = 0
+                            if champion4_hp != 0:
+                                champion4_hp = champion4_hp - self.calculate_ai_damage(1, 5)
+                                if champion4_hp < 0:
+                                    champion4_hp = 0
+                            if champion5_hp != 0:
+                                champion5_hp = champion5_hp - self.calculate_ai_damage(1, 5)
+                                if champion5_hp < 0:
+                                    champion5_hp = 0
+                        else:
+                            for indiv_champion in CHAMPION_LIST:
+                                if indiv_champion in ai5_attack_intention:
+                                    counter = 1
+                                    for indivi_champion in CHAMPION_LIST:
+                                        if  indiv_champion == indivi_champion:
+                                            break
+                                        counter += 1
+                                    if counter == 1:
+                                        champion1_hp = champion1_hp - self.calculate_ai_damage(1, 5)
+                                    if counter == 2:
+                                        champion2_hp = champion2_hp - self.calculate_ai_damage(2, 5)
+                                    if counter == 3:
+                                        champion3_hp = champion3_hp - self.calculate_ai_damage(3, 5)
+                                    if counter == 4:
+                                        champion4_hp = champion4_hp - self.calculate_ai_damage(4, 5)
+                                    if counter == 5:
+                                        champion5_hp = champion5_hp - self.calculate_ai_damage(5, 5)
             current_turn = "MN"
             self.next_turn()
-
+    def calculate_ai_damage(self, champion_position, ai_position):
+        if ai_position == 1:
+            if ai1_weakness != 0:
+                ai1_damage_done = ai2_attack[1] * 0.8
+            else:
+                ai1_damage_done = ai2_attack[1]
+            if champion_position == 1:
+                if champion1_fortification[0] == 1:
+                    ai1_damage_done = ai1_damage_done * 0.7
+                if champion1_aura == 2:
+                    ai1_damage_done = ai1_damage_done * 0.9
+                if "Defensive Stance" in champion1_guarded:
+                    ai1_damage_done = ai1_damage_done * 0.7
+                if "Enharden Nerves" in champion1_guarded:
+                    ai1_damage_done = ai1_damage_done * 0.6
+                if "Magical Barrier" in champion1_guarded:
+                    ai1_damage_done = ai1_damage_done - 1000
+                    if ai1_damage_done < 0:
+                        ai1_damage_done = 0
+            if champion_position == 2:
+                if champion2_fortification[0] == 1:
+                    ai1_damage_done = ai1_damage_done * 0.7
+                if champion2_aura != 0:
+                    ai1_damage_done = ai1_damage_done * 0.9
+                if "Defensive Stance" in champion2_guarded:
+                    ai1_damage_done = ai1_damage_done * 0.7
+                if "Enharden Nerves" in champion2_guarded:
+                    ai1_damage_done = ai1_damage_done * 0.6
+                if "Magical Barrier" in champion2_guarded:
+                    ai1_damage_done = ai1_damage_done - 1000
+                    if ai1_damage_done < 0:
+                        ai1_damage_done = 0
+            if champion_position == 3:
+                if champion3_fortification[0] == 1:
+                    ai1_damage_done = ai1_damage_done * 0.7
+                if champion3_aura != 0:
+                    ai1_damage_done = ai1_damage_done * 0.9
+                if "Defensive Stance" in champion3_guarded:
+                    ai1_damage_done = ai1_damage_done * 0.7
+                if "Enharden Nerves" in champion3_guarded:
+                    ai1_damage_done = ai1_damage_done * 0.6
+                if "Magical Barrier" in champion3_guarded:
+                    ai1_damage_done = ai1_damage_done - 1000
+                    if ai1_damage_done < 0:
+                        ai1_damage_done = 0
+            if champion_position == 4:
+                if champion4_fortification[0] == 1:
+                    ai1_damage_done = ai1_damage_done * 0.7
+                if champion4_aura != 0:
+                    ai1_damage_done = ai1_damage_done * 0.9
+                if "Defensive Stance" in champion4_guarded:
+                    ai1_damage_done = ai1_damage_done * 0.7
+                if "Enharden Nerves" in champion4_guarded:
+                    ai1_damage_done = ai1_damage_done * 0.6
+                if "Magical Barrier" in champion4_guarded:
+                    ai1_damage_done = ai1_damage_done - 1000
+                    if ai1_damage_done < 0:
+                        ai1_damage_done = 0
+            if champion_position == 5:
+                if champion5_fortification[0] == 1:
+                    ai1_damage_done = ai1_damage_done * 0.7
+                if champion5_aura != 0:
+                    ai1_damage_done = ai1_damage_done * 0.9
+                if "Defensive Stance" in champion5_guarded:
+                    ai1_damage_done = ai1_damage_done * 0.7
+                if "Enharden Nerves" in champion5_guarded:
+                    ai1_damage_done = ai1_damage_done * 0.6
+                if "Magical Barrier" in champion5_guarded:
+                    ai1_damage_done = ai1_damage_done - 1000
+                    if ai1_damage_done < 0:
+                        ai1_damage_done = 0
+            return math.ceil(ai1_damage_done)
+        if ai_position == 2:
+            if ai2_weakness != 0:
+                ai2_damage_done = ai2_attack[1] * 0.8
+            else:
+                ai2_damage_done = ai2_attack[1]
+            if champion_position == 1:
+                if champion1_fortification[0] == 1:
+                    ai2_damage_done = ai2_damage_done * 0.7
+                if champion1_aura == 2:
+                    ai2_damage_done = ai2_damage_done * 0.9
+                if "Defensive Stance" in champion1_guarded:
+                    ai2_damage_done = ai2_damage_done * 0.7
+                if "Enharden Nerves" in champion1_guarded:
+                    ai2_damage_done = ai2_damage_done * 0.6
+                if "Magical Barrier" in champion1_guarded:
+                    ai2_damage_done = ai2_damage_done - 1000
+                    if ai2_damage_done < 0:
+                        ai2_damage_done = 0
+            if champion_position == 2:
+                if champion2_fortification[0] == 1:
+                    ai2_damage_done = ai2_damage_done * 0.7
+                if champion2_aura != 0:
+                    ai2_damage_done = ai2_damage_done * 0.9
+                if "Defensive Stance" in champion2_guarded:
+                    ai2_damage_done = ai2_damage_done * 0.7
+                if "Enharden Nerves" in champion2_guarded:
+                    ai2_damage_done = ai2_damage_done * 0.6
+                if "Magical Barrier" in champion2_guarded:
+                    ai2_damage_done = ai2_damage_done - 1000
+                    if ai2_damage_done < 0:
+                        ai2_damage_done = 0
+            if champion_position == 3:
+                if champion3_fortification[0] == 1:
+                    ai2_damage_done = ai2_damage_done * 0.7
+                if champion3_aura != 0:
+                    ai2_damage_done = ai2_damage_done * 0.9
+                if "Defensive Stance" in champion3_guarded:
+                    ai2_damage_done = ai2_damage_done * 0.7
+                if "Enharden Nerves" in champion3_guarded:
+                    ai2_damage_done = ai2_damage_done * 0.6
+                if "Magical Barrier" in champion3_guarded:
+                    ai2_damage_done = ai2_damage_done - 1000
+                    if ai2_damage_done < 0:
+                        ai2_damage_done = 0
+            if champion_position == 4:
+                if champion4_fortification[0] == 1:
+                    ai2_damage_done = ai2_damage_done * 0.7
+                if champion4_aura != 0:
+                    ai2_damage_done = ai2_damage_done * 0.9
+                if "Defensive Stance" in champion4_guarded:
+                    ai2_damage_done = ai2_damage_done * 0.7
+                if "Enharden Nerves" in champion4_guarded:
+                    ai2_damage_done = ai2_damage_done * 0.6
+                if "Magical Barrier" in champion4_guarded:
+                    ai2_damage_done = ai2_damage_done - 1000
+                    if ai2_damage_done < 0:
+                        ai2_damage_done = 0
+            if champion_position == 5:
+                if champion5_fortification[0] == 1:
+                    ai2_damage_done = ai2_damage_done * 0.7
+                if champion5_aura != 0:
+                    ai2_damage_done = ai2_damage_done * 0.9
+                if "Defensive Stance" in champion5_guarded:
+                    ai2_damage_done = ai2_damage_done * 0.7
+                if "Enharden Nerves" in champion5_guarded:
+                    ai2_damage_done = ai2_damage_done * 0.6
+                if "Magical Barrier" in champion5_guarded:
+                    ai2_damage_done = ai2_damage_done - 1000
+                    if ai2_damage_done < 0:
+                        ai2_damage_done = 0
+            return math.ceil(ai2_damage_done)
+        if ai_position == 3:
+            if ai3_weakness != 0:
+                ai3_damage_done = ai2_attack[1] * 0.8
+            else:
+                ai3_damage_done = ai2_attack[1]
+            if champion_position == 1:
+                if champion1_fortification[0] == 1:
+                    ai3_damage_done = ai3_damage_done * 0.7
+                if champion1_aura == 2:
+                    ai3_damage_done = ai3_damage_done * 0.9
+                if "Defensive Stance" in champion1_guarded:
+                    ai3_damage_done = ai3_damage_done * 0.7
+                if "Enharden Nerves" in champion1_guarded:
+                    ai3_damage_done = ai3_damage_done * 0.6
+                if "Magical Barrier" in champion1_guarded:
+                    ai3_damage_done = ai3_damage_done - 1000
+                    if ai3_damage_done < 0:
+                        ai3_damage_done = 0
+            if champion_position == 2:
+                if champion2_fortification[0] == 1:
+                    ai3_damage_done = ai3_damage_done * 0.7
+                if champion2_aura != 0:
+                    ai3_damage_done = ai3_damage_done * 0.9
+                if "Defensive Stance" in champion2_guarded:
+                    ai3_damage_done = ai3_damage_done * 0.7
+                if "Enharden Nerves" in champion2_guarded:
+                    ai3_damage_done = ai3_damage_done * 0.6
+                if "Magical Barrier" in champion2_guarded:
+                    ai3_damage_done = ai3_damage_done - 1000
+                    if ai3_damage_done < 0:
+                        ai3_damage_done = 0
+            if champion_position == 3:
+                if champion3_fortification[0] == 1:
+                    ai3_damage_done = ai3_damage_done * 0.7
+                if champion3_aura != 0:
+                    ai3_damage_done = ai3_damage_done * 0.9
+                if "Defensive Stance" in champion3_guarded:
+                    ai3_damage_done = ai3_damage_done * 0.7
+                if "Enharden Nerves" in champion3_guarded:
+                    ai3_damage_done = ai3_damage_done * 0.6
+                if "Magical Barrier" in champion3_guarded:
+                    ai3_damage_done = ai3_damage_done - 1000
+                    if ai3_damage_done < 0:
+                        ai3_damage_done = 0
+            if champion_position == 4:
+                if champion4_fortification[0] == 1:
+                    ai3_damage_done = ai3_damage_done * 0.7
+                if champion4_aura != 0:
+                    ai3_damage_done = ai3_damage_done * 0.9
+                if "Defensive Stance" in champion4_guarded:
+                    ai3_damage_done = ai3_damage_done * 0.7
+                if "Enharden Nerves" in champion4_guarded:
+                    ai3_damage_done = ai3_damage_done * 0.6
+                if "Magical Barrier" in champion4_guarded:
+                    ai3_damage_done = ai3_damage_done - 1000
+                    if ai3_damage_done < 0:
+                        ai3_damage_done = 0
+            if champion_position == 5:
+                if champion5_fortification[0] == 1:
+                    ai3_damage_done = ai3_damage_done * 0.7
+                if champion5_aura != 0:
+                    ai3_damage_done = ai3_damage_done * 0.9
+                if "Defensive Stance" in champion5_guarded:
+                    ai3_damage_done = ai3_damage_done * 0.7
+                if "Enharden Nerves" in champion5_guarded:
+                    ai3_damage_done = ai3_damage_done * 0.6
+                if "Magical Barrier" in champion5_guarded:
+                    ai3_damage_done = ai3_damage_done - 1000
+                    if ai3_damage_done < 0:
+                        ai3_damage_done = 0
+            return math.ceil(ai3_damage_done)
+        if ai_position == 4:
+            if ai4_weakness != 0:
+                ai4_damage_done = ai2_attack[1] * 0.8
+            else:
+                ai4_damage_done = ai2_attack[1]
+            if champion_position == 1:
+                if champion1_fortification[0] == 1:
+                    ai4_damage_done = ai4_damage_done * 0.7
+                if champion1_aura == 2:
+                    ai4_damage_done = ai4_damage_done * 0.9
+                if "Defensive Stance" in champion1_guarded:
+                    ai4_damage_done = ai4_damage_done * 0.7
+                if "Enharden Nerves" in champion1_guarded:
+                    ai4_damage_done = ai4_damage_done * 0.6
+                if "Magical Barrier" in champion1_guarded:
+                    ai4_damage_done = ai4_damage_done - 1000
+                    if ai4_damage_done < 0:
+                        ai4_damage_done = 0
+            if champion_position == 2:
+                if champion2_fortification[0] == 1:
+                    ai4_damage_done = ai4_damage_done * 0.7
+                if champion2_aura != 0:
+                    ai4_damage_done = ai4_damage_done * 0.9
+                if "Defensive Stance" in champion2_guarded:
+                    ai4_damage_done = ai4_damage_done * 0.7
+                if "Enharden Nerves" in champion2_guarded:
+                    ai4_damage_done = ai4_damage_done * 0.6
+                if "Magical Barrier" in champion2_guarded:
+                    ai4_damage_done = ai4_damage_done - 1000
+                    if ai4_damage_done < 0:
+                        ai4_damage_done = 0
+            if champion_position == 3:
+                if champion3_fortification[0] == 1:
+                    ai4_damage_done = ai4_damage_done * 0.7
+                if champion3_aura != 0:
+                    ai4_damage_done = ai4_damage_done * 0.9
+                if "Defensive Stance" in champion3_guarded:
+                    ai4_damage_done = ai4_damage_done * 0.7
+                if "Enharden Nerves" in champion3_guarded:
+                    ai4_damage_done = ai4_damage_done * 0.6
+                if "Magical Barrier" in champion3_guarded:
+                    ai4_damage_done = ai4_damage_done - 1000
+                    if ai4_damage_done < 0:
+                        ai4_damage_done = 0
+            if champion_position == 4:
+                if champion4_fortification[0] == 1:
+                    ai4_damage_done = ai4_damage_done * 0.7
+                if champion4_aura != 0:
+                    ai4_damage_done = ai4_damage_done * 0.9
+                if "Defensive Stance" in champion4_guarded:
+                    ai4_damage_done = ai4_damage_done * 0.7
+                if "Enharden Nerves" in champion4_guarded:
+                    ai4_damage_done = ai4_damage_done * 0.6
+                if "Magical Barrier" in champion4_guarded:
+                    ai4_damage_done = ai4_damage_done - 1000
+                    if ai4_damage_done < 0:
+                        ai4_damage_done = 0
+            if champion_position == 5:
+                if champion5_fortification[0] == 1:
+                    ai4_damage_done = ai4_damage_done * 0.7
+                if champion5_aura != 0:
+                    ai4_damage_done = ai4_damage_done * 0.9
+                if "Defensive Stance" in champion5_guarded:
+                    ai4_damage_done = ai4_damage_done * 0.7
+                if "Enharden Nerves" in champion5_guarded:
+                    ai4_damage_done = ai4_damage_done * 0.6
+                if "Magical Barrier" in champion5_guarded:
+                    ai4_damage_done = ai4_damage_done - 1000
+                    if ai4_damage_done < 0:
+                        ai4_damage_done = 0
+            return math.ceil(ai4_damage_done)
+        if ai_position == 5:
+            if ai5_weakness != 0:
+                ai5_damage_done = ai2_attack[1] * 0.8
+            else:
+                ai5_damage_done = ai2_attack[1]
+            if champion_position == 1:
+                if champion1_fortification[0] == 1:
+                    ai5_damage_done = ai5_damage_done * 0.7
+                if champion1_aura == 2:
+                    ai5_damage_done = ai5_damage_done * 0.9
+                if "Defensive Stance" in champion1_guarded:
+                    ai5_damage_done = ai5_damage_done * 0.7
+                if "Enharden Nerves" in champion1_guarded:
+                    ai5_damage_done = ai5_damage_done * 0.6
+                if "Magical Barrier" in champion1_guarded:
+                    ai5_damage_done = ai5_damage_done - 1000
+                    if ai5_damage_done < 0:
+                        ai5_damage_done = 0
+            if champion_position == 2:
+                if champion2_fortification[0] == 1:
+                    ai5_damage_done = ai5_damage_done * 0.7
+                if champion2_aura != 0:
+                    ai5_damage_done = ai5_damage_done * 0.9
+                if "Defensive Stance" in champion2_guarded:
+                    ai5_damage_done = ai5_damage_done * 0.7
+                if "Enharden Nerves" in champion2_guarded:
+                    ai5_damage_done = ai5_damage_done * 0.6
+                if "Magical Barrier" in champion2_guarded:
+                    ai5_damage_done = ai5_damage_done - 1000
+                    if ai5_damage_done < 0:
+                        ai5_damage_done = 0
+            if champion_position == 3:
+                if champion3_fortification[0] == 1:
+                    ai5_damage_done = ai5_damage_done * 0.7
+                if champion3_aura != 0:
+                    ai5_damage_done = ai5_damage_done * 0.9
+                if "Defensive Stance" in champion3_guarded:
+                    ai5_damage_done = ai5_damage_done * 0.7
+                if "Enharden Nerves" in champion3_guarded:
+                    ai5_damage_done = ai5_damage_done * 0.6
+                if "Magical Barrier" in champion3_guarded:
+                    ai5_damage_done = ai5_damage_done - 1000
+                    if ai5_damage_done < 0:
+                        ai5_damage_done = 0
+            if champion_position == 4:
+                if champion4_fortification[0] == 1:
+                    ai5_damage_done = ai5_damage_done * 0.7
+                if champion4_aura != 0:
+                    ai5_damage_done = ai5_damage_done * 0.9
+                if "Defensive Stance" in champion4_guarded:
+                    ai5_damage_done = ai5_damage_done * 0.7
+                if "Enharden Nerves" in champion4_guarded:
+                    ai5_damage_done = ai5_damage_done * 0.6
+                if "Magical Barrier" in champion4_guarded:
+                    ai5_damage_done = ai5_damage_done - 1000
+                    if ai5_damage_done < 0:
+                        ai5_damage_done = 0
+            if champion_position == 5:
+                if champion5_fortification[0] == 1:
+                    ai5_damage_done = ai5_damage_done * 0.7
+                if champion5_aura != 0:
+                    ai5_damage_done = ai5_damage_done * 0.9
+                if "Defensive Stance" in champion5_guarded:
+                    ai5_damage_done = ai5_damage_done * 0.7
+                if "Enharden Nerves" in champion5_guarded:
+                    ai5_damage_done = ai5_damage_done * 0.6
+                if "Magical Barrier" in champion5_guarded:
+                    ai5_damage_done = ai5_damage_done - 1000
+                    if ai5_damage_done < 0:
+                        ai5_damage_done = 0
+            return math.ceil(ai5_damage_done)
     def combat_to_progression(self):
         global roomLevel, floorLevel, from_combat, permaHealthMod
         roomLevel += 1
@@ -10992,11 +13469,17 @@ class GameFrame(tk.Frame):
             champion5_guarded, current_arrow_type
         counter = 0
         if ability_data[0] == "Harmonize":
-            global monk_staggered_damage_list
-            if monk_staggered_damage_list[0] != 0:
-                monk_staggered_damage_list[0] = monk_staggered_damage_list[0] / 2
-            if monk_staggered_damage_list[1] != 0:
-                monk_staggered_damage_list[1] = monk_staggered_damage_list[1] - 1
+            global monk_staggered_damage_list1, monk_staggered_damage_list2, monk_staggered_damage_list3
+            if monk_staggered_damage_list1[1] != 0:
+                monk_staggered_damage_list1[1] = monk_staggered_damage_list1[1] - 1
+                monk_staggered_damage_list1[0] = monk_staggered_damage_list1[0] / 2
+            if monk_staggered_damage_list2[1] != 0:
+                monk_staggered_damage_list2[1] = monk_staggered_damage_list2[1] - 1
+                monk_staggered_damage_list2[0] = monk_staggered_damage_list2[0] / 2
+            if monk_staggered_damage_list3[1] != 0:
+                monk_staggered_damage_list3[1] = monk_staggered_damage_list3[1] - 1
+                monk_staggered_damage_list3[0] = monk_staggered_damage_list3[0] / 2
+
         elif ability_data[0] == "Challenging Shout":
             if AI_SPAWNED == 1:
                 self.apply_taunt(1, BARBARIAN.title, 2)
