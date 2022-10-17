@@ -1430,7 +1430,8 @@ class GameFrame(tk.Frame):
             ai1_burnDot, ai2_burnDot, ai3_burnDot, ai4_burnDot, ai5_burnDot, ai1_SerraSlashDot, ai2_SerraSlashDot, ai3_SerraSlashDot, \
             ai4_SerraSlashDot, ai5_SerraSlashDot, ai1_garroteDot, ai2_garroteDot, ai3_garroteDot, ai4_garroteDot, ai5_garroteDot, \
             ai1_EviscerDot, ai2_EviscerDot, ai3_EviscerDot, ai4_EviscerDot, ai5_EviscerDot, \
-            ai1_guarded, ai2_guarded, ai3_guarded, ai4_guarded, ai5_guarded
+            ai1_statuses, ai2_statuses, ai3_statuses, ai4_statuses, ai5_statuses, \
+            ai1_pricked, ai2_pricked, ai3_pricked, ai4_pricked, ai5_pricked
         new_round = 1
         damage_modifier = MODIFERS[1] * floorLevel
         health_modifier = MODIFERS[0] * (roomLevel + (permaHealthMod * 2))
@@ -1453,6 +1454,11 @@ class GameFrame(tk.Frame):
         ai3_stun = 0
         ai4_stun = 0
         ai5_stun = 0
+        ai1_pricked = []
+        ai2_pricked = []
+        ai3_pricked = []
+        ai4_pricked = []
+        ai5_pricked = []
         ai1_taunt = ["", 0]
         ai2_taunt = ["", 0]
         ai3_taunt = ["", 0]
@@ -1478,11 +1484,11 @@ class GameFrame(tk.Frame):
         ai3_garroteDot = [0, 0]
         ai4_garroteDot = [0, 0]
         ai5_garroteDot = [0, 0]
-        ai1_guarded = []
-        ai2_guarded = []
-        ai3_guarded = []
-        ai4_guarded = []
-        ai5_guarded = []
+        ai1_statuses = []
+        ai2_statuses = []
+        ai3_statuses = []
+        ai4_statuses = []
+        ai5_statuses = []
         current_turn = "C1"
         for widget in dungeon_game_frame.winfo_children():
             widget.destroy()
@@ -2862,12 +2868,118 @@ class GameFrame(tk.Frame):
             rest_button_champion5.grid(row=18, column=3)
 
     def monsters_turn(self):
-        global combat_results, current_turn
+        global combat_results, current_turn, ai1_stun, ai2_stun, ai3_stun, ai4_stun, ai5_stun, ai1_taunt, ai2_taunt, ai3_taunt, ai4_taunt, ai5_taunt, \
+            ai1_brittle, ai2_brittle, ai3_brittle, ai4_brittle, ai5_brittle, ai1_weakness, ai2_weakness, ai3_weakness, ai4_weakness, ai5_weakness, \
+            ai1_burnDot, ai2_burnDot, ai3_burnDot, ai4_burnDot, ai5_burnDot, ai1_SerraSlashDot, ai2_SerraSlashDot, ai3_SerraSlashDot, \
+            ai4_SerraSlashDot, ai5_SerraSlashDot, ai1_garroteDot, ai2_garroteDot, ai3_garroteDot, ai4_garroteDot, ai5_garroteDot, \
+            ai1_EviscerDot, ai2_EviscerDot, ai3_EviscerDot, ai4_EviscerDot, ai5_EviscerDot, \
+            ai1_statuses, ai2_statuses, ai3_statuses, ai4_statuses, ai5_statuses, \
+            ai1_hp, ai2_hp, ai3_hp, ai4_hp, ai5_hp, \
+            champion1_hp, champion2_hp, champion3_hp,champion4_hp, champion5_hp
+
         if combat_results == "win":
             self.combat_to_progression()
         elif combat_results == "lost":
             i = 0
         else:
+            if AI_SPAWNED == 1:
+                monster_list = [1]
+            elif AI_SPAWNED == 2:
+                monster_list = [1,2]
+            elif AI_SPAWNED == 3:
+                monster_list = [1,2,3]
+            elif AI_SPAWNED == 4:
+                monster_list = [1,2,3,4]
+            elif AI_SPAWNED == 5:
+                monster_list = [1,2,3,4,5]
+            for monster_var in monster_list:
+                if monster_var == $:
+                    if ai$_hp == 0:
+                        continue
+                    if len(ai$_pricked) != 0:
+                        ai$_hp = ai$_hp - ai$_pricked[0]
+                        if ai$_hp < 0:
+                            ai$_hp = 0
+                            continue
+                    if ai$_burnDot[1] != 0:
+                        ai$_hp = ai$_hp - ai$_burnDot[0]
+                        ai$_burnDot[1] = ai$_burnDot[1] - 1
+                        if ai$_hp < 0:
+                            ai$_hp = 0
+                            continue
+                    if ai$_SerraSlashDot[1] != 0:
+                        ai$_hp = ai$_hp - ai$_SerraSlashDot[0]
+                        ai$_SerraSlashDot[1] = ai$_SerraSlashDot[1] - 1
+                        if ai$_hp < 0:
+                            ai$_hp = 0
+                            continue
+                    if ai$_EviscerDot[1] != 0:
+                        ai$_hp = ai$_hp - ai$_EviscerDot[0]
+                        ai$_EviscerDot[1] = ai$_EviscerDot[1] - 1
+                        if ai$_hp < 0:
+                            ai$_hp = 0
+                            continue
+                    if ai$_garroteDot[1] != 0:
+                        ai$_hp = ai$_hp - ai$_garroteDot[0]
+                        ai$_garroteDot[1] = ai$_garroteDot[1] - 1
+                        if ai$_hp < 0:
+                            ai$_hp = 0
+                            continue
+                    if ai$_stun != 0:
+                        continue
+                    if ai$_taunt[1] != 0:
+                        taunter_counter = 1
+                        for champion in CHAMPION_LIST:
+                            if champion == ai$_taunt[0]:
+                                break
+                            taunter_counter += 1
+                        if taunter_counter == 1:
+                            if len(champion1_guarded) != 0:
+                                guard_list = []
+                                for guards in champion1_guarded:
+                                    if guards == "Block":
+                                        guard_list.append(99)
+                                    if guards == "Parry":
+                                        guard_list.append(101)
+                                    if guards == "Boulder":
+                                        guard_list.append(100)
+                                    if guards == "Elusive Measures":
+                                        guard_list.append(100)
+                                    guard_list = sorted(guard_list, reverse=True)
+                                    if guard_list[0] == 101:
+                                        ai$_hp = ai$_hp - ai1_attack[1]
+                                        if champion1_thorns[0] == 1:
+                                            ai$_hp = ai$_hp - 200
+                                        if ai$_hp < 0:
+                                            ai$_hp = 0
+                                    if guard_list[0] == 100:
+                                        champion1_hp = champion1_hp
+                                    if guard_list[0] == 99:
+                                        bodyguard_counter = 1
+                                        for champions in CHAMPION_LIST:
+                                            if champions == VETERAN_BODYGUARD.name:
+                                                break
+                                            bodyguard_counter
+                                        if bodyguard_counter == 1:
+                                            champion1_hp = champion1_hp - (ai$_attack[1] * 0.4)
+                                        if bodyguard_counter == 2:
+                                            champion2_hp = champion2_hp - (ai$_attack[1] * 0.4)
+                                        if bodyguard_counter == 3:
+                                            champion3_hp = champion3_hp - (ai$_attack[1] * 0.4)
+                                        if bodyguard_counter == 4:
+                                            champion4_hp = champion4_hp - (ai$_attack[1] * 0.4)
+                                        if bodyguard_counter == 5:
+                                            champion5_hp = champion5_hp - (ai$_attack[1] * 0.4)
+                            if CHAMPION_LIST[0] == MONK.name:
+                                staggered_damage = ai$_attack[1] / 3
+                                if len(monk_staggered_damage_list1) == 0:
+                                    monk_staggered_damage_list1
+
+
+
+
+
+
             current_turn = "MN"
             self.next_turn()
 
@@ -8379,7 +8491,7 @@ class GameFrame(tk.Frame):
                                 champion1_rp = champion1_rp - alter_time_requirements[0]
                                 alter_time_requirements[1] = alter_time_requirements[2]
                                 champion1_rp = champion1_rp + alter_time_requirements[3]
-                                ability_data = ["Alter Time", "ally", "AOE"]                            
+                                ability_data = ["Alter Time", "ally", "AOE"]
                             else:
                                 return
                         if counter == 2:
@@ -8387,7 +8499,7 @@ class GameFrame(tk.Frame):
                                 champion2_rp = champion2_rp - alter_time_requirements[0]
                                 alter_time_requirements[1] = alter_time_requirements[2]
                                 champion2_rp = champion2_rp + alter_time_requirements[3]
-                                ability_data = ["Alter Time", "ally", "AOE"]                            
+                                ability_data = ["Alter Time", "ally", "AOE"]
                             else:
                                 return
                         if counter == 3:
@@ -8395,7 +8507,7 @@ class GameFrame(tk.Frame):
                                 champion3_rp = champion3_rp - alter_time_requirements[0]
                                 alter_time_requirements[1] = alter_time_requirements[2]
                                 champion3_rp = champion3_rp + alter_time_requirements[3]
-                                ability_data = ["Alter Time", "ally", "AOE"]                            
+                                ability_data = ["Alter Time", "ally", "AOE"]
                             else:
                                 return
                         if counter == 4:
@@ -8403,7 +8515,7 @@ class GameFrame(tk.Frame):
                                 champion4_rp = champion4_rp - alter_time_requirements[0]
                                 alter_time_requirements[1] = alter_time_requirements[2]
                                 champion4_rp = champion4_rp + alter_time_requirements[3]
-                                ability_data = ["Alter Time", "ally", "AOE"]                           
+                                ability_data = ["Alter Time", "ally", "AOE"]
                             else:
                                 return
                         if counter == 5:
@@ -8411,7 +8523,7 @@ class GameFrame(tk.Frame):
                                 champion5_rp = champion5_rp - alter_time_requirements[0]
                                 alter_time_requirements[1] = alter_time_requirements[2]
                                 champion5_rp = champion5_rp + alter_time_requirements[3]
-                                ability_data = ["Alter Time", "ally", "AOE"]                            
+                                ability_data = ["Alter Time", "ally", "AOE"]
                             else:
                                 return
                     counter += 1
@@ -8873,7 +8985,7 @@ class GameFrame(tk.Frame):
                     champion5_supporttarget_frame["state"] = 'disable'
         if ability_data[1] == "self":
             self.complete_turn()
-    
+
     def multi_target_check(self, target):
         global ai1_attacktarget_frame, ai2_attacktarget_frame, ai3_attacktarget_frame, \
         ai4_attacktarget_frame, ai5_attacktarget_frame, target_list
@@ -9376,8 +9488,9 @@ class GameFrame(tk.Frame):
         elif ability_data[0] == "Exploit Weakness":
             damage_multipler = 0
             if 1 in target_list:
-                for status_effect in ai1_statuses:
-                    damage_multipler += 1
+                if len(ai1_statuses) != 0:
+                    for status_effect in ai1_statuses:
+                        damage_multipler += 1
                 ai1_hp = ai1_hp - (ability_data[3] * (1 + (damage_multipler * 0.3)))
             if 2 in target_list:
                 for status_effect in ai2_statuses:
@@ -10792,15 +10905,15 @@ class GameFrame(tk.Frame):
             self.apply_nanoheal_bots(3)
         elif ability_data[0] == "Reverse Wounds":
             if 1 in target_list:
-                champion1_hp = champion1_hp + champion1_lastRound_damage
+                champion1_hp = champion1_hp + champion1_lastRound_damageTaken
             if 2 in target_list:
-                champion2_hp = champion2_hp + champion2_lastRound_damage
+                champion2_hp = champion2_hp + champion2_lastRound_damageTaken
             if 3 in target_list:
-                champion3_hp = champion3_hp + champion3_lastRound_damage
+                champion3_hp = champion3_hp + champion3_lastRound_damageTaken
             if 4 in target_list:
-                champion4_hp = champion4_hp + champion4_lastRound_damage
+                champion4_hp = champion4_hp + champion4_lastRound_damageTaken
             if 5 in target_list:
-                champion5_hp = champion5_hp + champion5_lastRound_damage
+                champion5_hp = champion5_hp + champion5_lastRound_damageTaken
         elif ability_data[0] == "Alter Time":
             if champion1_hp != 0:
                 champion1_hp = CHAMPION_1_HP
