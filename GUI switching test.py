@@ -1239,7 +1239,8 @@ class GameFrame(tk.Frame):
             venusfly_snap_requirements, vine_swipe_requirements, thorns_requirements, prickle_arena_requirements, \
             champion1_thorns, champion2_thorns, champion3_thorns, champion4_thorns, champion5_thorns, \
             black_bolt_requirements, void_infusion_requirements, wound_fissure_requirements, soul_tap_requirements, \
-            drain_life_requirements, blood_spike_requirements, blood_boil_requirements, enharden_nerves_requirements
+            drain_life_requirements, blood_spike_requirements, blood_boil_requirements, enharden_nerves_requirements, \
+            blood_boil_buff
         # Academic Mage Abilities
         frost_bolt_requirements = [20, 0, 0, 0]
         fireball_requirements = [30, 0, 0, 0]
@@ -1262,9 +1263,10 @@ class GameFrame(tk.Frame):
         soul_tap_requirements = [0, 0, 0, 0]
         # Bloodmancer Abilities
         drain_life_requirements = [0, 0, 0, 0]
-        blood_spike_requirements = [200, 0, 0, 0]
+        blood_spike_requirements = [0, 0, 0, 0]
         blood_boil_requirements = [0, 0, 3, 0]
         enharden_nerves_requirements = [0, 0, 2, 0]
+        blood_boil_buff = 0
         global overhand_justice_requirements, righteous_blow_requirements, aura_of_power_requirements, aura_of_protection_requirements, champion1_aura, champion2_aura, champion3_aura, champion4_aura, champion5_aura, \
             steady_shot_requirements, power_opt_requirements, equip_iron_cast_arrows_requirements, equip_tracker_tipped_arrows_requirements, current_arrow_type, \
             lightning_bolt_requirements, chain_lightning_requirements, crashing_boom_requirements, thunderous_vigor_requirements, \
@@ -1928,9 +1930,9 @@ class GameFrame(tk.Frame):
                     ai1_attack_intention = "STUNNED"
                 else:
                     if ai1_taunt[1] != 0:
-                        for champions in CHAMPION_LIST:
+                        for champions1 in CHAMPION_LIST:
                             counter += 1
-                            if champions == ai1_taunt[0]:
+                            if champions1 == ai1_taunt[0]:
                                 if counter == 1:
                                     ai_attack_target = ai1_taunt[0]
                                     ai1_attack_intention = "{} <<< {} ({} Damage)".format(ai_attack_target, ai1_attack[0],
@@ -2022,395 +2024,403 @@ class GameFrame(tk.Frame):
         if ai2_hp >= 0:
             if ai2_attack == "null":
                 ai2_attack_intention = ""
-            elif ai2_stun != 0:
-                ai2_attack_intention = "STUNNED"
-            elif ai2_taunt[1] != 0:
-                for champions in CHAMPION_LIST:
-                    counter += 1
-                    if champions == ai2_taunt[0]:
-                        if counter == 1:
-                            ai_attack_target = CHAMPION_LIST[0]
-                            ai2_attack_intention = "{} <<< {} ({} Damage)".format(ai_attack_target, ai2_attack[0],
-                                                                                  ai2_attack[1])
-                        elif counter == 2:
-                            ai_attack_target = CHAMPION_LIST[1]
-                            ai2_attack_intention = "{} <<< {} ({} Damage)".format(ai_attack_target, ai2_attack[0],
-                                                                                  ai2_attack[1])
-                        elif counter == 3:
-                            ai_attack_target = CHAMPION_LIST[2]
-                            ai2_attack_intention = "{} <<< {} ({} Damage)".format(ai_attack_target, ai2_attack[0],
-                                                                                  ai2_attack[1])
-                        elif counter == 4:
-                            ai_attack_target = CHAMPION_LIST[3]
-                            ai2_attack_intention = "{} <<< {} ({} Damage)".format(ai_attack_target, ai2_attack[0],
-                                                                                  ai2_attack[1])
-                        elif counter == 5:
-                            ai_attack_target = CHAMPION_LIST[4]
-                            ai2_attack_intention = "{} <<< {} ({} Damage)".format(ai_attack_target, ai2_attack[0],
-                                                                                  ai2_attack[1])
             else:
-                if new_round == 1:
-                    if ai2_attack[2] == "1T":
-                        if champion1_hp != 0:
-                            ai_attack_options.append("C1")
-                        if champion2_hp != 0:
-                            ai_attack_options.append("C2")
-                        if champion3_hp != 0:
-                            ai_attack_options.append("C3")
-                        if champion4_hp != 0:
-                            ai_attack_options.append("C4")
-                        if champion5_hp != 0:
-                            ai_attack_options.append("C5")
-                        random.shuffle(ai_attack_options)
-                        if ai_attack_options[0] == "C1":
-                            ai_attack_target = CHAMPION_LIST[0]
-                        if ai_attack_options[0] == "C2":
-                            ai_attack_target = CHAMPION_LIST[1]
-                        if ai_attack_options[0] == "C3":
-                            ai_attack_target = CHAMPION_LIST[2]
-                        if ai_attack_options[0] == "C4":
-                            ai_attack_target = CHAMPION_LIST[3]
-                        if ai_attack_options[0] == "C5":
-                            ai_attack_target = CHAMPION_LIST[4]
-                        ai2_attack_intention = "{} <<< {} ({} Damage)".format(ai_attack_target, ai2_attack[0],
-                                                                              ai2_attack[1])
-                    if ai2_attack[2] == "2T":
-                        if champion1_hp != 0:
-                            ai_attack_options.append("C1")
-                        if champion2_hp != 0:
-                            ai_attack_options.append("C2")
-                        if champion3_hp != 0:
-                            ai_attack_options.append("C3")
-                        if champion4_hp != 0:
-                            ai_attack_options.append("C4")
-                        if champion5_hp != 0:
-                            ai_attack_options.append("C5")
-                        random.shuffle(ai_attack_options)
-                        if ai_attack_options[0] == "C1":
-                            ai_attack1_target = CHAMPION_LIST[0]
-                            ai_attack_options.remove("C1")
-                        if ai_attack_options[0] == "C2":
-                            ai_attack1_target = CHAMPION_LIST[1]
-                            ai_attack_options.remove("C2")
-                        if ai_attack_options[0] == "C3":
-                            ai_attack1_target = CHAMPION_LIST[2]
-                            ai_attack_options.remove("C3")
-                        if ai_attack_options[0] == "C4":
-                            ai_attack1_target = CHAMPION_LIST[3]
-                            ai_attack_options.remove("C4")
-                        if ai_attack_options[0] == "C5":
-                            ai_attack1_target = CHAMPION_LIST[4]
-                            ai_attack_options.remove("C5")
-                        random.shuffle(ai_attack_options)
-                        if ai_attack_options[0] == "C1":
-                            ai_attack2_target = CHAMPION_LIST[0]
-                        if ai_attack_options[0] == "C2":
-                            ai_attack2_target = CHAMPION_LIST[1]
-                        if ai_attack_options[0] == "C3":
-                            ai_attack2_target = CHAMPION_LIST[2]
-                        if ai_attack_options[0] == "C4":
-                            ai_attack2_target = CHAMPION_LIST[3]
-                        if ai_attack_options[0] == "C5":
-                            ai_attack2_target = CHAMPION_LIST[4]
-                        ai2_attack_intention = "{} and {} <<< {} ({} Damage)".format(ai_attack1_target, ai_attack2_target,
-                                                                                     ai2_attack[0],
-                                                                                     ai2_attack[1])
-                    if ai2_attack[2] == "AOE":
-                        ai2_attack_intention = "Everyone <<< {} ({} Damage)".format(ai2_attack[0], ai2_attack[1])
+                if ai2_stun != 0:
+                    ai2_attack_intention = "STUNNED"
+                else:
+                    if ai2_taunt[1] != 0:
+                        for champions2 in CHAMPION_LIST:
+                            counter += 1
+                            if champions2 == ai2_taunt[0]:
+                                if counter == 1:
+                                    ai_attack_target = CHAMPION_LIST[0]
+                                    ai2_attack_intention = "{} <<< {} ({} Damage)".format(ai_attack_target, ai2_attack[0],
+                                                                                          ai2_attack[1])
+                                elif counter == 2:
+                                    ai_attack_target = CHAMPION_LIST[1]
+                                    ai2_attack_intention = "{} <<< {} ({} Damage)".format(ai_attack_target, ai2_attack[0],
+                                                                                          ai2_attack[1])
+                                elif counter == 3:
+                                    ai_attack_target = CHAMPION_LIST[2]
+                                    ai2_attack_intention = "{} <<< {} ({} Damage)".format(ai_attack_target, ai2_attack[0],
+                                                                                          ai2_attack[1])
+                                elif counter == 4:
+                                    ai_attack_target = CHAMPION_LIST[3]
+                                    ai2_attack_intention = "{} <<< {} ({} Damage)".format(ai_attack_target, ai2_attack[0],
+                                                                                          ai2_attack[1])
+                                elif counter == 5:
+                                    ai_attack_target = CHAMPION_LIST[4]
+                                    ai2_attack_intention = "{} <<< {} ({} Damage)".format(ai_attack_target, ai2_attack[0],
+                                                                                          ai2_attack[1])
+                    else:
+                        if new_round == 1:
+                            if ai2_attack[2] == "1T":
+                                if champion1_hp != 0:
+                                    ai_attack_options.append("C1")
+                                if champion2_hp != 0:
+                                    ai_attack_options.append("C2")
+                                if champion3_hp != 0:
+                                    ai_attack_options.append("C3")
+                                if champion4_hp != 0:
+                                    ai_attack_options.append("C4")
+                                if champion5_hp != 0:
+                                    ai_attack_options.append("C5")
+                                random.shuffle(ai_attack_options)
+                                if ai_attack_options[0] == "C1":
+                                    ai_attack_target = CHAMPION_LIST[0]
+                                if ai_attack_options[0] == "C2":
+                                    ai_attack_target = CHAMPION_LIST[1]
+                                if ai_attack_options[0] == "C3":
+                                    ai_attack_target = CHAMPION_LIST[2]
+                                if ai_attack_options[0] == "C4":
+                                    ai_attack_target = CHAMPION_LIST[3]
+                                if ai_attack_options[0] == "C5":
+                                    ai_attack_target = CHAMPION_LIST[4]
+                                ai2_attack_intention = "{} <<< {} ({} Damage)".format(ai_attack_target, ai2_attack[0],
+                                                                                      ai2_attack[1])
+                            if ai2_attack[2] == "2T":
+                                if champion1_hp != 0:
+                                    ai_attack_options.append("C1")
+                                if champion2_hp != 0:
+                                    ai_attack_options.append("C2")
+                                if champion3_hp != 0:
+                                    ai_attack_options.append("C3")
+                                if champion4_hp != 0:
+                                    ai_attack_options.append("C4")
+                                if champion5_hp != 0:
+                                    ai_attack_options.append("C5")
+                                random.shuffle(ai_attack_options)
+                                if ai_attack_options[0] == "C1":
+                                    ai_attack1_target = CHAMPION_LIST[0]
+                                    ai_attack_options.remove("C1")
+                                if ai_attack_options[0] == "C2":
+                                    ai_attack1_target = CHAMPION_LIST[1]
+                                    ai_attack_options.remove("C2")
+                                if ai_attack_options[0] == "C3":
+                                    ai_attack1_target = CHAMPION_LIST[2]
+                                    ai_attack_options.remove("C3")
+                                if ai_attack_options[0] == "C4":
+                                    ai_attack1_target = CHAMPION_LIST[3]
+                                    ai_attack_options.remove("C4")
+                                if ai_attack_options[0] == "C5":
+                                    ai_attack1_target = CHAMPION_LIST[4]
+                                    ai_attack_options.remove("C5")
+                                random.shuffle(ai_attack_options)
+                                if ai_attack_options[0] == "C1":
+                                    ai_attack2_target = CHAMPION_LIST[0]
+                                if ai_attack_options[0] == "C2":
+                                    ai_attack2_target = CHAMPION_LIST[1]
+                                if ai_attack_options[0] == "C3":
+                                    ai_attack2_target = CHAMPION_LIST[2]
+                                if ai_attack_options[0] == "C4":
+                                    ai_attack2_target = CHAMPION_LIST[3]
+                                if ai_attack_options[0] == "C5":
+                                    ai_attack2_target = CHAMPION_LIST[4]
+                                ai2_attack_intention = "{} and {} <<< {} ({} Damage)".format(ai_attack1_target, ai_attack2_target,
+                                                                                             ai2_attack[0],
+                                                                                             ai2_attack[1])
+                            if ai2_attack[2] == "AOE":
+                                ai2_attack_intention = "Everyone <<< {} ({} Damage)".format(ai2_attack[0], ai2_attack[1])
             if ai3_hp >= 0:
                 if ai3_attack == "null":
                     ai3_attack_intention = ""
-                elif ai3_stun != 0:
-                    ai3_attack_intention = "STUNNED"
-                elif ai3_taunt[1] != 0:
-                    for champions in CHAMPION_LIST:
-                        counter += 1
-                        if champions == ai3_taunt[0]:
-                            if counter == 1:
-                                ai_attack_target = CHAMPION_LIST[0]
-                                ai3_attack_intention = "{} <<< {} ({} Damage)".format(ai_attack_target, ai3_attack[0],
-                                                                                      ai3_attack[1])
-                            elif counter == 2:
-                                ai_attack_target = CHAMPION_LIST[1]
-                                ai3_attack_intention = "{} <<< {} ({} Damage)".format(ai_attack_target, ai3_attack[0],
-                                                                                      ai3_attack[1])
-                            elif counter == 3:
-                                ai_attack_target = CHAMPION_LIST[2]
-                                ai3_attack_intention = "{} <<< {} ({} Damage)".format(ai_attack_target, ai3_attack[0],
-                                                                                      ai3_attack[1])
-                            elif counter == 4:
-                                ai_attack_target = CHAMPION_LIST[3]
-                                ai3_attack_intention = "{} <<< {} ({} Damage)".format(ai_attack_target, ai3_attack[0],
-                                                                                      ai3_attack[1])
-                            elif counter == 5:
-                                ai_attack_target = CHAMPION_LIST[4]
-                                ai3_attack_intention = "{} <<< {} ({} Damage)".format(ai_attack_target, ai3_attack[0],
-                                                                                      ai3_attack[1])
                 else:
-                    if new_round == 1:
-                        if ai3_attack[2] == "1T":
-                            if champion1_hp != 0:
-                                ai_attack_options.append("C1")
-                            if champion2_hp != 0:
-                                ai_attack_options.append("C2")
-                            if champion3_hp != 0:
-                                ai_attack_options.append("C3")
-                            if champion4_hp != 0:
-                                ai_attack_options.append("C4")
-                            if champion5_hp != 0:
-                                ai_attack_options.append("C5")
-                            random.shuffle(ai_attack_options)
-                            if ai_attack_options[0] == "C1":
-                                ai_attack_target = CHAMPION_LIST[0]
-                            if ai_attack_options[0] == "C2":
-                                ai_attack_target = CHAMPION_LIST[1]
-                            if ai_attack_options[0] == "C3":
-                                ai_attack_target = CHAMPION_LIST[2]
-                            if ai_attack_options[0] == "C4":
-                                ai_attack_target = CHAMPION_LIST[3]
-                            if ai_attack_options[0] == "C5":
-                                ai_attack_target = CHAMPION_LIST[4]
-                            ai3_attack_intention = "{} <<< {} ({} Damage)".format(ai_attack_target, ai3_attack[0],
-                                                                                  ai3_attack[1])
-                        if ai3_attack[2] == "2T":
-                            if champion1_hp != 0:
-                                ai_attack_options.append("C1")
-                            if champion2_hp != 0:
-                                ai_attack_options.append("C2")
-                            if champion3_hp != 0:
-                                ai_attack_options.append("C3")
-                            if champion4_hp != 0:
-                                ai_attack_options.append("C4")
-                            if champion5_hp != 0:
-                                ai_attack_options.append("C5")
-                            random.shuffle(ai_attack_options)
-                            if ai_attack_options[0] == "C1":
-                                ai_attack1_target = CHAMPION_LIST[0]
-                                ai_attack_options.remove("C1")
-                            if ai_attack_options[0] == "C2":
-                                ai_attack1_target = CHAMPION_LIST[1]
-                                ai_attack_options.remove("C2")
-                            if ai_attack_options[0] == "C3":
-                                ai_attack1_target = CHAMPION_LIST[2]
-                                ai_attack_options.remove("C3")
-                            if ai_attack_options[0] == "C4":
-                                ai_attack1_target = CHAMPION_LIST[3]
-                                ai_attack_options.remove("C4")
-                            if ai_attack_options[0] == "C5":
-                                ai_attack1_target = CHAMPION_LIST[4]
-                                ai_attack_options.remove("C5")
-                            random.shuffle(ai_attack_options)
-                            if ai_attack_options[0] == "C1":
-                                ai_attack2_target = CHAMPION_LIST[0]
-                            if ai_attack_options[0] == "C2":
-                                ai_attack2_target = CHAMPION_LIST[1]
-                            if ai_attack_options[0] == "C3":
-                                ai_attack2_target = CHAMPION_LIST[2]
-                            if ai_attack_options[0] == "C4":
-                                ai_attack2_target = CHAMPION_LIST[3]
-                            if ai_attack_options[0] == "C5":
-                                ai_attack2_target = CHAMPION_LIST[4]
-                            ai3_attack_intention = "{} and {} <<< {} ({} Damage)".format(ai_attack1_target, ai_attack2_target,
-                                                                                         ai3_attack[0],
-                                                                                         ai3_attack[1])
-                        if ai3_attack[2] == "AOE":
-                            ai3_attack_intention = "Everyone <<< {} ({} Damage)".format(ai3_attack[0], ai3_attack[1])
+                    if ai3_stun != 0:
+                        ai3_attack_intention = "STUNNED"
+                    else:
+                        if ai3_taunt[1] != 0:
+                            for champions3 in CHAMPION_LIST:
+                                counter += 1
+                                if champions3 == ai3_taunt[0]:
+                                    if counter == 1:
+                                        ai_attack_target = CHAMPION_LIST[0]
+                                        ai3_attack_intention = "{} <<< {} ({} Damage)".format(ai_attack_target, ai3_attack[0],
+                                                                                              ai3_attack[1])
+                                    elif counter == 2:
+                                        ai_attack_target = CHAMPION_LIST[1]
+                                        ai3_attack_intention = "{} <<< {} ({} Damage)".format(ai_attack_target, ai3_attack[0],
+                                                                                              ai3_attack[1])
+                                    elif counter == 3:
+                                        ai_attack_target = CHAMPION_LIST[2]
+                                        ai3_attack_intention = "{} <<< {} ({} Damage)".format(ai_attack_target, ai3_attack[0],
+                                                                                              ai3_attack[1])
+                                    elif counter == 4:
+                                        ai_attack_target = CHAMPION_LIST[3]
+                                        ai3_attack_intention = "{} <<< {} ({} Damage)".format(ai_attack_target, ai3_attack[0],
+                                                                                              ai3_attack[1])
+                                    elif counter == 5:
+                                        ai_attack_target = CHAMPION_LIST[4]
+                                        ai3_attack_intention = "{} <<< {} ({} Damage)".format(ai_attack_target, ai3_attack[0],
+                                                                                              ai3_attack[1])
+                        else:
+                            if new_round == 1:
+                                if ai3_attack[2] == "1T":
+                                    if champion1_hp != 0:
+                                        ai_attack_options.append("C1")
+                                    if champion2_hp != 0:
+                                        ai_attack_options.append("C2")
+                                    if champion3_hp != 0:
+                                        ai_attack_options.append("C3")
+                                    if champion4_hp != 0:
+                                        ai_attack_options.append("C4")
+                                    if champion5_hp != 0:
+                                        ai_attack_options.append("C5")
+                                    random.shuffle(ai_attack_options)
+                                    if ai_attack_options[0] == "C1":
+                                        ai_attack_target = CHAMPION_LIST[0]
+                                    if ai_attack_options[0] == "C2":
+                                        ai_attack_target = CHAMPION_LIST[1]
+                                    if ai_attack_options[0] == "C3":
+                                        ai_attack_target = CHAMPION_LIST[2]
+                                    if ai_attack_options[0] == "C4":
+                                        ai_attack_target = CHAMPION_LIST[3]
+                                    if ai_attack_options[0] == "C5":
+                                        ai_attack_target = CHAMPION_LIST[4]
+                                    ai3_attack_intention = "{} <<< {} ({} Damage)".format(ai_attack_target, ai3_attack[0],
+                                                                                          ai3_attack[1])
+                                if ai3_attack[2] == "2T":
+                                    if champion1_hp != 0:
+                                        ai_attack_options.append("C1")
+                                    if champion2_hp != 0:
+                                        ai_attack_options.append("C2")
+                                    if champion3_hp != 0:
+                                        ai_attack_options.append("C3")
+                                    if champion4_hp != 0:
+                                        ai_attack_options.append("C4")
+                                    if champion5_hp != 0:
+                                        ai_attack_options.append("C5")
+                                    random.shuffle(ai_attack_options)
+                                    if ai_attack_options[0] == "C1":
+                                        ai_attack1_target = CHAMPION_LIST[0]
+                                        ai_attack_options.remove("C1")
+                                    if ai_attack_options[0] == "C2":
+                                        ai_attack1_target = CHAMPION_LIST[1]
+                                        ai_attack_options.remove("C2")
+                                    if ai_attack_options[0] == "C3":
+                                        ai_attack1_target = CHAMPION_LIST[2]
+                                        ai_attack_options.remove("C3")
+                                    if ai_attack_options[0] == "C4":
+                                        ai_attack1_target = CHAMPION_LIST[3]
+                                        ai_attack_options.remove("C4")
+                                    if ai_attack_options[0] == "C5":
+                                        ai_attack1_target = CHAMPION_LIST[4]
+                                        ai_attack_options.remove("C5")
+                                    random.shuffle(ai_attack_options)
+                                    if ai_attack_options[0] == "C1":
+                                        ai_attack2_target = CHAMPION_LIST[0]
+                                    if ai_attack_options[0] == "C2":
+                                        ai_attack2_target = CHAMPION_LIST[1]
+                                    if ai_attack_options[0] == "C3":
+                                        ai_attack2_target = CHAMPION_LIST[2]
+                                    if ai_attack_options[0] == "C4":
+                                        ai_attack2_target = CHAMPION_LIST[3]
+                                    if ai_attack_options[0] == "C5":
+                                        ai_attack2_target = CHAMPION_LIST[4]
+                                    ai3_attack_intention = "{} and {} <<< {} ({} Damage)".format(ai_attack1_target, ai_attack2_target,
+                                                                                                 ai3_attack[0],
+                                                                                                 ai3_attack[1])
+                                if ai3_attack[2] == "AOE":
+                                    ai3_attack_intention = "Everyone <<< {} ({} Damage)".format(ai3_attack[0], ai3_attack[1])
         if ai4_hp >= 0:
             if ai4_attack == "null":
                 ai4_attack_intention = ""
-            elif ai4_stun != 0:
-                ai4_attack_intention = "STUNNED"
-            elif ai4_taunt[1] != 0:
-                for champions in CHAMPION_LIST:
-                    counter += 1
-                    if champions == ai4_taunt[0]:
-                        if counter == 1:
-                            ai_attack_target = CHAMPION_LIST[0]
-                            ai4_attack_intention = "{} <<< {} ({} Damage)".format(ai_attack_target, ai4_attack[0],
-                                                                                  ai4_attack[1])
-                        elif counter == 2:
-                            ai_attack_target = CHAMPION_LIST[1]
-                            ai4_attack_intention = "{} <<< {} ({} Damage)".format(ai_attack_target, ai4_attack[0],
-                                                                                  ai4_attack[1])
-                        elif counter == 3:
-                            ai_attack_target = CHAMPION_LIST[2]
-                            ai4_attack_intention = "{} <<< {} ({} Damage)".format(ai_attack_target, ai4_attack[0],
-                                                                                  ai4_attack[1])
-                        elif counter == 4:
-                            ai_attack_target = CHAMPION_LIST[3]
-                            ai4_attack_intention = "{} <<< {} ({} Damage)".format(ai_attack_target, ai4_attack[0],
-                                                                                  ai4_attack[1])
-                        elif counter == 5:
-                            ai_attack_target = CHAMPION_LIST[4]
-                            ai4_attack_intention = "{} <<< {} ({} Damage)".format(ai_attack_target, ai4_attack[0],
-                                                                                  ai4_attack[1])
             else:
-                if new_round == 1:
-                    if ai4_attack[2] == "1T":
-                        if champion1_hp != 0:
-                            ai_attack_options.append("C1")
-                        if champion2_hp != 0:
-                            ai_attack_options.append("C2")
-                        if champion3_hp != 0:
-                            ai_attack_options.append("C3")
-                        if champion4_hp != 0:
-                            ai_attack_options.append("C4")
-                        if champion5_hp != 0:
-                            ai_attack_options.append("C5")
-                        random.shuffle(ai_attack_options)
-                        if ai_attack_options[0] == "C1":
-                            ai_attack_target = CHAMPION_LIST[0]
-                        if ai_attack_options[0] == "C2":
-                            ai_attack_target = CHAMPION_LIST[1]
-                        if ai_attack_options[0] == "C3":
-                            ai_attack_target = CHAMPION_LIST[2]
-                        if ai_attack_options[0] == "C4":
-                            ai_attack_target = CHAMPION_LIST[3]
-                        if ai_attack_options[0] == "C5":
-                            ai_attack_target = CHAMPION_LIST[4]
-                        ai4_attack_intention = "{} <<< {} ({} Damage)".format(ai_attack_target, ai4_attack[0],
-                                                                              ai4_attack[1])
-                    if ai4_attack[2] == "2T":
-                        if champion1_hp != 0:
-                            ai_attack_options.append("C1")
-                        if champion2_hp != 0:
-                            ai_attack_options.append("C2")
-                        if champion3_hp != 0:
-                            ai_attack_options.append("C3")
-                        if champion4_hp != 0:
-                            ai_attack_options.append("C4")
-                        if champion5_hp != 0:
-                            ai_attack_options.append("C5")
-                        random.shuffle(ai_attack_options)
-                        if ai_attack_options[0] == "C1":
-                            ai_attack1_target = CHAMPION_LIST[0]
-                            ai_attack_options.remove("C1")
-                        if ai_attack_options[0] == "C2":
-                            ai_attack1_target = CHAMPION_LIST[1]
-                            ai_attack_options.remove("C2")
-                        if ai_attack_options[0] == "C3":
-                            ai_attack1_target = CHAMPION_LIST[2]
-                            ai_attack_options.remove("C3")
-                        if ai_attack_options[0] == "C4":
-                            ai_attack1_target = CHAMPION_LIST[3]
-                            ai_attack_options.remove("C4")
-                        if ai_attack_options[0] == "C5":
-                            ai_attack1_target = CHAMPION_LIST[4]
-                            ai_attack_options.remove("C5")
-                        random.shuffle(ai_attack_options)
-                        if ai_attack_options[0] == "C1":
-                            ai_attack2_target = CHAMPION_LIST[0]
-                        if ai_attack_options[0] == "C2":
-                            ai_attack2_target = CHAMPION_LIST[1]
-                        if ai_attack_options[0] == "C3":
-                            ai_attack2_target = CHAMPION_LIST[2]
-                        if ai_attack_options[0] == "C4":
-                            ai_attack2_target = CHAMPION_LIST[3]
-                        if ai_attack_options[0] == "C5":
-                            ai_attack2_target = CHAMPION_LIST[4]
-                        ai4_attack_intention = "{} and {} <<< {} ({} Damage)".format(ai_attack1_target, ai_attack2_target,
-                                                                                     ai4_attack[0],
-                                                                                     ai4_attack[1])
-                    if ai4_attack[2] == "AOE":
-                        ai4_attack_intention = "Everyone <<< {} ({} Damage)".format(ai4_attack[0], ai4_attack[1])
+                if ai4_stun != 0:
+                    ai4_attack_intention = "STUNNED"
+                else:
+                    if ai4_taunt[1] != 0:
+                        for champions4 in CHAMPION_LIST:
+                            counter += 1
+                            if champions4 == ai4_taunt[0]:
+                                if counter == 1:
+                                    ai_attack_target = CHAMPION_LIST[0]
+                                    ai4_attack_intention = "{} <<< {} ({} Damage)".format(ai_attack_target, ai4_attack[0],
+                                                                                          ai4_attack[1])
+                                elif counter == 2:
+                                    ai_attack_target = CHAMPION_LIST[1]
+                                    ai4_attack_intention = "{} <<< {} ({} Damage)".format(ai_attack_target, ai4_attack[0],
+                                                                                          ai4_attack[1])
+                                elif counter == 3:
+                                    ai_attack_target = CHAMPION_LIST[2]
+                                    ai4_attack_intention = "{} <<< {} ({} Damage)".format(ai_attack_target, ai4_attack[0],
+                                                                                          ai4_attack[1])
+                                elif counter == 4:
+                                    ai_attack_target = CHAMPION_LIST[3]
+                                    ai4_attack_intention = "{} <<< {} ({} Damage)".format(ai_attack_target, ai4_attack[0],
+                                                                                          ai4_attack[1])
+                                elif counter == 5:
+                                    ai_attack_target = CHAMPION_LIST[4]
+                                    ai4_attack_intention = "{} <<< {} ({} Damage)".format(ai_attack_target, ai4_attack[0],
+                                                                                          ai4_attack[1])
+                    else:
+                        if new_round == 1:
+                            if ai4_attack[2] == "1T":
+                                if champion1_hp != 0:
+                                    ai_attack_options.append("C1")
+                                if champion2_hp != 0:
+                                    ai_attack_options.append("C2")
+                                if champion3_hp != 0:
+                                    ai_attack_options.append("C3")
+                                if champion4_hp != 0:
+                                    ai_attack_options.append("C4")
+                                if champion5_hp != 0:
+                                    ai_attack_options.append("C5")
+                                random.shuffle(ai_attack_options)
+                                if ai_attack_options[0] == "C1":
+                                    ai_attack_target = CHAMPION_LIST[0]
+                                if ai_attack_options[0] == "C2":
+                                    ai_attack_target = CHAMPION_LIST[1]
+                                if ai_attack_options[0] == "C3":
+                                    ai_attack_target = CHAMPION_LIST[2]
+                                if ai_attack_options[0] == "C4":
+                                    ai_attack_target = CHAMPION_LIST[3]
+                                if ai_attack_options[0] == "C5":
+                                    ai_attack_target = CHAMPION_LIST[4]
+                                ai4_attack_intention = "{} <<< {} ({} Damage)".format(ai_attack_target, ai4_attack[0],
+                                                                                      ai4_attack[1])
+                            if ai4_attack[2] == "2T":
+                                if champion1_hp != 0:
+                                    ai_attack_options.append("C1")
+                                if champion2_hp != 0:
+                                    ai_attack_options.append("C2")
+                                if champion3_hp != 0:
+                                    ai_attack_options.append("C3")
+                                if champion4_hp != 0:
+                                    ai_attack_options.append("C4")
+                                if champion5_hp != 0:
+                                    ai_attack_options.append("C5")
+                                random.shuffle(ai_attack_options)
+                                if ai_attack_options[0] == "C1":
+                                    ai_attack1_target = CHAMPION_LIST[0]
+                                    ai_attack_options.remove("C1")
+                                if ai_attack_options[0] == "C2":
+                                    ai_attack1_target = CHAMPION_LIST[1]
+                                    ai_attack_options.remove("C2")
+                                if ai_attack_options[0] == "C3":
+                                    ai_attack1_target = CHAMPION_LIST[2]
+                                    ai_attack_options.remove("C3")
+                                if ai_attack_options[0] == "C4":
+                                    ai_attack1_target = CHAMPION_LIST[3]
+                                    ai_attack_options.remove("C4")
+                                if ai_attack_options[0] == "C5":
+                                    ai_attack1_target = CHAMPION_LIST[4]
+                                    ai_attack_options.remove("C5")
+                                random.shuffle(ai_attack_options)
+                                if ai_attack_options[0] == "C1":
+                                    ai_attack2_target = CHAMPION_LIST[0]
+                                if ai_attack_options[0] == "C2":
+                                    ai_attack2_target = CHAMPION_LIST[1]
+                                if ai_attack_options[0] == "C3":
+                                    ai_attack2_target = CHAMPION_LIST[2]
+                                if ai_attack_options[0] == "C4":
+                                    ai_attack2_target = CHAMPION_LIST[3]
+                                if ai_attack_options[0] == "C5":
+                                    ai_attack2_target = CHAMPION_LIST[4]
+                                ai4_attack_intention = "{} and {} <<< {} ({} Damage)".format(ai_attack1_target, ai_attack2_target,
+                                                                                             ai4_attack[0],
+                                                                                             ai4_attack[1])
+                            if ai4_attack[2] == "AOE":
+                                ai4_attack_intention = "Everyone <<< {} ({} Damage)".format(ai4_attack[0], ai4_attack[1])
         if ai5_hp >= 0:
             if ai5_attack == "null":
                 ai5_attack_intention = ""
-            elif ai5_stun != 0:
-                ai5_attack_intention = "STUNNED"
-            elif ai5_taunt[1] != 0:
-                for champions in CHAMPION_LIST:
-                    counter += 1
-                    if champions == ai5_taunt[0]:
-                        if counter == 1:
-                            ai_attack_target = CHAMPION_LIST[0]
-                            ai5_attack_intention = "{} <<< {} ({} Damage)".format(ai_attack_target, ai5_attack[0],
-                                                                                  ai5_attack[1])
-                        elif counter == 2:
-                            ai_attack_target = CHAMPION_LIST[1]
-                            ai5_attack_intention = "{} <<< {} ({} Damage)".format(ai_attack_target, ai5_attack[0],
-                                                                                  ai5_attack[1])
-                        elif counter == 3:
-                            ai_attack_target = CHAMPION_LIST[2]
-                            ai5_attack_intention = "{} <<< {} ({} Damage)".format(ai_attack_target, ai5_attack[0],
-                                                                                  ai5_attack[1])
-                        elif counter == 4:
-                            ai_attack_target = CHAMPION_LIST[3]
-                            ai5_attack_intention = "{} <<< {} ({} Damage)".format(ai_attack_target, ai5_attack[0],
-                                                                                  ai5_attack[1])
-                        elif counter == 5:
-                            ai_attack_target = CHAMPION_LIST[4]
-                            ai5_attack_intention = "{} <<< {} ({} Damage)".format(ai_attack_target, ai5_attack[0],
-                                                                                  ai5_attack[1])
             else:
-                if new_round == 1:
-                    if ai5_attack[2] == "1T":
-                        if champion1_hp != 0:
-                            ai_attack_options.append("C1")
-                        if champion2_hp != 0:
-                            ai_attack_options.append("C2")
-                        if champion3_hp != 0:
-                            ai_attack_options.append("C3")
-                        if champion4_hp != 0:
-                            ai_attack_options.append("C4")
-                        if champion5_hp != 0:
-                            ai_attack_options.append("C5")
-                        random.shuffle(ai_attack_options)
-                        if ai_attack_options[0] == "C1":
-                            ai_attack_target = CHAMPION_LIST[0]
-                        if ai_attack_options[0] == "C2":
-                            ai_attack_target = CHAMPION_LIST[1]
-                        if ai_attack_options[0] == "C3":
-                            ai_attack_target = CHAMPION_LIST[2]
-                        if ai_attack_options[0] == "C4":
-                            ai_attack_target = CHAMPION_LIST[3]
-                        if ai_attack_options[0] == "C5":
-                            ai_attack_target = CHAMPION_LIST[4]
-                        ai5_attack_intention = "{} <<< {} ({} Damage)".format(ai_attack_target, ai5_attack[0],
-                                                                              ai5_attack[1])
-                    if ai5_attack[2] == "2T":
-                        if champion1_hp != 0:
-                            ai_attack_options.append("C1")
-                        if champion2_hp != 0:
-                            ai_attack_options.append("C2")
-                        if champion3_hp != 0:
-                            ai_attack_options.append("C3")
-                        if champion4_hp != 0:
-                            ai_attack_options.append("C4")
-                        if champion5_hp != 0:
-                            ai_attack_options.append("C5")
-                        random.shuffle(ai_attack_options)
-                        if ai_attack_options[0] == "C1":
-                            ai_attack1_target = CHAMPION_LIST[0]
-                            ai_attack_options.remove("C1")
-                        if ai_attack_options[0] == "C2":
-                            ai_attack1_target = CHAMPION_LIST[1]
-                            ai_attack_options.remove("C2")
-                        if ai_attack_options[0] == "C3":
-                            ai_attack1_target = CHAMPION_LIST[2]
-                            ai_attack_options.remove("C3")
-                        if ai_attack_options[0] == "C4":
-                            ai_attack1_target = CHAMPION_LIST[3]
-                            ai_attack_options.remove("C4")
-                        if ai_attack_options[0] == "C5":
-                            ai_attack1_target = CHAMPION_LIST[4]
-                            ai_attack_options.remove("C5")
-                        random.shuffle(ai_attack_options)
-                        if ai_attack_options[0] == "C1":
-                            ai_attack2_target = CHAMPION_LIST[0]
-                        if ai_attack_options[0] == "C2":
-                            ai_attack2_target = CHAMPION_LIST[1]
-                        if ai_attack_options[0] == "C3":
-                            ai_attack2_target = CHAMPION_LIST[2]
-                        if ai_attack_options[0] == "C4":
-                            ai_attack2_target = CHAMPION_LIST[3]
-                        if ai_attack_options[0] == "C5":
-                            ai_attack2_target = CHAMPION_LIST[4]
-                        ai5_attack_intention = "{} and {} <<< {} ({} Damage)".format(ai_attack1_target, ai_attack2_target,
-                                                                                     ai5_attack[0],
-                                                                                     ai5_attack[1])
-                    if ai5_attack[2] == "AOE":
-                        ai5_attack_intention = "Everyone <<< {} ({} Damage)".format(ai5_attack[0], ai5_attack[1])
+                if ai5_stun != 0:
+                    ai5_attack_intention = "STUNNED"
+                else:
+                    if ai5_taunt[1] != 0:
+                        for champions5 in CHAMPION_LIST:
+                            counter += 1
+                            if champions5 == ai5_taunt[0]:
+                                if counter == 1:
+                                    ai_attack_target = CHAMPION_LIST[0]
+                                    ai5_attack_intention = "{} <<< {} ({} Damage)".format(ai_attack_target, ai5_attack[0],
+                                                                                          ai5_attack[1])
+                                elif counter == 2:
+                                    ai_attack_target = CHAMPION_LIST[1]
+                                    ai5_attack_intention = "{} <<< {} ({} Damage)".format(ai_attack_target, ai5_attack[0],
+                                                                                          ai5_attack[1])
+                                elif counter == 3:
+                                    ai_attack_target = CHAMPION_LIST[2]
+                                    ai5_attack_intention = "{} <<< {} ({} Damage)".format(ai_attack_target, ai5_attack[0],
+                                                                                          ai5_attack[1])
+                                elif counter == 4:
+                                    ai_attack_target = CHAMPION_LIST[3]
+                                    ai5_attack_intention = "{} <<< {} ({} Damage)".format(ai_attack_target, ai5_attack[0],
+                                                                                          ai5_attack[1])
+                                elif counter == 5:
+                                    ai_attack_target = CHAMPION_LIST[4]
+                                    ai5_attack_intention = "{} <<< {} ({} Damage)".format(ai_attack_target, ai5_attack[0],
+                                                                                          ai5_attack[1])
+                    else:
+                        if new_round == 1:
+                            if ai5_attack[2] == "1T":
+                                if champion1_hp != 0:
+                                    ai_attack_options.append("C1")
+                                if champion2_hp != 0:
+                                    ai_attack_options.append("C2")
+                                if champion3_hp != 0:
+                                    ai_attack_options.append("C3")
+                                if champion4_hp != 0:
+                                    ai_attack_options.append("C4")
+                                if champion5_hp != 0:
+                                    ai_attack_options.append("C5")
+                                random.shuffle(ai_attack_options)
+                                if ai_attack_options[0] == "C1":
+                                    ai_attack_target = CHAMPION_LIST[0]
+                                if ai_attack_options[0] == "C2":
+                                    ai_attack_target = CHAMPION_LIST[1]
+                                if ai_attack_options[0] == "C3":
+                                    ai_attack_target = CHAMPION_LIST[2]
+                                if ai_attack_options[0] == "C4":
+                                    ai_attack_target = CHAMPION_LIST[3]
+                                if ai_attack_options[0] == "C5":
+                                    ai_attack_target = CHAMPION_LIST[4]
+                                ai5_attack_intention = "{} <<< {} ({} Damage)".format(ai_attack_target, ai5_attack[0],
+                                                                                      ai5_attack[1])
+                            if ai5_attack[2] == "2T":
+                                if champion1_hp != 0:
+                                    ai_attack_options.append("C1")
+                                if champion2_hp != 0:
+                                    ai_attack_options.append("C2")
+                                if champion3_hp != 0:
+                                    ai_attack_options.append("C3")
+                                if champion4_hp != 0:
+                                    ai_attack_options.append("C4")
+                                if champion5_hp != 0:
+                                    ai_attack_options.append("C5")
+                                random.shuffle(ai_attack_options)
+                                if ai_attack_options[0] == "C1":
+                                    ai_attack1_target = CHAMPION_LIST[0]
+                                    ai_attack_options.remove("C1")
+                                if ai_attack_options[0] == "C2":
+                                    ai_attack1_target = CHAMPION_LIST[1]
+                                    ai_attack_options.remove("C2")
+                                if ai_attack_options[0] == "C3":
+                                    ai_attack1_target = CHAMPION_LIST[2]
+                                    ai_attack_options.remove("C3")
+                                if ai_attack_options[0] == "C4":
+                                    ai_attack1_target = CHAMPION_LIST[3]
+                                    ai_attack_options.remove("C4")
+                                if ai_attack_options[0] == "C5":
+                                    ai_attack1_target = CHAMPION_LIST[4]
+                                    ai_attack_options.remove("C5")
+                                random.shuffle(ai_attack_options)
+                                if ai_attack_options[0] == "C1":
+                                    ai_attack2_target = CHAMPION_LIST[0]
+                                if ai_attack_options[0] == "C2":
+                                    ai_attack2_target = CHAMPION_LIST[1]
+                                if ai_attack_options[0] == "C3":
+                                    ai_attack2_target = CHAMPION_LIST[2]
+                                if ai_attack_options[0] == "C4":
+                                    ai_attack2_target = CHAMPION_LIST[3]
+                                if ai_attack_options[0] == "C5":
+                                    ai_attack2_target = CHAMPION_LIST[4]
+                                ai5_attack_intention = "{} and {} <<< {} ({} Damage)".format(ai_attack1_target, ai_attack2_target,
+                                                                                             ai5_attack[0],
+                                                                                             ai5_attack[1])
+                            if ai5_attack[2] == "AOE":
+                                ai5_attack_intention = "Everyone <<< {} ({} Damage)".format(ai5_attack[0], ai5_attack[1])
 
     def champion_combat_name(self, champion_position):
         global champion1_hp, champion2_hp, champion3_hp, champion4_hp, champion5_hp
@@ -10563,7 +10573,7 @@ class GameFrame(tk.Frame):
                                                    champion2_big_external_buffs[0])
                                 else:
                                     damage_done = math.ceil(BARBARIAN.ap + champion2_small_external_buffs[0])
-                                ability_data = ["Pulverize", "enemy", "1T", damage_done]
+                                ability_data = ["Pulverize", "enemy", "2T", damage_done]
                             else:
                                 return
                         if counter == 3:
@@ -10576,7 +10586,7 @@ class GameFrame(tk.Frame):
                                                    champion3_big_external_buffs[0])
                                 else:
                                     damage_done = math.ceil(BARBARIAN.ap + champion3_small_external_buffs[0])
-                                ability_data = ["Pulverize", "enemy", "1T", damage_done]
+                                ability_data = ["Pulverize", "enemy", "2T", damage_done]
                             else:
                                 return
                         if counter == 4:
@@ -10589,7 +10599,7 @@ class GameFrame(tk.Frame):
                                                    champion4_big_external_buffs[0])
                                 else:
                                     damage_done = math.ceil(BARBARIAN.ap + champion4_small_external_buffs[0])
-                                ability_data = ["Pulverize", "enemy", "1T", damage_done]
+                                ability_data = ["Pulverize", "enemy", "2T", damage_done]
                             else:
                                 return
                         if counter == 5:
@@ -10602,7 +10612,7 @@ class GameFrame(tk.Frame):
                                                    champion5_big_external_buffs[0])
                                 else:
                                     damage_done = math.ceil(BARBARIAN.ap + champion5_small_external_buffs[0])
-                                ability_data = ["Pulverize", "enemy", "1T", damage_done]
+                                ability_data = ["Pulverize", "enemy", "2T", damage_done]
                             else:
                                 return
                     counter += 1
@@ -11279,7 +11289,7 @@ class GameFrame(tk.Frame):
                                     damage_done = math.ceil((SURVIVALIST.ap + champion1_small_external_buffs[0]) *
                                                    champion1_big_external_buffs[0])
                                 else:
-                                    damage_done = math.ceil(     SURVIVALIST.ap + champion1_small_external_buffs[0])
+                                    damage_done = math.ceil(SURVIVALIST.ap + champion1_small_external_buffs[0])
                                 ability_data = ["Scrap Bomb", "enemy", "AOE", damage_done]
                             else:
                                 return
@@ -11292,7 +11302,7 @@ class GameFrame(tk.Frame):
                                     damage_done = math.ceil((SURVIVALIST.ap + champion2_small_external_buffs[0]) *
                                                    champion2_big_external_buffs[0])
                                 else:
-                                    damage_done = math.ceil(     SURVIVALIST.ap + champion2_small_external_buffs[0])
+                                    damage_done = math.ceil(SURVIVALIST.ap + champion2_small_external_buffs[0])
                                 ability_data = ["Scrap Bomb", "enemy", "AOE", damage_done]
                             else:
                                 return
@@ -11305,7 +11315,7 @@ class GameFrame(tk.Frame):
                                     damage_done = math.ceil((SURVIVALIST.ap + champion3_small_external_buffs[0]) *
                                                    champion3_big_external_buffs[0])
                                 else:
-                                    damage_done = math.ceil(     SURVIVALIST.ap + champion3_small_external_buffs[0])
+                                    damage_done = math.ceil(SURVIVALIST.ap + champion3_small_external_buffs[0])
                                 ability_data = ["Scrap Bomb", "enemy", "AOE", damage_done]
                             else:
                                 return
@@ -11318,7 +11328,7 @@ class GameFrame(tk.Frame):
                                     damage_done = math.ceil((SURVIVALIST.ap + champion4_small_external_buffs[0]) *
                                                    champion4_big_external_buffs[0])
                                 else:
-                                    damage_done = math.ceil(     SURVIVALIST.ap + champion4_small_external_buffs[0])
+                                    damage_done = math.ceil(SURVIVALIST.ap + champion4_small_external_buffs[0])
                                 ability_data = ["Scrap Bomb", "enemy", "AOE", damage_done]
                             else:
                                 return
@@ -11331,7 +11341,7 @@ class GameFrame(tk.Frame):
                                     damage_done = math.ceil((SURVIVALIST.ap + champion5_small_external_buffs[0]) *
                                                    champion5_big_external_buffs[0])
                                 else:
-                                    damage_done = math.ceil(     SURVIVALIST.ap + champion5_small_external_buffs[0])
+                                    damage_done = math.ceil(SURVIVALIST.ap + champion5_small_external_buffs[0])
                                 ability_data = ["Scrap Bomb", "enemy", "AOE", damage_done]
                             else:
                                 return
@@ -12006,10 +12016,10 @@ class GameFrame(tk.Frame):
                                 blood_spike_requirements[1] = blood_spike_requirements[2]
                                 champion1_rp = champion1_rp + blood_spike_requirements[3]
                                 if len(champion1_big_external_buffs) != 1:
-                                    damage_done = math.ceil((BLOODMANCER.ap + champion1_small_external_buffs[0]) *
+                                    damage_done = math.ceil(((BLOODMANCER.ap * 2)+ champion1_small_external_buffs[0]) *
                                                    champion1_big_external_buffs[0])
                                 else:
-                                    damage_done = math.ceil(     BLOODMANCER.ap + champion1_small_external_buffs[0])
+                                    damage_done = math.ceil(     (BLOODMANCER.ap * 2) + champion1_small_external_buffs[0])
                                 ability_data = ["Blood Spike", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -12019,10 +12029,10 @@ class GameFrame(tk.Frame):
                                 blood_spike_requirements[1] = blood_spike_requirements[2]
                                 champion2_rp = champion2_rp + blood_spike_requirements[3]
                                 if len(champion2_big_external_buffs) != 1:
-                                    damage_done = math.ceil((BLOODMANCER.ap + champion2_small_external_buffs[0]) *
+                                    damage_done = math.ceil(((BLOODMANCER.ap * 2) + champion2_small_external_buffs[0]) *
                                                    champion2_big_external_buffs[0])
                                 else:
-                                    damage_done = math.ceil(     BLOODMANCER.ap + champion2_small_external_buffs[0])
+                                    damage_done = math.ceil(     (BLOODMANCER.ap * 2) + champion2_small_external_buffs[0])
                                 ability_data = ["Blood Spike", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -12032,10 +12042,10 @@ class GameFrame(tk.Frame):
                                 blood_spike_requirements[1] = blood_spike_requirements[2]
                                 champion3_rp = champion3_rp + blood_spike_requirements[3]
                                 if len(champion3_big_external_buffs) != 1:
-                                    damage_done = math.ceil((BLOODMANCER.ap + champion3_small_external_buffs[0]) *
+                                    damage_done = math.ceil(((BLOODMANCER.ap * 2) + champion3_small_external_buffs[0]) *
                                                    champion3_big_external_buffs[0])
                                 else:
-                                    damage_done = math.ceil(     BLOODMANCER.ap + champion3_small_external_buffs[0])
+                                    damage_done = math.ceil(     (BLOODMANCER.ap * 2) + champion3_small_external_buffs[0])
                                 ability_data = ["Blood Spike", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -12045,10 +12055,10 @@ class GameFrame(tk.Frame):
                                 blood_spike_requirements[1] = blood_spike_requirements[2]
                                 champion4_rp = champion4_rp + blood_spike_requirements[3]
                                 if len(champion4_big_external_buffs) != 1:
-                                    damage_done = math.ceil((BLOODMANCER.ap + champion4_small_external_buffs[0]) *
+                                    damage_done = math.ceil(((BLOODMANCER.ap * 2) + champion4_small_external_buffs[0]) *
                                                    champion4_big_external_buffs[0])
                                 else:
-                                    damage_done = math.ceil(     BLOODMANCER.ap + champion4_small_external_buffs[0])
+                                    damage_done = math.ceil(     (BLOODMANCER.ap * 2) + champion4_small_external_buffs[0])
                                 ability_data = ["Blood Spike", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -12058,10 +12068,10 @@ class GameFrame(tk.Frame):
                                 blood_spike_requirements[1] = blood_spike_requirements[2]
                                 champion5_rp = champion5_rp + blood_spike_requirements[3]
                                 if len(champion5_big_external_buffs) != 1:
-                                    damage_done = math.ceil((BLOODMANCER.ap + champion5_small_external_buffs[0]) *
+                                    damage_done = math.ceil(((BLOODMANCER.ap * 2) + champion5_small_external_buffs[0]) *
                                                    champion5_big_external_buffs[0])
                                 else:
-                                    damage_done = math.ceil(     BLOODMANCER.ap + champion5_small_external_buffs[0])
+                                    damage_done = math.ceil(     (BLOODMANCER.ap * 2) + champion5_small_external_buffs[0])
                                 ability_data = ["Blood Spike", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -14537,6 +14547,102 @@ class GameFrame(tk.Frame):
                     counter += 1
             else:
                 return
+        elif ability_name == "Crashing Boom":
+            global crashing_boom_requirements
+            if crashing_boom_requirements[1] == 0:
+                for character in CHAMPION_LIST:
+                    if character == THUNDER_APPRENTICE.title:
+                        if counter == 1:
+                            if crashing_boom_requirements[0] <= champion1_rp:
+                                champion1_rp = champion1_rp - crashing_boom_requirements[0]
+                                crashing_boom_requirements[1] = crashing_boom_requirements[2]
+                                champion1_rp = champion1_rp + crashing_boom_requirements[3]
+                                ability_data = ["Crashing Boom", "enemy", "AOE"]
+                            else:
+                                return
+                        if counter == 2:
+                            if crashing_boom_requirements[0] <= champion2_rp:
+                                champion2_rp = champion2_rp - crashing_boom_requirements[0]
+                                crashing_boom_requirements[1] = crashing_boom_requirements[2]
+                                champion2_rp = champion2_rp + crashing_boom_requirements[3]
+                                ability_data = ["Crashing Boom", "enemy", "AOE"]
+                            else:
+                                return
+                        if counter == 3:
+                            if crashing_boom_requirements[0] <= champion3_rp:
+                                champion3_rp = champion3_rp - crashing_boom_requirements[0]
+                                crashing_boom_requirements[1] = crashing_boom_requirements[2]
+                                champion3_rp = champion3_rp + crashing_boom_requirements[3]
+                                ability_data = ["Crashing Boom", "enemy", "AOE"]
+                            else:
+                                return
+                        if counter == 4:
+                            if crashing_boom_requirements[0] <= champion4_rp:
+                                champion4_rp = champion4_rp - crashing_boom_requirements[0]
+                                crashing_boom_requirements[1] = crashing_boom_requirements[2]
+                                champion4_rp = champion4_rp + crashing_boom_requirements[3]
+                                ability_data = ["Crashing Boom", "enemy", "AOE"]
+                            else:
+                                return
+                        if counter == 5:
+                            if crashing_boom_requirements[0] <= champion5_rp:
+                                champion5_rp = champion5_rp - crashing_boom_requirements[0]
+                                crashing_boom_requirements[1] = crashing_boom_requirements[2]
+                                champion5_rp = champion5_rp + crashing_boom_requirements[3]
+                                ability_data = ["Crashing Boom", "enemy", "AOE"]
+                            else:
+                                return
+                    counter += 1
+            else:
+                return
+        elif ability_name == "Thunderous Vigor":
+            global thunderous_vigor_requirements
+            if thunderous_vigor_requirements[1] == 0:
+                for character in CHAMPION_LIST:
+                    if character == THUNDER_APPRENTICE.title:
+                        if counter == 1:
+                            if thunderous_vigor_requirements[0] <= champion1_rp:
+                                champion1_rp = champion1_rp - thunderous_vigor_requirements[0]
+                                thunderous_vigor_requirements[1] = thunderous_vigor_requirements[2]
+                                champion1_rp = champion1_rp + thunderous_vigor_requirements[3]
+                                ability_data = ["Thunderous Vigor", "self"]
+                            else:
+                                return
+                        if counter == 2:
+                            if thunderous_vigor_requirements[0] <= champion2_rp:
+                                champion2_rp = champion2_rp - thunderous_vigor_requirements[0]
+                                thunderous_vigor_requirements[1] = thunderous_vigor_requirements[2]
+                                champion2_rp = champion2_rp + thunderous_vigor_requirements[3]
+                                ability_data = ["Thunderous Vigor", "self"]
+                            else:
+                                return
+                        if counter == 3:
+                            if thunderous_vigor_requirements[0] <= champion3_rp:
+                                champion3_rp = champion3_rp - thunderous_vigor_requirements[0]
+                                thunderous_vigor_requirements[1] = thunderous_vigor_requirements[2]
+                                champion3_rp = champion3_rp + thunderous_vigor_requirements[3]
+                                ability_data = ["Thunderous Vigor", "self"]
+                            else:
+                                return
+                        if counter == 4:
+                            if thunderous_vigor_requirements[0] <= champion4_rp:
+                                champion4_rp = champion4_rp - thunderous_vigor_requirements[0]
+                                thunderous_vigor_requirements[1] = thunderous_vigor_requirements[2]
+                                champion4_rp = champion4_rp + thunderous_vigor_requirements[3]
+                                ability_data = ["Thunderous Vigor", "self"]
+                            else:
+                                return
+                        if counter == 5:
+                            if thunderous_vigor_requirements[0] <= champion5_rp:
+                                champion5_rp = champion5_rp - thunderous_vigor_requirements[0]
+                                thunderous_vigor_requirements[1] = thunderous_vigor_requirements[2]
+                                champion5_rp = champion5_rp + thunderous_vigor_requirements[3]
+                                ability_data = ["Thunderous Vigor", "self"]
+                            else:
+                                return
+                    counter += 1
+            else:
+                return
         elif ability_name == "Muscle Enlarger":
             global muscle_enlarger_requirements
             if muscle_enlarger_requirements[1] == 0:
@@ -16034,7 +16140,7 @@ class GameFrame(tk.Frame):
         elif ability_data[0] == "Pulverize":
             if 1 in target_list:
                 ai1_hp = ai1_hp - ability_data[3]
-                self.apply_taunt(1,BARBARIAN.title, 2)
+                self.apply_taunt(1, BARBARIAN.title, 2)
             if 2 in target_list:
                 ai2_hp = ai2_hp - ability_data[3]
                 self.apply_taunt(2, BARBARIAN.title, 2)
@@ -16971,34 +17077,34 @@ class GameFrame(tk.Frame):
             if 1 in target_list:
                 ai1_hp = ai1_hp - (ability_data[3] + (blood_boil_buff * ability_data[3]))
             if 2 in target_list:
-                ai2_hp = ai2_hp - ability_data[3]
+                ai2_hp = ai2_hp - (ability_data[3] + (blood_boil_buff * ability_data[3]))
             if 3 in target_list:
-                ai3_hp = ai3_hp - ability_data[3]
+                ai3_hp = ai3_hp - (ability_data[3] + (blood_boil_buff * ability_data[3]))
             if 4 in target_list:
-                ai4_hp = ai4_hp - ability_data[3]
+                ai4_hp = ai4_hp - (ability_data[3] + (blood_boil_buff * ability_data[3]))
             if 5 in target_list:
-                ai5_hp = ai5_hp - ability_data[3]
+                ai5_hp = ai5_hp - (ability_data[3] + (blood_boil_buff * ability_data[3]))
             for champions in CHAMPION_LIST:
                 counter += 1
                 if champions == BLOODMANCER.title:
                     if counter == 1:
-                        champion1_hp = champion1_hp - ability_data[3]
+                        champion1_hp = champion1_hp - BLOODMANCER.ap
                         if champion1_hp > CHAMPION_1_HP:
                             champion1_hp = CHAMPION_1_HP
                     elif counter == 2:
-                        champion2_hp = champion2_hp - ability_data[3]
+                        champion2_hp = champion2_hp - BLOODMANCER.ap
                         if champion2_hp > CHAMPION_2_HP:
                             champion2_hp = CHAMPION_2_HP
                     elif counter == 3:
-                        champion3_hp = champion3_hp - ability_data[3]
+                        champion3_hp = champion3_hp - BLOODMANCER.ap
                         if champion3_hp > CHAMPION_3_HP:
                             champion3_hp = CHAMPION_3_HP
                     elif counter == 4:
-                        champion4_hp = champion4_hp - ability_data[3]
+                        champion4_hp = champion4_hp - BLOODMANCER.ap
                         if champion4_hp > CHAMPION_4_HP:
                             champion4_hp = CHAMPION_4_HP
                     elif counter == 5:
-                        champion5_hp = champion5_hp - ability_data[3]
+                        champion5_hp = champion5_hp - BLOODMANCER.ap
                         if champion5_hp > CHAMPION_5_HP:
                             champion5_hp = CHAMPION_5_HP
             blood_boil_buff = 0
@@ -18707,7 +18813,8 @@ class GameFrame(tk.Frame):
                     attack_text = "Blood Spike ({})".format(blood_spike_requirements[1])
                     attack_button_text_list.append(attack_text)
                 else:
-                    attack_button_text_list.append(attack_name)
+                    attack_text = "Blood Spike\n{} {}".format(BLOODMANCER.rp_name, BLOODMANCER.ap)
+                    attack_button_text_list.append(attack_text)
             elif attack_name == "Rightous Blow":
                 if righteous_blow_requirements[0] > 0:
                     if righteous_blow_requirements[1] > 0:
