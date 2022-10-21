@@ -1173,21 +1173,21 @@ class GameFrame(tk.Frame):
             pierce_requirements, disruptive_slash_requirements, parry_requirements, elusive_measures_requirements
         # Monk Abilities:
         palm_strike_requirements = [0, 0, 0, 20]
-        leg_sweep_requirements = [30, 0, 2, 0]
+        leg_sweep_requirements = [30, 0, 3, 0]
         harmonize_requirements = [50, 0, 0, 0]
-        pressure_points_requirements = [30, 0, 5, 0]
+        pressure_points_requirements = [30, 0, 6, 0]
         monk_staggered_damage_list1 = [0, 0]
         monk_staggered_damage_list2 = [0, 0]
         monk_staggered_damage_list3 = [0, 0]
         # Barbarian Abiltities:
         bloodthirst_requirements = [0, 0, 0, 30]
         pulverize_requirements = [20, 0, 0, 0]
-        challenging_shout_requirements = [40, 0, 2, 20]
+        challenging_shout_requirements = [40, 0, 3, 20]
         impactful_boast_requirements = [20, 0, 0, 0]
         # Veteran Bodyguard Abilities:
         shield_bash_requirements = [0, 0, 0, 0]
-        trainwreck_requirements = [0, 0, 1, 0]
-        fortification_requirements = [0, 0, 2, 0]
+        trainwreck_requirements = [0, 0, 2, 0]
+        fortification_requirements = [0, 0, 3, 0]
         block_requirements = [0, 0, 0, 0]
         champion1_fortification = [0]
         champion2_fortification = [0]
@@ -1196,11 +1196,11 @@ class GameFrame(tk.Frame):
         champion5_fortification = [0]
         # Master Fencer Abilities
         pierce_requirements = [0, 0, 0, 0]
-        disruptive_slash_requirements = [0, 0, 2, 0]
-        parry_requirements = [0, 0, 2, 0]
-        elusive_measures_requirements = [0, 0, 1, 0]
+        disruptive_slash_requirements = [0, 0, 3, 0]
+        parry_requirements = [0, 0, 3, 0]
+        elusive_measures_requirements = [0, 0, 2, 0]
         global raging_blow_requirements, rampage_requirements, enrage_requirements, reckless_flurry_requirements, \
-            champion1_enrage, champion2_enrage, champion3_enrage, champion4_enrage, champion5_enrage, \
+            champion1_enrage, champion2_enrage, champion3_enrage, champion4_enrage, champion5_enrage, reckless_flurry_buff, \
             serrated_slash_requirements, eviscerate_requirements, garrote_requirements, exploit_weakness_requirements, \
             spear_thrust_requirements, scrap_bomb_requirements, play_dead_requirements, rushed_rest_requirements, \
             champion1_play_dead, champion2_play_dead, champion3_play_dead, champion4_play_dead, champion5_play_dead, \
@@ -1209,32 +1209,33 @@ class GameFrame(tk.Frame):
         raging_blow_requirements = [0, 0, 0, 40]
         rampage_requirements = [80, 0, 0, 0]
         enrage_requirements = [0, 0, 0, 30]
-        reckless_flurry_requirements = [40, 0, 2, 0]
-        champion1_enrage = []
-        champion2_enrage = []
-        champion3_enrage = []
-        champion4_enrage = []
-        champion5_enrage = []
+        reckless_flurry_requirements = [40, 0, 3, 0]
+        champion1_enrage = [0]
+        champion2_enrage = [0]
+        champion3_enrage = [0]
+        champion4_enrage = [0]
+        champion5_enrage = [0]
+        reckless_flurry_buff = 0
         # Rogue Abilities
         serrated_slash_requirements = [0, 0, 0, 0]
-        eviscerate_requirements = [0, 0, 2, 0]
+        eviscerate_requirements = [0, 0, 3, 0]
         garrote_requirements = [0, 0, 0, 0]
-        exploit_weakness_requirements = [0, 0, 4, 0]
+        exploit_weakness_requirements = [0, 0, 5, 0]
         # Survivalist Abilities
         spear_thrust_requirements = [0, 0, 0, 0]
-        scrap_bomb_requirements = [0, 0, 2, 0]
-        play_dead_requirements = [0, 0, 3, 0]
-        rushed_rest_requirements = [0, 0, 2, 0]
-        champion1_play_dead = []
-        champion2_play_dead = []
-        champion3_play_dead = []
-        champion4_play_dead = []
-        champion5_play_dead = []
+        scrap_bomb_requirements = [0, 0, 3, 0]
+        play_dead_requirements = [0, 0, 4, 0]
+        rushed_rest_requirements = [0, 0, 3, 0]
+        champion1_play_dead = [0]
+        champion2_play_dead = [0]
+        champion3_play_dead = [0]
+        champion4_play_dead = [0]
+        champion5_play_dead = [0]
         # Brawlist Abilties
         tactical_punch_requirements = [0, 0, 0, 0]
-        uppercut_requirements = [0, 0, 2, 0]
-        defensive_stance_requirements = [0, 0, 2, 0]
-        rushdown_requirements = [0, 0, 3, 0]
+        uppercut_requirements = [0, 0, 3, 0]
+        defensive_stance_requirements = [0, 0, 3, 0]
+        rushdown_requirements = [0, 0, 4, 0]
         global frost_bolt_requirements, fireball_requirements, arcane_brilliance_requirements, magical_barrier_requirements, \
             venusfly_snap_requirements, vine_swipe_requirements, thorns_requirements, prickle_arena_requirements, \
             champion1_thorns, champion2_thorns, champion3_thorns, champion4_thorns, champion5_thorns, \
@@ -1244,13 +1245,13 @@ class GameFrame(tk.Frame):
         # Academic Mage Abilities
         frost_bolt_requirements = [20, 0, 0, 0]
         fireball_requirements = [30, 0, 0, 0]
-        arcane_brilliance_requirements = [100, 0, 5, 0]
+        arcane_brilliance_requirements = [100, 0, 6, 0]
         magical_barrier_requirements = [20, 0, 0, 0]
         # Druid Abilities
         venusfly_snap_requirements = [40, 0, 0, 0]
-        vine_swipe_requirements = [20, 0, 1, 0]
+        vine_swipe_requirements = [20, 0, 2, 0]
         thorns_requirements = [10, 0, 0, 0]
-        prickle_arena_requirements = [30, 0, 4, 0]
+        prickle_arena_requirements = [30, 0, 5, 0]
         champion1_thorns = [0, 0]
         champion2_thorns = [0, 0]
         champion3_thorns = [0, 0]
@@ -1259,23 +1260,26 @@ class GameFrame(tk.Frame):
         # Warlock Abilities
         black_bolt_requirements = [25, 0, 0, 0]
         void_infusion_requirements = [100, 0, 0, 0]
-        wound_fissure_requirements = [50, 0, 3, 0]
+        wound_fissure_requirements = [50, 0, 4, 0]
         soul_tap_requirements = [0, 0, 0, 0]
         # Bloodmancer Abilities
         drain_life_requirements = [0, 0, 0, 0]
         blood_spike_requirements = [0, 0, 0, 0]
-        blood_boil_requirements = [0, 0, 3, 0]
-        enharden_nerves_requirements = [0, 0, 2, 0]
+        blood_boil_requirements = [0, 0, 4, 0]
+        enharden_nerves_requirements = [0, 0, 3, 0]
         blood_boil_buff = 0
         global overhand_justice_requirements, righteous_blow_requirements, aura_of_power_requirements, aura_of_protection_requirements, champion1_aura, champion2_aura, champion3_aura, champion4_aura, champion5_aura, \
             steady_shot_requirements, power_opt_requirements, equip_iron_cast_arrows_requirements, equip_tracker_tipped_arrows_requirements, current_arrow_type, \
             lightning_bolt_requirements, chain_lightning_requirements, crashing_boom_requirements, thunderous_vigor_requirements, \
-            muscle_enlarger_requirements, mistic_bloom_requirements, power_surge_requirements, full_potential_requirements
+            muscle_enlarger_requirements, mistic_bloom_requirements, power_surge_requirements, full_potential_requirements, \
+        champion1_muscleEnlarger, champion2_muscleEnlarger, champion3_muscleEnlarger, champion4_muscleEnlarger, champion5_muscleEnlarger, \
+        champion1_fullPotential, champion2_fullPotential, champion3_fullPotential, champion4_fullPotential, champion5_fullPotential
+
         # Paladin Abilities
         overhand_justice_requirements = [0, 0, 0, 0]
-        righteous_blow_requirements = [0, 0, 2, 0]
-        aura_of_power_requirements = [0, 0, 1, 0]
-        aura_of_protection_requirements = [0, 0, 1, 0]
+        righteous_blow_requirements = [0, 0, 3, 0]
+        aura_of_power_requirements = [0, 0, 2, 0]
+        aura_of_protection_requirements = [0, 0, 2, 0]
         champion1_aura = [1]
         champion2_aura = [1]
         champion3_aura = [1]
@@ -1283,20 +1287,30 @@ class GameFrame(tk.Frame):
         champion5_aura = [1]
         # Castle Ranger Abilitites
         steady_shot_requirements = [0, 0, 0, 0]
-        power_opt_requirements = [0, 0, 1, 0]
-        equip_iron_cast_arrows_requirements = [0, 0, 1, 0]
-        equip_tracker_tipped_arrows_requirements = [0, 0, 1, 0]
+        power_opt_requirements = [0, 0, 2, 0]
+        equip_iron_cast_arrows_requirements = [0, 0, 2, 0]
+        equip_tracker_tipped_arrows_requirements = [0, 0, 2, 0]
         current_arrow_type = "Iron-cast"
         # Thunder Apprentice Abilities
         lightning_bolt_requirements = [0, 0, 0, 0]
         chain_lightning_requirements = [0, 0, 0, 0]
-        crashing_boom_requirements = [0, 0, 4, 0]
-        thunderous_vigor_requirements = [0, 0, 6, 0]
+        crashing_boom_requirements = [0, 0, 5, 0]
+        thunderous_vigor_requirements = [0, 0, 7, 0]
         # Power Conduit Abilities
         muscle_enlarger_requirements = [0, 0, 0, 1]
+        champion1_muscleEnlarger = 0
+        champion2_muscleEnlarger = 0
+        champion3_muscleEnlarger = 0
+        champion4_muscleEnlarger = 0
+        champion5_muscleEnlarger = 0
         mistic_bloom_requirements = [0, 0, 0, 1]
         power_surge_requirements = [3, 0, 0, 0]
         full_potential_requirements = [3, 0, 0, 0]
+        champion1_fullPotential = 0
+        champion2_fullPotential = 0
+        champion3_fullPotential = 0
+        champion4_fullPotential = 0
+        champion5_fullPotential = 0
         global rock_barrage_requirements, healing_surge_requirements, rejuvenating_whirlpool_requirements, boulder_cocoon_requirements, \
             shimmering_bolt_requirements, divine_smite_requirements, healing_light_requirements, diffracting_nova_requirements, \
             cybernetic_blast_requirements, nanoheal_bots_requirements, reverse_wounds_requirements, alter_time_requirements,\
@@ -1307,7 +1321,7 @@ class GameFrame(tk.Frame):
         # Earth Speaker Abilities
         rock_barrage_requirements = [0, 0, 0, 30]
         healing_surge_requirements = [40, 0, 0, 0]
-        rejuvenating_whirlpool_requirements = [50, 0, 1, 0]
+        rejuvenating_whirlpool_requirements = [50, 0, 2, 0]
         boulder_cocoon_requirements = [100, 0, 0, 0]
         # Priest of the Devoted Abilities
         shimmering_bolt_requirements = [0, 0, 0, 30]
@@ -1317,28 +1331,33 @@ class GameFrame(tk.Frame):
         # Time Walker Abilities
         cybernetic_blast_requirements = [0, 0, 0, 30]
         nanoheal_bots_requirements = [20, 0, 0, 0]
-        champion1_nanobot = []
-        champion2_nanobot = []
-        champion3_nanobot = []
-        champion4_nanobot = []
-        champion5_nanobot = []
+        champion1_nanobot = [0, 0]
+        champion2_nanobot = [0, 0]
+        champion3_nanobot = [0, 0]
+        champion4_nanobot = [0, 0]
+        champion5_nanobot = [0, 0]
         reverse_wounds_requirements = [50, 0, 0, 0]
         champion1_lastRound_damageTaken = 0
         champion2_lastRound_damageTaken = 0
         champion3_lastRound_damageTaken = 0
         champion4_lastRound_damageTaken = 0
         champion5_lastRound_damageTaken = 0
-        alter_time_requirements = [180, 0, 5, 0]
+        alter_time_requirements = [180, 0, 6, 0]
         # Child of Medicine Abilities
         throw_scissors_requirements = [0, 0, 0, 0]
         bandage_wound_requirements = [0, 0, 0, 0]
-        perfected_herbal_tea_requirements = [0, 0, 1, 0]
-        champion1_herb_tea = []
-        champion2_herb_tea = []
-        champion3_herb_tea = []
-        champion4_herb_tea = []
-        champion5_herb_tea = []
-        g3t_jaxd_requirements = [0, 0, 4, 0]
+        perfected_herbal_tea_requirements = [0, 0, 2, 0]
+        champion1_herb_tea = [0, 0]
+        champion2_herb_tea = [0, 0]
+        champion3_herb_tea = [0, 0]
+        champion4_herb_tea = [0, 0]
+        champion5_herb_tea = [0, 0]
+        g3t_jaxd_requirements = [0, 0, 5, 0]
+        champion1_g3t_jaxd = 0
+        champion2_g3t_jaxd = 0
+        champion3_g3t_jaxd = 0
+        champion4_g3t_jaxd = 0
+        champion5_g3t_jaxd = 0
 
     def DungeonFloorProgress(self):
         global BDR_check_interger, teams_current_condition_label, current_floor_label, floor_room_modifiers_label, from_combat
@@ -9297,6 +9316,46 @@ class GameFrame(tk.Frame):
                                             champion5_lastRound_damageTaken = self.calculate_ai_damage(5, 5)
                                             if champion5_hp < 0:
                                                 champion5_hp = 0
+            if ai1_brittle != 0:
+                ai1_brittle = ai1_brittle - 1
+            if ai2_brittle != 0:
+                ai2_brittle = ai2_brittle - 1
+            if ai3_brittle != 0:
+                ai3_brittle = ai3_brittle - 1
+            if ai4_brittle != 0:
+                ai4_brittle = ai4_brittle - 1
+            if ai5_brittle != 0:
+                ai5_brittle = ai5_brittle - 1
+            if ai1_weakness != 0:
+                ai1_weakness = ai1_weakness - 1
+            if ai2_weakness != 0:
+                ai2_weakness = ai2_weakness - 1
+            if ai3_weakness != 0:
+                ai3_weakness = ai3_weakness - 1
+            if ai4_weakness != 0:
+                ai4_weakness = ai4_weakness - 1
+            if ai5_weakness != 0:
+                ai5_weakness = ai5_weakness - 1
+            if ai1_stun != 0:
+                ai1_stun = ai1_stun - 1
+            if ai2_stun != 0:
+                ai2_stun = ai2_stun - 1
+            if ai3_stun != 0:
+                ai3_stun = ai3_stun - 1
+            if ai4_stun != 0:
+                ai4_stun = ai4_stun - 1
+            if ai5_stun != 0:
+                ai5_stun = ai5_stun - 1
+            if ai1_taunt[1] != 0:
+                ai1_taunt[1] = ai1_taunt[1] - 1
+            if ai2_taunt[1] != 0:
+                ai2_taunt[1] = ai2_taunt[1] - 1
+            if ai3_taunt[1] != 0:
+                ai3_taunt[1] = ai3_taunt[1] - 1
+            if ai4_taunt[1] != 0:
+                ai4_taunt[1] = ai4_taunt[1] - 1
+            if ai5_taunt[1] != 0:
+                ai5_taunt[1] = ai5_taunt[1] - 1
             current_turn = "MN"
             self.next_turn()
     def calculate_ai_damage(self, champion_position, ai_position):
@@ -9669,26 +9728,27 @@ class GameFrame(tk.Frame):
         self.DungeonFloorProgress()
 
     def check_if_power_conduit_text(self):
-        counter = 1
         for character in CHAMPION_LIST:
             if character == "Power Conduit":
-                turn_check = "C{}".format(counter)
-                if current_turn == turn_check:
-                    attack_text = "Cannot Attack"
-                    return attack_text
-            counter += 1
-        attack_text = "Attack"
+                attack_text = "Cannot Attack"
+                break
+            else:
+                attack_text = "Attack"
         return attack_text
 
     def check_if_power_conduit_command(self):
         counter = 1
+        PC_detected = 0
         for character in CHAMPION_LIST:
             if character == "Power Conduit":
                 turn_check = "C{}".format(counter)
                 if current_turn == turn_check:
-                    break
+                    PC_detected = 1
             counter += 1
-        self.attack_button()
+        if PC_detected == 1:
+            do_nothing = 0
+        else:
+            self.attack_button()
 
     def champion_turn_ticker(self, champion_position):
         global leg_sweep_requirements, pressure_points_requirements, challenging_shout_requirements, trainwreck_requirements, \
@@ -15951,7 +16011,8 @@ class GameFrame(tk.Frame):
         self.next_turn()
 
     def finalise_damage_dealt(self):
-        global ai1_hp, ai2_hp, ai3_hp, ai4_hp, ai5_hp, champion1_hp, champion2_hp, champion3_hp, champion4_hp, champion5_hp
+        global ai1_hp, ai2_hp, ai3_hp, ai4_hp, ai5_hp, champion1_hp, champion2_hp, champion3_hp, champion4_hp, champion5_hp, \
+        reckless_flurry_buff
         counter = 0
         if ability_data[0] == "Palm Strike":
             if 1 in target_list:
@@ -16208,7 +16269,7 @@ class GameFrame(tk.Frame):
                 ai5_hp = ai5_hp - ability_data[3]
                 self.apply_stun(5, 1)
         elif ability_data[0] == "Raging Blow":
-            if reckless_flurry_requirements[1] != 0:
+            if reckless_flurry_buff != 0:
                 if AI_SPAWNED == 1:
                     ai1_hp = ai1_hp - ability_data[3]
                 if AI_SPAWNED == 2:
@@ -16229,6 +16290,7 @@ class GameFrame(tk.Frame):
                     ai3_hp = ai3_hp - ability_data[3]
                     ai4_hp = ai4_hp - ability_data[3]
                     ai5_hp = ai5_hp - ability_data[3]
+                reckless_flurry_buff = reckless_flurry_buff - 1
             else:
                 if 1 in target_list:
                     ai1_hp = ai1_hp - ability_data[3]
@@ -16241,7 +16303,7 @@ class GameFrame(tk.Frame):
                 if 5 in target_list:
                     ai5_hp = ai5_hp - ability_data[3]
         elif ability_data[0] == "Rampage":
-            if reckless_flurry_requirements[1] != 0:
+            if reckless_flurry_buff != 0:
                 if AI_SPAWNED == 1:
                     ai1_hp = ai1_hp - ability_data[3]
                 if AI_SPAWNED == 2:
@@ -16262,6 +16324,7 @@ class GameFrame(tk.Frame):
                     ai3_hp = ai3_hp - ability_data[3]
                     ai4_hp = ai4_hp - ability_data[3]
                     ai5_hp = ai5_hp - ability_data[3]
+                reckless_flurry_buff = reckless_flurry_buff - 1
             else:
                 if 1 in target_list:
                     ai1_hp = ai1_hp - ability_data[3]
@@ -17929,41 +17992,23 @@ class GameFrame(tk.Frame):
                 counter += 1
                 if character == BERSERKER.title:
                     if counter == 1:
-                        champion1_enrage = [1]
+                        champion1_enrage = [3]
                         break
                     if counter == 2:
-                        champion2_enrage = [1]
+                        champion2_enrage = [3]
                         break
                     if counter == 3:
-                        champion3_enrage = [1]
+                        champion3_enrage = [3]
                         break
                     if counter == 4:
-                        champion4_enrage = [1]
+                        champion4_enrage = [3]
                         break
                     if counter == 5:
-                        champion5_enrage = [1]
+                        champion5_enrage = [3]
                         break
         elif ability_data[0] == "Reckless Flurry":
-            global champion1_reckless_flurry,champion2_reckless_flurry,champion3_reckless_flurry, \
-                champion4_reckless_flurry,champion5_reckless_flurry
-            for character in CHAMPION_LIST:
-                counter += 1
-                if character == BERSERKER.title:
-                    if counter == 1:
-                        champion1_reckless_flurry = [1, 3]
-                        break
-                    if counter == 2:
-                        champion2_reckless_flurry = [1, 3]
-                        break
-                    if counter == 3:
-                        champion3_reckless_flurry = [1, 3]
-                        break
-                    if counter == 4:
-                        champion4_reckless_flurry = [1, 3]
-                        break
-                    if counter == 5:
-                        champion5_reckless_flurry = [1, 3]
-                        break
+            global reckless_flurry_buff
+            reckless_flurry_buff = 2
         elif ability_data[0] == "Play Dead":
             global champion1_play_dead, champion2_play_dead, champion3_play_dead , \
                 champion4_play_dead, champion5_play_dead
@@ -19274,6 +19319,23 @@ class GameFrame(tk.Frame):
                         special_button_text_list.append(special_text)
                 elif crashing_boom_requirements[1] > 0:
                     special_text = "Crashing Boom ({})".format(crashing_boom_requirements[1])
+                    special_button_text_list.append(special_text)
+                else:
+                    special_button_text_list.append(special_name)
+            elif special_name == "Thunderous Vigor":
+                if thunderous_vigor_requirements[0] > 0:
+                    if thunderous_vigor_requirements[1] > 0:
+                        special_text = "Thunderous Vigor ({})\n{} {}".format(thunderous_vigor_requirements[1],
+                                                                          THUNDER_APPRENTICE.rp_name,
+                                                                          thunderous_vigor_requirements[
+                                                                              0])
+                        special_button_text_list.append(special_text)
+                    else:
+                        special_text = "Thunderous Vigor\n{} {}".format(THUNDER_APPRENTICE.rp_name,
+                                                                     thunderous_vigor_requirements[0])
+                        special_button_text_list.append(special_text)
+                elif thunderous_vigor_requirements[1] > 0:
+                    special_text = "Thunderous Vigor ({})".format(thunderous_vigor_requirements[1])
                     special_button_text_list.append(special_text)
                 else:
                     special_button_text_list.append(special_name)
