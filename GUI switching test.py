@@ -1,9 +1,15 @@
+#Importing outside modules to support my program
+#Module to collect users pc username
 import os
+#Module that enables randomisation of variables
 import random
+#Module that enables me to round my caluclated numbers to the close whole number through math.ceil
 import math
+#Personal custom Module that contains champion information
 from Champions import *
+#Personal custom Module that contains monster information
 from Monsters import *
-
+#Enables the tkinter addon which I'll use for my GUI
 try:
     import tkinter as tk  # python 3
     from tkinter import font as tkfont, ttk  # python 3
@@ -12,12 +18,13 @@ except ImportError:
     import tkFont as tkfont  # python 2
 from flask import Flask
 from flask_bcrypt import Bcrypt
-
+#Enables Bcrypt which is my password salting/hashing functions
 app = Flask(__name__)
 bcrypt = Bcrypt(app)
 
-
+#This class loads all Frames into one parent (container) and lets me call those Frames through the use of classes. I can call these class frames through the show.frame function
 class ParentClass(tk.Tk):
+    #Sets container parent, frame fonts, and laods all possible frames through F
     def __init__(self, *args, **kwargs):
         global computer_username
         tk.Tk.__init__(self, *args, **kwargs)
@@ -33,16 +40,13 @@ class ParentClass(tk.Tk):
         container.grid_columnconfigure(0, weight=1)
         computer_username = os.getlogin()
         self.frames = {}
+        #Loads all frames on top of each other. The frame that is visible is the one called to go on top.
         for F in (
                 OpeningPage, MainMenu, DungeonDelve, CreateTeamPage, CreditPage, How2PlayPage, LeaderboardPage,
                 LoginMenu, RegisterMenu, DungeonManagement, Team1SelectionPage, GameFrame):
             page_name = F.__name__
             frame = F(parent=container, controller=self)
             self.frames[page_name] = frame
-
-            # put all of the pages in the same location;
-            # the one on the top of the stacking order
-            # will be the one that is visible.
             frame.grid(row=0, column=0)
 
         self.show_frame("OpeningPage")
@@ -57,7 +61,8 @@ class ParentClass(tk.Tk):
 
     def breakcode(self):
         self.destroy()
-
+    #Checks username_entry and password_entry through the account_data_username/password text files to see whether or not
+    #the inputted account exists and displays a message through self.problem accordingly on if an input was empty or wrong.
     def login_check_password(self, username_entry, password_entry):
         global user
         inputted_username = username_entry.get()
@@ -107,7 +112,6 @@ class ParentClass(tk.Tk):
                     try:
                         if bcrypt.check_password_hash(password_file_r, password_encoder):
                             self.problem.destroy()
-                            user = User(inputted_username)
                             self.set_current_user(inputted_username)
                             self.login_to_main_menu(username_entry, password_entry)
                     except:
@@ -120,30 +124,33 @@ class ParentClass(tk.Tk):
                 self.problem = ttk.Label(self, text="")
                 self.problem.configure(text=invalid_details)
                 self.problem.grid(row=7, column=2, padx=10, pady=10)
-
+    #Writes the inputted_username into a text file for later use when finding accounts
     def set_current_user(self, inputted_username):
         current_user = open(
-            "C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/account_data_current_username.txt".format(computer_username), "w")
+            "C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/game_data_current_username.txt".format(computer_username), "w")
         current_user.write("{}".format(inputted_username))
         current_user.close()
-
+    #Reads the current_username file to return the plain name in the file
     def get_user(self):
         current_user = open(
-            "C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/account_data_current_username.txt".format(computer_username), "r")
+            "C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/game_data_current_username.txt".format(computer_username), "r")
         current_user_r = current_user.readline()
         user = current_user_r
         current_user.close()
         return user
 
+    # Reads the current_username file to return the encoded version of the name in the file
     def get_user_encoded(self):
         current_user = open(
-            "C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/account_data_current_username.txt".format(computer_username), "r")
+            "C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/game_data_current_username.txt".format(computer_username), "r")
         current_user_r = current_user.readline()
         user = current_user_r
         user = user.encode("utf-8")
         current_user.close()
         return user
 
+    # Checks username_entry and password_entry through the account_data_username/password text files to see whether or not
+    # the inputted account exists already and displays a message through self.problem accordingly on if an input was empty or wrong or if that accounts password is already in use.
     def register_check_password(self, username_entry, password_entry, confirm_password_entry):
         global problem
         global encode_username
@@ -207,7 +214,7 @@ class ParentClass(tk.Tk):
             self.problem = ttk.Label(self, text="")
             self.problem.configure(text=not_equal_pw_warning)
             self.problem.grid(row=3, column=0, padx=10, pady=10)
-
+    #Writes the newly created password and usename into their respective text files
     def user_account_set(self):
         file = open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/account_data_username.txt".format(computer_username), "a")
         file.write("\n")
@@ -232,36 +239,32 @@ class ParentClass(tk.Tk):
         file.write("\n")
         file.write(str(encode_password))
         file.close()
-
+    #Gives the user a window to make sure they are sure they want to add this account to the data base
     def final_register_check(self):
         register_window = registery_window(self)
         registery_window.grab_set(self)
-
     def register_to_login(self, username_entry, password_entry, confirm_password_entry):
         self.problem.destroy()
         username_entry.delete(0, "end")
         password_entry.delete(0, "end")
         confirm_password_entry.delete(0, "end")
         self.show_frame("LoginMenu")
-
     def login_to_register(self, username_entry, password_entry):
         self.problem.destroy()
         username_entry.delete(0, "end")
         password_entry.delete(0, "end")
         self.show_frame("RegisterMenu")
-
     def login_to_main_menu(self, username_entry, password_entry):
         self.problem.destroy()
         username_entry.delete(0, "end")
         password_entry.delete(0, "end")
         self.show_frame("MainMenu")
-
     def login_to_start(self, username_entry, password_entry):
         self.problem.destroy()
         username_entry.delete(0, "end")
         password_entry.delete(0, "end")
         self.show_frame("OpeningPage")
-
+    #reads the users team codes and returns the string
     def return_users_champion_team1(self, user):
         team_line_1 = ""
         champion_file_1 = open(
@@ -275,6 +278,7 @@ class ParentClass(tk.Tk):
             except:
                 breakpoint()
 
+    # reads the users team codes and returns the string
     def return_users_champion_team2(self, user):
         team_line_2 = ""
         champion_file_2 = open(
@@ -288,6 +292,7 @@ class ParentClass(tk.Tk):
             except:
                 breakpoint()
 
+    # reads the users team codes and returns the string
     def return_users_champion_team3(self, user):
         team_line_3 = ""
         champion_file_3 = open(
@@ -318,15 +323,16 @@ class ParentClass(tk.Tk):
         Team1SelectionPage.save_new_team1(self, root)
         ParentClass.show_frame(app, "CreateTeamPage")
 
+    #writes the users chosen team into a file for later use
     def set_dungeon_team(self, decoded_dungeoneer_team1, root):
         current_team = open(
-            "C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/account_data_dungeon_team.txt".format(computer_username), "w")
+            "C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/game_data_dungeon_team.txt".format(computer_username), "w")
         current_team.write(str(decoded_dungeoneer_team1))
         current_team.close()
         root.destroy()
         ParentClass.show_frame(app, "GameFrame")
 
-
+#Window pop-up for confirming account creation
 class registery_window(tk.Toplevel):
     def __init__(self, parent):
         super().__init__(parent)
@@ -343,13 +349,7 @@ class registery_window(tk.Toplevel):
     def access_user_account_set(self):
         ParentClass.user_account_set(self)
         registery_window.destroy(self)
-
-
-class User():
-    def __init__(self, username):
-        self.username = username
-
-
+#Opening Screen
 class OpeningPage(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
@@ -366,7 +366,7 @@ class OpeningPage(tk.Frame):
         invis_label3.grid(column=1, row=2, padx=95)
         button.grid(row=3, column=2)
 
-
+#Login Frame
 class LoginMenu(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
@@ -434,7 +434,7 @@ class RegisterMenu(tk.Frame):
         invis_label2.grid(column=0, row=1, padx=25)
         invis_label3.grid(row=2, column=1, pady=35)
 
-
+#Main menu for all the games functions
 class MainMenu(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
@@ -453,11 +453,11 @@ class MainMenu(tk.Frame):
                                   command=lambda: controller.show_frame("DungeonDelve"))
         buttonTeam = tk.Button(self, text="Champion Camp", padx=10, pady=10, font=controller.menu_button_font,
                                command=lambda: controller.show_frame("CreateTeamPage"))
-        buttonCredit = tk.Button(self, text="Credits", padx=10, pady=10, font=controller.menu_button_font,
+        buttonCredit = tk.Button(self, text="Credits (NYI)", padx=10, pady=10, font=controller.menu_button_font,
                                  command=lambda: controller.show_frame("CreditPage"))
-        buttonH2P = tk.Button(self, text="How to Play", padx=10, pady=10, font=controller.menu_button_font,
+        buttonH2P = tk.Button(self, text="How to Play (NYI)", padx=10, pady=10, font=controller.menu_button_font,
                               command=lambda: controller.show_frame("How2PlayPage"))
-        buttonLeaderboard = tk.Button(self, text="Leaderboard", padx=10, pady=10, font=controller.menu_button_font,
+        buttonLeaderboard = tk.Button(self, text="Leaderboard (NYI)", padx=10, pady=10, font=controller.menu_button_font,
                                       command=lambda: controller.show_frame("LeaderboardPage"))
         buttonLogout = tk.Button(self, text="Log Out", padx=10, pady=10, font=controller.menu_button_font,
                                  command=lambda: controller.show_frame("LoginMenu"))
@@ -477,7 +477,6 @@ class MainMenu(tk.Frame):
         invis_label5.grid(column=1, row=5, padx=50)
         invis_label6.grid(column=1, row=6, padx=50)
         invis_label7.grid(column=1, row=7, padx=50)
-
 
 class DungeonDelve(tk.Frame):
     def __init__(self, parent, controller):
@@ -584,42 +583,42 @@ class DungeonManagement(tk.Frame):
         global dungeon_difficulty
         if difficulty == "easy":
             dungeon_difficulty_file = open(
-                "C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/account_data_dungeon_difficulty.txt".format(computer_username),
+                "C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/game_data_dungeon_difficulty.txt".format(computer_username),
                 "w")
             dungeon_difficulty_file.write("easy")
             dungeon_difficulty_file.close()
         if difficulty == "normal":
             dungeon_difficulty_file = open(
-                "C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/account_data_dungeon_difficulty.txt".format(computer_username),
+                "C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/game_data_dungeon_difficulty.txt".format(computer_username),
                 "w")
             dungeon_difficulty_file.write("normal")
             dungeon_difficulty_file.close()
         if difficulty == "hard":
             dungeon_difficulty_file = open(
-                "C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/account_data_dungeon_difficulty.txt".format(computer_username),
+                "C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/game_data_dungeon_difficulty.txt".format(computer_username),
                 "w")
             dungeon_difficulty_file.write("hard")
             dungeon_difficulty_file.close()
 
     def get_easy_dungeon_modifiers(self):
-        HEALTH_MODIFIER = 0.05
-        ATTACKPOWER_MODIFIER = 0.05
+        HEALTH_MODIFIER = 0.10
+        ATTACKPOWER_MODIFIER = 0.10
         EASY_DUNGEON_MODIFIERS = []
         EASY_DUNGEON_MODIFIERS.append(HEALTH_MODIFIER)
         EASY_DUNGEON_MODIFIERS.append(ATTACKPOWER_MODIFIER)
         return EASY_DUNGEON_MODIFIERS
 
     def get_medium_dungeon_modifiers(self):
-        HEALTH_MODIFIER = 0.1
-        ATTACKPOWER_MODIFIER = 0.1
+        HEALTH_MODIFIER = 0.20
+        ATTACKPOWER_MODIFIER = 0.25
         MEDIUM_DUNGEON_MODIFIERS = []
         MEDIUM_DUNGEON_MODIFIERS.append(HEALTH_MODIFIER)
         MEDIUM_DUNGEON_MODIFIERS.append(ATTACKPOWER_MODIFIER)
         return MEDIUM_DUNGEON_MODIFIERS
 
     def get_hard_dungeon_modifiers(self):
-        HEALTH_MODIFIER = 0.2
-        ATTACKPOWER_MODIFIER = 0.25
+        HEALTH_MODIFIER = 0.25
+        ATTACKPOWER_MODIFIER = 0.5
         HARD_DUNGEON_MODIFIERS = []
         HARD_DUNGEON_MODIFIERS.append(HEALTH_MODIFIER)
         HARD_DUNGEON_MODIFIERS.append(ATTACKPOWER_MODIFIER)
@@ -656,7 +655,7 @@ class GameFrame(tk.Frame):
             start_invis_label1.destroy()
             beginning_check_interger = 0
         read_difficulty_file = open(
-            "C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/account_data_dungeon_difficulty.txt".format(computer_username),
+            "C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/game_data_dungeon_difficulty.txt".format(computer_username),
             "r")
         dungeon_settings = read_difficulty_file.readline()
         if dungeon_settings == "easy":
@@ -701,7 +700,7 @@ class GameFrame(tk.Frame):
     def get_individual_champions(self):
         global CHAMPION_LIST
         current_team_file = open(
-            "C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/account_data_dungeon_team.txt".format(computer_username), "r")
+            "C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/game_data_dungeon_team.txt".format(computer_username), "r")
         team = current_team_file.readline()
         team = team.replace("[", "")
         team = team.replace("]", "")
@@ -1104,25 +1103,23 @@ class GameFrame(tk.Frame):
     def set_up_beginning_champion_stats(self):
         global champion1_hp, champion1_ap, champion1_rp, champion1_rpName, champion2_hp, champion2_ap, champion2_rp, champion2_rpName, \
             champion3_hp, champion3_ap, champion3_rp, champion3_rpName, champion4_hp, champion4_ap, champion4_rp, champion4_rpName, \
-            champion5_hp, champion5_ap, champion5_rp, champion5_rpName, champion1_small_external_buffs, champion1_big_external_buffs, \
+            champion5_hp, champion5_ap, champion5_rp, champion5_rpName, \
             champion2_small_external_buffs, champion2_big_external_buffs, champion3_small_external_buffs, champion3_big_external_buffs, \
             champion4_small_external_buffs, champion4_big_external_buffs, champion5_small_external_buffs, champion5_big_external_buffs, \
         void_infusion_stacks, champion1_blessing, champion2_blessing, champion3_blessing, champion4_blessing, champion5_blessing
         champion1_hp = CHAMPION_1_HP
         champion1_ap = CHAMPION_1_AP
         void_infusion_stacks = 0
-        champion1_blessing = [0, 0]
-        champion2_blessing = [0, 0]
-        champion3_blessing = [0, 0]
-        champion4_blessing = [0, 0]
-        champion5_blessing = [0, 0]
+        champion1_blessing = 0
+        champion2_blessing = 0
+        champion3_blessing = 0
+        champion4_blessing = 0
+        champion5_blessing = 0
         if CHAMPION_1_RPNAME == "Mana":
             champion1_rp = CHAMPION_1_RP
         else:
             champion1_rp = 0
         champion1_rpName = CHAMPION_1_RPNAME
-        champion1_small_external_buffs = [0]
-        champion1_big_external_buffs = [0]
         champion2_hp = CHAMPION_2_HP
         champion2_ap = CHAMPION_2_AP
         if CHAMPION_2_RPNAME == "Mana":
@@ -1159,12 +1156,18 @@ class GameFrame(tk.Frame):
         champion5_rpName = CHAMPION_5_RPNAME
         champion5_small_external_buffs = [0]
         champion5_big_external_buffs = [0]
-        global champion1_guarded, champion2_guarded, champion3_guarded, champion4_guarded, champion5_guarded
+        global champion1_guarded, champion2_guarded, champion3_guarded, champion4_guarded, champion5_guarded, \
+            champion1_defensive, champion2_defensive, champion3_defensive, champion4_defensive, champion5_defensive
         champion1_guarded = []
         champion2_guarded = []
         champion3_guarded = []
         champion4_guarded = []
         champion5_guarded = []
+        champion1_defensive = []
+        champion2_defensive = []
+        champion3_defensive = []
+        champion4_defensive = []
+        champion5_defensive = []
         global palm_strike_requirements, leg_sweep_requirements, harmonize_requirements, pressure_points_requirements, \
             monk_staggered_damage_list1, monk_staggered_damage_list2, monk_staggered_damage_list3, \
             bloodthirst_requirements, pulverize_requirements, challenging_shout_requirements, impactful_boast_requirements, \
@@ -1189,11 +1192,11 @@ class GameFrame(tk.Frame):
         trainwreck_requirements = [0, 0, 2, 0]
         fortification_requirements = [0, 0, 3, 0]
         block_requirements = [0, 0, 0, 0]
-        champion1_fortification = [0]
-        champion2_fortification = [0]
-        champion3_fortification = [0]
-        champion4_fortification = [0]
-        champion5_fortification = [0]
+        champion1_fortification = 0
+        champion2_fortification = 0
+        champion3_fortification = 0
+        champion4_fortification = 0
+        champion5_fortification = 0
         # Master Fencer Abilities
         pierce_requirements = [0, 0, 0, 0]
         disruptive_slash_requirements = [0, 0, 3, 0]
@@ -1210,11 +1213,11 @@ class GameFrame(tk.Frame):
         rampage_requirements = [80, 0, 0, 0]
         enrage_requirements = [0, 0, 0, 30]
         reckless_flurry_requirements = [40, 0, 3, 0]
-        champion1_enrage = [0]
-        champion2_enrage = [0]
-        champion3_enrage = [0]
-        champion4_enrage = [0]
-        champion5_enrage = [0]
+        champion1_enrage = 0
+        champion2_enrage = 0
+        champion3_enrage = 0
+        champion4_enrage = 0
+        champion5_enrage = 0
         reckless_flurry_buff = 0
         # Rogue Abilities
         serrated_slash_requirements = [0, 0, 0, 0]
@@ -1226,11 +1229,11 @@ class GameFrame(tk.Frame):
         scrap_bomb_requirements = [0, 0, 3, 0]
         play_dead_requirements = [0, 0, 4, 0]
         rushed_rest_requirements = [0, 0, 3, 0]
-        champion1_play_dead = [0]
-        champion2_play_dead = [0]
-        champion3_play_dead = [0]
-        champion4_play_dead = [0]
-        champion5_play_dead = [0]
+        champion1_play_dead = 0
+        champion2_play_dead = 0
+        champion3_play_dead = 0
+        champion4_play_dead = 0
+        champion5_play_dead = 0
         # Brawlist Abilties
         tactical_punch_requirements = [0, 0, 0, 0]
         uppercut_requirements = [0, 0, 3, 0]
@@ -1252,11 +1255,11 @@ class GameFrame(tk.Frame):
         vine_swipe_requirements = [20, 0, 2, 0]
         thorns_requirements = [10, 0, 0, 0]
         prickle_arena_requirements = [30, 0, 5, 0]
-        champion1_thorns = [0, 0]
-        champion2_thorns = [0, 0]
-        champion3_thorns = [0, 0]
-        champion4_thorns = [0, 0]
-        champion5_thorns = [0, 0]
+        champion1_thorns = 0
+        champion2_thorns = 0
+        champion3_thorns = 0
+        champion4_thorns = 0
+        champion5_thorns = 0
         # Warlock Abilities
         black_bolt_requirements = [25, 0, 0, 0]
         void_infusion_requirements = [100, 0, 0, 0]
@@ -1280,11 +1283,11 @@ class GameFrame(tk.Frame):
         righteous_blow_requirements = [0, 0, 3, 0]
         aura_of_power_requirements = [0, 0, 2, 0]
         aura_of_protection_requirements = [0, 0, 2, 0]
-        champion1_aura = [1]
-        champion2_aura = [1]
-        champion3_aura = [1]
-        champion4_aura = [1]
-        champion5_aura = [1]
+        champion1_aura = 1
+        champion2_aura = 1
+        champion3_aura = 1
+        champion4_aura = 1
+        champion5_aura = 1
         # Castle Ranger Abilitites
         steady_shot_requirements = [0, 0, 0, 0]
         power_opt_requirements = [0, 0, 2, 0]
@@ -1317,7 +1320,8 @@ class GameFrame(tk.Frame):
             champion1_nanobot, champion2_nanobot, champion3_nanobot, champion4_nanobot, champion5_nanobot, \
             champion1_lastRound_damageTaken, champion2_lastRound_damageTaken, champion3_lastRound_damageTaken, champion4_lastRound_damageTaken,champion5_lastRound_damageTaken, \
             throw_scissors_requirements, bandage_wound_requirements, perfected_herbal_tea_requirements, g3t_jaxd_requirements, \
-            champion1_herb_tea, champion2_herb_tea, champion3_herb_tea, champion4_herb_tea, champion5_herb_tea
+            champion1_herb_tea, champion2_herb_tea, champion3_herb_tea, champion4_herb_tea, champion5_herb_tea, \
+            champion1_JAXD, champion2_JAXD, champion3_JAXD, champion4_JAXD, champion5_JAXD
         # Earth Speaker Abilities
         rock_barrage_requirements = [0, 0, 0, 30]
         healing_surge_requirements = [40, 0, 0, 0]
@@ -1346,21 +1350,21 @@ class GameFrame(tk.Frame):
         # Child of Medicine Abilities
         throw_scissors_requirements = [0, 0, 0, 0]
         bandage_wound_requirements = [0, 0, 0, 0]
-        perfected_herbal_tea_requirements = [0, 0, 2, 0]
+        perfected_herbal_tea_requirements = [0, 0, 3, 0]
         champion1_herb_tea = [0, 0]
         champion2_herb_tea = [0, 0]
         champion3_herb_tea = [0, 0]
         champion4_herb_tea = [0, 0]
         champion5_herb_tea = [0, 0]
         g3t_jaxd_requirements = [0, 0, 5, 0]
-        champion1_g3t_jaxd = 0
-        champion2_g3t_jaxd = 0
-        champion3_g3t_jaxd = 0
-        champion4_g3t_jaxd = 0
-        champion5_g3t_jaxd = 0
+        champion1_JAXD = 0
+        champion2_JAXD = 0
+        champion3_JAXD = 0
+        champion4_JAXD = 0
+        champion5_JAXD = 0
 
     def DungeonFloorProgress(self):
-        global BDR_check_interger, teams_current_condition_label, current_floor_label, floor_room_modifiers_label, from_combat
+        global BDR_check_interger, teams_current_condition_label, current_floor_label, floor_room_modifiers_label, from_combat, current_dungeon_label
         if BDR_check_interger == 1:
             dungeon_name_label.destroy()
             delve_button.destroy()
@@ -1386,6 +1390,8 @@ class GameFrame(tk.Frame):
         champion5_status = tk.Label(dungeon_game_frame, text=self.champion_floorMenu_status_text(5), width=20)
         proceed_button = tk.Button(dungeon_game_frame, text="Proceed", font=self.menu_button_font,
                                    command=self.combat_monster_setup)
+        leave_game_button = tk.Button(dungeon_game_frame, text="Leave Game", font=self.menu_button_font,
+                                   command=self.confirm_leave_game)
         CLFinvis_label = tk.Label(dungeon_game_frame)
         teams_current_condition_label.grid(row=2, column=0)
         champion1_label.grid(row=4, column=1)
@@ -1400,9 +1406,22 @@ class GameFrame(tk.Frame):
         champion5_status.grid(row=5, column=5)
         CLFinvis_label.grid(row=6, column=3, pady=100)
         proceed_button.grid(row=7, column=3)
+        leave_game_button.grid(row=8, column=3)
         current_dungeon_label.grid(row=0, column=0)
         current_floor_label.grid(row=1, column=0)
-
+    def confirm_leave_game(self):
+        global root
+        root = tk.Tk()
+        warning_label = tk.Label(root,
+                                 text="Are you sure you want to leave this game\n(You can return is you want to)")
+        yes_button = tk.Button(root, text="Yes", command=self.dungeonfloor_to_mainmenu)
+        no_button = tk.Button(root, text="No", command=root.destroy)
+        warning_label.grid(row=1, column=1)
+        yes_button.grid(row=2, column=1)
+        no_button.grid(row=3, column=1)
+    def dungeonfloor_to_mainmenu(self):
+        root.destroy()
+        ParentClass.show_frame(app, "MainMenu")
     def champion_floorMenu_status_text(self, champion_position):
         if champion_position == 1:
             if CHAMPION_1_RPNAME == "null":
@@ -1708,19 +1727,19 @@ class GameFrame(tk.Frame):
         floor_information_dottedLine3.grid(row=0, column=3, sticky="WE")
         champion1_combatFrame_name = tk.Label(dungeon_game_frame, text=self.champion_combat_name(1))
         champion1_combatFrame_stats = tk.Label(dungeon_game_frame, text=self.champion_combat_status_text(1))
-        champion1_combatFrame_statusEffects = tk.Label(dungeon_game_frame, text="Status Effects")
+        champion1_combatFrame_statusEffects = tk.Button(dungeon_game_frame, text="Status Effects (NYI)")
         champion2_combatFrame_name = tk.Label(dungeon_game_frame, text=self.champion_combat_name(2))
         champion2_combatFrame_stats = tk.Label(dungeon_game_frame, text=self.champion_combat_status_text(2))
-        champion2_combatFrame_statusEffects = tk.Label(dungeon_game_frame, text="Status Effects")
+        champion2_combatFrame_statusEffects = tk.Button(dungeon_game_frame, text="Status Effects (NYI)")
         champion3_combatFrame_name = tk.Label(dungeon_game_frame, text=self.champion_combat_name(3))
         champion3_combatFrame_stats = tk.Label(dungeon_game_frame, text=self.champion_combat_status_text(3))
-        champion3_combatFrame_statusEffects = tk.Label(dungeon_game_frame, text="Status Effects")
+        champion3_combatFrame_statusEffects = tk.Button(dungeon_game_frame, text="Status Effects (NYI)")
         champion4_combatFrame_name = tk.Label(dungeon_game_frame, text=self.champion_combat_name(4))
         champion4_combatFrame_stats = tk.Label(dungeon_game_frame, text=self.champion_combat_status_text(4))
-        champion4_combatFrame_statusEffects = tk.Label(dungeon_game_frame, text="Status Effects")
+        champion4_combatFrame_statusEffects = tk.Button(dungeon_game_frame, text="Status Effects (NYI)")
         champion5_combatFrame_name = tk.Label(dungeon_game_frame, text=self.champion_combat_name(5))
         champion5_combatFrame_stats = tk.Label(dungeon_game_frame, text=self.champion_combat_status_text(5))
-        champion5_combatFrame_statusEffects = tk.Label(dungeon_game_frame, text="Status Effects")
+        champion5_combatFrame_statusEffects = tk.Button(dungeon_game_frame, text="Status Effects (NYI)")
         champion_CLF_dottedLine_label2 = tk.Label(dungeon_game_frame, text="----------------")
         champion_CLF_dottedLine_label3 = tk.Label(dungeon_game_frame, text="----------------")
         champion_CLF_dottedLine_label4 = tk.Label(dungeon_game_frame, text="----------------")
@@ -1731,19 +1750,19 @@ class GameFrame(tk.Frame):
         champion_CLF_dottedLine_label5.grid(row=12, column=1, sticky="w")
         champion1_combatFrame_name.grid(row=1, column=1, sticky="w")
         champion1_combatFrame_stats.grid(row=2, column=1, sticky="w")
-        champion1_combatFrame_statusEffects.grid(row=2, column=1)
+        champion1_combatFrame_statusEffects.grid(row=1, column=1)
         champion2_combatFrame_name.grid(row=4, column=1, sticky="w")
         champion2_combatFrame_stats.grid(row=5, column=1, sticky="w")
-        champion2_combatFrame_statusEffects.grid(row=5, column=1)
+        champion2_combatFrame_statusEffects.grid(row=4, column=1)
         champion3_combatFrame_name.grid(row=7, column=1, sticky="w")
         champion3_combatFrame_stats.grid(row=8, column=1, sticky="w")
-        champion3_combatFrame_statusEffects.grid(row=8, column=1)
+        champion3_combatFrame_statusEffects.grid(row=7, column=1)
         champion4_combatFrame_name.grid(row=10, column=1, sticky="w")
         champion4_combatFrame_stats.grid(row=11, column=1, sticky="w")
-        champion4_combatFrame_statusEffects.grid(row=11, column=1)
+        champion4_combatFrame_statusEffects.grid(row=10, column=1)
         champion5_combatFrame_name.grid(row=13, column=1, sticky="w")
         champion5_combatFrame_stats.grid(row=14, column=1, sticky="w")
-        champion5_combatFrame_statusEffects.grid(row=14, column=1)
+        champion5_combatFrame_statusEffects.grid(row=13, column=1)
         champion_interaction_dottedLine1 = tk.Label(dungeon_game_frame,
                                                     text="====================================================")
         champion_interaction_dottedLine2 = tk.Label(dungeon_game_frame,
@@ -1758,28 +1777,28 @@ class GameFrame(tk.Frame):
         if AI_SPAWNED == 1:
             ai1_combatFrame_stats = tk.Label(dungeon_game_frame, text=self.ai_combat_status_text(1))
             ai1_combatFrame_name = tk.Label(dungeon_game_frame, text=self.ai_combat_name(1))
-            ai1_combatFrame_statusEffects = tk.Label(dungeon_game_frame, text="status effects")
+            ai1_combatFrame_statusEffects = tk.Button(dungeon_game_frame, text="Status Effects (NYI)")
             AI_CLF_dottedLine_label2 = tk.Label(dungeon_game_frame, text="----------------")
             if ai1_hp != 0:
                 ai1_intended_attack_label = tk.Label(dungeon_game_frame, text=ai1_attack_intention)
                 ai1_intended_attack_label.grid(row=7, column=2, sticky="e")
             ai1_combatFrame_name.grid(row=7, column=3, sticky="e")
             ai1_combatFrame_stats.grid(row=8, column=3, sticky="e")
-            ai1_combatFrame_statusEffects.grid(row=8, column=3)
+            ai1_combatFrame_statusEffects.grid(row=7, column=3, sticky="w")
             AI_CLF_dottedLine_label2.grid(row=9, column=3, sticky="e")
         elif AI_SPAWNED == 2:
             ai1_combatFrame_stats = tk.Label(dungeon_game_frame, text=self.ai_combat_status_text(1))
             ai1_combatFrame_name = tk.Label(dungeon_game_frame, text=self.ai_combat_name(1))
-            ai1_combatFrame_statusEffects = tk.Label(dungeon_game_frame, text="status effects")
+            ai1_combatFrame_statusEffects = tk.Button(dungeon_game_frame, text="Status Effects (NYI)")
             ai1_combatFrame_name.grid(row=4, column=3, sticky="e")
             ai1_combatFrame_stats.grid(row=5, column=3, sticky="e")
-            ai1_combatFrame_statusEffects.grid(row=5, column=3)
+            ai1_combatFrame_statusEffects.grid(row=4, column=3, sticky="w")
             ai2_combatFrame_stats = tk.Label(dungeon_game_frame, text=self.ai_combat_status_text(2))
             ai2_combatFrame_name = tk.Label(dungeon_game_frame, text=self.ai_combat_name(2))
-            ai2_combatFrame_statusEffects = tk.Label(dungeon_game_frame, text="status effects")
+            ai2_combatFrame_statusEffects = tk.Button(dungeon_game_frame, text="Status Effects (NYI)")
             ai2_combatFrame_name.grid(row=7, column=3, sticky="e")
             ai2_combatFrame_stats.grid(row=8, column=3, sticky="e")
-            ai2_combatFrame_statusEffects.grid(row=8, column=3)
+            ai2_combatFrame_statusEffects.grid(row=7, column=3, sticky="w")
             AI_CLF_dottedLine_label2 = tk.Label(dungeon_game_frame, text="----------------")
             AI_CLF_dottedLine_label3 = tk.Label(dungeon_game_frame, text="----------------")
             if ai1_hp != 0:
@@ -1793,22 +1812,22 @@ class GameFrame(tk.Frame):
         elif AI_SPAWNED == 3:
             ai1_combatFrame_stats = tk.Label(dungeon_game_frame, text=self.ai_combat_status_text(1))
             ai1_combatFrame_name = tk.Label(dungeon_game_frame, text=self.ai_combat_name(1))
-            ai1_combatFrame_statusEffects = tk.Label(dungeon_game_frame, text="status effects")
+            ai1_combatFrame_statusEffects = tk.Button(dungeon_game_frame, text="Status Effects (NYI)")
             ai1_combatFrame_name.grid(row=4, column=3, sticky="e")
             ai1_combatFrame_stats.grid(row=5, column=3, sticky="e")
-            ai1_combatFrame_statusEffects.grid(row=5, column=3)
+            ai1_combatFrame_statusEffects.grid(row=4, column=3, sticky="w")
             ai2_combatFrame_stats = tk.Label(dungeon_game_frame, text=self.ai_combat_status_text(2))
             ai2_combatFrame_name = tk.Label(dungeon_game_frame, text=self.ai_combat_name(2))
-            ai2_combatFrame_statusEffects = tk.Label(dungeon_game_frame, text="status effects")
+            ai2_combatFrame_statusEffects = tk.Button(dungeon_game_frame, text="Status Effects (NYI)")
             ai2_combatFrame_name.grid(row=7, column=3, sticky="e")
             ai2_combatFrame_stats.grid(row=8, column=3, sticky="e")
-            ai2_combatFrame_statusEffects.grid(row=8, column=3)
+            ai2_combatFrame_statusEffects.grid(row=7, column=3, sticky="w")
             ai3_combatFrame_stats = tk.Label(dungeon_game_frame, text=self.ai_combat_status_text(3))
             ai3_combatFrame_name = tk.Label(dungeon_game_frame, text=self.ai_combat_name(3))
-            ai3_combatFrame_statusEffects = tk.Label(dungeon_game_frame, text="status effects")
+            ai3_combatFrame_statusEffects = tk.Button(dungeon_game_frame, text="Status Effects (NYI)")
             ai3_combatFrame_name.grid(row=10, column=3, sticky="e")
             ai3_combatFrame_stats.grid(row=11, column=3, sticky="e")
-            ai3_combatFrame_statusEffects.grid(row=11, column=3)
+            ai3_combatFrame_statusEffects.grid(row=10, column=3, sticky="w")
             AI_CLF_dottedLine_label2 = tk.Label(dungeon_game_frame, text="----------------")
             AI_CLF_dottedLine_label3 = tk.Label(dungeon_game_frame, text="----------------")
             if ai1_hp != 0:
@@ -1825,28 +1844,28 @@ class GameFrame(tk.Frame):
         elif AI_SPAWNED == 4:
             ai1_combatFrame_stats = tk.Label(dungeon_game_frame, text=self.ai_combat_status_text(1))
             ai1_combatFrame_name = tk.Label(dungeon_game_frame, text=self.ai_combat_name(1))
-            ai1_combatFrame_statusEffects = tk.Label(dungeon_game_frame, text="status effects")
+            ai1_combatFrame_statusEffects = tk.Button(dungeon_game_frame, text="Status Effects (NYI)")
             ai1_combatFrame_name.grid(row=1, column=3, sticky="e")
             ai1_combatFrame_stats.grid(row=2, column=3, sticky="e")
-            ai1_combatFrame_statusEffects.grid(row=2, column=3)
+            ai1_combatFrame_statusEffects.grid(row=1, column=3, sticky="w")
             ai2_combatFrame_stats = tk.Label(dungeon_game_frame, text=self.ai_combat_status_text(2))
             ai2_combatFrame_name = tk.Label(dungeon_game_frame, text=self.ai_combat_name(2))
-            ai2_combatFrame_statusEffects = tk.Label(dungeon_game_frame, text="status effects")
+            ai2_combatFrame_statusEffects = tk.Button(dungeon_game_frame, text="Status Effects (NYI)")
             ai2_combatFrame_name.grid(row=4, column=3, sticky="e")
             ai2_combatFrame_stats.grid(row=5, column=3, sticky="e")
-            ai2_combatFrame_statusEffects.grid(row=5, column=3)
+            ai2_combatFrame_statusEffects.grid(row=4, column=3, sticky="w")
             ai3_combatFrame_stats = tk.Label(dungeon_game_frame, text=self.ai_combat_status_text(3))
             ai3_combatFrame_name = tk.Label(dungeon_game_frame, text=self.ai_combat_name(3))
-            ai3_combatFrame_statusEffects = tk.Label(dungeon_game_frame, text="status effects")
+            ai3_combatFrame_statusEffects = tk.Button(dungeon_game_frame, text="Status Effects (NYI)")
             ai3_combatFrame_name.grid(row=7, column=3, sticky="e")
             ai3_combatFrame_stats.grid(row=8, column=3, sticky="e")
-            ai3_combatFrame_statusEffects.grid(row=8, column=3)
+            ai3_combatFrame_statusEffects.grid(row=7, column=3, sticky="w")
             ai4_combatFrame_stats = tk.Label(dungeon_game_frame, text=self.ai_combat_status_text(4))
             ai4_combatFrame_name = tk.Label(dungeon_game_frame, text=self.ai_combat_name(4))
-            ai4_combatFrame_statusEffects = tk.Label(dungeon_game_frame, text="status effects")
+            ai4_combatFrame_statusEffects = tk.Button(dungeon_game_frame, text="Status Effects (NYI)")
             ai4_combatFrame_name.grid(row=10, column=3, sticky="e")
             ai4_combatFrame_stats.grid(row=11, column=3, sticky="e")
-            ai4_combatFrame_statusEffects.grid(row=11, column=3)
+            ai4_combatFrame_statusEffects.grid(row=10, column=3, sticky="w")
             AI_CLF_dottedLine_label2 = tk.Label(dungeon_game_frame, text="----------------")
             AI_CLF_dottedLine_label3 = tk.Label(dungeon_game_frame, text="----------------")
             AI_CLF_dottedLine_label4 = tk.Label(dungeon_game_frame, text="----------------")
@@ -1868,34 +1887,34 @@ class GameFrame(tk.Frame):
         elif AI_SPAWNED == 5:
             ai1_combatFrame_stats = tk.Label(dungeon_game_frame, text=self.ai_combat_status_text(1))
             ai1_combatFrame_name = tk.Label(dungeon_game_frame, text=self.ai_combat_name(1))
-            ai1_combatFrame_statusEffects = tk.Label(dungeon_game_frame, text="status effects")
+            ai1_combatFrame_statusEffects = tk.Button(dungeon_game_frame, text="Status Effects (NYI)")
             ai1_combatFrame_name.grid(row=1, column=3, sticky="e")
             ai1_combatFrame_stats.grid(row=2, column=3, sticky="e")
-            ai1_combatFrame_statusEffects.grid(row=2, column=3)
+            ai1_combatFrame_statusEffects.grid(row=1, column=3, sticky="w")
             ai2_combatFrame_stats = tk.Label(dungeon_game_frame, text=self.ai_combat_status_text(2))
             ai2_combatFrame_name = tk.Label(dungeon_game_frame, text=self.ai_combat_name(2))
-            ai2_combatFrame_statusEffects = tk.Label(dungeon_game_frame, text="status effects")
+            ai2_combatFrame_statusEffects = tk.Button(dungeon_game_frame, text="Status Effects (NYI)")
             ai2_combatFrame_name.grid(row=4, column=3, sticky="e")
             ai2_combatFrame_stats.grid(row=5, column=3, sticky="e")
-            ai2_combatFrame_statusEffects.grid(row=5, column=3)
+            ai2_combatFrame_statusEffects.grid(row=4, column=3, sticky="w")
             ai3_combatFrame_stats = tk.Label(dungeon_game_frame, text=self.ai_combat_status_text(3))
             ai3_combatFrame_name = tk.Label(dungeon_game_frame, text=self.ai_combat_name(3))
-            ai3_combatFrame_statusEffects = tk.Label(dungeon_game_frame, text="status effects")
+            ai3_combatFrame_statusEffects = tk.Button(dungeon_game_frame, text="Status Effects (NYI)")
             ai3_combatFrame_name.grid(row=7, column=3, sticky="e")
             ai3_combatFrame_stats.grid(row=8, column=3, sticky="e")
-            ai3_combatFrame_statusEffects.grid(row=8, column=3)
+            ai3_combatFrame_statusEffects.grid(row=7, column=3, sticky="w")
             ai4_combatFrame_stats = tk.Label(dungeon_game_frame, text=self.ai_combat_status_text(4))
             ai4_combatFrame_name = tk.Label(dungeon_game_frame, text=self.ai_combat_name(4))
-            ai4_combatFrame_statusEffects = tk.Label(dungeon_game_frame, text="status effects")
+            ai4_combatFrame_statusEffects = tk.Button(dungeon_game_frame, text="Status Effects (NYI)")
             ai4_combatFrame_name.grid(row=10, column=3, sticky="e")
             ai4_combatFrame_stats.grid(row=11, column=3, sticky="e")
-            ai4_combatFrame_statusEffects.grid(row=11, column=3)
+            ai4_combatFrame_statusEffects.grid(row=10, column=3, sticky="w")
             ai5_combatFrame_stats = tk.Label(dungeon_game_frame, text=self.ai_combat_status_text(5))
             ai5_combatFrame_name = tk.Label(dungeon_game_frame, text=self.ai_combat_name(5))
-            ai5_combatFrame_statusEffects = tk.Label(dungeon_game_frame, text="status effects")
+            ai5_combatFrame_statusEffects = tk.Button(dungeon_game_frame, text="Status Effects (NYI)")
             ai5_combatFrame_name.grid(row=13, column=3, sticky="e")
             ai5_combatFrame_stats.grid(row=14, column=3, sticky="e")
-            ai5_combatFrame_statusEffects.grid(row=14, column=3)
+            ai5_combatFrame_statusEffects.grid(row=13, column=3, sticky="w")
             AI_CLF_dottedLine_label2 = tk.Label(dungeon_game_frame, text="----------------")
             AI_CLF_dottedLine_label3 = tk.Label(dungeon_game_frame, text="----------------")
             AI_CLF_dottedLine_label4 = tk.Label(dungeon_game_frame, text="----------------")
@@ -1941,7 +1960,7 @@ class GameFrame(tk.Frame):
         global ai1_attack_intention, ai2_attack_intention, ai3_attack_intention, ai4_attack_intention, ai5_attack_intention
         ai_attack_options = []
         counter = 0
-        if ai1_hp >= 0:
+        if ai1_hp > 0:
             if ai1_attack == "null":
                 ai1_attack_intention = ""
             else:
@@ -1949,29 +1968,9 @@ class GameFrame(tk.Frame):
                     ai1_attack_intention = "STUNNED"
                 else:
                     if ai1_taunt[1] != 0:
-                        for champions1 in CHAMPION_LIST:
-                            counter += 1
-                            if champions1 == ai1_taunt[0]:
-                                if counter == 1:
-                                    ai_attack_target = ai1_taunt[0]
-                                    ai1_attack_intention = "{} <<< {} ({} Damage)".format(ai_attack_target, ai1_attack[0],
-                                                                                          ai1_attack[1])
-                                elif counter == 2:
-                                    ai_attack_target = ai1_taunt[0]
-                                    ai1_attack_intention = "{} <<< {} ({} Damage)".format(ai_attack_target, ai1_attack[0],
-                                                                                          ai1_attack[1])
-                                elif counter == 3:
-                                    ai_attack_target = ai1_taunt[0]
-                                    ai1_attack_intention = "{} <<< {} ({} Damage)".format(ai_attack_target, ai1_attack[0],
-                                                                                          ai1_attack[1])
-                                elif counter == 4:
-                                    ai_attack_target = ai1_taunt[0]
-                                    ai1_attack_intention = "{} <<< {} ({} Damage)".format(ai_attack_target, ai1_attack[0],
-                                                                                          ai1_attack[1])
-                                elif counter == 5:
-                                    ai_attack_target = ai1_taunt[0]
-                                    ai1_attack_intention = "{} <<< {} ({} Damage)".format(ai_attack_target, ai1_attack[0],
-                                                                                          ai1_attack[1])
+                        ai_attack_target = ai1_taunt[0]
+                        ai1_attack_intention = "{} <<< {} ({} Damage)".format(ai_attack_target, ai1_attack[0],
+                                                                              ai1_attack[1])
                     else:
                         if new_round == 1:
                             if ai1_attack[2] == "1T":
@@ -2040,7 +2039,8 @@ class GameFrame(tk.Frame):
                                                                                              ai1_attack[0], ai1_attack[1])
                             if ai1_attack[2] == "AOE":
                                 ai1_attack_intention = "Everyone <<< {} ({} Damage)".format(ai1_attack[0], ai1_attack[1])
-        if ai2_hp >= 0:
+        if ai2_hp > 0:
+            ai_attack_options = []
             if ai2_attack == "null":
                 ai2_attack_intention = ""
             else:
@@ -2048,29 +2048,9 @@ class GameFrame(tk.Frame):
                     ai2_attack_intention = "STUNNED"
                 else:
                     if ai2_taunt[1] != 0:
-                        for champions2 in CHAMPION_LIST:
-                            counter += 1
-                            if champions2 == ai2_taunt[0]:
-                                if counter == 1:
-                                    ai_attack_target = CHAMPION_LIST[0]
-                                    ai2_attack_intention = "{} <<< {} ({} Damage)".format(ai_attack_target, ai2_attack[0],
-                                                                                          ai2_attack[1])
-                                elif counter == 2:
-                                    ai_attack_target = CHAMPION_LIST[1]
-                                    ai2_attack_intention = "{} <<< {} ({} Damage)".format(ai_attack_target, ai2_attack[0],
-                                                                                          ai2_attack[1])
-                                elif counter == 3:
-                                    ai_attack_target = CHAMPION_LIST[2]
-                                    ai2_attack_intention = "{} <<< {} ({} Damage)".format(ai_attack_target, ai2_attack[0],
-                                                                                          ai2_attack[1])
-                                elif counter == 4:
-                                    ai_attack_target = CHAMPION_LIST[3]
-                                    ai2_attack_intention = "{} <<< {} ({} Damage)".format(ai_attack_target, ai2_attack[0],
-                                                                                          ai2_attack[1])
-                                elif counter == 5:
-                                    ai_attack_target = CHAMPION_LIST[4]
-                                    ai2_attack_intention = "{} <<< {} ({} Damage)".format(ai_attack_target, ai2_attack[0],
-                                                                                          ai2_attack[1])
+                        ai_attack_target = ai2_taunt[0]
+                        ai2_attack_intention = "{} <<< {} ({} Damage)".format(ai_attack_target, ai2_attack[0],
+                                                                              ai2_attack[1])
                     else:
                         if new_round == 1:
                             if ai2_attack[2] == "1T":
@@ -2140,7 +2120,8 @@ class GameFrame(tk.Frame):
                                                                                              ai2_attack[1])
                             if ai2_attack[2] == "AOE":
                                 ai2_attack_intention = "Everyone <<< {} ({} Damage)".format(ai2_attack[0], ai2_attack[1])
-            if ai3_hp >= 0:
+            if ai3_hp > 0:
+                ai_attack_options = []
                 if ai3_attack == "null":
                     ai3_attack_intention = ""
                 else:
@@ -2148,29 +2129,9 @@ class GameFrame(tk.Frame):
                         ai3_attack_intention = "STUNNED"
                     else:
                         if ai3_taunt[1] != 0:
-                            for champions3 in CHAMPION_LIST:
-                                counter += 1
-                                if champions3 == ai3_taunt[0]:
-                                    if counter == 1:
-                                        ai_attack_target = CHAMPION_LIST[0]
-                                        ai3_attack_intention = "{} <<< {} ({} Damage)".format(ai_attack_target, ai3_attack[0],
-                                                                                              ai3_attack[1])
-                                    elif counter == 2:
-                                        ai_attack_target = CHAMPION_LIST[1]
-                                        ai3_attack_intention = "{} <<< {} ({} Damage)".format(ai_attack_target, ai3_attack[0],
-                                                                                              ai3_attack[1])
-                                    elif counter == 3:
-                                        ai_attack_target = CHAMPION_LIST[2]
-                                        ai3_attack_intention = "{} <<< {} ({} Damage)".format(ai_attack_target, ai3_attack[0],
-                                                                                              ai3_attack[1])
-                                    elif counter == 4:
-                                        ai_attack_target = CHAMPION_LIST[3]
-                                        ai3_attack_intention = "{} <<< {} ({} Damage)".format(ai_attack_target, ai3_attack[0],
-                                                                                              ai3_attack[1])
-                                    elif counter == 5:
-                                        ai_attack_target = CHAMPION_LIST[4]
-                                        ai3_attack_intention = "{} <<< {} ({} Damage)".format(ai_attack_target, ai3_attack[0],
-                                                                                              ai3_attack[1])
+                            ai_attack_target = ai3_taunt[0]
+                            ai3_attack_intention = "{} <<< {} ({} Damage)".format(ai_attack_target, ai3_attack[0],
+                                                                                  ai3_attack[1])
                         else:
                             if new_round == 1:
                                 if ai3_attack[2] == "1T":
@@ -2240,7 +2201,8 @@ class GameFrame(tk.Frame):
                                                                                                  ai3_attack[1])
                                 if ai3_attack[2] == "AOE":
                                     ai3_attack_intention = "Everyone <<< {} ({} Damage)".format(ai3_attack[0], ai3_attack[1])
-        if ai4_hp >= 0:
+        if ai4_hp > 0:
+            ai_attack_options = []
             if ai4_attack == "null":
                 ai4_attack_intention = ""
             else:
@@ -2248,29 +2210,9 @@ class GameFrame(tk.Frame):
                     ai4_attack_intention = "STUNNED"
                 else:
                     if ai4_taunt[1] != 0:
-                        for champions4 in CHAMPION_LIST:
-                            counter += 1
-                            if champions4 == ai4_taunt[0]:
-                                if counter == 1:
-                                    ai_attack_target = CHAMPION_LIST[0]
-                                    ai4_attack_intention = "{} <<< {} ({} Damage)".format(ai_attack_target, ai4_attack[0],
-                                                                                          ai4_attack[1])
-                                elif counter == 2:
-                                    ai_attack_target = CHAMPION_LIST[1]
-                                    ai4_attack_intention = "{} <<< {} ({} Damage)".format(ai_attack_target, ai4_attack[0],
-                                                                                          ai4_attack[1])
-                                elif counter == 3:
-                                    ai_attack_target = CHAMPION_LIST[2]
-                                    ai4_attack_intention = "{} <<< {} ({} Damage)".format(ai_attack_target, ai4_attack[0],
-                                                                                          ai4_attack[1])
-                                elif counter == 4:
-                                    ai_attack_target = CHAMPION_LIST[3]
-                                    ai4_attack_intention = "{} <<< {} ({} Damage)".format(ai_attack_target, ai4_attack[0],
-                                                                                          ai4_attack[1])
-                                elif counter == 5:
-                                    ai_attack_target = CHAMPION_LIST[4]
-                                    ai4_attack_intention = "{} <<< {} ({} Damage)".format(ai_attack_target, ai4_attack[0],
-                                                                                          ai4_attack[1])
+                        ai_attack_target = ai4_taunt[0]
+                        ai4_attack_intention = "{} <<< {} ({} Damage)".format(ai_attack_target, ai4_attack[0],
+                                                                              ai4_attack[1])
                     else:
                         if new_round == 1:
                             if ai4_attack[2] == "1T":
@@ -2340,7 +2282,8 @@ class GameFrame(tk.Frame):
                                                                                              ai4_attack[1])
                             if ai4_attack[2] == "AOE":
                                 ai4_attack_intention = "Everyone <<< {} ({} Damage)".format(ai4_attack[0], ai4_attack[1])
-        if ai5_hp >= 0:
+        if ai5_hp > 0:
+            ai_attack_options = []
             if ai5_attack == "null":
                 ai5_attack_intention = ""
             else:
@@ -2348,29 +2291,9 @@ class GameFrame(tk.Frame):
                     ai5_attack_intention = "STUNNED"
                 else:
                     if ai5_taunt[1] != 0:
-                        for champions5 in CHAMPION_LIST:
-                            counter += 1
-                            if champions5 == ai5_taunt[0]:
-                                if counter == 1:
-                                    ai_attack_target = CHAMPION_LIST[0]
-                                    ai5_attack_intention = "{} <<< {} ({} Damage)".format(ai_attack_target, ai5_attack[0],
-                                                                                          ai5_attack[1])
-                                elif counter == 2:
-                                    ai_attack_target = CHAMPION_LIST[1]
-                                    ai5_attack_intention = "{} <<< {} ({} Damage)".format(ai_attack_target, ai5_attack[0],
-                                                                                          ai5_attack[1])
-                                elif counter == 3:
-                                    ai_attack_target = CHAMPION_LIST[2]
-                                    ai5_attack_intention = "{} <<< {} ({} Damage)".format(ai_attack_target, ai5_attack[0],
-                                                                                          ai5_attack[1])
-                                elif counter == 4:
-                                    ai_attack_target = CHAMPION_LIST[3]
-                                    ai5_attack_intention = "{} <<< {} ({} Damage)".format(ai_attack_target, ai5_attack[0],
-                                                                                          ai5_attack[1])
-                                elif counter == 5:
-                                    ai_attack_target = CHAMPION_LIST[4]
-                                    ai5_attack_intention = "{} <<< {} ({} Damage)".format(ai_attack_target, ai5_attack[0],
-                                                                                          ai5_attack[1])
+                        ai_attack_target = ai5_taunt[1]
+                        ai5_attack_intention = "{} <<< {} ({} Damage)".format(ai_attack_target, ai5_attack[0],
+                                                                              ai5_attack[1])
                     else:
                         if new_round == 1:
                             if ai5_attack[2] == "1T":
@@ -2645,8 +2568,13 @@ class GameFrame(tk.Frame):
         global attack_button_champion1, special_button_champion1, rest_button_champion1, current_turn, new_round, from_attack_button, from_special_button, \
             floorLevel, roomLevel, from_rest_button
         if new_round == 1:
-            self.monster_attack_intentions()
-            self.ai_choose_attack_targets()
+            if combat_results == "win":
+                self.combat_to_progression()
+            elif combat_results == "lost":
+                self.combat_to_endgame()
+            else:
+                self.monster_attack_intentions()
+                self.ai_choose_attack_targets()
             new_round = 0
         if from_attack_button == 1:
             attack1_button.destroy()
@@ -2679,18 +2607,21 @@ class GameFrame(tk.Frame):
         if combat_results == "win":
             self.combat_to_progression()
         elif combat_results == "lost":
-            i = 0
+            self.combat_to_endgame()
         else:
-            self.get_champions_abiltity_button_data(1)
-            attack_button_champion1 = tk.Button(dungeon_game_frame, text=self.check_if_power_conduit_text(), width=59,
-                                                height=12, command=self.check_if_power_conduit_command)
-            special_button_champion1 = tk.Button(dungeon_game_frame, text="Special Moves", width=59, height=12,
-                                                 command=self.special_button)
-            rest_button_champion1 = tk.Button(dungeon_game_frame, text="Rest", width=59, height=12,
-                                              command=self.rest_button)
-            attack_button_champion1.grid(row=18, column=1)
-            special_button_champion1.grid(row=18, column=2)
-            rest_button_champion1.grid(row=18, column=3)
+            if champion1_hp == 0:
+                self.next_turn()
+            else:
+                self.get_champions_abiltity_button_data(1)
+                attack_button_champion1 = tk.Button(dungeon_game_frame, text=self.check_if_power_conduit_text(), width=59,
+                                                    height=12, command=self.check_if_power_conduit_command)
+                special_button_champion1 = tk.Button(dungeon_game_frame, text="Special Moves", width=59, height=12,
+                                                     command=self.special_button)
+                rest_button_champion1 = tk.Button(dungeon_game_frame, text="Rest", width=59, height=12,
+                                                  command=self.rest_button)
+                attack_button_champion1.grid(row=18, column=1)
+                special_button_champion1.grid(row=18, column=2)
+                rest_button_champion1.grid(row=18, column=3)
 
     def next_turn(self):
         global combat_results, current_turn, new_round
@@ -2805,18 +2736,21 @@ class GameFrame(tk.Frame):
         if combat_results == "win":
             self.combat_to_progression()
         elif combat_results == "lost":
-            i = 0
+            self.combat_to_endgame()
         else:
-            self.get_champions_abiltity_button_data(2)
-            attack_button_champion2 = tk.Button(dungeon_game_frame, text=self.check_if_power_conduit_text(), width=59,
-                                                height=10, command=self.check_if_power_conduit_command)
-            special_button_champion2 = tk.Button(dungeon_game_frame, text="Special Moves", width=59, height=10,
-                                                 command=self.special_button)
-            rest_button_champion2 = tk.Button(dungeon_game_frame, text="Rest", width=59, height=10,
-                                              command=self.rest_button)
-            attack_button_champion2.grid(row=18, column=1)
-            special_button_champion2.grid(row=18, column=2)
-            rest_button_champion2.grid(row=18, column=3)
+            if champion2_hp == 0:
+                self.next_turn()
+            else:
+                self.get_champions_abiltity_button_data(2)
+                attack_button_champion2 = tk.Button(dungeon_game_frame, text=self.check_if_power_conduit_text(), width=59,
+                                                    height=10, command=self.check_if_power_conduit_command)
+                special_button_champion2 = tk.Button(dungeon_game_frame, text="Special Moves", width=59, height=10,
+                                                     command=self.special_button)
+                rest_button_champion2 = tk.Button(dungeon_game_frame, text="Rest", width=59, height=10,
+                                                  command=self.rest_button)
+                attack_button_champion2.grid(row=18, column=1)
+                special_button_champion2.grid(row=18, column=2)
+                rest_button_champion2.grid(row=18, column=3)
 
     def player_combat_champion3(self):
         global attack_button_champion3, special_button_champion3, rest_button_champion3, current_turn, new_round, from_attack_button, from_special_button, \
@@ -2852,18 +2786,21 @@ class GameFrame(tk.Frame):
         if combat_results == "win":
             self.combat_to_progression()
         elif combat_results == "lost":
-            i = 0
+            self.combat_to_endgame()
         else:
-            self.get_champions_abiltity_button_data(3)
-            attack_button_champion3 = tk.Button(dungeon_game_frame, text=self.check_if_power_conduit_text(), width=59,
-                                                height=10, command=self.check_if_power_conduit_command)
-            special_button_champion3 = tk.Button(dungeon_game_frame, text="Special Moves", width=59, height=10,
-                                                 command=self.special_button)
-            rest_button_champion3 = tk.Button(dungeon_game_frame, text="Rest", width=59, height=10,
-                                              command=self.rest_button)
-            attack_button_champion3.grid(row=18, column=1)
-            special_button_champion3.grid(row=18, column=2)
-            rest_button_champion3.grid(row=18, column=3)
+            if champion3_hp == 0:
+                self.next_turn()
+            else:
+                self.get_champions_abiltity_button_data(3)
+                attack_button_champion3 = tk.Button(dungeon_game_frame, text=self.check_if_power_conduit_text(), width=59,
+                                                    height=10, command=self.check_if_power_conduit_command)
+                special_button_champion3 = tk.Button(dungeon_game_frame, text="Special Moves", width=59, height=10,
+                                                     command=self.special_button)
+                rest_button_champion3 = tk.Button(dungeon_game_frame, text="Rest", width=59, height=10,
+                                                  command=self.rest_button)
+                attack_button_champion3.grid(row=18, column=1)
+                special_button_champion3.grid(row=18, column=2)
+                rest_button_champion3.grid(row=18, column=3)
 
     def player_combat_champion4(self):
         global attack_button_champion4, special_button_champion4, rest_button_champion4, current_turn, new_round, from_attack_button, from_special_button, \
@@ -2899,18 +2836,21 @@ class GameFrame(tk.Frame):
         if combat_results == "win":
             self.combat_to_progression()
         elif combat_results == "lost":
-            i = 0
+            self.combat_to_endgame()
         else:
-            self.get_champions_abiltity_button_data(4)
-            attack_button_champion4 = tk.Button(dungeon_game_frame, text=self.check_if_power_conduit_text(), width=59,
-                                                height=10, command=self.check_if_power_conduit_command)
-            special_button_champion4 = tk.Button(dungeon_game_frame, text="Special Moves", width=59, height=10,
-                                                 command=self.special_button)
-            rest_button_champion4 = tk.Button(dungeon_game_frame, text="Rest", width=59, height=10,
-                                              command=self.rest_button)
-            attack_button_champion4.grid(row=18, column=1)
-            special_button_champion4.grid(row=18, column=2)
-            rest_button_champion4.grid(row=18, column=3)
+            if champion4_hp == 0:
+                self.next_turn()
+            else:
+                self.get_champions_abiltity_button_data(4)
+                attack_button_champion4 = tk.Button(dungeon_game_frame, text=self.check_if_power_conduit_text(), width=59,
+                                                    height=10, command=self.check_if_power_conduit_command)
+                special_button_champion4 = tk.Button(dungeon_game_frame, text="Special Moves", width=59, height=10,
+                                                     command=self.special_button)
+                rest_button_champion4 = tk.Button(dungeon_game_frame, text="Rest", width=59, height=10,
+                                                  command=self.rest_button)
+                attack_button_champion4.grid(row=18, column=1)
+                special_button_champion4.grid(row=18, column=2)
+                rest_button_champion4.grid(row=18, column=3)
 
     def player_combat_champion5(self):
         global attack_button_champion5, special_button_champion5, rest_button_champion5, current_turn, new_round, from_attack_button, from_special_button, \
@@ -2946,18 +2886,21 @@ class GameFrame(tk.Frame):
         if combat_results == "win":
             self.combat_to_progression()
         elif combat_results == "lost":
-            i = 0
+            self.combat_to_endgame()
         else:
-            self.get_champions_abiltity_button_data(5)
-            attack_button_champion5 = tk.Button(dungeon_game_frame, text=self.check_if_power_conduit_text(), width=59,
-                                                height=10, command=self.check_if_power_conduit_command)
-            special_button_champion5 = tk.Button(dungeon_game_frame, text="Special Moves", width=59, height=10,
-                                                 command=self.special_button)
-            rest_button_champion5 = tk.Button(dungeon_game_frame, text="Rest", width=59, height=10,
-                                              command=self.rest_button)
-            attack_button_champion5.grid(row=18, column=1)
-            special_button_champion5.grid(row=18, column=2)
-            rest_button_champion5.grid(row=18, column=3)
+            if champion5_hp == 0:
+                self.next_turn()
+            else:
+                self.get_champions_abiltity_button_data(5)
+                attack_button_champion5 = tk.Button(dungeon_game_frame, text=self.check_if_power_conduit_text(), width=59,
+                                                    height=10, command=self.check_if_power_conduit_command)
+                special_button_champion5 = tk.Button(dungeon_game_frame, text="Special Moves", width=59, height=10,
+                                                     command=self.special_button)
+                rest_button_champion5 = tk.Button(dungeon_game_frame, text="Rest", width=59, height=10,
+                                                  command=self.rest_button)
+                attack_button_champion5.grid(row=18, column=1)
+                special_button_champion5.grid(row=18, column=2)
+                rest_button_champion5.grid(row=18, column=3)
 
     def monsters_turn(self):
         global combat_results, current_turn, ai1_stun, ai2_stun, ai3_stun, ai4_stun, ai5_stun, ai1_taunt, ai2_taunt, ai3_taunt, ai4_taunt, ai5_taunt, \
@@ -2968,12 +2911,24 @@ class GameFrame(tk.Frame):
             ai1_statuses, ai2_statuses, ai3_statuses, ai4_statuses, ai5_statuses, \
             ai1_hp, ai2_hp, ai3_hp, ai4_hp, ai5_hp, monk_staggered_damage_list1, monk_staggered_damage_list2, monk_staggered_damage_list3, \
             champion1_hp, champion2_hp, champion3_hp,champion4_hp, champion5_hp, \
-            champion1_lastRound_damageTaken, champion2_lastRound_damageTaken, champion3_lastRound_damageTaken, champion4_lastRound_damageTaken, champion5_lastRound_damageTaken
-
+            champion1_lastRound_damageTaken, champion2_lastRound_damageTaken, champion3_lastRound_damageTaken, champion4_lastRound_damageTaken, champion5_lastRound_damageTaken, \
+            champion1_guarded, champion2_guarded, champion3_guarded, champion4_guarded, champion5_guarded, \
+            champion1_defensive, champion2_defensive, champion3_defensive, champion4_defensive, champion5_defensive, \
+            champion1_fullPotential, champion2_fullPotential, champion3_fullPotential, champion4_fullPotential, champion5_fullPotential, \
+            champion1_muscleEnlarger, champion2_muscleEnlarger, champion3_muscleEnlarger, champion4_muscleEnlarger, champion5_muscleEnlarger, \
+            champion1_JAXD, champion2_JAXD, champion3_JAXD, champion4_JAXD, champion5_JAXD, \
+            champion1_nanobot, champion2_nanobot, champion3_nanobot, champion4_nanobot, champion5_nanobot, \
+            champion1_herb_tea, champion2_herb_tea, champion3_herb_tea, champion4_herb_tea, champion5_herb_tea, \
+            champion1_blessing, champion2_blessing, champion3_blessing, champion4_blessing, champion5_blessing, \
+            monk_staggered_damage_list1, monk_staggered_damage_list2, monk_staggered_damage_list3, \
+            champion1_fortification, champion2_fortification, champion3_fortification, champion4_fortification, champion5_fortification, \
+            champion1_enrage, champion2_enrage, champion3_enrage, champion4_enrage, champion5_enrage, \
+            champion1_play_dead, champion2_play_dead, champion3_play_dead, champion4_play_dead, champion5_play_dead, \
+            champion1_thorns, champion2_thorns, champion3_thorns, champion4_thorns, champion5_thorns
         if combat_results == "win":
             self.combat_to_progression()
         elif combat_results == "lost":
-            i = 0
+            self.combat_to_endgame()
         else:
             if AI_SPAWNED == 1:
                 monster_list = [1]
@@ -2985,6 +2940,56 @@ class GameFrame(tk.Frame):
                 monster_list = [1, 2, 3, 4]
             elif AI_SPAWNED == 5:
                 monster_list = [1, 2, 3, 4, 5]
+            if champion1_nanobot[1] != 0:
+                champion1_nanobot[1] = champion1_nanobot[1] - 1
+                champion1_hp = champion1_hp + champion1_nanobot[0]
+                if champion1_hp > CHAMPION_1_HP:
+                    champion1_hp = CHAMPION_1_HP
+            if champion2_nanobot[1] != 0:
+                champion2_nanobot[1] = champion2_nanobot[1] - 1
+                champion2_hp = champion2_hp + champion2_nanobot[0]
+                if champion2_hp > CHAMPION_2_HP:
+                    champion2_hp = CHAMPION_2_HP
+            if champion3_nanobot[1] != 0:
+                champion3_nanobot[1] = champion3_nanobot[1] - 1
+                champion3_hp = champion3_hp + champion3_nanobot[0]
+                if champion3_hp > CHAMPION_3_HP:
+                    champion3_hp = CHAMPION_3_HP
+            if champion4_nanobot[1] != 0:
+                champion4_nanobot[1] = champion4_nanobot[1] - 1
+                champion4_hp = champion4_hp + champion4_nanobot[0]
+                if champion4_hp > CHAMPION_4_HP:
+                    champion4_hp = CHAMPION_4_HP
+            if champion5_nanobot[1] != 0:
+                champion5_nanobot[1] = champion5_nanobot[1] - 1
+                champion5_hp = champion5_hp + champion5_nanobot[0]
+                if champion5_hp > CHAMPION_5_HP:
+                    champion5_hp = CHAMPION_5_HP
+            if champion1_herb_tea[1] != 0:
+                champion1_herb_tea[1] = champion1_herb_tea[1] - 1
+                champion1_hp = champion1_hp + champion1_herb_tea[0]
+                if champion1_hp > CHAMPION_1_HP:
+                    champion1_hp = CHAMPION_1_HP
+            if champion2_herb_tea[1] != 0:
+                champion2_herb_tea[1] = champion2_herb_tea[1] - 1
+                champion2_hp = champion2_hp + champion2_herb_tea[0]
+                if champion2_hp > CHAMPION_2_HP:
+                    champion2_hp = CHAMPION_2_HP
+            if champion3_herb_tea[1] != 0:
+                champion3_herb_tea[1] = champion3_herb_tea[1] - 1
+                champion3_hp = champion3_hp + champion3_herb_tea[0]
+                if champion3_hp > CHAMPION_3_HP:
+                    champion3_hp = CHAMPION_3_HP
+            if champion4_herb_tea[1] != 0:
+                champion4_herb_tea[1] = champion4_herb_tea[1] - 1
+                champion4_hp = champion4_hp + champion4_herb_tea[0]
+                if champion4_hp > CHAMPION_4_HP:
+                    champion4_hp = CHAMPION_4_HP
+            if champion5_herb_tea[1] != 0:
+                champion5_herb_tea[1] = champion5_herb_tea[1] - 1
+                champion5_hp = champion5_hp + champion5_herb_tea[0]
+                if champion5_hp > CHAMPION_5_HP:
+                    champion5_hp = CHAMPION_5_HP
             for monster_var in monster_list:
                 if monster_var == 1:
                     if ai1_hp == 0:
@@ -3041,16 +3046,12 @@ class GameFrame(tk.Frame):
                                     guard_list = sorted(guard_list, reverse=True)
                                     if guard_list[0] == 101:
                                         ai1_hp = ai1_hp - ai1_attack[1]
-                                        if champion1_thorns[0] == 1:
-                                            ai1_hp = ai1_hp - 200
-                                        if ai1_hp < 0:
-                                            ai1_hp = 0
                                     if guard_list[0] == 100:
                                         champion1_hp = champion1_hp
                                     if guard_list[0] == 99:
                                         bodyguard_counter = 1
                                         for champions in CHAMPION_LIST:
-                                            if champions == VETERAN_BODYGUARD.name:
+                                            if champions == VETERAN_BODYGUARD.title:
                                                 break
                                             bodyguard_counter += 1
                                         if bodyguard_counter == 1:
@@ -3078,28 +3079,28 @@ class GameFrame(tk.Frame):
                                             champion5_lastRound_damageTaken = self.calculate_ai_damage(5, 1)
                                             if champion5_hp < 0:
                                                 champion5_hp = 0
-                            elif CHAMPION_LIST[0] == MONK.name:
+                            elif CHAMPION_LIST[0] == MONK.title:
                                     staggered_damage = (self.calculate_ai_damage(1, 1) / 3)
                                     unstaggerable_damage = 0
-                                    if len(monk_staggered_damage_list1) == 0:
+                                    if monk_staggered_damage_list1[1] == 0:
                                         monk_staggered_damage_list1 = [staggered_damage, 3]
                                     else:
-                                        if len(monk_staggered_damage_list2) == 0:
+                                        if monk_staggered_damage_list2[1] == 0:
                                             monk_staggered_damage_list2 = [staggered_damage, 3]
                                         else:
-                                            if len(monk_staggered_damage_list3) == 0:
+                                            if monk_staggered_damage_list3[1] == 0:
                                                 monk_staggered_damage_list3 = [staggered_damage, 3]
                                             else:
                                                 unstaggerable_damage = self.calculate_ai_damage(1, 1)
                                     staggered_damage_list = [0, 0, 0]
-                                    if len(monk_staggered_damage_list1) != 0:
+                                    if monk_staggered_damage_list1[1] != 0:
                                         staggered_damage_list[0] = monk_staggered_damage_list1[0]
-                                    if len(monk_staggered_damage_list2) != 0:
+                                    if monk_staggered_damage_list2[1] != 0:
                                         staggered_damage_list[1] = monk_staggered_damage_list2[0]
-                                    if len(monk_staggered_damage_list3) != 0:
+                                    if monk_staggered_damage_list3[1] != 0:
                                         staggered_damage_list[2] = monk_staggered_damage_list3[0]
-                                    champion1_hp = champion1_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3] + unstaggerable_damage)
-                                    champion1_lastRound_damageTaken = (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3] + unstaggerable_damage)
+                                    champion1_hp = champion1_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[2] + unstaggerable_damage)
+                                    champion1_lastRound_damageTaken = (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[2] + unstaggerable_damage)
                                     if champion1_hp < 0:
                                         champion1_hp = 0
                             else:
@@ -3107,6 +3108,10 @@ class GameFrame(tk.Frame):
                                 champion1_lastRound_damageTaken = self.calculate_ai_damage(1, 1)
                                 if champion1_hp < 0:
                                     champion1_hp = 0
+                            if champion1_thorns != 0:
+                                ai1_hp = ai1_hp - 200
+                            if ai1_hp < 0:
+                                ai1_hp = 0
                         elif taunter_counter == 2:
                             if len(champion2_guarded) != 0:
                                 guard_list = []
@@ -3122,7 +3127,7 @@ class GameFrame(tk.Frame):
                                     guard_list = sorted(guard_list, reverse=True)
                                     if guard_list[0] == 101:
                                         ai1_hp = ai1_hp - ai1_attack[1]
-                                        if champion2_thorns[0] == 1:
+                                        if champion2_thorns != 0:
                                             ai1_hp = ai1_hp - 200
                                         if ai1_hp < 0:
                                             ai1_hp = 0
@@ -3131,7 +3136,7 @@ class GameFrame(tk.Frame):
                                     if guard_list[0] == 99:
                                         bodyguard_counter = 1
                                         for champions in CHAMPION_LIST:
-                                            if champions == VETERAN_BODYGUARD.name:
+                                            if champions == VETERAN_BODYGUARD.title:
                                                 break
                                             bodyguard_counter += 1
                                         if bodyguard_counter == 1:
@@ -3159,28 +3164,28 @@ class GameFrame(tk.Frame):
                                             champion5_lastRound_damageTaken = self.calculate_ai_damage(5, 1)
                                             if champion5_hp < 0:
                                                 champion5_hp = 0
-                            elif CHAMPION_LIST[1] == MONK.name:
+                            elif CHAMPION_LIST[1] == MONK.title:
                                     staggered_damage = (self.calculate_ai_damage(2, 1) / 3)
                                     unstaggerable_damage = 0
-                                    if len(monk_staggered_damage_list1) == 0:
+                                    if monk_staggered_damage_list1[1] == 0:
                                         monk_staggered_damage_list1 = [staggered_damage, 3]
                                     else:
-                                        if len(monk_staggered_damage_list2) == 0:
+                                        if monk_staggered_damage_list2[1] == 0:
                                             monk_staggered_damage_list2 = [staggered_damage, 3]
                                         else:
-                                            if len(monk_staggered_damage_list3) == 0:
+                                            if monk_staggered_damage_list3[1] == 0:
                                                 monk_staggered_damage_list3 = [staggered_damage, 3]
                                             else:
                                                 unstaggerable_damage = self.calculate_ai_damage(2, 1)
                                     staggered_damage_list = [0, 0, 0]
-                                    if len(monk_staggered_damage_list1) != 0:
+                                    if monk_staggered_damage_list1[1] != 0:
                                         staggered_damage_list[0] = monk_staggered_damage_list1[0]
-                                    if len(monk_staggered_damage_list2) != 0:
+                                    if monk_staggered_damage_list2[1] != 0:
                                         staggered_damage_list[1] = monk_staggered_damage_list2[0]
-                                    if len(monk_staggered_damage_list3) != 0:
+                                    if monk_staggered_damage_list3[1] != 0:
                                         staggered_damage_list[2] = monk_staggered_damage_list3[0]
-                                    champion2_hp = champion2_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3] + unstaggerable_damage)
-                                    champion2_lastRound_damageTaken = (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3] + unstaggerable_damage)
+                                    champion2_hp = champion2_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[2] + unstaggerable_damage)
+                                    champion2_lastRound_damageTaken = (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[2] + unstaggerable_damage)
                                     if champion2_hp < 0:
                                         champion2_hp = 0
                             else:
@@ -3188,6 +3193,10 @@ class GameFrame(tk.Frame):
                                 champion2_lastRound_damageTaken = self.calculate_ai_damage(2, 1)
                                 if champion2_hp < 0:
                                     champion2_hp = 0
+                            if champion2_thorns != 0:
+                                ai1_hp = ai1_hp - 200
+                            if ai1_hp < 0:
+                                ai1_hp = 0
                         elif taunter_counter == 3:
                             if len(champion3_guarded) != 0:
                                 guard_list = []
@@ -3203,7 +3212,7 @@ class GameFrame(tk.Frame):
                                     guard_list = sorted(guard_list, reverse=True)
                                     if guard_list[0] == 101:
                                         ai1_hp = ai1_hp - ai1_attack[1]
-                                        if champion3_thorns[0] == 1:
+                                        if champion3_thorns != 0:
                                             ai1_hp = ai1_hp - 200
                                         if ai1_hp < 0:
                                             ai1_hp = 0
@@ -3212,7 +3221,7 @@ class GameFrame(tk.Frame):
                                     if guard_list[0] == 99:
                                         bodyguard_counter = 1
                                         for champions in CHAMPION_LIST:
-                                            if champions == VETERAN_BODYGUARD.name:
+                                            if champions == VETERAN_BODYGUARD.title:
                                                 break
                                             bodyguard_counter += 1
                                         if bodyguard_counter == 1:
@@ -3240,28 +3249,28 @@ class GameFrame(tk.Frame):
                                             champion5_lastRound_damageTaken = self.calculate_ai_damage(5, 1)
                                             if champion5_hp < 0:
                                                 champion5_hp = 0
-                            elif CHAMPION_LIST[2] == MONK.name:
+                            elif CHAMPION_LIST[2] == MONK.title:
                                     staggered_damage = (self.calculate_ai_damage(3, 1) / 3)
                                     unstaggerable_damage = 0
-                                    if len(monk_staggered_damage_list1) == 0:
+                                    if monk_staggered_damage_list1[1] == 0:
                                         monk_staggered_damage_list1 = [staggered_damage, 3]
                                     else:
-                                        if len(monk_staggered_damage_list2) == 0:
+                                        if monk_staggered_damage_list2[1] == 0:
                                             monk_staggered_damage_list2 = [staggered_damage, 3]
                                         else:
-                                            if len(monk_staggered_damage_list3) == 0:
+                                            if monk_staggered_damage_list3[1] == 0:
                                                 monk_staggered_damage_list3 = [staggered_damage, 3]
                                             else:
                                                 unstaggerable_damage = self.calculate_ai_damage(3, 1)
                                     staggered_damage_list = [0, 0, 0]
-                                    if len(monk_staggered_damage_list1) != 0:
+                                    if monk_staggered_damage_list1[1] != 0:
                                         staggered_damage_list[0] = monk_staggered_damage_list1[0]
-                                    if len(monk_staggered_damage_list2) != 0:
+                                    if monk_staggered_damage_list2[1] != 0:
                                         staggered_damage_list[1] = monk_staggered_damage_list2[0]
-                                    if len(monk_staggered_damage_list3) != 0:
+                                    if monk_staggered_damage_list3[1] != 0:
                                         staggered_damage_list[2] = monk_staggered_damage_list3[0]
-                                    champion3_hp = champion3_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3] + unstaggerable_damage)
-                                    champion3_lastRound_damageTaken = (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3] + unstaggerable_damage)
+                                    champion3_hp = champion3_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[2] + unstaggerable_damage)
+                                    champion3_lastRound_damageTaken = (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[2] + unstaggerable_damage)
                                     if champion3_hp < 0:
                                         champion3_hp = 0
                             else:
@@ -3269,6 +3278,10 @@ class GameFrame(tk.Frame):
                                 champion3_lastRound_damageTaken = self.calculate_ai_damage(3, 1)
                                 if champion3_hp < 0:
                                     champion3_hp = 0
+                        if champion3_thorns != 0:
+                            ai1_hp = ai1_hp - 200
+                        if ai1_hp < 0:
+                            ai1_hp = 0
                         elif taunter_counter == 4:
                             if len(champion4_guarded) != 0:
                                 guard_list = []
@@ -3284,7 +3297,7 @@ class GameFrame(tk.Frame):
                                     guard_list = sorted(guard_list, reverse=True)
                                     if guard_list[0] == 101:
                                         ai1_hp = ai1_hp - ai1_attack[1]
-                                        if champion4_thorns[0] == 1:
+                                        if champion4_thorns != 0:
                                             ai1_hp = ai1_hp - 200
                                         if ai1_hp < 0:
                                             ai1_hp = 0
@@ -3293,7 +3306,7 @@ class GameFrame(tk.Frame):
                                     if guard_list[0] == 99:
                                         bodyguard_counter = 1
                                         for champions in CHAMPION_LIST:
-                                            if champions == VETERAN_BODYGUARD.name:
+                                            if champions == VETERAN_BODYGUARD.title:
                                                 break
                                             bodyguard_counter += 1
                                         if bodyguard_counter == 1:
@@ -3321,28 +3334,28 @@ class GameFrame(tk.Frame):
                                             champion5_lastRound_damageTaken = self.calculate_ai_damage(5, 1)
                                             if champion5_hp < 0:
                                                 champion5_hp = 0
-                            elif CHAMPION_LIST[3] == MONK.name:
+                            elif CHAMPION_LIST[3] == MONK.title:
                                     staggered_damage = (self.calculate_ai_damage(4, 1) / 3)
                                     unstaggerable_damage = 0
-                                    if len(monk_staggered_damage_list1) == 0:
+                                    if monk_staggered_damage_list1[1] == 0:
                                         monk_staggered_damage_list1 = [staggered_damage, 3]
                                     else:
-                                        if len(monk_staggered_damage_list2) == 0:
+                                        if monk_staggered_damage_list2[1] == 0:
                                             monk_staggered_damage_list2 = [staggered_damage, 3]
                                         else:
-                                            if len(monk_staggered_damage_list3) == 0:
+                                            if monk_staggered_damage_list3[1] == 0:
                                                 monk_staggered_damage_list3 = [staggered_damage, 3]
                                             else:
                                                 unstaggerable_damage = self.calculate_ai_damage(4, 1)
                                     staggered_damage_list = [0, 0, 0]
-                                    if len(monk_staggered_damage_list1) != 0:
+                                    if monk_staggered_damage_list1[1] != 0:
                                         staggered_damage_list[0] = monk_staggered_damage_list1[0]
-                                    if len(monk_staggered_damage_list2) != 0:
+                                    if monk_staggered_damage_list2[1] != 0:
                                         staggered_damage_list[1] = monk_staggered_damage_list2[0]
-                                    if len(monk_staggered_damage_list3) != 0:
+                                    if monk_staggered_damage_list3[1] != 0:
                                         staggered_damage_list[2] = monk_staggered_damage_list3[0]
-                                    champion4_hp = champion4_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3] + unstaggerable_damage)
-                                    champion4_lastRound_damageTaken = (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3] + unstaggerable_damage)
+                                    champion4_hp = champion4_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[2] + unstaggerable_damage)
+                                    champion4_lastRound_damageTaken = (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[2] + unstaggerable_damage)
                                     if champion4_hp < 0:
                                         champion4_hp = 0
                             else:
@@ -3350,6 +3363,10 @@ class GameFrame(tk.Frame):
                                 champion4_lastRound_damageTaken = self.calculate_ai_damage(4, 1)
                                 if champion4_hp < 0:
                                     champion4_hp = 0
+                            if champion4_thorns != 0:
+                                ai1_hp = ai1_hp - 200
+                            if ai1_hp < 0:
+                                ai1_hp = 0
                         elif taunter_counter == 5:
                             if len(champion5_guarded) != 0:
                                 guard_list = []
@@ -3365,16 +3382,12 @@ class GameFrame(tk.Frame):
                                     guard_list = sorted(guard_list, reverse=True)
                                     if guard_list[0] == 101:
                                         ai1_hp = ai1_hp - ai1_attack[1]
-                                        if champion5_thorns[0] == 1:
-                                            ai1_hp = ai1_hp - 200
-                                        if ai1_hp < 0:
-                                            ai1_hp = 0
                                     if guard_list[0] == 100:
                                         champion5_hp = champion5_hp
                                     if guard_list[0] == 99:
                                         bodyguard_counter = 1
                                         for champions in CHAMPION_LIST:
-                                            if champions == VETERAN_BODYGUARD.name:
+                                            if champions == VETERAN_BODYGUARD.title:
                                                 break
                                             bodyguard_counter += 1
                                         if bodyguard_counter == 1:
@@ -3402,28 +3415,28 @@ class GameFrame(tk.Frame):
                                             champion5_lastRound_damageTaken = self.calculate_ai_damage(5, 1)
                                             if champion5_hp < 0:
                                                 champion5_hp = 0
-                            elif CHAMPION_LIST[4] == MONK.name:
+                            elif CHAMPION_LIST[4] == MONK.title:
                                     staggered_damage = (self.calculate_ai_damage(5, 1) / 3)
                                     unstaggerable_damage = 0
-                                    if len(monk_staggered_damage_list1) == 0:
+                                    if monk_staggered_damage_list1[1] == 0:
                                         monk_staggered_damage_list1 = [staggered_damage, 3]
                                     else:
-                                        if len(monk_staggered_damage_list2) == 0:
+                                        if monk_staggered_damage_list2[1] == 0:
                                             monk_staggered_damage_list2 = [staggered_damage, 3]
                                         else:
-                                            if len(monk_staggered_damage_list3) == 0:
+                                            if monk_staggered_damage_list3[1] == 0:
                                                 monk_staggered_damage_list3 = [staggered_damage, 3]
                                             else:
                                                 unstaggerable_damage = self.calculate_ai_damage(5, 1)
                                     staggered_damage_list = [0, 0, 0]
-                                    if len(monk_staggered_damage_list1) != 0:
+                                    if monk_staggered_damage_list1[1] != 0:
                                         staggered_damage_list[0] = monk_staggered_damage_list1[0]
-                                    if len(monk_staggered_damage_list2) != 0:
+                                    if monk_staggered_damage_list2[1] != 0:
                                         staggered_damage_list[1] = monk_staggered_damage_list2[0]
-                                    if len(monk_staggered_damage_list3) != 0:
+                                    if monk_staggered_damage_list3[1] != 0:
                                         staggered_damage_list[2] = monk_staggered_damage_list3[0]
-                                    champion5_hp = champion5_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3] + unstaggerable_damage)
-                                    champion5_lastRound_damageTaken = (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3] + unstaggerable_damage)
+                                    champion5_hp = champion5_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[2] + unstaggerable_damage)
+                                    champion5_lastRound_damageTaken = (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[2] + unstaggerable_damage)
                                     if champion5_hp < 0:
                                         champion5_hp = 0
                             else:
@@ -3431,7 +3444,10 @@ class GameFrame(tk.Frame):
                                 champion5_lastRound_damageTaken = self.calculate_ai_damage(5, 1)
                                 if champion5_hp < 0:
                                     champion5_hp = 0
-                        ai1_taunt[1] = ai1_taunt[1] - 1
+                            if champion5_thorns != 0:
+                                ai1_hp = ai1_hp - 200
+                            if ai1_hp < 0:
+                                ai1_hp = 0
                     else:
                         if "Everyone" in ai1_attack_intention:
                             if champion1_hp != 0:
@@ -3449,16 +3465,12 @@ class GameFrame(tk.Frame):
                                         guard_list = sorted(guard_list, reverse=True)
                                         if guard_list[0] == 101:
                                             ai1_hp = ai1_hp - ai1_attack[1]
-                                            if champion5_thorns[0] == 1:
-                                                ai1_hp = ai1_hp - 200
-                                            if ai1_hp < 0:
-                                                ai1_hp = 0
                                         if guard_list[0] == 100:
                                             champion1_hp = champion1_hp
                                         if guard_list[0] == 99:
                                             bodyguard_counter = 1
                                             for champions in CHAMPION_LIST:
-                                                if champions == VETERAN_BODYGUARD.name:
+                                                if champions == VETERAN_BODYGUARD.title:
                                                     break
                                                 bodyguard_counter += 1
                                             if bodyguard_counter == 1:
@@ -3486,28 +3498,28 @@ class GameFrame(tk.Frame):
                                                 champion5_lastRound_damageTaken = self.calculate_ai_damage(5, 1)
                                                 if champion5_hp < 0:
                                                     champion5_hp = 0
-                                elif CHAMPION_LIST[0] == MONK.name:
+                                elif CHAMPION_LIST[0] == MONK.title:
                                     staggered_damage = (self.calculate_ai_damage(1, 1) / 3)
                                     unstaggerable_damage = 0
-                                    if len(monk_staggered_damage_list1) == 0:
+                                    if monk_staggered_damage_list1[1] == 0:
                                         monk_staggered_damage_list1 = [staggered_damage, 3]
                                     else:
-                                        if len(monk_staggered_damage_list2) == 0:
+                                        if monk_staggered_damage_list2[1] == 0:
                                             monk_staggered_damage_list2 = [staggered_damage, 3]
                                         else:
-                                            if len(monk_staggered_damage_list3) == 0:
+                                            if monk_staggered_damage_list3[1] == 0:
                                                 monk_staggered_damage_list3 = [staggered_damage, 3]
                                             else:
                                                 unstaggerable_damage = self.calculate_ai_damage(1, 1)
                                     staggered_damage_list = [0, 0, 0]
-                                    if len(monk_staggered_damage_list1) != 0:
+                                    if monk_staggered_damage_list1[1] != 0:
                                         staggered_damage_list[0] = monk_staggered_damage_list1[0]
-                                    if len(monk_staggered_damage_list2) != 0:
+                                    if monk_staggered_damage_list2[1] != 0:
                                         staggered_damage_list[1] = monk_staggered_damage_list2[0]
-                                    if len(monk_staggered_damage_list3) != 0:
+                                    if monk_staggered_damage_list3[1] != 0:
                                         staggered_damage_list[2] = monk_staggered_damage_list3[0]
-                                    champion1_hp = champion1_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3] + unstaggerable_damage)
-                                    champion1_lastRound_damageTaken = (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3] + unstaggerable_damage)
+                                    champion1_hp = champion1_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[2] + unstaggerable_damage)
+                                    champion1_lastRound_damageTaken = (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[2] + unstaggerable_damage)
                                     if champion1_hp < 0:
                                         champion1_hp = 0
                                 else:
@@ -3515,6 +3527,10 @@ class GameFrame(tk.Frame):
                                     champion1_lastRound_damageTaken = self.calculate_ai_damage(1, 1)
                                     if champion1_hp < 0:
                                         champion1_hp = 0
+                                if champion1_thorns != 0:
+                                    ai1_hp = ai1_hp - 200
+                                if ai1_hp < 0:
+                                    ai1_hp = 0
                             if champion2_hp != 0:
                                 if len(champion2_guarded) != 0:
                                     guard_list = []
@@ -3530,16 +3546,12 @@ class GameFrame(tk.Frame):
                                         guard_list = sorted(guard_list, reverse=True)
                                         if guard_list[0] == 101:
                                             ai1_hp = ai1_hp - ai1_attack[1]
-                                            if champion5_thorns[0] == 1:
-                                                ai1_hp = ai1_hp - 200
-                                            if ai1_hp < 0:
-                                                ai1_hp = 0
                                         if guard_list[0] == 100:
                                             champion2_hp = champion2_hp
                                         if guard_list[0] == 99:
                                             bodyguard_counter = 1
                                             for champions in CHAMPION_LIST:
-                                                if champions == VETERAN_BODYGUARD.name:
+                                                if champions == VETERAN_BODYGUARD.title:
                                                     break
                                                 bodyguard_counter += 1
                                             if bodyguard_counter == 1:
@@ -3567,28 +3579,28 @@ class GameFrame(tk.Frame):
                                                 champion5_lastRound_damageTaken = self.calculate_ai_damage(5, 1)
                                                 if champion5_hp < 0:
                                                     champion5_hp = 0
-                                elif CHAMPION_LIST[1] == MONK.name:
+                                elif CHAMPION_LIST[1] == MONK.title:
                                     staggered_damage = (self.calculate_ai_damage(2, 1) / 3)
                                     unstaggerable_damage = 0
-                                    if len(monk_staggered_damage_list1) == 0:
+                                    if monk_staggered_damage_list1[1] == 0:
                                         monk_staggered_damage_list1 = [staggered_damage, 3]
                                     else:
-                                        if len(monk_staggered_damage_list2) == 0:
+                                        if monk_staggered_damage_list2[1] == 0:
                                             monk_staggered_damage_list2 = [staggered_damage, 3]
                                         else:
-                                            if len(monk_staggered_damage_list3) == 0:
+                                            if monk_staggered_damage_list3[1] == 0:
                                                 monk_staggered_damage_list3 = [staggered_damage, 3]
                                             else:
                                                 unstaggerable_damage = self.calculate_ai_damage(2, 1)
                                     staggered_damage_list = [0, 0, 0]
-                                    if len(monk_staggered_damage_list1) != 0:
+                                    if monk_staggered_damage_list1[1] != 0:
                                         staggered_damage_list[0] = monk_staggered_damage_list1[0]
-                                    if len(monk_staggered_damage_list2) != 0:
+                                    if monk_staggered_damage_list2[1] != 0:
                                         staggered_damage_list[1] = monk_staggered_damage_list2[0]
-                                    if len(monk_staggered_damage_list3) != 0:
+                                    if monk_staggered_damage_list3[1] != 0:
                                         staggered_damage_list[2] = monk_staggered_damage_list3[0]
-                                    champion2_hp = champion2_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3] + unstaggerable_damage)
-                                    champion2_lastRound_damageTaken = (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3] + unstaggerable_damage)
+                                    champion2_hp = champion2_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[2] + unstaggerable_damage)
+                                    champion2_lastRound_damageTaken = (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[2] + unstaggerable_damage)
                                     if champion2_hp < 0:
                                         champion2_hp = 0
                                 else:
@@ -3596,6 +3608,10 @@ class GameFrame(tk.Frame):
                                     champion2_lastRound_damageTaken = self.calculate_ai_damage(2, 1)
                                     if champion2_hp < 0:
                                         champion2_hp = 0
+                                if champion2_thorns != 0:
+                                    ai1_hp = ai1_hp - 200
+                                if ai1_hp < 0:
+                                    ai1_hp = 0
                             if champion3_hp != 0:
                                 if len(champion3_guarded) != 0:
                                     guard_list = []
@@ -3611,16 +3627,12 @@ class GameFrame(tk.Frame):
                                         guard_list = sorted(guard_list, reverse=True)
                                         if guard_list[0] == 101:
                                             ai1_hp = ai1_hp - ai1_attack[1]
-                                            if champion5_thorns[0] == 1:
-                                                ai1_hp = ai1_hp - 200
-                                            if ai1_hp < 0:
-                                                ai1_hp = 0
                                         if guard_list[0] == 100:
                                             champion3_hp = champion3_hp
                                         if guard_list[0] == 99:
                                             bodyguard_counter = 1
                                             for champions in CHAMPION_LIST:
-                                                if champions == VETERAN_BODYGUARD.name:
+                                                if champions == VETERAN_BODYGUARD.title:
                                                     break
                                                 bodyguard_counter += 1
                                             if bodyguard_counter == 1:
@@ -3648,28 +3660,28 @@ class GameFrame(tk.Frame):
                                                 champion5_lastRound_damageTaken = self.calculate_ai_damage(5, 1)
                                                 if champion5_hp < 0:
                                                     champion5_hp = 0
-                                elif CHAMPION_LIST[2] == MONK.name:
+                                elif CHAMPION_LIST[2] == MONK.title:
                                     staggered_damage = (self.calculate_ai_damage(3, 1) / 3)
                                     unstaggerable_damage = 0
-                                    if len(monk_staggered_damage_list1) == 0:
+                                    if monk_staggered_damage_list1[1] == 0:
                                         monk_staggered_damage_list1 = [staggered_damage, 3]
                                     else:
-                                        if len(monk_staggered_damage_list2) == 0:
+                                        if monk_staggered_damage_list2[1] == 0:
                                             monk_staggered_damage_list2 = [staggered_damage, 3]
                                         else:
-                                            if len(monk_staggered_damage_list3) == 0:
+                                            if monk_staggered_damage_list3[1] == 0:
                                                 monk_staggered_damage_list3 = [staggered_damage, 3]
                                             else:
                                                 unstaggerable_damage = self.calculate_ai_damage(3, 1)
                                     staggered_damage_list = [0, 0, 0]
-                                    if len(monk_staggered_damage_list1) != 0:
+                                    if monk_staggered_damage_list1[1] != 0:
                                         staggered_damage_list[0] = monk_staggered_damage_list1[0]
-                                    if len(monk_staggered_damage_list2) != 0:
+                                    if monk_staggered_damage_list2[1] != 0:
                                         staggered_damage_list[1] = monk_staggered_damage_list2[0]
-                                    if len(monk_staggered_damage_list3) != 0:
+                                    if monk_staggered_damage_list3[1] != 0:
                                         staggered_damage_list[2] = monk_staggered_damage_list3[0]
-                                    champion3_hp = champion3_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3] + unstaggerable_damage)
-                                    champion3_lastRound_damageTaken = (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3] + unstaggerable_damage)
+                                    champion3_hp = champion3_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[2] + unstaggerable_damage)
+                                    champion3_lastRound_damageTaken = (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[2] + unstaggerable_damage)
                                     if champion3_hp < 0:
                                         champion3_hp = 0
                                 else:
@@ -3677,6 +3689,10 @@ class GameFrame(tk.Frame):
                                     champion3_lastRound_damageTaken = self.calculate_ai_damage(3, 1)
                                     if champion3_hp < 0:
                                         champion3_hp = 0
+                                if champion3_thorns != 0:
+                                    ai1_hp = ai1_hp - 200
+                                if ai1_hp < 0:
+                                    ai1_hp = 0
                             if champion4_hp != 0:
                                 if len(champion4_guarded) != 0:
                                     guard_list = []
@@ -3692,7 +3708,7 @@ class GameFrame(tk.Frame):
                                         guard_list = sorted(guard_list, reverse=True)
                                         if guard_list[0] == 101:
                                             ai1_hp = ai1_hp - ai1_attack[1]
-                                            if champion5_thorns[0] == 1:
+                                            if champion4_thorns != 0:
                                                 ai1_hp = ai1_hp - 200
                                             if ai1_hp < 0:
                                                 ai1_hp = 0
@@ -3701,7 +3717,7 @@ class GameFrame(tk.Frame):
                                         if guard_list[0] == 99:
                                             bodyguard_counter = 1
                                             for champions in CHAMPION_LIST:
-                                                if champions == VETERAN_BODYGUARD.name:
+                                                if champions == VETERAN_BODYGUARD.title:
                                                     break
                                                 bodyguard_counter += 1
                                             if bodyguard_counter == 1:
@@ -3729,28 +3745,28 @@ class GameFrame(tk.Frame):
                                                 champion5_lastRound_damageTaken = self.calculate_ai_damage(5, 1)
                                                 if champion5_hp < 0:
                                                     champion5_hp = 0
-                                elif CHAMPION_LIST[3] == MONK.name:
+                                elif CHAMPION_LIST[3] == MONK.title:
                                     staggered_damage = (self.calculate_ai_damage(4, 1) / 3)
                                     unstaggerable_damage = 0
-                                    if len(monk_staggered_damage_list1) == 0:
+                                    if monk_staggered_damage_list1[1] == 0:
                                         monk_staggered_damage_list1 = [staggered_damage, 3]
                                     else:
-                                        if len(monk_staggered_damage_list2) == 0:
+                                        if monk_staggered_damage_list2[1] == 0:
                                             monk_staggered_damage_list2 = [staggered_damage, 3]
                                         else:
-                                            if len(monk_staggered_damage_list3) == 0:
+                                            if monk_staggered_damage_list3[1] == 0:
                                                 monk_staggered_damage_list3 = [staggered_damage, 3]
                                             else:
                                                 unstaggerable_damage = self.calculate_ai_damage(4, 1)
                                     staggered_damage_list = [0, 0, 0]
-                                    if len(monk_staggered_damage_list1) != 0:
+                                    if monk_staggered_damage_list1[1] != 0:
                                         staggered_damage_list[0] = monk_staggered_damage_list1[0]
-                                    if len(monk_staggered_damage_list2) != 0:
+                                    if monk_staggered_damage_list2[1] != 0:
                                         staggered_damage_list[1] = monk_staggered_damage_list2[0]
-                                    if len(monk_staggered_damage_list3) != 0:
+                                    if monk_staggered_damage_list3[1] != 0:
                                         staggered_damage_list[2] = monk_staggered_damage_list3[0]
-                                    champion4_hp = champion4_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3] + unstaggerable_damage)
-                                    champion4_lastRound_damageTaken = (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3] + unstaggerable_damage)
+                                    champion4_hp = champion4_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[2] + unstaggerable_damage)
+                                    champion4_lastRound_damageTaken = (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[2] + unstaggerable_damage)
                                     if champion4_hp < 0:
                                         champion4_hp = 0
                                 else:
@@ -3758,6 +3774,10 @@ class GameFrame(tk.Frame):
                                     champion4_lastRound_damageTaken = self.calculate_ai_damage(4, 1)
                                     if champion4_hp < 0:
                                         champion4_hp = 0
+                                if champion4_thorns != 0:
+                                    ai1_hp = ai1_hp - 200
+                                if ai1_hp < 0:
+                                    ai1_hp = 0
                             if champion5_hp != 0:
                                 if len(champion5_guarded) != 0:
                                     guard_list = []
@@ -3773,16 +3793,12 @@ class GameFrame(tk.Frame):
                                         guard_list = sorted(guard_list, reverse=True)
                                         if guard_list[0] == 101:
                                             ai1_hp = ai1_hp - ai1_attack[1]
-                                            if champion5_thorns[0] == 1:
-                                                ai1_hp = ai1_hp - 200
-                                            if ai1_hp < 0:
-                                                ai1_hp = 0
                                         if guard_list[0] == 100:
                                             champion5_hp = champion5_hp
                                         if guard_list[0] == 99:
                                             bodyguard_counter = 1
                                             for champions in CHAMPION_LIST:
-                                                if champions == VETERAN_BODYGUARD.name:
+                                                if champions == VETERAN_BODYGUARD.title:
                                                     break
                                                 bodyguard_counter += 1
                                             if bodyguard_counter == 1:
@@ -3810,28 +3826,28 @@ class GameFrame(tk.Frame):
                                                 champion5_lastRound_damageTaken = self.calculate_ai_damage(5, 1)
                                                 if champion5_hp < 0:
                                                     champion5_hp = 0
-                                elif CHAMPION_LIST[4] == MONK.name:
+                                elif CHAMPION_LIST[4] == MONK.title:
                                     staggered_damage = (self.calculate_ai_damage(5, 1) / 3)
                                     unstaggerable_damage = 0
-                                    if len(monk_staggered_damage_list1) == 0:
+                                    if monk_staggered_damage_list1[1] == 0:
                                         monk_staggered_damage_list1 = [staggered_damage, 3]
                                     else:
-                                        if len(monk_staggered_damage_list2) == 0:
+                                        if monk_staggered_damage_list2[1] == 0:
                                             monk_staggered_damage_list2 = [staggered_damage, 3]
                                         else:
-                                            if len(monk_staggered_damage_list3) == 0:
+                                            if monk_staggered_damage_list3[1] == 0:
                                                 monk_staggered_damage_list3 = [staggered_damage, 3]
                                             else:
                                                 unstaggerable_damage = self.calculate_ai_damage(5, 1)
                                     staggered_damage_list = [0, 0, 0]
-                                    if len(monk_staggered_damage_list1) != 0:
+                                    if monk_staggered_damage_list1[1] != 0:
                                         staggered_damage_list[0] = monk_staggered_damage_list1[0]
-                                    if len(monk_staggered_damage_list2) != 0:
+                                    if monk_staggered_damage_list2[1] != 0:
                                         staggered_damage_list[1] = monk_staggered_damage_list2[0]
-                                    if len(monk_staggered_damage_list3) != 0:
+                                    if monk_staggered_damage_list3[1] != 0:
                                         staggered_damage_list[2] = monk_staggered_damage_list3[0]
-                                    champion5_hp = champion5_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3] + unstaggerable_damage)
-                                    champion5_lastRound_damageTaken = (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3] + unstaggerable_damage)
+                                    champion5_hp = champion5_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[2] + unstaggerable_damage)
+                                    champion5_lastRound_damageTaken = (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[2] + unstaggerable_damage)
                                     if champion5_hp < 0:
                                         champion5_hp = 0
                                 else:
@@ -3839,6 +3855,10 @@ class GameFrame(tk.Frame):
                                     champion5_lastRound_damageTaken = self.calculate_ai_damage(5, 1)
                                     if champion5_hp < 0:
                                         champion5_hp = 0
+                                if champion5_thorns != 0:
+                                    ai1_hp = ai1_hp - 200
+                                if ai1_hp < 0:
+                                    ai1_hp = 0
                         else:
                             for indiv_champion in CHAMPION_LIST:
                                 if indiv_champion in ai1_attack_intention:
@@ -3862,16 +3882,12 @@ class GameFrame(tk.Frame):
                                                 guard_list = sorted(guard_list, reverse=True)
                                                 if guard_list[0] == 101:
                                                     ai1_hp = ai1_hp - ai1_attack[1]
-                                                    if champion5_thorns[0] == 1:
-                                                        ai1_hp = ai1_hp - 200
-                                                    if ai1_hp < 0:
-                                                        ai1_hp = 0
                                                 if guard_list[0] == 100:
                                                     champion1_hp = champion1_hp
                                                 if guard_list[0] == 99:
                                                     bodyguard_counter = 1
                                                     for champions in CHAMPION_LIST:
-                                                        if champions == VETERAN_BODYGUARD.name:
+                                                        if champions == VETERAN_BODYGUARD.title:
                                                             break
                                                         bodyguard_counter += 1
                                                     if bodyguard_counter == 1:
@@ -3899,28 +3915,28 @@ class GameFrame(tk.Frame):
                                                         champion5_lastRound_damageTaken = self.calculate_ai_damage(5, 1)
                                                         if champion5_hp < 0:
                                                             champion5_hp = 0
-                                        elif CHAMPION_LIST[0] == MONK.name:
+                                        elif CHAMPION_LIST[0] == MONK.title:
                                             staggered_damage = (self.calculate_ai_damage(1, 1) / 3)
                                             unstaggerable_damage = 0
-                                            if len(monk_staggered_damage_list1) == 0:
+                                            if monk_staggered_damage_list1[1] == 0:
                                                 monk_staggered_damage_list1 = [staggered_damage, 3]
                                             else:
-                                                if len(monk_staggered_damage_list2) == 0:
+                                                if monk_staggered_damage_list2[1] == 0:
                                                     monk_staggered_damage_list2 = [staggered_damage, 3]
                                                 else:
-                                                    if len(monk_staggered_damage_list3) == 0:
+                                                    if monk_staggered_damage_list3[1] == 0:
                                                         monk_staggered_damage_list3 = [staggered_damage, 3]
                                                     else:
                                                         unstaggerable_damage = self.calculate_ai_damage(1, 1)
                                             staggered_damage_list = [0, 0, 0]
-                                            if len(monk_staggered_damage_list1) != 0:
+                                            if monk_staggered_damage_list1[1] != 0:
                                                 staggered_damage_list[0] = monk_staggered_damage_list1[0]
-                                            if len(monk_staggered_damage_list2) != 0:
+                                            if monk_staggered_damage_list2[1] != 0:
                                                 staggered_damage_list[1] = monk_staggered_damage_list2[0]
-                                            if len(monk_staggered_damage_list3) != 0:
+                                            if monk_staggered_damage_list3[1] != 0:
                                                 staggered_damage_list[2] = monk_staggered_damage_list3[0]
-                                            champion1_hp = champion1_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3] + unstaggerable_damage)
-                                            champion1_lastRound_damageTaken = (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3] + unstaggerable_damage)
+                                            champion1_hp = champion1_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[2] + unstaggerable_damage)
+                                            champion1_lastRound_damageTaken = (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[2] + unstaggerable_damage)
                                             if champion1_hp < 0:
                                                 champion1_hp = 0
                                         else:
@@ -3928,6 +3944,10 @@ class GameFrame(tk.Frame):
                                             champion1_lastRound_damageTaken = self.calculate_ai_damage(1, 1)
                                             if champion1_hp < 0:
                                                 champion1_hp = 0
+                                        if champion1_thorns != 0:
+                                            ai1_hp = ai1_hp - 200
+                                        if ai1_hp < 0:
+                                            ai1_hp = 0
                                     if counter == 2:
                                         if len(champion2_guarded) != 0:
                                             guard_list = []
@@ -3943,16 +3963,12 @@ class GameFrame(tk.Frame):
                                                 guard_list = sorted(guard_list, reverse=True)
                                                 if guard_list[0] == 101:
                                                     ai1_hp = ai1_hp - ai1_attack[1]
-                                                    if champion5_thorns[0] == 1:
-                                                        ai1_hp = ai1_hp - 200
-                                                    if ai1_hp < 0:
-                                                        ai1_hp = 0
                                                 if guard_list[0] == 100:
                                                     champion2_hp = champion2_hp
                                                 if guard_list[0] == 99:
                                                     bodyguard_counter = 1
                                                     for champions in CHAMPION_LIST:
-                                                        if champions == VETERAN_BODYGUARD.name:
+                                                        if champions == VETERAN_BODYGUARD.title:
                                                             break
                                                         bodyguard_counter += 1
                                                     if bodyguard_counter == 1:
@@ -3980,28 +3996,28 @@ class GameFrame(tk.Frame):
                                                         champion5_lastRound_damageTaken = self.calculate_ai_damage(5, 1)
                                                         if champion5_hp < 0:
                                                             champion5_hp = 0
-                                        elif CHAMPION_LIST[1] == MONK.name:
+                                        elif CHAMPION_LIST[1] == MONK.title:
                                             staggered_damage = (self.calculate_ai_damage(2, 1) / 3)
                                             unstaggerable_damage = 0
-                                            if len(monk_staggered_damage_list1) == 0:
+                                            if monk_staggered_damage_list1[1] == 0:
                                                 monk_staggered_damage_list1 = [staggered_damage, 3]
                                             else:
-                                                if len(monk_staggered_damage_list2) == 0:
+                                                if monk_staggered_damage_list2[1] == 0:
                                                     monk_staggered_damage_list2 = [staggered_damage, 3]
                                                 else:
-                                                    if len(monk_staggered_damage_list3) == 0:
+                                                    if monk_staggered_damage_list3[1] == 0:
                                                         monk_staggered_damage_list3 = [staggered_damage, 3]
                                                     else:
                                                         unstaggerable_damage = self.calculate_ai_damage(2, 1)
                                             staggered_damage_list = [0, 0, 0]
-                                            if len(monk_staggered_damage_list1) != 0:
+                                            if monk_staggered_damage_list1[1] != 0:
                                                 staggered_damage_list[0] = monk_staggered_damage_list1[0]
-                                            if len(monk_staggered_damage_list2) != 0:
+                                            if monk_staggered_damage_list2[1] != 0:
                                                 staggered_damage_list[1] = monk_staggered_damage_list2[0]
-                                            if len(monk_staggered_damage_list3) != 0:
+                                            if monk_staggered_damage_list3[1] != 0:
                                                 staggered_damage_list[2] = monk_staggered_damage_list3[0]
-                                            champion2_hp = champion2_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3] + unstaggerable_damage)
-                                            champion2_lastRound_damageTaken = (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3] + unstaggerable_damage)
+                                            champion2_hp = champion2_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[2] + unstaggerable_damage)
+                                            champion2_lastRound_damageTaken = (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[2] + unstaggerable_damage)
                                             if champion2_hp < 0:
                                                 champion2_hp = 0
                                         else:
@@ -4009,6 +4025,10 @@ class GameFrame(tk.Frame):
                                             champion2_lastRound_damageTaken = self.calculate_ai_damage(2, 1)
                                             if champion2_hp < 0:
                                                 champion2_hp = 0
+                                        if champion2_thorns != 0:
+                                            ai1_hp = ai1_hp - 200
+                                        if ai1_hp < 0:
+                                            ai1_hp = 0
                                     if counter == 3:
                                         if len(champion3_guarded) != 0:
                                             guard_list = []
@@ -4024,16 +4044,12 @@ class GameFrame(tk.Frame):
                                                 guard_list = sorted(guard_list, reverse=True)
                                                 if guard_list[0] == 101:
                                                     ai1_hp = ai1_hp - ai1_attack[1]
-                                                    if champion5_thorns[0] == 1:
-                                                        ai1_hp = ai1_hp - 200
-                                                    if ai1_hp < 0:
-                                                        ai1_hp = 0
                                                 if guard_list[0] == 100:
                                                     champion3_hp = champion3_hp
                                                 if guard_list[0] == 99:
                                                     bodyguard_counter = 1
                                                     for champions in CHAMPION_LIST:
-                                                        if champions == VETERAN_BODYGUARD.name:
+                                                        if champions == VETERAN_BODYGUARD.title:
                                                             break
                                                         bodyguard_counter += 1
                                                     if bodyguard_counter == 1:
@@ -4061,28 +4077,28 @@ class GameFrame(tk.Frame):
                                                         champion5_lastRound_damageTaken = self.calculate_ai_damage(5, 1)
                                                         if champion5_hp < 0:
                                                             champion5_hp = 0
-                                        elif CHAMPION_LIST[2] == MONK.name:
+                                        elif CHAMPION_LIST[2] == MONK.title:
                                             staggered_damage = (self.calculate_ai_damage(3, 1) / 3)
                                             unstaggerable_damage = 0
-                                            if len(monk_staggered_damage_list1) == 0:
+                                            if monk_staggered_damage_list1[1] == 0:
                                                 monk_staggered_damage_list1 = [staggered_damage, 3]
                                             else:
-                                                if len(monk_staggered_damage_list2) == 0:
+                                                if monk_staggered_damage_list2[1] == 0:
                                                     monk_staggered_damage_list2 = [staggered_damage, 3]
                                                 else:
-                                                    if len(monk_staggered_damage_list3) == 0:
+                                                    if monk_staggered_damage_list3[1] == 0:
                                                         monk_staggered_damage_list3 = [staggered_damage, 3]
                                                     else:
                                                         unstaggerable_damage = self.calculate_ai_damage(3, 1)
                                             staggered_damage_list = [0, 0, 0]
-                                            if len(monk_staggered_damage_list1) != 0:
+                                            if monk_staggered_damage_list1[1] != 0:
                                                 staggered_damage_list[0] = monk_staggered_damage_list1[0]
-                                            if len(monk_staggered_damage_list2) != 0:
+                                            if monk_staggered_damage_list2[1] != 0:
                                                 staggered_damage_list[1] = monk_staggered_damage_list2[0]
-                                            if len(monk_staggered_damage_list3) != 0:
+                                            if monk_staggered_damage_list3[1] != 0:
                                                 staggered_damage_list[2] = monk_staggered_damage_list3[0]
-                                            champion3_hp = champion3_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3] + unstaggerable_damage)
-                                            champion3_lastRound_damageTaken = (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3] + unstaggerable_damage)
+                                            champion3_hp = champion3_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[2] + unstaggerable_damage)
+                                            champion3_lastRound_damageTaken = (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[2] + unstaggerable_damage)
                                             if champion3_hp < 0:
                                                 champion3_hp = 0
                                         else:
@@ -4090,6 +4106,10 @@ class GameFrame(tk.Frame):
                                             champion3_lastRound_damageTaken = self.calculate_ai_damage(3, 1)
                                             if champion3_hp < 0:
                                                 champion3_hp = 0
+                                        if champion3_thorns != 0:
+                                            ai1_hp = ai1_hp - 200
+                                        if ai1_hp < 0:
+                                            ai1_hp = 0
                                     if counter == 4:
                                         if len(champion4_guarded) != 0:
                                             guard_list = []
@@ -4105,16 +4125,12 @@ class GameFrame(tk.Frame):
                                                 guard_list = sorted(guard_list, reverse=True)
                                                 if guard_list[0] == 101:
                                                     ai1_hp = ai1_hp - ai1_attack[1]
-                                                    if champion5_thorns[0] == 1:
-                                                        ai1_hp = ai1_hp - 200
-                                                    if ai1_hp < 0:
-                                                        ai1_hp = 0
                                                 if guard_list[0] == 100:
                                                     champion4_hp = champion4_hp
                                                 if guard_list[0] == 99:
                                                     bodyguard_counter = 1
                                                     for champions in CHAMPION_LIST:
-                                                        if champions == VETERAN_BODYGUARD.name:
+                                                        if champions == VETERAN_BODYGUARD.title:
                                                             break
                                                         bodyguard_counter += 1
                                                     if bodyguard_counter == 1:
@@ -4142,28 +4158,28 @@ class GameFrame(tk.Frame):
                                                         champion5_lastRound_damageTaken = self.calculate_ai_damage(5, 1)
                                                         if champion5_hp < 0:
                                                             champion5_hp = 0
-                                        elif CHAMPION_LIST[3] == MONK.name:
+                                        elif CHAMPION_LIST[3] == MONK.title:
                                             staggered_damage = (self.calculate_ai_damage(4, 1) / 3)
                                             unstaggerable_damage = 0
-                                            if len(monk_staggered_damage_list1) == 0:
+                                            if monk_staggered_damage_list1[1] == 0:
                                                 monk_staggered_damage_list1 = [staggered_damage, 3]
                                             else:
-                                                if len(monk_staggered_damage_list2) == 0:
+                                                if monk_staggered_damage_list2[1] == 0:
                                                     monk_staggered_damage_list2 = [staggered_damage, 3]
                                                 else:
-                                                    if len(monk_staggered_damage_list3) == 0:
+                                                    if monk_staggered_damage_list3[1] == 0:
                                                         monk_staggered_damage_list3 = [staggered_damage, 3]
                                                     else:
                                                         unstaggerable_damage = self.calculate_ai_damage(4, 1)
                                             staggered_damage_list = [0, 0, 0]
-                                            if len(monk_staggered_damage_list1) != 0:
+                                            if monk_staggered_damage_list1[1] != 0:
                                                 staggered_damage_list[0] = monk_staggered_damage_list1[0]
-                                            if len(monk_staggered_damage_list2) != 0:
+                                            if monk_staggered_damage_list2[1] != 0:
                                                 staggered_damage_list[1] = monk_staggered_damage_list2[0]
-                                            if len(monk_staggered_damage_list3) != 0:
+                                            if monk_staggered_damage_list3[1] != 0:
                                                 staggered_damage_list[2] = monk_staggered_damage_list3[0]
-                                            champion4_hp = champion4_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3] + unstaggerable_damage)
-                                            champion4_lastRound_damageTaken = (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3] + unstaggerable_damage)
+                                            champion4_hp = champion4_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[2] + unstaggerable_damage)
+                                            champion4_lastRound_damageTaken = (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[2] + unstaggerable_damage)
                                             if champion4_hp < 0:
                                                 champion4_hp = 0
                                         else:
@@ -4171,6 +4187,10 @@ class GameFrame(tk.Frame):
                                             champion4_lastRound_damageTaken = self.calculate_ai_damage(4, 1)
                                             if champion4_hp < 0:
                                                 champion4_hp = 0
+                                        if champion4_thorns != 0:
+                                            ai1_hp = ai1_hp - 200
+                                        if ai1_hp < 0:
+                                            ai1_hp = 0
                                     if counter == 5:
                                         if len(champion5_guarded) != 0:
                                             guard_list = []
@@ -4186,16 +4206,12 @@ class GameFrame(tk.Frame):
                                                 guard_list = sorted(guard_list, reverse=True)
                                                 if guard_list[0] == 101:
                                                     ai1_hp = ai1_hp - ai1_attack[1]
-                                                    if champion5_thorns[0] == 1:
-                                                        ai1_hp = ai1_hp - 200
-                                                    if ai1_hp < 0:
-                                                        ai1_hp = 0
                                                 if guard_list[0] == 100:
                                                     champion5_hp = champion5_hp
                                                 if guard_list[0] == 99:
                                                     bodyguard_counter = 1
                                                     for champions in CHAMPION_LIST:
-                                                        if champions == VETERAN_BODYGUARD.name:
+                                                        if champions == VETERAN_BODYGUARD.title:
                                                             break
                                                         bodyguard_counter += 1
                                                     if bodyguard_counter == 1:
@@ -4223,28 +4239,28 @@ class GameFrame(tk.Frame):
                                                         champion5_lastRound_damageTaken = self.calculate_ai_damage(5, 1)
                                                         if champion5_hp < 0:
                                                             champion5_hp = 0
-                                        elif CHAMPION_LIST[4] == MONK.name:
+                                        elif CHAMPION_LIST[4] == MONK.title:
                                             staggered_damage = (self.calculate_ai_damage(5, 1) / 3)
                                             unstaggerable_damage = 0
-                                            if len(monk_staggered_damage_list1) == 0:
+                                            if monk_staggered_damage_list1[1] == 0:
                                                 monk_staggered_damage_list1 = [staggered_damage, 3]
                                             else:
-                                                if len(monk_staggered_damage_list2) == 0:
+                                                if monk_staggered_damage_list2[1] == 0:
                                                     monk_staggered_damage_list2 = [staggered_damage, 3]
                                                 else:
-                                                    if len(monk_staggered_damage_list3) == 0:
+                                                    if monk_staggered_damage_list3[1] == 0:
                                                         monk_staggered_damage_list3 = [staggered_damage, 3]
                                                     else:
                                                         unstaggerable_damage = self.calculate_ai_damage(5, 1)
                                             staggered_damage_list = [0, 0, 0]
-                                            if len(monk_staggered_damage_list1) != 0:
+                                            if monk_staggered_damage_list1[1] != 0:
                                                 staggered_damage_list[0] = monk_staggered_damage_list1[0]
-                                            if len(monk_staggered_damage_list2) != 0:
+                                            if monk_staggered_damage_list2[1] != 0:
                                                 staggered_damage_list[1] = monk_staggered_damage_list2[0]
-                                            if len(monk_staggered_damage_list3) != 0:
+                                            if monk_staggered_damage_list3[1] != 0:
                                                 staggered_damage_list[2] = monk_staggered_damage_list3[0]
-                                            champion5_hp = champion5_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3] + unstaggerable_damage)
-                                            champion5_lastRound_damageTaken = (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3] + unstaggerable_damage)
+                                            champion5_hp = champion5_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[2] + unstaggerable_damage)
+                                            champion5_lastRound_damageTaken = (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[2] + unstaggerable_damage)
                                             if champion5_hp < 0:
                                                 champion5_hp = 0
                                         else:
@@ -4252,6 +4268,10 @@ class GameFrame(tk.Frame):
                                             champion5_lastRound_damageTaken = self.calculate_ai_damage(5, 1)
                                             if champion5_hp < 0:
                                                 champion5_hp = 0
+                                        if champion5_thorns != 0:
+                                            ai1_hp = ai1_hp - 200
+                                        if ai1_hp < 0:
+                                            ai1_hp = 0
                 if monster_var == 2:
                     if ai2_hp == 0:
                         continue
@@ -4307,16 +4327,12 @@ class GameFrame(tk.Frame):
                                     guard_list = sorted(guard_list, reverse=True)
                                     if guard_list[0] == 101:
                                         ai2_hp = ai2_hp - ai2_attack[1]
-                                        if champion1_thorns[0] == 1:
-                                            ai2_hp = ai2_hp - 200
-                                        if ai2_hp < 0:
-                                            ai2_hp = 0
                                     if guard_list[0] == 100:
                                         champion1_hp = champion1_hp
                                     if guard_list[0] == 99:
                                         bodyguard_counter = 1
                                         for champions in CHAMPION_LIST:
-                                            if champions == VETERAN_BODYGUARD.name:
+                                            if champions == VETERAN_BODYGUARD.title:
                                                 break
                                             bodyguard_counter += 1
                                         if bodyguard_counter == 1:
@@ -4344,28 +4360,28 @@ class GameFrame(tk.Frame):
                                             champion5_lastRound_damageTaken = self.calculate_ai_damage(5, 2)
                                             if champion5_hp < 0:
                                                 champion5_hp = 0
-                            elif CHAMPION_LIST[0] == MONK.name:
+                            elif CHAMPION_LIST[0] == MONK.title:
                                     staggered_damage = (self.calculate_ai_damage(1, 2) / 3)
                                     unstaggerable_damage = 0
-                                    if len(monk_staggered_damage_list1) == 0:
+                                    if monk_staggered_damage_list1[1] == 0:
                                         monk_staggered_damage_list1 = [staggered_damage, 3]
                                     else:
-                                        if len(monk_staggered_damage_list2) == 0:
+                                        if monk_staggered_damage_list2[1] == 0:
                                             monk_staggered_damage_list2 = [staggered_damage, 3]
                                         else:
-                                            if len(monk_staggered_damage_list3) == 0:
+                                            if monk_staggered_damage_list3[1] == 0:
                                                 monk_staggered_damage_list3 = [staggered_damage, 3]
                                             else:
                                                 unstaggerable_damage = self.calculate_ai_damage(1, 2)
                                     staggered_damage_list = [0, 0, 0]
-                                    if len(monk_staggered_damage_list1) != 0:
+                                    if monk_staggered_damage_list1[1] != 0:
                                         staggered_damage_list[0] = monk_staggered_damage_list1[0]
-                                    if len(monk_staggered_damage_list2) != 0:
+                                    if monk_staggered_damage_list2[1] != 0:
                                         staggered_damage_list[1] = monk_staggered_damage_list2[0]
-                                    if len(monk_staggered_damage_list3) != 0:
+                                    if monk_staggered_damage_list3[1] != 0:
                                         staggered_damage_list[2] = monk_staggered_damage_list3[0]
-                                    champion1_hp = champion1_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3] + unstaggerable_damage)
-                                    champion1_lastRound_damageTaken = (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3] + unstaggerable_damage)
+                                    champion1_hp = champion1_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[2] + unstaggerable_damage)
+                                    champion1_lastRound_damageTaken = (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[2] + unstaggerable_damage)
                                     if champion1_hp < 0:
                                         champion1_hp = 0
                             else:
@@ -4373,6 +4389,10 @@ class GameFrame(tk.Frame):
                                 champion1_lastRound_damageTaken = self.calculate_ai_damage(1, 2)
                                 if champion1_hp < 0:
                                     champion1_hp = 0
+                            if champion1_thorns != 0:
+                                ai2_hp = ai2_hp - 200
+                            if ai2_hp < 0:
+                                ai2_hp = 0
                         elif taunter_counter == 2:
                             if len(champion2_guarded) != 0:
                                 guard_list = []
@@ -4388,7 +4408,7 @@ class GameFrame(tk.Frame):
                                     guard_list = sorted(guard_list, reverse=True)
                                     if guard_list[0] == 101:
                                         ai2_hp = ai2_hp - ai2_attack[1]
-                                        if champion2_thorns[0] == 1:
+                                        if champion2_thorns != 0:
                                             ai2_hp = ai2_hp - 200
                                         if ai2_hp < 0:
                                             ai2_hp = 0
@@ -4397,7 +4417,7 @@ class GameFrame(tk.Frame):
                                     if guard_list[0] == 99:
                                         bodyguard_counter = 1
                                         for champions in CHAMPION_LIST:
-                                            if champions == VETERAN_BODYGUARD.name:
+                                            if champions == VETERAN_BODYGUARD.title:
                                                 break
                                             bodyguard_counter += 1
                                         if bodyguard_counter == 1:
@@ -4425,28 +4445,28 @@ class GameFrame(tk.Frame):
                                             champion5_lastRound_damageTaken = self.calculate_ai_damage(5, 2)
                                             if champion5_hp < 0:
                                                 champion5_hp = 0
-                            elif CHAMPION_LIST[1] == MONK.name:
+                            elif CHAMPION_LIST[1] == MONK.title:
                                     staggered_damage = (self.calculate_ai_damage(2, 2) / 3)
                                     unstaggerable_damage = 0
-                                    if len(monk_staggered_damage_list1) == 0:
+                                    if monk_staggered_damage_list1[1] == 0:
                                         monk_staggered_damage_list1 = [staggered_damage, 3]
                                     else:
-                                        if len(monk_staggered_damage_list2) == 0:
+                                        if monk_staggered_damage_list2[1] == 0:
                                             monk_staggered_damage_list2 = [staggered_damage, 3]
                                         else:
-                                            if len(monk_staggered_damage_list3) == 0:
+                                            if monk_staggered_damage_list3[1] == 0:
                                                 monk_staggered_damage_list3 = [staggered_damage, 3]
                                             else:
                                                 unstaggerable_damage = self.calculate_ai_damage(2, 2)
                                     staggered_damage_list = [0, 0, 0]
-                                    if len(monk_staggered_damage_list1) != 0:
+                                    if monk_staggered_damage_list1[1] != 0:
                                         staggered_damage_list[0] = monk_staggered_damage_list1[0]
-                                    if len(monk_staggered_damage_list2) != 0:
+                                    if monk_staggered_damage_list2[1] != 0:
                                         staggered_damage_list[1] = monk_staggered_damage_list2[0]
-                                    if len(monk_staggered_damage_list3) != 0:
+                                    if monk_staggered_damage_list3[1] != 0:
                                         staggered_damage_list[2] = monk_staggered_damage_list3[0]
-                                    champion2_hp = champion2_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3] + unstaggerable_damage)
-                                    champion2_lastRound_damageTaken = (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3] + unstaggerable_damage)
+                                    champion2_hp = champion2_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[2] + unstaggerable_damage)
+                                    champion2_lastRound_damageTaken = (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[2] + unstaggerable_damage)
                                     if champion2_hp < 0:
                                         champion2_hp = 0
                             else:
@@ -4454,6 +4474,10 @@ class GameFrame(tk.Frame):
                                 champion2_lastRound_damageTaken = self.calculate_ai_damage(2, 2)
                                 if champion2_hp < 0:
                                     champion2_hp = 0
+                            if champion2_thorns != 0:
+                                ai2_hp = ai2_hp - 200
+                            if ai2_hp < 0:
+                                ai2_hp = 0
                         elif taunter_counter == 3:
                             if len(champion3_guarded) != 0:
                                 guard_list = []
@@ -4469,7 +4493,7 @@ class GameFrame(tk.Frame):
                                     guard_list = sorted(guard_list, reverse=True)
                                     if guard_list[0] == 101:
                                         ai2_hp = ai2_hp - ai2_attack[1]
-                                        if champion3_thorns[0] == 1:
+                                        if champion3_thorns != 0:
                                             ai2_hp = ai2_hp - 200
                                         if ai2_hp < 0:
                                             ai2_hp = 0
@@ -4478,7 +4502,7 @@ class GameFrame(tk.Frame):
                                     if guard_list[0] == 99:
                                         bodyguard_counter = 1
                                         for champions in CHAMPION_LIST:
-                                            if champions == VETERAN_BODYGUARD.name:
+                                            if champions == VETERAN_BODYGUARD.title:
                                                 break
                                             bodyguard_counter += 1
                                         if bodyguard_counter == 1:
@@ -4506,28 +4530,28 @@ class GameFrame(tk.Frame):
                                             champion5_lastRound_damageTaken = self.calculate_ai_damage(5, 2)
                                             if champion5_hp < 0:
                                                 champion5_hp = 0
-                            elif CHAMPION_LIST[2] == MONK.name:
+                            elif CHAMPION_LIST[2] == MONK.title:
                                     staggered_damage = (self.calculate_ai_damage(3, 2) / 3)
                                     unstaggerable_damage = 0
-                                    if len(monk_staggered_damage_list1) == 0:
+                                    if monk_staggered_damage_list1[1] == 0:
                                         monk_staggered_damage_list1 = [staggered_damage, 3]
                                     else:
-                                        if len(monk_staggered_damage_list2) == 0:
+                                        if monk_staggered_damage_list2[1] == 0:
                                             monk_staggered_damage_list2 = [staggered_damage, 3]
                                         else:
-                                            if len(monk_staggered_damage_list3) == 0:
+                                            if monk_staggered_damage_list3[1] == 0:
                                                 monk_staggered_damage_list3 = [staggered_damage, 3]
                                             else:
                                                 unstaggerable_damage = self.calculate_ai_damage(3, 2)
                                     staggered_damage_list = [0, 0, 0]
-                                    if len(monk_staggered_damage_list1) != 0:
+                                    if monk_staggered_damage_list1[1] != 0:
                                         staggered_damage_list[0] = monk_staggered_damage_list1[0]
-                                    if len(monk_staggered_damage_list2) != 0:
+                                    if monk_staggered_damage_list2[1] != 0:
                                         staggered_damage_list[1] = monk_staggered_damage_list2[0]
-                                    if len(monk_staggered_damage_list3) != 0:
+                                    if monk_staggered_damage_list3[1] != 0:
                                         staggered_damage_list[2] = monk_staggered_damage_list3[0]
-                                    champion3_hp = champion3_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3] + unstaggerable_damage)
-                                    champion3_lastRound_damageTaken = (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3] + unstaggerable_damage)
+                                    champion3_hp = champion3_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[2] + unstaggerable_damage)
+                                    champion3_lastRound_damageTaken = (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[2] + unstaggerable_damage)
                                     if champion3_hp < 0:
                                         champion3_hp = 0
                             else:
@@ -4535,6 +4559,10 @@ class GameFrame(tk.Frame):
                                 champion3_lastRound_damageTaken = self.calculate_ai_damage(3, 2)
                                 if champion3_hp < 0:
                                     champion3_hp = 0
+                        if champion3_thorns != 0:
+                            ai2_hp = ai2_hp - 200
+                        if ai2_hp < 0:
+                            ai2_hp = 0
                         elif taunter_counter == 4:
                             if len(champion4_guarded) != 0:
                                 guard_list = []
@@ -4550,7 +4578,7 @@ class GameFrame(tk.Frame):
                                     guard_list = sorted(guard_list, reverse=True)
                                     if guard_list[0] == 101:
                                         ai2_hp = ai2_hp - ai2_attack[1]
-                                        if champion4_thorns[0] == 1:
+                                        if champion4_thorns != 0:
                                             ai2_hp = ai2_hp - 200
                                         if ai2_hp < 0:
                                             ai2_hp = 0
@@ -4559,7 +4587,7 @@ class GameFrame(tk.Frame):
                                     if guard_list[0] == 99:
                                         bodyguard_counter = 1
                                         for champions in CHAMPION_LIST:
-                                            if champions == VETERAN_BODYGUARD.name:
+                                            if champions == VETERAN_BODYGUARD.title:
                                                 break
                                             bodyguard_counter += 1
                                         if bodyguard_counter == 1:
@@ -4587,28 +4615,28 @@ class GameFrame(tk.Frame):
                                             champion5_lastRound_damageTaken = self.calculate_ai_damage(5, 2)
                                             if champion5_hp < 0:
                                                 champion5_hp = 0
-                            elif CHAMPION_LIST[3] == MONK.name:
+                            elif CHAMPION_LIST[3] == MONK.title:
                                     staggered_damage = (self.calculate_ai_damage(4, 2) / 3)
                                     unstaggerable_damage = 0
-                                    if len(monk_staggered_damage_list1) == 0:
+                                    if monk_staggered_damage_list1[1] == 0:
                                         monk_staggered_damage_list1 = [staggered_damage, 3]
                                     else:
-                                        if len(monk_staggered_damage_list2) == 0:
+                                        if monk_staggered_damage_list2[1] == 0:
                                             monk_staggered_damage_list2 = [staggered_damage, 3]
                                         else:
-                                            if len(monk_staggered_damage_list3) == 0:
+                                            if monk_staggered_damage_list3[1] == 0:
                                                 monk_staggered_damage_list3 = [staggered_damage, 3]
                                             else:
                                                 unstaggerable_damage = self.calculate_ai_damage(4, 2)
                                     staggered_damage_list = [0, 0, 0]
-                                    if len(monk_staggered_damage_list1) != 0:
+                                    if monk_staggered_damage_list1[1] != 0:
                                         staggered_damage_list[0] = monk_staggered_damage_list1[0]
-                                    if len(monk_staggered_damage_list2) != 0:
+                                    if monk_staggered_damage_list2[1] != 0:
                                         staggered_damage_list[1] = monk_staggered_damage_list2[0]
-                                    if len(monk_staggered_damage_list3) != 0:
+                                    if monk_staggered_damage_list3[1] != 0:
                                         staggered_damage_list[2] = monk_staggered_damage_list3[0]
-                                    champion4_hp = champion4_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3] + unstaggerable_damage)
-                                    champion4_lastRound_damageTaken = (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3] + unstaggerable_damage)
+                                    champion4_hp = champion4_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[2] + unstaggerable_damage)
+                                    champion4_lastRound_damageTaken = (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[2] + unstaggerable_damage)
                                     if champion4_hp < 0:
                                         champion4_hp = 0
                             else:
@@ -4616,6 +4644,10 @@ class GameFrame(tk.Frame):
                                 champion4_lastRound_damageTaken = self.calculate_ai_damage(4, 2)
                                 if champion4_hp < 0:
                                     champion4_hp = 0
+                            if champion4_thorns != 0:
+                                ai2_hp = ai2_hp - 200
+                            if ai2_hp < 0:
+                                ai2_hp = 0
                         elif taunter_counter == 5:
                             if len(champion5_guarded) != 0:
                                 guard_list = []
@@ -4631,16 +4663,12 @@ class GameFrame(tk.Frame):
                                     guard_list = sorted(guard_list, reverse=True)
                                     if guard_list[0] == 101:
                                         ai2_hp = ai2_hp - ai2_attack[1]
-                                        if champion5_thorns[0] == 1:
-                                            ai2_hp = ai2_hp - 200
-                                        if ai2_hp < 0:
-                                            ai2_hp = 0
                                     if guard_list[0] == 100:
                                         champion5_hp = champion5_hp
                                     if guard_list[0] == 99:
                                         bodyguard_counter = 1
                                         for champions in CHAMPION_LIST:
-                                            if champions == VETERAN_BODYGUARD.name:
+                                            if champions == VETERAN_BODYGUARD.title:
                                                 break
                                             bodyguard_counter += 1
                                         if bodyguard_counter == 1:
@@ -4668,28 +4696,28 @@ class GameFrame(tk.Frame):
                                             champion5_lastRound_damageTaken = self.calculate_ai_damage(5, 2)
                                             if champion5_hp < 0:
                                                 champion5_hp = 0
-                            elif CHAMPION_LIST[4] == MONK.name:
+                            elif CHAMPION_LIST[4] == MONK.title:
                                     staggered_damage = (self.calculate_ai_damage(5, 2) / 3)
                                     unstaggerable_damage = 0
-                                    if len(monk_staggered_damage_list1) == 0:
+                                    if monk_staggered_damage_list1[1] == 0:
                                         monk_staggered_damage_list1 = [staggered_damage, 3]
                                     else:
-                                        if len(monk_staggered_damage_list2) == 0:
+                                        if monk_staggered_damage_list2[1] == 0:
                                             monk_staggered_damage_list2 = [staggered_damage, 3]
                                         else:
-                                            if len(monk_staggered_damage_list3) == 0:
+                                            if monk_staggered_damage_list3[1] == 0:
                                                 monk_staggered_damage_list3 = [staggered_damage, 3]
                                             else:
                                                 unstaggerable_damage = self.calculate_ai_damage(5, 2)
                                     staggered_damage_list = [0, 0, 0]
-                                    if len(monk_staggered_damage_list1) != 0:
+                                    if monk_staggered_damage_list1[1] != 0:
                                         staggered_damage_list[0] = monk_staggered_damage_list1[0]
-                                    if len(monk_staggered_damage_list2) != 0:
+                                    if monk_staggered_damage_list2[1] != 0:
                                         staggered_damage_list[1] = monk_staggered_damage_list2[0]
-                                    if len(monk_staggered_damage_list3) != 0:
+                                    if monk_staggered_damage_list3[1] != 0:
                                         staggered_damage_list[2] = monk_staggered_damage_list3[0]
-                                    champion5_hp = champion5_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3] + unstaggerable_damage)
-                                    champion5_lastRound_damageTaken = (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3] + unstaggerable_damage)
+                                    champion5_hp = champion5_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[2] + unstaggerable_damage)
+                                    champion5_lastRound_damageTaken = (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[2] + unstaggerable_damage)
                                     if champion5_hp < 0:
                                         champion5_hp = 0
                             else:
@@ -4697,7 +4725,10 @@ class GameFrame(tk.Frame):
                                 champion5_lastRound_damageTaken = self.calculate_ai_damage(5, 2)
                                 if champion5_hp < 0:
                                     champion5_hp = 0
-                        ai2_taunt[1] = ai2_taunt[1] - 1
+                            if champion5_thorns != 0:
+                                ai2_hp = ai2_hp - 200
+                            if ai2_hp < 0:
+                                ai2_hp = 0
                     else:
                         if "Everyone" in ai2_attack_intention:
                             if champion1_hp != 0:
@@ -4715,16 +4746,12 @@ class GameFrame(tk.Frame):
                                         guard_list = sorted(guard_list, reverse=True)
                                         if guard_list[0] == 101:
                                             ai2_hp = ai2_hp - ai2_attack[1]
-                                            if champion5_thorns[0] == 1:
-                                                ai2_hp = ai2_hp - 200
-                                            if ai2_hp < 0:
-                                                ai2_hp = 0
                                         if guard_list[0] == 100:
                                             champion1_hp = champion1_hp
                                         if guard_list[0] == 99:
                                             bodyguard_counter = 1
                                             for champions in CHAMPION_LIST:
-                                                if champions == VETERAN_BODYGUARD.name:
+                                                if champions == VETERAN_BODYGUARD.title:
                                                     break
                                                 bodyguard_counter += 1
                                             if bodyguard_counter == 1:
@@ -4752,28 +4779,28 @@ class GameFrame(tk.Frame):
                                                 champion5_lastRound_damageTaken = self.calculate_ai_damage(5, 2)
                                                 if champion5_hp < 0:
                                                     champion5_hp = 0
-                                elif CHAMPION_LIST[0] == MONK.name:
+                                elif CHAMPION_LIST[0] == MONK.title:
                                     staggered_damage = (self.calculate_ai_damage(1, 2) / 3)
                                     unstaggerable_damage = 0
-                                    if len(monk_staggered_damage_list1) == 0:
+                                    if monk_staggered_damage_list1[1] == 0:
                                         monk_staggered_damage_list1 = [staggered_damage, 3]
                                     else:
-                                        if len(monk_staggered_damage_list2) == 0:
+                                        if monk_staggered_damage_list2[1] == 0:
                                             monk_staggered_damage_list2 = [staggered_damage, 3]
                                         else:
-                                            if len(monk_staggered_damage_list3) == 0:
+                                            if monk_staggered_damage_list3[1] == 0:
                                                 monk_staggered_damage_list3 = [staggered_damage, 3]
                                             else:
                                                 unstaggerable_damage = self.calculate_ai_damage(1, 2)
                                     staggered_damage_list = [0, 0, 0]
-                                    if len(monk_staggered_damage_list1) != 0:
+                                    if monk_staggered_damage_list1[1] != 0:
                                         staggered_damage_list[0] = monk_staggered_damage_list1[0]
-                                    if len(monk_staggered_damage_list2) != 0:
+                                    if monk_staggered_damage_list2[1] != 0:
                                         staggered_damage_list[1] = monk_staggered_damage_list2[0]
-                                    if len(monk_staggered_damage_list3) != 0:
+                                    if monk_staggered_damage_list3[1] != 0:
                                         staggered_damage_list[2] = monk_staggered_damage_list3[0]
-                                    champion1_hp = champion1_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3] + unstaggerable_damage)
-                                    champion1_lastRound_damageTaken = (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3] + unstaggerable_damage)
+                                    champion1_hp = champion1_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[2] + unstaggerable_damage)
+                                    champion1_lastRound_damageTaken = (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[2] + unstaggerable_damage)
                                     if champion1_hp < 0:
                                         champion1_hp = 0
                                 else:
@@ -4781,6 +4808,10 @@ class GameFrame(tk.Frame):
                                     champion1_lastRound_damageTaken = self.calculate_ai_damage(1, 2)
                                     if champion1_hp < 0:
                                         champion1_hp = 0
+                                if champion1_thorns != 0:
+                                    ai2_hp = ai2_hp - 200
+                                if ai2_hp < 0:
+                                    ai2_hp = 0
                             if champion2_hp != 0:
                                 if len(champion2_guarded) != 0:
                                     guard_list = []
@@ -4796,16 +4827,12 @@ class GameFrame(tk.Frame):
                                         guard_list = sorted(guard_list, reverse=True)
                                         if guard_list[0] == 101:
                                             ai2_hp = ai2_hp - ai2_attack[1]
-                                            if champion5_thorns[0] == 1:
-                                                ai2_hp = ai2_hp - 200
-                                            if ai2_hp < 0:
-                                                ai2_hp = 0
                                         if guard_list[0] == 100:
                                             champion2_hp = champion2_hp
                                         if guard_list[0] == 99:
                                             bodyguard_counter = 1
                                             for champions in CHAMPION_LIST:
-                                                if champions == VETERAN_BODYGUARD.name:
+                                                if champions == VETERAN_BODYGUARD.title:
                                                     break
                                                 bodyguard_counter += 1
                                             if bodyguard_counter == 1:
@@ -4833,28 +4860,28 @@ class GameFrame(tk.Frame):
                                                 champion5_lastRound_damageTaken = self.calculate_ai_damage(5, 2)
                                                 if champion5_hp < 0:
                                                     champion5_hp = 0
-                                elif CHAMPION_LIST[1] == MONK.name:
+                                elif CHAMPION_LIST[1] == MONK.title:
                                     staggered_damage = (self.calculate_ai_damage(2, 2) / 3)
                                     unstaggerable_damage = 0
-                                    if len(monk_staggered_damage_list1) == 0:
+                                    if monk_staggered_damage_list1[1] == 0:
                                         monk_staggered_damage_list1 = [staggered_damage, 3]
                                     else:
-                                        if len(monk_staggered_damage_list2) == 0:
+                                        if monk_staggered_damage_list2[1] == 0:
                                             monk_staggered_damage_list2 = [staggered_damage, 3]
                                         else:
-                                            if len(monk_staggered_damage_list3) == 0:
+                                            if monk_staggered_damage_list3[1] == 0:
                                                 monk_staggered_damage_list3 = [staggered_damage, 3]
                                             else:
                                                 unstaggerable_damage = self.calculate_ai_damage(2, 2)
                                     staggered_damage_list = [0, 0, 0]
-                                    if len(monk_staggered_damage_list1) != 0:
+                                    if monk_staggered_damage_list1[1] != 0:
                                         staggered_damage_list[0] = monk_staggered_damage_list1[0]
-                                    if len(monk_staggered_damage_list2) != 0:
+                                    if monk_staggered_damage_list2[1] != 0:
                                         staggered_damage_list[1] = monk_staggered_damage_list2[0]
-                                    if len(monk_staggered_damage_list3) != 0:
+                                    if monk_staggered_damage_list3[1] != 0:
                                         staggered_damage_list[2] = monk_staggered_damage_list3[0]
-                                    champion2_hp = champion2_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3] + unstaggerable_damage)
-                                    champion2_lastRound_damageTaken = (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3] + unstaggerable_damage)
+                                    champion2_hp = champion2_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[2] + unstaggerable_damage)
+                                    champion2_lastRound_damageTaken = (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[2] + unstaggerable_damage)
                                     if champion2_hp < 0:
                                         champion2_hp = 0
                                 else:
@@ -4862,6 +4889,10 @@ class GameFrame(tk.Frame):
                                     champion2_lastRound_damageTaken = self.calculate_ai_damage(2, 2)
                                     if champion2_hp < 0:
                                         champion2_hp = 0
+                                if champion2_thorns != 0:
+                                    ai2_hp = ai2_hp - 200
+                                if ai2_hp < 0:
+                                    ai2_hp = 0
                             if champion3_hp != 0:
                                 if len(champion3_guarded) != 0:
                                     guard_list = []
@@ -4877,16 +4908,12 @@ class GameFrame(tk.Frame):
                                         guard_list = sorted(guard_list, reverse=True)
                                         if guard_list[0] == 101:
                                             ai2_hp = ai2_hp - ai2_attack[1]
-                                            if champion5_thorns[0] == 1:
-                                                ai2_hp = ai2_hp - 200
-                                            if ai2_hp < 0:
-                                                ai2_hp = 0
                                         if guard_list[0] == 100:
                                             champion3_hp = champion3_hp
                                         if guard_list[0] == 99:
                                             bodyguard_counter = 1
                                             for champions in CHAMPION_LIST:
-                                                if champions == VETERAN_BODYGUARD.name:
+                                                if champions == VETERAN_BODYGUARD.title:
                                                     break
                                                 bodyguard_counter += 1
                                             if bodyguard_counter == 1:
@@ -4914,28 +4941,28 @@ class GameFrame(tk.Frame):
                                                 champion5_lastRound_damageTaken = self.calculate_ai_damage(5, 2)
                                                 if champion5_hp < 0:
                                                     champion5_hp = 0
-                                elif CHAMPION_LIST[2] == MONK.name:
+                                elif CHAMPION_LIST[2] == MONK.title:
                                     staggered_damage = (self.calculate_ai_damage(3, 2) / 3)
                                     unstaggerable_damage = 0
-                                    if len(monk_staggered_damage_list1) == 0:
+                                    if monk_staggered_damage_list1[1] == 0:
                                         monk_staggered_damage_list1 = [staggered_damage, 3]
                                     else:
-                                        if len(monk_staggered_damage_list2) == 0:
+                                        if monk_staggered_damage_list2[1] == 0:
                                             monk_staggered_damage_list2 = [staggered_damage, 3]
                                         else:
-                                            if len(monk_staggered_damage_list3) == 0:
+                                            if monk_staggered_damage_list3[1] == 0:
                                                 monk_staggered_damage_list3 = [staggered_damage, 3]
                                             else:
                                                 unstaggerable_damage = self.calculate_ai_damage(3, 2)
                                     staggered_damage_list = [0, 0, 0]
-                                    if len(monk_staggered_damage_list1) != 0:
+                                    if monk_staggered_damage_list1[1] != 0:
                                         staggered_damage_list[0] = monk_staggered_damage_list1[0]
-                                    if len(monk_staggered_damage_list2) != 0:
+                                    if monk_staggered_damage_list2[1] != 0:
                                         staggered_damage_list[1] = monk_staggered_damage_list2[0]
-                                    if len(monk_staggered_damage_list3) != 0:
+                                    if monk_staggered_damage_list3[1] != 0:
                                         staggered_damage_list[2] = monk_staggered_damage_list3[0]
-                                    champion3_hp = champion3_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3] + unstaggerable_damage)
-                                    champion3_lastRound_damageTaken = (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3] + unstaggerable_damage)
+                                    champion3_hp = champion3_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[2] + unstaggerable_damage)
+                                    champion3_lastRound_damageTaken = (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[2] + unstaggerable_damage)
                                     if champion3_hp < 0:
                                         champion3_hp = 0
                                 else:
@@ -4943,6 +4970,10 @@ class GameFrame(tk.Frame):
                                     champion3_lastRound_damageTaken = self.calculate_ai_damage(3, 2)
                                     if champion3_hp < 0:
                                         champion3_hp = 0
+                                if champion3_thorns != 0:
+                                    ai2_hp = ai2_hp - 200
+                                if ai2_hp < 0:
+                                    ai2_hp = 0
                             if champion4_hp != 0:
                                 if len(champion4_guarded) != 0:
                                     guard_list = []
@@ -4958,7 +4989,7 @@ class GameFrame(tk.Frame):
                                         guard_list = sorted(guard_list, reverse=True)
                                         if guard_list[0] == 101:
                                             ai2_hp = ai2_hp - ai2_attack[1]
-                                            if champion5_thorns[0] == 1:
+                                            if champion4_thorns != 0:
                                                 ai2_hp = ai2_hp - 200
                                             if ai2_hp < 0:
                                                 ai2_hp = 0
@@ -4967,7 +4998,7 @@ class GameFrame(tk.Frame):
                                         if guard_list[0] == 99:
                                             bodyguard_counter = 1
                                             for champions in CHAMPION_LIST:
-                                                if champions == VETERAN_BODYGUARD.name:
+                                                if champions == VETERAN_BODYGUARD.title:
                                                     break
                                                 bodyguard_counter += 1
                                             if bodyguard_counter == 1:
@@ -4995,28 +5026,28 @@ class GameFrame(tk.Frame):
                                                 champion5_lastRound_damageTaken = self.calculate_ai_damage(5, 2)
                                                 if champion5_hp < 0:
                                                     champion5_hp = 0
-                                elif CHAMPION_LIST[3] == MONK.name:
+                                elif CHAMPION_LIST[3] == MONK.title:
                                     staggered_damage = (self.calculate_ai_damage(4, 2) / 3)
                                     unstaggerable_damage = 0
-                                    if len(monk_staggered_damage_list1) == 0:
+                                    if monk_staggered_damage_list1[1] == 0:
                                         monk_staggered_damage_list1 = [staggered_damage, 3]
                                     else:
-                                        if len(monk_staggered_damage_list2) == 0:
+                                        if monk_staggered_damage_list2[1] == 0:
                                             monk_staggered_damage_list2 = [staggered_damage, 3]
                                         else:
-                                            if len(monk_staggered_damage_list3) == 0:
+                                            if monk_staggered_damage_list3[1] == 0:
                                                 monk_staggered_damage_list3 = [staggered_damage, 3]
                                             else:
                                                 unstaggerable_damage = self.calculate_ai_damage(4, 2)
                                     staggered_damage_list = [0, 0, 0]
-                                    if len(monk_staggered_damage_list1) != 0:
+                                    if monk_staggered_damage_list1[1] != 0:
                                         staggered_damage_list[0] = monk_staggered_damage_list1[0]
-                                    if len(monk_staggered_damage_list2) != 0:
+                                    if monk_staggered_damage_list2[1] != 0:
                                         staggered_damage_list[1] = monk_staggered_damage_list2[0]
-                                    if len(monk_staggered_damage_list3) != 0:
+                                    if monk_staggered_damage_list3[1] != 0:
                                         staggered_damage_list[2] = monk_staggered_damage_list3[0]
-                                    champion4_hp = champion4_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3] + unstaggerable_damage)
-                                    champion4_lastRound_damageTaken = (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3] + unstaggerable_damage)
+                                    champion4_hp = champion4_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[2] + unstaggerable_damage)
+                                    champion4_lastRound_damageTaken = (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[2] + unstaggerable_damage)
                                     if champion4_hp < 0:
                                         champion4_hp = 0
                                 else:
@@ -5024,6 +5055,10 @@ class GameFrame(tk.Frame):
                                     champion4_lastRound_damageTaken = self.calculate_ai_damage(4, 2)
                                     if champion4_hp < 0:
                                         champion4_hp = 0
+                                if champion4_thorns != 0:
+                                    ai2_hp = ai2_hp - 200
+                                if ai2_hp < 0:
+                                    ai2_hp = 0
                             if champion5_hp != 0:
                                 if len(champion5_guarded) != 0:
                                     guard_list = []
@@ -5039,16 +5074,12 @@ class GameFrame(tk.Frame):
                                         guard_list = sorted(guard_list, reverse=True)
                                         if guard_list[0] == 101:
                                             ai2_hp = ai2_hp - ai2_attack[1]
-                                            if champion5_thorns[0] == 1:
-                                                ai2_hp = ai2_hp - 200
-                                            if ai2_hp < 0:
-                                                ai2_hp = 0
                                         if guard_list[0] == 100:
                                             champion5_hp = champion5_hp
                                         if guard_list[0] == 99:
                                             bodyguard_counter = 1
                                             for champions in CHAMPION_LIST:
-                                                if champions == VETERAN_BODYGUARD.name:
+                                                if champions == VETERAN_BODYGUARD.title:
                                                     break
                                                 bodyguard_counter += 1
                                             if bodyguard_counter == 1:
@@ -5076,28 +5107,28 @@ class GameFrame(tk.Frame):
                                                 champion5_lastRound_damageTaken = self.calculate_ai_damage(5, 2)
                                                 if champion5_hp < 0:
                                                     champion5_hp = 0
-                                elif CHAMPION_LIST[4] == MONK.name:
+                                elif CHAMPION_LIST[4] == MONK.title:
                                     staggered_damage = (self.calculate_ai_damage(5, 2) / 3)
                                     unstaggerable_damage = 0
-                                    if len(monk_staggered_damage_list1) == 0:
+                                    if monk_staggered_damage_list1[1] == 0:
                                         monk_staggered_damage_list1 = [staggered_damage, 3]
                                     else:
-                                        if len(monk_staggered_damage_list2) == 0:
+                                        if monk_staggered_damage_list2[1] == 0:
                                             monk_staggered_damage_list2 = [staggered_damage, 3]
                                         else:
-                                            if len(monk_staggered_damage_list3) == 0:
+                                            if monk_staggered_damage_list3[1] == 0:
                                                 monk_staggered_damage_list3 = [staggered_damage, 3]
                                             else:
                                                 unstaggerable_damage = self.calculate_ai_damage(5, 2)
                                     staggered_damage_list = [0, 0, 0]
-                                    if len(monk_staggered_damage_list1) != 0:
+                                    if monk_staggered_damage_list1[1] != 0:
                                         staggered_damage_list[0] = monk_staggered_damage_list1[0]
-                                    if len(monk_staggered_damage_list2) != 0:
+                                    if monk_staggered_damage_list2[1] != 0:
                                         staggered_damage_list[1] = monk_staggered_damage_list2[0]
-                                    if len(monk_staggered_damage_list3) != 0:
+                                    if monk_staggered_damage_list3[1] != 0:
                                         staggered_damage_list[2] = monk_staggered_damage_list3[0]
-                                    champion5_hp = champion5_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3] + unstaggerable_damage)
-                                    champion5_lastRound_damageTaken = (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3] + unstaggerable_damage)
+                                    champion5_hp = champion5_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[2] + unstaggerable_damage)
+                                    champion5_lastRound_damageTaken = (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[2] + unstaggerable_damage)
                                     if champion5_hp < 0:
                                         champion5_hp = 0
                                 else:
@@ -5105,6 +5136,10 @@ class GameFrame(tk.Frame):
                                     champion5_lastRound_damageTaken = self.calculate_ai_damage(5, 2)
                                     if champion5_hp < 0:
                                         champion5_hp = 0
+                                if champion5_thorns != 0:
+                                    ai2_hp = ai2_hp - 200
+                                if ai2_hp < 0:
+                                    ai2_hp = 0
                         else:
                             for indiv_champion in CHAMPION_LIST:
                                 if indiv_champion in ai2_attack_intention:
@@ -5128,16 +5163,12 @@ class GameFrame(tk.Frame):
                                                 guard_list = sorted(guard_list, reverse=True)
                                                 if guard_list[0] == 101:
                                                     ai2_hp = ai2_hp - ai2_attack[1]
-                                                    if champion5_thorns[0] == 1:
-                                                        ai2_hp = ai2_hp - 200
-                                                    if ai2_hp < 0:
-                                                        ai2_hp = 0
                                                 if guard_list[0] == 100:
                                                     champion1_hp = champion1_hp
                                                 if guard_list[0] == 99:
                                                     bodyguard_counter = 1
                                                     for champions in CHAMPION_LIST:
-                                                        if champions == VETERAN_BODYGUARD.name:
+                                                        if champions == VETERAN_BODYGUARD.title:
                                                             break
                                                         bodyguard_counter += 1
                                                     if bodyguard_counter == 1:
@@ -5165,28 +5196,28 @@ class GameFrame(tk.Frame):
                                                         champion5_lastRound_damageTaken = self.calculate_ai_damage(5, 2)
                                                         if champion5_hp < 0:
                                                             champion5_hp = 0
-                                        elif CHAMPION_LIST[0] == MONK.name:
+                                        elif CHAMPION_LIST[0] == MONK.title:
                                             staggered_damage = (self.calculate_ai_damage(1, 2) / 3)
                                             unstaggerable_damage = 0
-                                            if len(monk_staggered_damage_list1) == 0:
+                                            if monk_staggered_damage_list1[1] == 0:
                                                 monk_staggered_damage_list1 = [staggered_damage, 3]
                                             else:
-                                                if len(monk_staggered_damage_list2) == 0:
+                                                if monk_staggered_damage_list2[1] == 0:
                                                     monk_staggered_damage_list2 = [staggered_damage, 3]
                                                 else:
-                                                    if len(monk_staggered_damage_list3) == 0:
+                                                    if monk_staggered_damage_list3[1] == 0:
                                                         monk_staggered_damage_list3 = [staggered_damage, 3]
                                                     else:
                                                         unstaggerable_damage = self.calculate_ai_damage(1, 2)
                                             staggered_damage_list = [0, 0, 0]
-                                            if len(monk_staggered_damage_list1) != 0:
+                                            if monk_staggered_damage_list1[1] != 0:
                                                 staggered_damage_list[0] = monk_staggered_damage_list1[0]
-                                            if len(monk_staggered_damage_list2) != 0:
+                                            if monk_staggered_damage_list2[1] != 0:
                                                 staggered_damage_list[1] = monk_staggered_damage_list2[0]
-                                            if len(monk_staggered_damage_list3) != 0:
+                                            if monk_staggered_damage_list3[1] != 0:
                                                 staggered_damage_list[2] = monk_staggered_damage_list3[0]
-                                            champion1_hp = champion1_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3] + unstaggerable_damage)
-                                            champion1_lastRound_damageTaken = (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3] + unstaggerable_damage)
+                                            champion1_hp = champion1_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[2] + unstaggerable_damage)
+                                            champion1_lastRound_damageTaken = (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[2] + unstaggerable_damage)
                                             if champion1_hp < 0:
                                                 champion1_hp = 0
                                         else:
@@ -5194,6 +5225,10 @@ class GameFrame(tk.Frame):
                                             champion1_lastRound_damageTaken = self.calculate_ai_damage(1, 2)
                                             if champion1_hp < 0:
                                                 champion1_hp = 0
+                                        if champion1_thorns != 0:
+                                            ai2_hp = ai2_hp - 200
+                                        if ai2_hp < 0:
+                                            ai2_hp = 0
                                     if counter == 2:
                                         if len(champion2_guarded) != 0:
                                             guard_list = []
@@ -5209,16 +5244,12 @@ class GameFrame(tk.Frame):
                                                 guard_list = sorted(guard_list, reverse=True)
                                                 if guard_list[0] == 101:
                                                     ai2_hp = ai2_hp - ai2_attack[1]
-                                                    if champion5_thorns[0] == 1:
-                                                        ai2_hp = ai2_hp - 200
-                                                    if ai2_hp < 0:
-                                                        ai2_hp = 0
                                                 if guard_list[0] == 100:
                                                     champion2_hp = champion2_hp
                                                 if guard_list[0] == 99:
                                                     bodyguard_counter = 1
                                                     for champions in CHAMPION_LIST:
-                                                        if champions == VETERAN_BODYGUARD.name:
+                                                        if champions == VETERAN_BODYGUARD.title:
                                                             break
                                                         bodyguard_counter += 1
                                                     if bodyguard_counter == 1:
@@ -5246,28 +5277,28 @@ class GameFrame(tk.Frame):
                                                         champion5_lastRound_damageTaken = self.calculate_ai_damage(5, 2)
                                                         if champion5_hp < 0:
                                                             champion5_hp = 0
-                                        elif CHAMPION_LIST[1] == MONK.name:
+                                        elif CHAMPION_LIST[1] == MONK.title:
                                             staggered_damage = (self.calculate_ai_damage(2, 2) / 3)
                                             unstaggerable_damage = 0
-                                            if len(monk_staggered_damage_list1) == 0:
+                                            if monk_staggered_damage_list1[1] == 0:
                                                 monk_staggered_damage_list1 = [staggered_damage, 3]
                                             else:
-                                                if len(monk_staggered_damage_list2) == 0:
+                                                if monk_staggered_damage_list2[1] == 0:
                                                     monk_staggered_damage_list2 = [staggered_damage, 3]
                                                 else:
-                                                    if len(monk_staggered_damage_list3) == 0:
+                                                    if monk_staggered_damage_list3[1] == 0:
                                                         monk_staggered_damage_list3 = [staggered_damage, 3]
                                                     else:
                                                         unstaggerable_damage = self.calculate_ai_damage(2, 2)
                                             staggered_damage_list = [0, 0, 0]
-                                            if len(monk_staggered_damage_list1) != 0:
+                                            if monk_staggered_damage_list1[1] != 0:
                                                 staggered_damage_list[0] = monk_staggered_damage_list1[0]
-                                            if len(monk_staggered_damage_list2) != 0:
+                                            if monk_staggered_damage_list2[1] != 0:
                                                 staggered_damage_list[1] = monk_staggered_damage_list2[0]
-                                            if len(monk_staggered_damage_list3) != 0:
+                                            if monk_staggered_damage_list3[1] != 0:
                                                 staggered_damage_list[2] = monk_staggered_damage_list3[0]
-                                            champion2_hp = champion2_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3] + unstaggerable_damage)
-                                            champion2_lastRound_damageTaken = (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3] + unstaggerable_damage)
+                                            champion2_hp = champion2_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[2] + unstaggerable_damage)
+                                            champion2_lastRound_damageTaken = (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[2] + unstaggerable_damage)
                                             if champion2_hp < 0:
                                                 champion2_hp = 0
                                         else:
@@ -5275,6 +5306,10 @@ class GameFrame(tk.Frame):
                                             champion2_lastRound_damageTaken = self.calculate_ai_damage(2, 2)
                                             if champion2_hp < 0:
                                                 champion2_hp = 0
+                                        if champion2_thorns != 0:
+                                            ai2_hp = ai2_hp - 200
+                                        if ai2_hp < 0:
+                                            ai2_hp = 0
                                     if counter == 3:
                                         if len(champion3_guarded) != 0:
                                             guard_list = []
@@ -5290,16 +5325,12 @@ class GameFrame(tk.Frame):
                                                 guard_list = sorted(guard_list, reverse=True)
                                                 if guard_list[0] == 101:
                                                     ai2_hp = ai2_hp - ai2_attack[1]
-                                                    if champion5_thorns[0] == 1:
-                                                        ai2_hp = ai2_hp - 200
-                                                    if ai2_hp < 0:
-                                                        ai2_hp = 0
                                                 if guard_list[0] == 100:
                                                     champion3_hp = champion3_hp
                                                 if guard_list[0] == 99:
                                                     bodyguard_counter = 1
                                                     for champions in CHAMPION_LIST:
-                                                        if champions == VETERAN_BODYGUARD.name:
+                                                        if champions == VETERAN_BODYGUARD.title:
                                                             break
                                                         bodyguard_counter += 1
                                                     if bodyguard_counter == 1:
@@ -5327,28 +5358,28 @@ class GameFrame(tk.Frame):
                                                         champion5_lastRound_damageTaken = self.calculate_ai_damage(5, 2)
                                                         if champion5_hp < 0:
                                                             champion5_hp = 0
-                                        elif CHAMPION_LIST[2] == MONK.name:
+                                        elif CHAMPION_LIST[2] == MONK.title:
                                             staggered_damage = (self.calculate_ai_damage(3, 2) / 3)
                                             unstaggerable_damage = 0
-                                            if len(monk_staggered_damage_list1) == 0:
+                                            if monk_staggered_damage_list1[1] == 0:
                                                 monk_staggered_damage_list1 = [staggered_damage, 3]
                                             else:
-                                                if len(monk_staggered_damage_list2) == 0:
+                                                if monk_staggered_damage_list2[1] == 0:
                                                     monk_staggered_damage_list2 = [staggered_damage, 3]
                                                 else:
-                                                    if len(monk_staggered_damage_list3) == 0:
+                                                    if monk_staggered_damage_list3[1] == 0:
                                                         monk_staggered_damage_list3 = [staggered_damage, 3]
                                                     else:
                                                         unstaggerable_damage = self.calculate_ai_damage(3, 2)
                                             staggered_damage_list = [0, 0, 0]
-                                            if len(monk_staggered_damage_list1) != 0:
+                                            if monk_staggered_damage_list1[1] != 0:
                                                 staggered_damage_list[0] = monk_staggered_damage_list1[0]
-                                            if len(monk_staggered_damage_list2) != 0:
+                                            if monk_staggered_damage_list2[1] != 0:
                                                 staggered_damage_list[1] = monk_staggered_damage_list2[0]
-                                            if len(monk_staggered_damage_list3) != 0:
+                                            if monk_staggered_damage_list3[1] != 0:
                                                 staggered_damage_list[2] = monk_staggered_damage_list3[0]
-                                            champion3_hp = champion3_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3] + unstaggerable_damage)
-                                            champion3_lastRound_damageTaken = (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3] + unstaggerable_damage)
+                                            champion3_hp = champion3_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[2] + unstaggerable_damage)
+                                            champion3_lastRound_damageTaken = (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[2] + unstaggerable_damage)
                                             if champion3_hp < 0:
                                                 champion3_hp = 0
                                         else:
@@ -5356,6 +5387,10 @@ class GameFrame(tk.Frame):
                                             champion3_lastRound_damageTaken = self.calculate_ai_damage(3, 2)
                                             if champion3_hp < 0:
                                                 champion3_hp = 0
+                                        if champion3_thorns != 0:
+                                            ai2_hp = ai2_hp - 200
+                                        if ai2_hp < 0:
+                                            ai2_hp = 0
                                     if counter == 4:
                                         if len(champion4_guarded) != 0:
                                             guard_list = []
@@ -5371,16 +5406,12 @@ class GameFrame(tk.Frame):
                                                 guard_list = sorted(guard_list, reverse=True)
                                                 if guard_list[0] == 101:
                                                     ai2_hp = ai2_hp - ai2_attack[1]
-                                                    if champion5_thorns[0] == 1:
-                                                        ai2_hp = ai2_hp - 200
-                                                    if ai2_hp < 0:
-                                                        ai2_hp = 0
                                                 if guard_list[0] == 100:
                                                     champion4_hp = champion4_hp
                                                 if guard_list[0] == 99:
                                                     bodyguard_counter = 1
                                                     for champions in CHAMPION_LIST:
-                                                        if champions == VETERAN_BODYGUARD.name:
+                                                        if champions == VETERAN_BODYGUARD.title:
                                                             break
                                                         bodyguard_counter += 1
                                                     if bodyguard_counter == 1:
@@ -5408,28 +5439,28 @@ class GameFrame(tk.Frame):
                                                         champion5_lastRound_damageTaken = self.calculate_ai_damage(5, 2)
                                                         if champion5_hp < 0:
                                                             champion5_hp = 0
-                                        elif CHAMPION_LIST[3] == MONK.name:
+                                        elif CHAMPION_LIST[3] == MONK.title:
                                             staggered_damage = (self.calculate_ai_damage(4, 2) / 3)
                                             unstaggerable_damage = 0
-                                            if len(monk_staggered_damage_list1) == 0:
+                                            if monk_staggered_damage_list1[1] == 0:
                                                 monk_staggered_damage_list1 = [staggered_damage, 3]
                                             else:
-                                                if len(monk_staggered_damage_list2) == 0:
+                                                if monk_staggered_damage_list2[1] == 0:
                                                     monk_staggered_damage_list2 = [staggered_damage, 3]
                                                 else:
-                                                    if len(monk_staggered_damage_list3) == 0:
+                                                    if monk_staggered_damage_list3[1] == 0:
                                                         monk_staggered_damage_list3 = [staggered_damage, 3]
                                                     else:
                                                         unstaggerable_damage = self.calculate_ai_damage(4, 2)
                                             staggered_damage_list = [0, 0, 0]
-                                            if len(monk_staggered_damage_list1) != 0:
+                                            if monk_staggered_damage_list1[1] != 0:
                                                 staggered_damage_list[0] = monk_staggered_damage_list1[0]
-                                            if len(monk_staggered_damage_list2) != 0:
+                                            if monk_staggered_damage_list2[1] != 0:
                                                 staggered_damage_list[1] = monk_staggered_damage_list2[0]
-                                            if len(monk_staggered_damage_list3) != 0:
+                                            if monk_staggered_damage_list3[1] != 0:
                                                 staggered_damage_list[2] = monk_staggered_damage_list3[0]
-                                            champion4_hp = champion4_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3] + unstaggerable_damage)
-                                            champion4_lastRound_damageTaken = (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3] + unstaggerable_damage)
+                                            champion4_hp = champion4_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[2] + unstaggerable_damage)
+                                            champion4_lastRound_damageTaken = (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[2] + unstaggerable_damage)
                                             if champion4_hp < 0:
                                                 champion4_hp = 0
                                         else:
@@ -5437,6 +5468,10 @@ class GameFrame(tk.Frame):
                                             champion4_lastRound_damageTaken = self.calculate_ai_damage(4, 2)
                                             if champion4_hp < 0:
                                                 champion4_hp = 0
+                                        if champion4_thorns != 0:
+                                            ai2_hp = ai2_hp - 200
+                                        if ai2_hp < 0:
+                                            ai2_hp = 0
                                     if counter == 5:
                                         if len(champion5_guarded) != 0:
                                             guard_list = []
@@ -5452,16 +5487,12 @@ class GameFrame(tk.Frame):
                                                 guard_list = sorted(guard_list, reverse=True)
                                                 if guard_list[0] == 101:
                                                     ai2_hp = ai2_hp - ai2_attack[1]
-                                                    if champion5_thorns[0] == 1:
-                                                        ai2_hp = ai2_hp - 200
-                                                    if ai2_hp < 0:
-                                                        ai2_hp = 0
                                                 if guard_list[0] == 100:
                                                     champion5_hp = champion5_hp
                                                 if guard_list[0] == 99:
                                                     bodyguard_counter = 1
                                                     for champions in CHAMPION_LIST:
-                                                        if champions == VETERAN_BODYGUARD.name:
+                                                        if champions == VETERAN_BODYGUARD.title:
                                                             break
                                                         bodyguard_counter += 1
                                                     if bodyguard_counter == 1:
@@ -5489,28 +5520,28 @@ class GameFrame(tk.Frame):
                                                         champion5_lastRound_damageTaken = self.calculate_ai_damage(5, 2)
                                                         if champion5_hp < 0:
                                                             champion5_hp = 0
-                                        elif CHAMPION_LIST[4] == MONK.name:
+                                        elif CHAMPION_LIST[4] == MONK.title:
                                             staggered_damage = (self.calculate_ai_damage(5, 2) / 3)
                                             unstaggerable_damage = 0
-                                            if len(monk_staggered_damage_list1) == 0:
+                                            if monk_staggered_damage_list1[1] == 0:
                                                 monk_staggered_damage_list1 = [staggered_damage, 3]
                                             else:
-                                                if len(monk_staggered_damage_list2) == 0:
+                                                if monk_staggered_damage_list2[1] == 0:
                                                     monk_staggered_damage_list2 = [staggered_damage, 3]
                                                 else:
-                                                    if len(monk_staggered_damage_list3) == 0:
+                                                    if monk_staggered_damage_list3[1] == 0:
                                                         monk_staggered_damage_list3 = [staggered_damage, 3]
                                                     else:
                                                         unstaggerable_damage = self.calculate_ai_damage(5, 2)
                                             staggered_damage_list = [0, 0, 0]
-                                            if len(monk_staggered_damage_list1) != 0:
+                                            if monk_staggered_damage_list1[1] != 0:
                                                 staggered_damage_list[0] = monk_staggered_damage_list1[0]
-                                            if len(monk_staggered_damage_list2) != 0:
+                                            if monk_staggered_damage_list2[1] != 0:
                                                 staggered_damage_list[1] = monk_staggered_damage_list2[0]
-                                            if len(monk_staggered_damage_list3) != 0:
+                                            if monk_staggered_damage_list3[1] != 0:
                                                 staggered_damage_list[2] = monk_staggered_damage_list3[0]
-                                            champion5_hp = champion5_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3] + unstaggerable_damage)
-                                            champion5_lastRound_damageTaken = (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3] + unstaggerable_damage)
+                                            champion5_hp = champion5_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[2] + unstaggerable_damage)
+                                            champion5_lastRound_damageTaken = (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[2] + unstaggerable_damage)
                                             if champion5_hp < 0:
                                                 champion5_hp = 0
                                         else:
@@ -5518,6 +5549,10 @@ class GameFrame(tk.Frame):
                                             champion5_lastRound_damageTaken = self.calculate_ai_damage(5, 2)
                                             if champion5_hp < 0:
                                                 champion5_hp = 0
+                                        if champion5_thorns != 0:
+                                            ai2_hp = ai2_hp - 200
+                                        if ai2_hp < 0:
+                                            ai2_hp = 0
                 if monster_var == 3:
                     if ai3_hp == 0:
                         continue
@@ -5573,16 +5608,12 @@ class GameFrame(tk.Frame):
                                     guard_list = sorted(guard_list, reverse=True)
                                     if guard_list[0] == 101:
                                         ai3_hp = ai3_hp - ai3_attack[1]
-                                        if champion1_thorns[0] == 1:
-                                            ai3_hp = ai3_hp - 200
-                                        if ai3_hp < 0:
-                                            ai3_hp = 0
                                     if guard_list[0] == 100:
                                         champion1_hp = champion1_hp
                                     if guard_list[0] == 99:
                                         bodyguard_counter = 1
                                         for champions in CHAMPION_LIST:
-                                            if champions == VETERAN_BODYGUARD.name:
+                                            if champions == VETERAN_BODYGUARD.title:
                                                 break
                                             bodyguard_counter += 1
                                         if bodyguard_counter == 1:
@@ -5610,28 +5641,28 @@ class GameFrame(tk.Frame):
                                             champion5_lastRound_damageTaken = self.calculate_ai_damage(5, 3)
                                             if champion5_hp < 0:
                                                 champion5_hp = 0
-                            elif CHAMPION_LIST[0] == MONK.name:
+                            elif CHAMPION_LIST[0] == MONK.title:
                                     staggered_damage = (self.calculate_ai_damage(1, 3) / 3)
                                     unstaggerable_damage = 0
-                                    if len(monk_staggered_damage_list1) == 0:
+                                    if monk_staggered_damage_list1[1] == 0:
                                         monk_staggered_damage_list1 = [staggered_damage, 3]
                                     else:
-                                        if len(monk_staggered_damage_list2) == 0:
+                                        if monk_staggered_damage_list2[1] == 0:
                                             monk_staggered_damage_list2 = [staggered_damage, 3]
                                         else:
-                                            if len(monk_staggered_damage_list3) == 0:
+                                            if monk_staggered_damage_list3[1] == 0:
                                                 monk_staggered_damage_list3 = [staggered_damage, 3]
                                             else:
                                                 unstaggerable_damage = self.calculate_ai_damage(1, 3)
                                     staggered_damage_list = [0, 0, 0]
-                                    if len(monk_staggered_damage_list1) != 0:
+                                    if monk_staggered_damage_list1[1] != 0:
                                         staggered_damage_list[0] = monk_staggered_damage_list1[0]
-                                    if len(monk_staggered_damage_list2) != 0:
+                                    if monk_staggered_damage_list2[1] != 0:
                                         staggered_damage_list[1] = monk_staggered_damage_list2[0]
-                                    if len(monk_staggered_damage_list3) != 0:
+                                    if monk_staggered_damage_list3[1] != 0:
                                         staggered_damage_list[2] = monk_staggered_damage_list3[0]
-                                    champion1_hp = champion1_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3] + unstaggerable_damage)
-                                    champion1_lastRound_damageTaken = (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3] + unstaggerable_damage)
+                                    champion1_hp = champion1_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[2] + unstaggerable_damage)
+                                    champion1_lastRound_damageTaken = (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[2] + unstaggerable_damage)
                                     if champion1_hp < 0:
                                         champion1_hp = 0
                             else:
@@ -5639,6 +5670,10 @@ class GameFrame(tk.Frame):
                                 champion1_lastRound_damageTaken = self.calculate_ai_damage(1, 3)
                                 if champion1_hp < 0:
                                     champion1_hp = 0
+                            if champion1_thorns != 0:
+                                ai3_hp = ai3_hp - 200
+                            if ai3_hp < 0:
+                                ai3_hp = 0
                         elif taunter_counter == 2:
                             if len(champion2_guarded) != 0:
                                 guard_list = []
@@ -5654,7 +5689,7 @@ class GameFrame(tk.Frame):
                                     guard_list = sorted(guard_list, reverse=True)
                                     if guard_list[0] == 101:
                                         ai3_hp = ai3_hp - ai3_attack[1]
-                                        if champion2_thorns[0] == 1:
+                                        if champion2_thorns != 0:
                                             ai3_hp = ai3_hp - 200
                                         if ai3_hp < 0:
                                             ai3_hp = 0
@@ -5663,7 +5698,7 @@ class GameFrame(tk.Frame):
                                     if guard_list[0] == 99:
                                         bodyguard_counter = 1
                                         for champions in CHAMPION_LIST:
-                                            if champions == VETERAN_BODYGUARD.name:
+                                            if champions == VETERAN_BODYGUARD.title:
                                                 break
                                             bodyguard_counter += 1
                                         if bodyguard_counter == 1:
@@ -5691,28 +5726,28 @@ class GameFrame(tk.Frame):
                                             champion5_lastRound_damageTaken = self.calculate_ai_damage(5, 3)
                                             if champion5_hp < 0:
                                                 champion5_hp = 0
-                            elif CHAMPION_LIST[1] == MONK.name:
+                            elif CHAMPION_LIST[1] == MONK.title:
                                     staggered_damage = (self.calculate_ai_damage(2, 3) / 3)
                                     unstaggerable_damage = 0
-                                    if len(monk_staggered_damage_list1) == 0:
+                                    if monk_staggered_damage_list1[1] == 0:
                                         monk_staggered_damage_list1 = [staggered_damage, 3]
                                     else:
-                                        if len(monk_staggered_damage_list2) == 0:
+                                        if monk_staggered_damage_list2[1] == 0:
                                             monk_staggered_damage_list2 = [staggered_damage, 3]
                                         else:
-                                            if len(monk_staggered_damage_list3) == 0:
+                                            if monk_staggered_damage_list3[1] == 0:
                                                 monk_staggered_damage_list3 = [staggered_damage, 3]
                                             else:
                                                 unstaggerable_damage = self.calculate_ai_damage(2, 3)
                                     staggered_damage_list = [0, 0, 0]
-                                    if len(monk_staggered_damage_list1) != 0:
+                                    if monk_staggered_damage_list1[1] != 0:
                                         staggered_damage_list[0] = monk_staggered_damage_list1[0]
-                                    if len(monk_staggered_damage_list2) != 0:
+                                    if monk_staggered_damage_list2[1] != 0:
                                         staggered_damage_list[1] = monk_staggered_damage_list2[0]
-                                    if len(monk_staggered_damage_list3) != 0:
+                                    if monk_staggered_damage_list3[1] != 0:
                                         staggered_damage_list[2] = monk_staggered_damage_list3[0]
-                                    champion2_hp = champion2_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3] + unstaggerable_damage)
-                                    champion2_lastRound_damageTaken = (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3] + unstaggerable_damage)
+                                    champion2_hp = champion2_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[2] + unstaggerable_damage)
+                                    champion2_lastRound_damageTaken = (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[2] + unstaggerable_damage)
                                     if champion2_hp < 0:
                                         champion2_hp = 0
                             else:
@@ -5720,6 +5755,10 @@ class GameFrame(tk.Frame):
                                 champion2_lastRound_damageTaken = self.calculate_ai_damage(2, 3)
                                 if champion2_hp < 0:
                                     champion2_hp = 0
+                            if champion2_thorns != 0:
+                                ai3_hp = ai3_hp - 200
+                            if ai3_hp < 0:
+                                ai3_hp = 0
                         elif taunter_counter == 3:
                             if len(champion3_guarded) != 0:
                                 guard_list = []
@@ -5735,7 +5774,7 @@ class GameFrame(tk.Frame):
                                     guard_list = sorted(guard_list, reverse=True)
                                     if guard_list[0] == 101:
                                         ai3_hp = ai3_hp - ai3_attack[1]
-                                        if champion3_thorns[0] == 1:
+                                        if champion3_thorns != 0:
                                             ai3_hp = ai3_hp - 200
                                         if ai3_hp < 0:
                                             ai3_hp = 0
@@ -5744,7 +5783,7 @@ class GameFrame(tk.Frame):
                                     if guard_list[0] == 99:
                                         bodyguard_counter = 1
                                         for champions in CHAMPION_LIST:
-                                            if champions == VETERAN_BODYGUARD.name:
+                                            if champions == VETERAN_BODYGUARD.title:
                                                 break
                                             bodyguard_counter += 1
                                         if bodyguard_counter == 1:
@@ -5772,28 +5811,28 @@ class GameFrame(tk.Frame):
                                             champion5_lastRound_damageTaken = self.calculate_ai_damage(5, 3)
                                             if champion5_hp < 0:
                                                 champion5_hp = 0
-                            elif CHAMPION_LIST[2] == MONK.name:
+                            elif CHAMPION_LIST[2] == MONK.title:
                                     staggered_damage = (self.calculate_ai_damage(3, 3) / 3)
                                     unstaggerable_damage = 0
-                                    if len(monk_staggered_damage_list1) == 0:
+                                    if monk_staggered_damage_list1[1] == 0:
                                         monk_staggered_damage_list1 = [staggered_damage, 3]
                                     else:
-                                        if len(monk_staggered_damage_list2) == 0:
+                                        if monk_staggered_damage_list2[1] == 0:
                                             monk_staggered_damage_list2 = [staggered_damage, 3]
                                         else:
-                                            if len(monk_staggered_damage_list3) == 0:
+                                            if monk_staggered_damage_list3[1] == 0:
                                                 monk_staggered_damage_list3 = [staggered_damage, 3]
                                             else:
                                                 unstaggerable_damage = self.calculate_ai_damage(3, 3)
                                     staggered_damage_list = [0, 0, 0]
-                                    if len(monk_staggered_damage_list1) != 0:
+                                    if monk_staggered_damage_list1[1] != 0:
                                         staggered_damage_list[0] = monk_staggered_damage_list1[0]
-                                    if len(monk_staggered_damage_list2) != 0:
+                                    if monk_staggered_damage_list2[1] != 0:
                                         staggered_damage_list[1] = monk_staggered_damage_list2[0]
-                                    if len(monk_staggered_damage_list3) != 0:
+                                    if monk_staggered_damage_list3[1] != 0:
                                         staggered_damage_list[2] = monk_staggered_damage_list3[0]
-                                    champion3_hp = champion3_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3] + unstaggerable_damage)
-                                    champion3_lastRound_damageTaken = (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3] + unstaggerable_damage)
+                                    champion3_hp = champion3_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[2] + unstaggerable_damage)
+                                    champion3_lastRound_damageTaken = (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[2] + unstaggerable_damage)
                                     if champion3_hp < 0:
                                         champion3_hp = 0
                             else:
@@ -5801,6 +5840,10 @@ class GameFrame(tk.Frame):
                                 champion3_lastRound_damageTaken = self.calculate_ai_damage(3, 3)
                                 if champion3_hp < 0:
                                     champion3_hp = 0
+                        if champion3_thorns != 0:
+                            ai3_hp = ai3_hp - 200
+                        if ai3_hp < 0:
+                            ai3_hp = 0
                         elif taunter_counter == 4:
                             if len(champion4_guarded) != 0:
                                 guard_list = []
@@ -5816,7 +5859,7 @@ class GameFrame(tk.Frame):
                                     guard_list = sorted(guard_list, reverse=True)
                                     if guard_list[0] == 101:
                                         ai3_hp = ai3_hp - ai3_attack[1]
-                                        if champion4_thorns[0] == 1:
+                                        if champion4_thorns != 0:
                                             ai3_hp = ai3_hp - 200
                                         if ai3_hp < 0:
                                             ai3_hp = 0
@@ -5825,7 +5868,7 @@ class GameFrame(tk.Frame):
                                     if guard_list[0] == 99:
                                         bodyguard_counter = 1
                                         for champions in CHAMPION_LIST:
-                                            if champions == VETERAN_BODYGUARD.name:
+                                            if champions == VETERAN_BODYGUARD.title:
                                                 break
                                             bodyguard_counter += 1
                                         if bodyguard_counter == 1:
@@ -5853,28 +5896,28 @@ class GameFrame(tk.Frame):
                                             champion5_lastRound_damageTaken = self.calculate_ai_damage(5, 3)
                                             if champion5_hp < 0:
                                                 champion5_hp = 0
-                            elif CHAMPION_LIST[3] == MONK.name:
+                            elif CHAMPION_LIST[3] == MONK.title:
                                     staggered_damage = (self.calculate_ai_damage(4, 3) / 3)
                                     unstaggerable_damage = 0
-                                    if len(monk_staggered_damage_list1) == 0:
+                                    if monk_staggered_damage_list1[1] == 0:
                                         monk_staggered_damage_list1 = [staggered_damage, 3]
                                     else:
-                                        if len(monk_staggered_damage_list2) == 0:
+                                        if monk_staggered_damage_list2[1] == 0:
                                             monk_staggered_damage_list2 = [staggered_damage, 3]
                                         else:
-                                            if len(monk_staggered_damage_list3) == 0:
+                                            if monk_staggered_damage_list3[1] == 0:
                                                 monk_staggered_damage_list3 = [staggered_damage, 3]
                                             else:
                                                 unstaggerable_damage = self.calculate_ai_damage(4, 3)
                                     staggered_damage_list = [0, 0, 0]
-                                    if len(monk_staggered_damage_list1) != 0:
+                                    if monk_staggered_damage_list1[1] != 0:
                                         staggered_damage_list[0] = monk_staggered_damage_list1[0]
-                                    if len(monk_staggered_damage_list2) != 0:
+                                    if monk_staggered_damage_list2[1] != 0:
                                         staggered_damage_list[1] = monk_staggered_damage_list2[0]
-                                    if len(monk_staggered_damage_list3) != 0:
+                                    if monk_staggered_damage_list3[1] != 0:
                                         staggered_damage_list[2] = monk_staggered_damage_list3[0]
-                                    champion4_hp = champion4_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3] + unstaggerable_damage)
-                                    champion4_lastRound_damageTaken = (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3] + unstaggerable_damage)
+                                    champion4_hp = champion4_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[2] + unstaggerable_damage)
+                                    champion4_lastRound_damageTaken = (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[2] + unstaggerable_damage)
                                     if champion4_hp < 0:
                                         champion4_hp = 0
                             else:
@@ -5882,6 +5925,10 @@ class GameFrame(tk.Frame):
                                 champion4_lastRound_damageTaken = self.calculate_ai_damage(4, 3)
                                 if champion4_hp < 0:
                                     champion4_hp = 0
+                            if champion4_thorns != 0:
+                                ai3_hp = ai3_hp - 200
+                            if ai3_hp < 0:
+                                ai3_hp = 0
                         elif taunter_counter == 5:
                             if len(champion5_guarded) != 0:
                                 guard_list = []
@@ -5897,16 +5944,12 @@ class GameFrame(tk.Frame):
                                     guard_list = sorted(guard_list, reverse=True)
                                     if guard_list[0] == 101:
                                         ai3_hp = ai3_hp - ai3_attack[1]
-                                        if champion5_thorns[0] == 1:
-                                            ai3_hp = ai3_hp - 200
-                                        if ai3_hp < 0:
-                                            ai3_hp = 0
                                     if guard_list[0] == 100:
                                         champion5_hp = champion5_hp
                                     if guard_list[0] == 99:
                                         bodyguard_counter = 1
                                         for champions in CHAMPION_LIST:
-                                            if champions == VETERAN_BODYGUARD.name:
+                                            if champions == VETERAN_BODYGUARD.title:
                                                 break
                                             bodyguard_counter += 1
                                         if bodyguard_counter == 1:
@@ -5934,28 +5977,28 @@ class GameFrame(tk.Frame):
                                             champion5_lastRound_damageTaken = self.calculate_ai_damage(5, 3)
                                             if champion5_hp < 0:
                                                 champion5_hp = 0
-                            elif CHAMPION_LIST[4] == MONK.name:
+                            elif CHAMPION_LIST[4] == MONK.title:
                                     staggered_damage = (self.calculate_ai_damage(5, 3) / 3)
                                     unstaggerable_damage = 0
-                                    if len(monk_staggered_damage_list1) == 0:
+                                    if monk_staggered_damage_list1[1] == 0:
                                         monk_staggered_damage_list1 = [staggered_damage, 3]
                                     else:
-                                        if len(monk_staggered_damage_list2) == 0:
+                                        if monk_staggered_damage_list2[1] == 0:
                                             monk_staggered_damage_list2 = [staggered_damage, 3]
                                         else:
-                                            if len(monk_staggered_damage_list3) == 0:
+                                            if monk_staggered_damage_list3[1] == 0:
                                                 monk_staggered_damage_list3 = [staggered_damage, 3]
                                             else:
                                                 unstaggerable_damage = self.calculate_ai_damage(5, 3)
                                     staggered_damage_list = [0, 0, 0]
-                                    if len(monk_staggered_damage_list1) != 0:
+                                    if monk_staggered_damage_list1[1] != 0:
                                         staggered_damage_list[0] = monk_staggered_damage_list1[0]
-                                    if len(monk_staggered_damage_list2) != 0:
+                                    if monk_staggered_damage_list2[1] != 0:
                                         staggered_damage_list[1] = monk_staggered_damage_list2[0]
-                                    if len(monk_staggered_damage_list3) != 0:
+                                    if monk_staggered_damage_list3[1] != 0:
                                         staggered_damage_list[2] = monk_staggered_damage_list3[0]
-                                    champion5_hp = champion5_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3] + unstaggerable_damage)
-                                    champion5_lastRound_damageTaken = (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3] + unstaggerable_damage)
+                                    champion5_hp = champion5_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[2] + unstaggerable_damage)
+                                    champion5_lastRound_damageTaken = (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[2] + unstaggerable_damage)
                                     if champion5_hp < 0:
                                         champion5_hp = 0
                             else:
@@ -5963,7 +6006,10 @@ class GameFrame(tk.Frame):
                                 champion5_lastRound_damageTaken = self.calculate_ai_damage(5, 3)
                                 if champion5_hp < 0:
                                     champion5_hp = 0
-                        ai3_taunt[1] = ai3_taunt[1] - 1
+                            if champion5_thorns != 0:
+                                ai3_hp = ai3_hp - 200
+                            if ai3_hp < 0:
+                                ai3_hp = 0
                     else:
                         if "Everyone" in ai3_attack_intention:
                             if champion1_hp != 0:
@@ -5981,16 +6027,12 @@ class GameFrame(tk.Frame):
                                         guard_list = sorted(guard_list, reverse=True)
                                         if guard_list[0] == 101:
                                             ai3_hp = ai3_hp - ai3_attack[1]
-                                            if champion5_thorns[0] == 1:
-                                                ai3_hp = ai3_hp - 200
-                                            if ai3_hp < 0:
-                                                ai3_hp = 0
                                         if guard_list[0] == 100:
                                             champion1_hp = champion1_hp
                                         if guard_list[0] == 99:
                                             bodyguard_counter = 1
                                             for champions in CHAMPION_LIST:
-                                                if champions == VETERAN_BODYGUARD.name:
+                                                if champions == VETERAN_BODYGUARD.title:
                                                     break
                                                 bodyguard_counter += 1
                                             if bodyguard_counter == 1:
@@ -6018,28 +6060,28 @@ class GameFrame(tk.Frame):
                                                 champion5_lastRound_damageTaken = self.calculate_ai_damage(5, 3)
                                                 if champion5_hp < 0:
                                                     champion5_hp = 0
-                                elif CHAMPION_LIST[0] == MONK.name:
+                                elif CHAMPION_LIST[0] == MONK.title:
                                     staggered_damage = (self.calculate_ai_damage(1, 3) / 3)
                                     unstaggerable_damage = 0
-                                    if len(monk_staggered_damage_list1) == 0:
+                                    if monk_staggered_damage_list1[1] == 0:
                                         monk_staggered_damage_list1 = [staggered_damage, 3]
                                     else:
-                                        if len(monk_staggered_damage_list2) == 0:
+                                        if monk_staggered_damage_list2[1] == 0:
                                             monk_staggered_damage_list2 = [staggered_damage, 3]
                                         else:
-                                            if len(monk_staggered_damage_list3) == 0:
+                                            if monk_staggered_damage_list3[1] == 0:
                                                 monk_staggered_damage_list3 = [staggered_damage, 3]
                                             else:
                                                 unstaggerable_damage = self.calculate_ai_damage(1, 3)
                                     staggered_damage_list = [0, 0, 0]
-                                    if len(monk_staggered_damage_list1) != 0:
+                                    if monk_staggered_damage_list1[1] != 0:
                                         staggered_damage_list[0] = monk_staggered_damage_list1[0]
-                                    if len(monk_staggered_damage_list2) != 0:
+                                    if monk_staggered_damage_list2[1] != 0:
                                         staggered_damage_list[1] = monk_staggered_damage_list2[0]
-                                    if len(monk_staggered_damage_list3) != 0:
+                                    if monk_staggered_damage_list3[1] != 0:
                                         staggered_damage_list[2] = monk_staggered_damage_list3[0]
-                                    champion1_hp = champion1_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3] + unstaggerable_damage)
-                                    champion1_lastRound_damageTaken = (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3] + unstaggerable_damage)
+                                    champion1_hp = champion1_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[2] + unstaggerable_damage)
+                                    champion1_lastRound_damageTaken = (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[2] + unstaggerable_damage)
                                     if champion1_hp < 0:
                                         champion1_hp = 0
                                 else:
@@ -6047,6 +6089,10 @@ class GameFrame(tk.Frame):
                                     champion1_lastRound_damageTaken = self.calculate_ai_damage(1, 3)
                                     if champion1_hp < 0:
                                         champion1_hp = 0
+                                if champion1_thorns != 0:
+                                    ai3_hp = ai3_hp - 200
+                                if ai3_hp < 0:
+                                    ai3_hp = 0
                             if champion2_hp != 0:
                                 if len(champion2_guarded) != 0:
                                     guard_list = []
@@ -6062,16 +6108,12 @@ class GameFrame(tk.Frame):
                                         guard_list = sorted(guard_list, reverse=True)
                                         if guard_list[0] == 101:
                                             ai3_hp = ai3_hp - ai3_attack[1]
-                                            if champion5_thorns[0] == 1:
-                                                ai3_hp = ai3_hp - 200
-                                            if ai3_hp < 0:
-                                                ai3_hp = 0
                                         if guard_list[0] == 100:
                                             champion2_hp = champion2_hp
                                         if guard_list[0] == 99:
                                             bodyguard_counter = 1
                                             for champions in CHAMPION_LIST:
-                                                if champions == VETERAN_BODYGUARD.name:
+                                                if champions == VETERAN_BODYGUARD.title:
                                                     break
                                                 bodyguard_counter += 1
                                             if bodyguard_counter == 1:
@@ -6099,28 +6141,28 @@ class GameFrame(tk.Frame):
                                                 champion5_lastRound_damageTaken = self.calculate_ai_damage(5, 3)
                                                 if champion5_hp < 0:
                                                     champion5_hp = 0
-                                elif CHAMPION_LIST[1] == MONK.name:
+                                elif CHAMPION_LIST[1] == MONK.title:
                                     staggered_damage = (self.calculate_ai_damage(2, 3) / 3)
                                     unstaggerable_damage = 0
-                                    if len(monk_staggered_damage_list1) == 0:
+                                    if monk_staggered_damage_list1[1] == 0:
                                         monk_staggered_damage_list1 = [staggered_damage, 3]
                                     else:
-                                        if len(monk_staggered_damage_list2) == 0:
+                                        if monk_staggered_damage_list2[1] == 0:
                                             monk_staggered_damage_list2 = [staggered_damage, 3]
                                         else:
-                                            if len(monk_staggered_damage_list3) == 0:
+                                            if monk_staggered_damage_list3[1] == 0:
                                                 monk_staggered_damage_list3 = [staggered_damage, 3]
                                             else:
                                                 unstaggerable_damage = self.calculate_ai_damage(2, 3)
                                     staggered_damage_list = [0, 0, 0]
-                                    if len(monk_staggered_damage_list1) != 0:
+                                    if monk_staggered_damage_list1[1] != 0:
                                         staggered_damage_list[0] = monk_staggered_damage_list1[0]
-                                    if len(monk_staggered_damage_list2) != 0:
+                                    if monk_staggered_damage_list2[1] != 0:
                                         staggered_damage_list[1] = monk_staggered_damage_list2[0]
-                                    if len(monk_staggered_damage_list3) != 0:
+                                    if monk_staggered_damage_list3[1] != 0:
                                         staggered_damage_list[2] = monk_staggered_damage_list3[0]
-                                    champion2_hp = champion2_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3] + unstaggerable_damage)
-                                    champion2_lastRound_damageTaken = (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3] + unstaggerable_damage)
+                                    champion2_hp = champion2_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[2] + unstaggerable_damage)
+                                    champion2_lastRound_damageTaken = (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[2] + unstaggerable_damage)
                                     if champion2_hp < 0:
                                         champion2_hp = 0
                                 else:
@@ -6128,6 +6170,10 @@ class GameFrame(tk.Frame):
                                     champion2_lastRound_damageTaken = self.calculate_ai_damage(2, 3)
                                     if champion2_hp < 0:
                                         champion2_hp = 0
+                                if champion2_thorns != 0:
+                                    ai3_hp = ai3_hp - 200
+                                if ai3_hp < 0:
+                                    ai3_hp = 0
                             if champion3_hp != 0:
                                 if len(champion3_guarded) != 0:
                                     guard_list = []
@@ -6143,16 +6189,12 @@ class GameFrame(tk.Frame):
                                         guard_list = sorted(guard_list, reverse=True)
                                         if guard_list[0] == 101:
                                             ai3_hp = ai3_hp - ai3_attack[1]
-                                            if champion5_thorns[0] == 1:
-                                                ai3_hp = ai3_hp - 200
-                                            if ai3_hp < 0:
-                                                ai3_hp = 0
                                         if guard_list[0] == 100:
                                             champion3_hp = champion3_hp
                                         if guard_list[0] == 99:
                                             bodyguard_counter = 1
                                             for champions in CHAMPION_LIST:
-                                                if champions == VETERAN_BODYGUARD.name:
+                                                if champions == VETERAN_BODYGUARD.title:
                                                     break
                                                 bodyguard_counter += 1
                                             if bodyguard_counter == 1:
@@ -6180,28 +6222,28 @@ class GameFrame(tk.Frame):
                                                 champion5_lastRound_damageTaken = self.calculate_ai_damage(5, 3)
                                                 if champion5_hp < 0:
                                                     champion5_hp = 0
-                                elif CHAMPION_LIST[2] == MONK.name:
+                                elif CHAMPION_LIST[2] == MONK.title:
                                     staggered_damage = (self.calculate_ai_damage(3, 3) / 3)
                                     unstaggerable_damage = 0
-                                    if len(monk_staggered_damage_list1) == 0:
+                                    if monk_staggered_damage_list1[1] == 0:
                                         monk_staggered_damage_list1 = [staggered_damage, 3]
                                     else:
-                                        if len(monk_staggered_damage_list2) == 0:
+                                        if monk_staggered_damage_list2[1] == 0:
                                             monk_staggered_damage_list2 = [staggered_damage, 3]
                                         else:
-                                            if len(monk_staggered_damage_list3) == 0:
+                                            if monk_staggered_damage_list3[1] == 0:
                                                 monk_staggered_damage_list3 = [staggered_damage, 3]
                                             else:
                                                 unstaggerable_damage = self.calculate_ai_damage(3, 3)
                                     staggered_damage_list = [0, 0, 0]
-                                    if len(monk_staggered_damage_list1) != 0:
+                                    if monk_staggered_damage_list1[1] != 0:
                                         staggered_damage_list[0] = monk_staggered_damage_list1[0]
-                                    if len(monk_staggered_damage_list2) != 0:
+                                    if monk_staggered_damage_list2[1] != 0:
                                         staggered_damage_list[1] = monk_staggered_damage_list2[0]
-                                    if len(monk_staggered_damage_list3) != 0:
+                                    if monk_staggered_damage_list3[1] != 0:
                                         staggered_damage_list[2] = monk_staggered_damage_list3[0]
-                                    champion3_hp = champion3_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3] + unstaggerable_damage)
-                                    champion3_lastRound_damageTaken = (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3] + unstaggerable_damage)
+                                    champion3_hp = champion3_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[2] + unstaggerable_damage)
+                                    champion3_lastRound_damageTaken = (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[2] + unstaggerable_damage)
                                     if champion3_hp < 0:
                                         champion3_hp = 0
                                 else:
@@ -6209,6 +6251,10 @@ class GameFrame(tk.Frame):
                                     champion3_lastRound_damageTaken = self.calculate_ai_damage(3, 3)
                                     if champion3_hp < 0:
                                         champion3_hp = 0
+                                if champion3_thorns != 0:
+                                    ai3_hp = ai3_hp - 200
+                                if ai3_hp < 0:
+                                    ai3_hp = 0
                             if champion4_hp != 0:
                                 if len(champion4_guarded) != 0:
                                     guard_list = []
@@ -6224,7 +6270,7 @@ class GameFrame(tk.Frame):
                                         guard_list = sorted(guard_list, reverse=True)
                                         if guard_list[0] == 101:
                                             ai3_hp = ai3_hp - ai3_attack[1]
-                                            if champion5_thorns[0] == 1:
+                                            if champion4_thorns != 0:
                                                 ai3_hp = ai3_hp - 200
                                             if ai3_hp < 0:
                                                 ai3_hp = 0
@@ -6233,7 +6279,7 @@ class GameFrame(tk.Frame):
                                         if guard_list[0] == 99:
                                             bodyguard_counter = 1
                                             for champions in CHAMPION_LIST:
-                                                if champions == VETERAN_BODYGUARD.name:
+                                                if champions == VETERAN_BODYGUARD.title:
                                                     break
                                                 bodyguard_counter += 1
                                             if bodyguard_counter == 1:
@@ -6261,28 +6307,28 @@ class GameFrame(tk.Frame):
                                                 champion5_lastRound_damageTaken = self.calculate_ai_damage(5, 3)
                                                 if champion5_hp < 0:
                                                     champion5_hp = 0
-                                elif CHAMPION_LIST[3] == MONK.name:
+                                elif CHAMPION_LIST[3] == MONK.title:
                                     staggered_damage = (self.calculate_ai_damage(4, 3) / 3)
                                     unstaggerable_damage = 0
-                                    if len(monk_staggered_damage_list1) == 0:
+                                    if monk_staggered_damage_list1[1] == 0:
                                         monk_staggered_damage_list1 = [staggered_damage, 3]
                                     else:
-                                        if len(monk_staggered_damage_list2) == 0:
+                                        if monk_staggered_damage_list2[1] == 0:
                                             monk_staggered_damage_list2 = [staggered_damage, 3]
                                         else:
-                                            if len(monk_staggered_damage_list3) == 0:
+                                            if monk_staggered_damage_list3[1] == 0:
                                                 monk_staggered_damage_list3 = [staggered_damage, 3]
                                             else:
                                                 unstaggerable_damage = self.calculate_ai_damage(4, 3)
                                     staggered_damage_list = [0, 0, 0]
-                                    if len(monk_staggered_damage_list1) != 0:
+                                    if monk_staggered_damage_list1[1] != 0:
                                         staggered_damage_list[0] = monk_staggered_damage_list1[0]
-                                    if len(monk_staggered_damage_list2) != 0:
+                                    if monk_staggered_damage_list2[1] != 0:
                                         staggered_damage_list[1] = monk_staggered_damage_list2[0]
-                                    if len(monk_staggered_damage_list3) != 0:
+                                    if monk_staggered_damage_list3[1] != 0:
                                         staggered_damage_list[2] = monk_staggered_damage_list3[0]
-                                    champion4_hp = champion4_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3] + unstaggerable_damage)
-                                    champion4_lastRound_damageTaken = (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3] + unstaggerable_damage)
+                                    champion4_hp = champion4_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[2] + unstaggerable_damage)
+                                    champion4_lastRound_damageTaken = (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[2] + unstaggerable_damage)
                                     if champion4_hp < 0:
                                         champion4_hp = 0
                                 else:
@@ -6290,6 +6336,10 @@ class GameFrame(tk.Frame):
                                     champion4_lastRound_damageTaken = self.calculate_ai_damage(4, 3)
                                     if champion4_hp < 0:
                                         champion4_hp = 0
+                                if champion4_thorns != 0:
+                                    ai3_hp = ai3_hp - 200
+                                if ai3_hp < 0:
+                                    ai3_hp = 0
                             if champion5_hp != 0:
                                 if len(champion5_guarded) != 0:
                                     guard_list = []
@@ -6305,16 +6355,12 @@ class GameFrame(tk.Frame):
                                         guard_list = sorted(guard_list, reverse=True)
                                         if guard_list[0] == 101:
                                             ai3_hp = ai3_hp - ai3_attack[1]
-                                            if champion5_thorns[0] == 1:
-                                                ai3_hp = ai3_hp - 200
-                                            if ai3_hp < 0:
-                                                ai3_hp = 0
                                         if guard_list[0] == 100:
                                             champion5_hp = champion5_hp
                                         if guard_list[0] == 99:
                                             bodyguard_counter = 1
                                             for champions in CHAMPION_LIST:
-                                                if champions == VETERAN_BODYGUARD.name:
+                                                if champions == VETERAN_BODYGUARD.title:
                                                     break
                                                 bodyguard_counter += 1
                                             if bodyguard_counter == 1:
@@ -6342,28 +6388,28 @@ class GameFrame(tk.Frame):
                                                 champion5_lastRound_damageTaken = self.calculate_ai_damage(5, 3)
                                                 if champion5_hp < 0:
                                                     champion5_hp = 0
-                                elif CHAMPION_LIST[4] == MONK.name:
+                                elif CHAMPION_LIST[4] == MONK.title:
                                     staggered_damage = (self.calculate_ai_damage(5, 3) / 3)
                                     unstaggerable_damage = 0
-                                    if len(monk_staggered_damage_list1) == 0:
+                                    if monk_staggered_damage_list1[1] == 0:
                                         monk_staggered_damage_list1 = [staggered_damage, 3]
                                     else:
-                                        if len(monk_staggered_damage_list2) == 0:
+                                        if monk_staggered_damage_list2[1] == 0:
                                             monk_staggered_damage_list2 = [staggered_damage, 3]
                                         else:
-                                            if len(monk_staggered_damage_list3) == 0:
+                                            if monk_staggered_damage_list3[1] == 0:
                                                 monk_staggered_damage_list3 = [staggered_damage, 3]
                                             else:
                                                 unstaggerable_damage = self.calculate_ai_damage(5, 3)
                                     staggered_damage_list = [0, 0, 0]
-                                    if len(monk_staggered_damage_list1) != 0:
+                                    if monk_staggered_damage_list1[1] != 0:
                                         staggered_damage_list[0] = monk_staggered_damage_list1[0]
-                                    if len(monk_staggered_damage_list2) != 0:
+                                    if monk_staggered_damage_list2[1] != 0:
                                         staggered_damage_list[1] = monk_staggered_damage_list2[0]
-                                    if len(monk_staggered_damage_list3) != 0:
+                                    if monk_staggered_damage_list3[1] != 0:
                                         staggered_damage_list[2] = monk_staggered_damage_list3[0]
-                                    champion5_hp = champion5_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3] + unstaggerable_damage)
-                                    champion5_lastRound_damageTaken = (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3] + unstaggerable_damage)
+                                    champion5_hp = champion5_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[2] + unstaggerable_damage)
+                                    champion5_lastRound_damageTaken = (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[2] + unstaggerable_damage)
                                     if champion5_hp < 0:
                                         champion5_hp = 0
                                 else:
@@ -6371,6 +6417,10 @@ class GameFrame(tk.Frame):
                                     champion5_lastRound_damageTaken = self.calculate_ai_damage(5, 3)
                                     if champion5_hp < 0:
                                         champion5_hp = 0
+                                if champion5_thorns != 0:
+                                    ai3_hp = ai3_hp - 200
+                                if ai3_hp < 0:
+                                    ai3_hp = 0
                         else:
                             for indiv_champion in CHAMPION_LIST:
                                 if indiv_champion in ai3_attack_intention:
@@ -6394,16 +6444,12 @@ class GameFrame(tk.Frame):
                                                 guard_list = sorted(guard_list, reverse=True)
                                                 if guard_list[0] == 101:
                                                     ai3_hp = ai3_hp - ai3_attack[1]
-                                                    if champion5_thorns[0] == 1:
-                                                        ai3_hp = ai3_hp - 200
-                                                    if ai3_hp < 0:
-                                                        ai3_hp = 0
                                                 if guard_list[0] == 100:
                                                     champion1_hp = champion1_hp
                                                 if guard_list[0] == 99:
                                                     bodyguard_counter = 1
                                                     for champions in CHAMPION_LIST:
-                                                        if champions == VETERAN_BODYGUARD.name:
+                                                        if champions == VETERAN_BODYGUARD.title:
                                                             break
                                                         bodyguard_counter += 1
                                                     if bodyguard_counter == 1:
@@ -6431,28 +6477,28 @@ class GameFrame(tk.Frame):
                                                         champion5_lastRound_damageTaken = self.calculate_ai_damage(5, 3)
                                                         if champion5_hp < 0:
                                                             champion5_hp = 0
-                                        elif CHAMPION_LIST[0] == MONK.name:
+                                        elif CHAMPION_LIST[0] == MONK.title:
                                             staggered_damage = (self.calculate_ai_damage(1, 3) / 3)
                                             unstaggerable_damage = 0
-                                            if len(monk_staggered_damage_list1) == 0:
+                                            if monk_staggered_damage_list1[1] == 0:
                                                 monk_staggered_damage_list1 = [staggered_damage, 3]
                                             else:
-                                                if len(monk_staggered_damage_list2) == 0:
+                                                if monk_staggered_damage_list2[1] == 0:
                                                     monk_staggered_damage_list2 = [staggered_damage, 3]
                                                 else:
-                                                    if len(monk_staggered_damage_list3) == 0:
+                                                    if monk_staggered_damage_list3[1] == 0:
                                                         monk_staggered_damage_list3 = [staggered_damage, 3]
                                                     else:
                                                         unstaggerable_damage = self.calculate_ai_damage(1, 3)
                                             staggered_damage_list = [0, 0, 0]
-                                            if len(monk_staggered_damage_list1) != 0:
+                                            if monk_staggered_damage_list1[1] != 0:
                                                 staggered_damage_list[0] = monk_staggered_damage_list1[0]
-                                            if len(monk_staggered_damage_list2) != 0:
+                                            if monk_staggered_damage_list2[1] != 0:
                                                 staggered_damage_list[1] = monk_staggered_damage_list2[0]
-                                            if len(monk_staggered_damage_list3) != 0:
+                                            if monk_staggered_damage_list3[1] != 0:
                                                 staggered_damage_list[2] = monk_staggered_damage_list3[0]
-                                            champion1_hp = champion1_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3] + unstaggerable_damage)
-                                            champion1_lastRound_damageTaken = (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3] + unstaggerable_damage)
+                                            champion1_hp = champion1_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[2] + unstaggerable_damage)
+                                            champion1_lastRound_damageTaken = (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[2] + unstaggerable_damage)
                                             if champion1_hp < 0:
                                                 champion1_hp = 0
                                         else:
@@ -6460,6 +6506,10 @@ class GameFrame(tk.Frame):
                                             champion1_lastRound_damageTaken = self.calculate_ai_damage(1, 3)
                                             if champion1_hp < 0:
                                                 champion1_hp = 0
+                                        if champion1_thorns != 0:
+                                            ai3_hp = ai3_hp - 200
+                                        if ai3_hp < 0:
+                                            ai3_hp = 0
                                     if counter == 2:
                                         if len(champion2_guarded) != 0:
                                             guard_list = []
@@ -6475,16 +6525,12 @@ class GameFrame(tk.Frame):
                                                 guard_list = sorted(guard_list, reverse=True)
                                                 if guard_list[0] == 101:
                                                     ai3_hp = ai3_hp - ai3_attack[1]
-                                                    if champion5_thorns[0] == 1:
-                                                        ai3_hp = ai3_hp - 200
-                                                    if ai3_hp < 0:
-                                                        ai3_hp = 0
                                                 if guard_list[0] == 100:
                                                     champion2_hp = champion2_hp
                                                 if guard_list[0] == 99:
                                                     bodyguard_counter = 1
                                                     for champions in CHAMPION_LIST:
-                                                        if champions == VETERAN_BODYGUARD.name:
+                                                        if champions == VETERAN_BODYGUARD.title:
                                                             break
                                                         bodyguard_counter += 1
                                                     if bodyguard_counter == 1:
@@ -6512,28 +6558,28 @@ class GameFrame(tk.Frame):
                                                         champion5_lastRound_damageTaken = self.calculate_ai_damage(5, 3)
                                                         if champion5_hp < 0:
                                                             champion5_hp = 0
-                                        elif CHAMPION_LIST[1] == MONK.name:
+                                        elif CHAMPION_LIST[1] == MONK.title:
                                             staggered_damage = (self.calculate_ai_damage(2, 3) / 3)
                                             unstaggerable_damage = 0
-                                            if len(monk_staggered_damage_list1) == 0:
+                                            if monk_staggered_damage_list1[1] == 0:
                                                 monk_staggered_damage_list1 = [staggered_damage, 3]
                                             else:
-                                                if len(monk_staggered_damage_list2) == 0:
+                                                if monk_staggered_damage_list2[1] == 0:
                                                     monk_staggered_damage_list2 = [staggered_damage, 3]
                                                 else:
-                                                    if len(monk_staggered_damage_list3) == 0:
+                                                    if monk_staggered_damage_list3[1] == 0:
                                                         monk_staggered_damage_list3 = [staggered_damage, 3]
                                                     else:
                                                         unstaggerable_damage = self.calculate_ai_damage(2, 3)
                                             staggered_damage_list = [0, 0, 0]
-                                            if len(monk_staggered_damage_list1) != 0:
+                                            if monk_staggered_damage_list1[1] != 0:
                                                 staggered_damage_list[0] = monk_staggered_damage_list1[0]
-                                            if len(monk_staggered_damage_list2) != 0:
+                                            if monk_staggered_damage_list2[1] != 0:
                                                 staggered_damage_list[1] = monk_staggered_damage_list2[0]
-                                            if len(monk_staggered_damage_list3) != 0:
+                                            if monk_staggered_damage_list3[1] != 0:
                                                 staggered_damage_list[2] = monk_staggered_damage_list3[0]
-                                            champion2_hp = champion2_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3] + unstaggerable_damage)
-                                            champion2_lastRound_damageTaken = (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3] + unstaggerable_damage)
+                                            champion2_hp = champion2_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[2] + unstaggerable_damage)
+                                            champion2_lastRound_damageTaken = (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[2] + unstaggerable_damage)
                                             if champion2_hp < 0:
                                                 champion2_hp = 0
                                         else:
@@ -6541,6 +6587,10 @@ class GameFrame(tk.Frame):
                                             champion2_lastRound_damageTaken = self.calculate_ai_damage(2, 3)
                                             if champion2_hp < 0:
                                                 champion2_hp = 0
+                                        if champion2_thorns != 0:
+                                            ai3_hp = ai3_hp - 200
+                                        if ai3_hp < 0:
+                                            ai3_hp = 0
                                     if counter == 3:
                                         if len(champion3_guarded) != 0:
                                             guard_list = []
@@ -6556,16 +6606,12 @@ class GameFrame(tk.Frame):
                                                 guard_list = sorted(guard_list, reverse=True)
                                                 if guard_list[0] == 101:
                                                     ai3_hp = ai3_hp - ai3_attack[1]
-                                                    if champion5_thorns[0] == 1:
-                                                        ai3_hp = ai3_hp - 200
-                                                    if ai3_hp < 0:
-                                                        ai3_hp = 0
                                                 if guard_list[0] == 100:
                                                     champion3_hp = champion3_hp
                                                 if guard_list[0] == 99:
                                                     bodyguard_counter = 1
                                                     for champions in CHAMPION_LIST:
-                                                        if champions == VETERAN_BODYGUARD.name:
+                                                        if champions == VETERAN_BODYGUARD.title:
                                                             break
                                                         bodyguard_counter += 1
                                                     if bodyguard_counter == 1:
@@ -6593,28 +6639,28 @@ class GameFrame(tk.Frame):
                                                         champion5_lastRound_damageTaken = self.calculate_ai_damage(5, 3)
                                                         if champion5_hp < 0:
                                                             champion5_hp = 0
-                                        elif CHAMPION_LIST[2] == MONK.name:
+                                        elif CHAMPION_LIST[2] == MONK.title:
                                             staggered_damage = (self.calculate_ai_damage(3, 3) / 3)
                                             unstaggerable_damage = 0
-                                            if len(monk_staggered_damage_list1) == 0:
+                                            if monk_staggered_damage_list1[1] == 0:
                                                 monk_staggered_damage_list1 = [staggered_damage, 3]
                                             else:
-                                                if len(monk_staggered_damage_list2) == 0:
+                                                if monk_staggered_damage_list2[1] == 0:
                                                     monk_staggered_damage_list2 = [staggered_damage, 3]
                                                 else:
-                                                    if len(monk_staggered_damage_list3) == 0:
+                                                    if monk_staggered_damage_list3[1] == 0:
                                                         monk_staggered_damage_list3 = [staggered_damage, 3]
                                                     else:
                                                         unstaggerable_damage = self.calculate_ai_damage(3, 3)
                                             staggered_damage_list = [0, 0, 0]
-                                            if len(monk_staggered_damage_list1) != 0:
+                                            if monk_staggered_damage_list1[1] != 0:
                                                 staggered_damage_list[0] = monk_staggered_damage_list1[0]
-                                            if len(monk_staggered_damage_list2) != 0:
+                                            if monk_staggered_damage_list2[1] != 0:
                                                 staggered_damage_list[1] = monk_staggered_damage_list2[0]
-                                            if len(monk_staggered_damage_list3) != 0:
+                                            if monk_staggered_damage_list3[1] != 0:
                                                 staggered_damage_list[2] = monk_staggered_damage_list3[0]
-                                            champion3_hp = champion3_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3] + unstaggerable_damage)
-                                            champion3_lastRound_damageTaken = (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3] + unstaggerable_damage)
+                                            champion3_hp = champion3_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[2] + unstaggerable_damage)
+                                            champion3_lastRound_damageTaken = (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[2] + unstaggerable_damage)
                                             if champion3_hp < 0:
                                                 champion3_hp = 0
                                         else:
@@ -6622,6 +6668,10 @@ class GameFrame(tk.Frame):
                                             champion3_lastRound_damageTaken = self.calculate_ai_damage(3, 3)
                                             if champion3_hp < 0:
                                                 champion3_hp = 0
+                                        if champion3_thorns != 0:
+                                            ai3_hp = ai3_hp - 200
+                                        if ai3_hp < 0:
+                                            ai3_hp = 0
                                     if counter == 4:
                                         if len(champion4_guarded) != 0:
                                             guard_list = []
@@ -6637,16 +6687,12 @@ class GameFrame(tk.Frame):
                                                 guard_list = sorted(guard_list, reverse=True)
                                                 if guard_list[0] == 101:
                                                     ai3_hp = ai3_hp - ai3_attack[1]
-                                                    if champion5_thorns[0] == 1:
-                                                        ai3_hp = ai3_hp - 200
-                                                    if ai3_hp < 0:
-                                                        ai3_hp = 0
                                                 if guard_list[0] == 100:
                                                     champion4_hp = champion4_hp
                                                 if guard_list[0] == 99:
                                                     bodyguard_counter = 1
                                                     for champions in CHAMPION_LIST:
-                                                        if champions == VETERAN_BODYGUARD.name:
+                                                        if champions == VETERAN_BODYGUARD.title:
                                                             break
                                                         bodyguard_counter += 1
                                                     if bodyguard_counter == 1:
@@ -6674,28 +6720,28 @@ class GameFrame(tk.Frame):
                                                         champion5_lastRound_damageTaken = self.calculate_ai_damage(5, 3)
                                                         if champion5_hp < 0:
                                                             champion5_hp = 0
-                                        elif CHAMPION_LIST[3] == MONK.name:
+                                        elif CHAMPION_LIST[3] == MONK.title:
                                             staggered_damage = (self.calculate_ai_damage(4, 3) / 3)
                                             unstaggerable_damage = 0
-                                            if len(monk_staggered_damage_list1) == 0:
+                                            if monk_staggered_damage_list1[1] == 0:
                                                 monk_staggered_damage_list1 = [staggered_damage, 3]
                                             else:
-                                                if len(monk_staggered_damage_list2) == 0:
+                                                if monk_staggered_damage_list2[1] == 0:
                                                     monk_staggered_damage_list2 = [staggered_damage, 3]
                                                 else:
-                                                    if len(monk_staggered_damage_list3) == 0:
+                                                    if monk_staggered_damage_list3[1] == 0:
                                                         monk_staggered_damage_list3 = [staggered_damage, 3]
                                                     else:
                                                         unstaggerable_damage = self.calculate_ai_damage(4, 3)
                                             staggered_damage_list = [0, 0, 0]
-                                            if len(monk_staggered_damage_list1) != 0:
+                                            if monk_staggered_damage_list1[1] != 0:
                                                 staggered_damage_list[0] = monk_staggered_damage_list1[0]
-                                            if len(monk_staggered_damage_list2) != 0:
+                                            if monk_staggered_damage_list2[1] != 0:
                                                 staggered_damage_list[1] = monk_staggered_damage_list2[0]
-                                            if len(monk_staggered_damage_list3) != 0:
+                                            if monk_staggered_damage_list3[1] != 0:
                                                 staggered_damage_list[2] = monk_staggered_damage_list3[0]
-                                            champion4_hp = champion4_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3] + unstaggerable_damage)
-                                            champion4_lastRound_damageTaken = (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3] + unstaggerable_damage)
+                                            champion4_hp = champion4_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[2] + unstaggerable_damage)
+                                            champion4_lastRound_damageTaken = (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[2] + unstaggerable_damage)
                                             if champion4_hp < 0:
                                                 champion4_hp = 0
                                         else:
@@ -6703,6 +6749,10 @@ class GameFrame(tk.Frame):
                                             champion4_lastRound_damageTaken = self.calculate_ai_damage(4, 3)
                                             if champion4_hp < 0:
                                                 champion4_hp = 0
+                                        if champion4_thorns != 0:
+                                            ai3_hp = ai3_hp - 200
+                                        if ai3_hp < 0:
+                                            ai3_hp = 0
                                     if counter == 5:
                                         if len(champion5_guarded) != 0:
                                             guard_list = []
@@ -6718,16 +6768,12 @@ class GameFrame(tk.Frame):
                                                 guard_list = sorted(guard_list, reverse=True)
                                                 if guard_list[0] == 101:
                                                     ai3_hp = ai3_hp - ai3_attack[1]
-                                                    if champion5_thorns[0] == 1:
-                                                        ai3_hp = ai3_hp - 200
-                                                    if ai3_hp < 0:
-                                                        ai3_hp = 0
                                                 if guard_list[0] == 100:
                                                     champion5_hp = champion5_hp
                                                 if guard_list[0] == 99:
                                                     bodyguard_counter = 1
                                                     for champions in CHAMPION_LIST:
-                                                        if champions == VETERAN_BODYGUARD.name:
+                                                        if champions == VETERAN_BODYGUARD.title:
                                                             break
                                                         bodyguard_counter += 1
                                                     if bodyguard_counter == 1:
@@ -6755,28 +6801,28 @@ class GameFrame(tk.Frame):
                                                         champion5_lastRound_damageTaken = self.calculate_ai_damage(5, 3)
                                                         if champion5_hp < 0:
                                                             champion5_hp = 0
-                                        elif CHAMPION_LIST[4] == MONK.name:
+                                        elif CHAMPION_LIST[4] == MONK.title:
                                             staggered_damage = (self.calculate_ai_damage(5, 3) / 3)
                                             unstaggerable_damage = 0
-                                            if len(monk_staggered_damage_list1) == 0:
+                                            if monk_staggered_damage_list1[1] == 0:
                                                 monk_staggered_damage_list1 = [staggered_damage, 3]
                                             else:
-                                                if len(monk_staggered_damage_list2) == 0:
+                                                if monk_staggered_damage_list2[1] == 0:
                                                     monk_staggered_damage_list2 = [staggered_damage, 3]
                                                 else:
-                                                    if len(monk_staggered_damage_list3) == 0:
+                                                    if monk_staggered_damage_list3[1] == 0:
                                                         monk_staggered_damage_list3 = [staggered_damage, 3]
                                                     else:
                                                         unstaggerable_damage = self.calculate_ai_damage(5, 3)
                                             staggered_damage_list = [0, 0, 0]
-                                            if len(monk_staggered_damage_list1) != 0:
+                                            if monk_staggered_damage_list1[1] != 0:
                                                 staggered_damage_list[0] = monk_staggered_damage_list1[0]
-                                            if len(monk_staggered_damage_list2) != 0:
+                                            if monk_staggered_damage_list2[1] != 0:
                                                 staggered_damage_list[1] = monk_staggered_damage_list2[0]
-                                            if len(monk_staggered_damage_list3) != 0:
+                                            if monk_staggered_damage_list3[1] != 0:
                                                 staggered_damage_list[2] = monk_staggered_damage_list3[0]
-                                            champion5_hp = champion5_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3] + unstaggerable_damage)
-                                            champion5_lastRound_damageTaken = (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3] + unstaggerable_damage)
+                                            champion5_hp = champion5_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[2] + unstaggerable_damage)
+                                            champion5_lastRound_damageTaken = (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[2] + unstaggerable_damage)
                                             if champion5_hp < 0:
                                                 champion5_hp = 0
                                         else:
@@ -6784,6 +6830,10 @@ class GameFrame(tk.Frame):
                                             champion5_lastRound_damageTaken = self.calculate_ai_damage(5, 3)
                                             if champion5_hp < 0:
                                                 champion5_hp = 0
+                                        if champion5_thorns != 0:
+                                            ai3_hp = ai3_hp - 200
+                                        if ai3_hp < 0:
+                                            ai3_hp = 0
                 if monster_var == 4:
                     if ai4_hp == 0:
                         continue
@@ -6839,16 +6889,12 @@ class GameFrame(tk.Frame):
                                     guard_list = sorted(guard_list, reverse=True)
                                     if guard_list[0] == 101:
                                         ai4_hp = ai4_hp - ai4_attack[1]
-                                        if champion1_thorns[0] == 1:
-                                            ai4_hp = ai4_hp - 200
-                                        if ai4_hp < 0:
-                                            ai4_hp = 0
                                     if guard_list[0] == 100:
                                         champion1_hp = champion1_hp
                                     if guard_list[0] == 99:
                                         bodyguard_counter = 1
                                         for champions in CHAMPION_LIST:
-                                            if champions == VETERAN_BODYGUARD.name:
+                                            if champions == VETERAN_BODYGUARD.title:
                                                 break
                                             bodyguard_counter += 1
                                         if bodyguard_counter == 1:
@@ -6876,28 +6922,28 @@ class GameFrame(tk.Frame):
                                             champion5_lastRound_damageTaken = self.calculate_ai_damage(5, 4)
                                             if champion5_hp < 0:
                                                 champion5_hp = 0
-                            elif CHAMPION_LIST[0] == MONK.name:
+                            elif CHAMPION_LIST[0] == MONK.title:
                                     staggered_damage = (self.calculate_ai_damage(1, 4) / 3)
                                     unstaggerable_damage = 0
-                                    if len(monk_staggered_damage_list1) == 0:
+                                    if monk_staggered_damage_list1[1] == 0:
                                         monk_staggered_damage_list1 = [staggered_damage, 3]
                                     else:
-                                        if len(monk_staggered_damage_list2) == 0:
+                                        if monk_staggered_damage_list2[1] == 0:
                                             monk_staggered_damage_list2 = [staggered_damage, 3]
                                         else:
-                                            if len(monk_staggered_damage_list3) == 0:
+                                            if monk_staggered_damage_list3[1] == 0:
                                                 monk_staggered_damage_list3 = [staggered_damage, 3]
                                             else:
                                                 unstaggerable_damage = self.calculate_ai_damage(1, 4)
                                     staggered_damage_list = [0, 0, 0]
-                                    if len(monk_staggered_damage_list1) != 0:
+                                    if monk_staggered_damage_list1[1] != 0:
                                         staggered_damage_list[0] = monk_staggered_damage_list1[0]
-                                    if len(monk_staggered_damage_list2) != 0:
+                                    if monk_staggered_damage_list2[1] != 0:
                                         staggered_damage_list[1] = monk_staggered_damage_list2[0]
-                                    if len(monk_staggered_damage_list3) != 0:
+                                    if monk_staggered_damage_list3[1] != 0:
                                         staggered_damage_list[2] = monk_staggered_damage_list3[0]
-                                    champion1_hp = champion1_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3] + unstaggerable_damage)
-                                    champion1_lastRound_damageTaken = (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3] + unstaggerable_damage)
+                                    champion1_hp = champion1_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[2] + unstaggerable_damage)
+                                    champion1_lastRound_damageTaken = (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[2] + unstaggerable_damage)
                                     if champion1_hp < 0:
                                         champion1_hp = 0
                             else:
@@ -6905,6 +6951,10 @@ class GameFrame(tk.Frame):
                                 champion1_lastRound_damageTaken = self.calculate_ai_damage(1, 4)
                                 if champion1_hp < 0:
                                     champion1_hp = 0
+                            if champion1_thorns != 0:
+                                ai4_hp = ai4_hp - 200
+                            if ai4_hp < 0:
+                                ai4_hp = 0
                         elif taunter_counter == 2:
                             if len(champion2_guarded) != 0:
                                 guard_list = []
@@ -6920,7 +6970,7 @@ class GameFrame(tk.Frame):
                                     guard_list = sorted(guard_list, reverse=True)
                                     if guard_list[0] == 101:
                                         ai4_hp = ai4_hp - ai4_attack[1]
-                                        if champion2_thorns[0] == 1:
+                                        if champion2_thorns != 0:
                                             ai4_hp = ai4_hp - 200
                                         if ai4_hp < 0:
                                             ai4_hp = 0
@@ -6929,7 +6979,7 @@ class GameFrame(tk.Frame):
                                     if guard_list[0] == 99:
                                         bodyguard_counter = 1
                                         for champions in CHAMPION_LIST:
-                                            if champions == VETERAN_BODYGUARD.name:
+                                            if champions == VETERAN_BODYGUARD.title:
                                                 break
                                             bodyguard_counter += 1
                                         if bodyguard_counter == 1:
@@ -6957,28 +7007,28 @@ class GameFrame(tk.Frame):
                                             champion5_lastRound_damageTaken = self.calculate_ai_damage(5, 4)
                                             if champion5_hp < 0:
                                                 champion5_hp = 0
-                            elif CHAMPION_LIST[1] == MONK.name:
+                            elif CHAMPION_LIST[1] == MONK.title:
                                     staggered_damage = (self.calculate_ai_damage(2, 4) / 3)
                                     unstaggerable_damage = 0
-                                    if len(monk_staggered_damage_list1) == 0:
+                                    if monk_staggered_damage_list1[1] == 0:
                                         monk_staggered_damage_list1 = [staggered_damage, 3]
                                     else:
-                                        if len(monk_staggered_damage_list2) == 0:
+                                        if monk_staggered_damage_list2[1] == 0:
                                             monk_staggered_damage_list2 = [staggered_damage, 3]
                                         else:
-                                            if len(monk_staggered_damage_list3) == 0:
+                                            if monk_staggered_damage_list3[1] == 0:
                                                 monk_staggered_damage_list3 = [staggered_damage, 3]
                                             else:
                                                 unstaggerable_damage = self.calculate_ai_damage(2, 4)
                                     staggered_damage_list = [0, 0, 0]
-                                    if len(monk_staggered_damage_list1) != 0:
+                                    if monk_staggered_damage_list1[1] != 0:
                                         staggered_damage_list[0] = monk_staggered_damage_list1[0]
-                                    if len(monk_staggered_damage_list2) != 0:
+                                    if monk_staggered_damage_list2[1] != 0:
                                         staggered_damage_list[1] = monk_staggered_damage_list2[0]
-                                    if len(monk_staggered_damage_list3) != 0:
+                                    if monk_staggered_damage_list3[1] != 0:
                                         staggered_damage_list[2] = monk_staggered_damage_list3[0]
-                                    champion2_hp = champion2_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3] + unstaggerable_damage)
-                                    champion2_lastRound_damageTaken = (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3] + unstaggerable_damage)
+                                    champion2_hp = champion2_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[2] + unstaggerable_damage)
+                                    champion2_lastRound_damageTaken = (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[2] + unstaggerable_damage)
                                     if champion2_hp < 0:
                                         champion2_hp = 0
                             else:
@@ -6986,6 +7036,10 @@ class GameFrame(tk.Frame):
                                 champion2_lastRound_damageTaken = self.calculate_ai_damage(2, 4)
                                 if champion2_hp < 0:
                                     champion2_hp = 0
+                            if champion2_thorns != 0:
+                                ai4_hp = ai4_hp - 200
+                            if ai4_hp < 0:
+                                ai4_hp = 0
                         elif taunter_counter == 3:
                             if len(champion3_guarded) != 0:
                                 guard_list = []
@@ -7001,7 +7055,7 @@ class GameFrame(tk.Frame):
                                     guard_list = sorted(guard_list, reverse=True)
                                     if guard_list[0] == 101:
                                         ai4_hp = ai4_hp - ai4_attack[1]
-                                        if champion3_thorns[0] == 1:
+                                        if champion3_thorns != 0:
                                             ai4_hp = ai4_hp - 200
                                         if ai4_hp < 0:
                                             ai4_hp = 0
@@ -7010,7 +7064,7 @@ class GameFrame(tk.Frame):
                                     if guard_list[0] == 99:
                                         bodyguard_counter = 1
                                         for champions in CHAMPION_LIST:
-                                            if champions == VETERAN_BODYGUARD.name:
+                                            if champions == VETERAN_BODYGUARD.title:
                                                 break
                                             bodyguard_counter += 1
                                         if bodyguard_counter == 1:
@@ -7038,28 +7092,28 @@ class GameFrame(tk.Frame):
                                             champion5_lastRound_damageTaken = self.calculate_ai_damage(5, 4)
                                             if champion5_hp < 0:
                                                 champion5_hp = 0
-                            elif CHAMPION_LIST[2] == MONK.name:
+                            elif CHAMPION_LIST[2] == MONK.title:
                                     staggered_damage = (self.calculate_ai_damage(3, 4) / 3)
                                     unstaggerable_damage = 0
-                                    if len(monk_staggered_damage_list1) == 0:
+                                    if monk_staggered_damage_list1[1] == 0:
                                         monk_staggered_damage_list1 = [staggered_damage, 3]
                                     else:
-                                        if len(monk_staggered_damage_list2) == 0:
+                                        if monk_staggered_damage_list2[1] == 0:
                                             monk_staggered_damage_list2 = [staggered_damage, 3]
                                         else:
-                                            if len(monk_staggered_damage_list3) == 0:
+                                            if monk_staggered_damage_list3[1] == 0:
                                                 monk_staggered_damage_list3 = [staggered_damage, 3]
                                             else:
                                                 unstaggerable_damage = self.calculate_ai_damage(3, 4)
                                     staggered_damage_list = [0, 0, 0]
-                                    if len(monk_staggered_damage_list1) != 0:
+                                    if monk_staggered_damage_list1[1] != 0:
                                         staggered_damage_list[0] = monk_staggered_damage_list1[0]
-                                    if len(monk_staggered_damage_list2) != 0:
+                                    if monk_staggered_damage_list2[1] != 0:
                                         staggered_damage_list[1] = monk_staggered_damage_list2[0]
-                                    if len(monk_staggered_damage_list3) != 0:
+                                    if monk_staggered_damage_list3[1] != 0:
                                         staggered_damage_list[2] = monk_staggered_damage_list3[0]
-                                    champion3_hp = champion3_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3] + unstaggerable_damage)
-                                    champion3_lastRound_damageTaken = (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3] + unstaggerable_damage)
+                                    champion3_hp = champion3_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[2] + unstaggerable_damage)
+                                    champion3_lastRound_damageTaken = (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[2] + unstaggerable_damage)
                                     if champion3_hp < 0:
                                         champion3_hp = 0
                             else:
@@ -7067,6 +7121,10 @@ class GameFrame(tk.Frame):
                                 champion3_lastRound_damageTaken = self.calculate_ai_damage(3, 4)
                                 if champion3_hp < 0:
                                     champion3_hp = 0
+                        if champion3_thorns != 0:
+                            ai4_hp = ai4_hp - 200
+                        if ai4_hp < 0:
+                            ai4_hp = 0
                         elif taunter_counter == 4:
                             if len(champion4_guarded) != 0:
                                 guard_list = []
@@ -7082,7 +7140,7 @@ class GameFrame(tk.Frame):
                                     guard_list = sorted(guard_list, reverse=True)
                                     if guard_list[0] == 101:
                                         ai4_hp = ai4_hp - ai4_attack[1]
-                                        if champion4_thorns[0] == 1:
+                                        if champion4_thorns != 0:
                                             ai4_hp = ai4_hp - 200
                                         if ai4_hp < 0:
                                             ai4_hp = 0
@@ -7091,7 +7149,7 @@ class GameFrame(tk.Frame):
                                     if guard_list[0] == 99:
                                         bodyguard_counter = 1
                                         for champions in CHAMPION_LIST:
-                                            if champions == VETERAN_BODYGUARD.name:
+                                            if champions == VETERAN_BODYGUARD.title:
                                                 break
                                             bodyguard_counter += 1
                                         if bodyguard_counter == 1:
@@ -7119,28 +7177,28 @@ class GameFrame(tk.Frame):
                                             champion5_lastRound_damageTaken = self.calculate_ai_damage(5, 4)
                                             if champion5_hp < 0:
                                                 champion5_hp = 0
-                            elif CHAMPION_LIST[3] == MONK.name:
+                            elif CHAMPION_LIST[3] == MONK.title:
                                     staggered_damage = (self.calculate_ai_damage(4, 4) / 3)
                                     unstaggerable_damage = 0
-                                    if len(monk_staggered_damage_list1) == 0:
+                                    if monk_staggered_damage_list1[1] == 0:
                                         monk_staggered_damage_list1 = [staggered_damage, 3]
                                     else:
-                                        if len(monk_staggered_damage_list2) == 0:
+                                        if monk_staggered_damage_list2[1] == 0:
                                             monk_staggered_damage_list2 = [staggered_damage, 3]
                                         else:
-                                            if len(monk_staggered_damage_list3) == 0:
+                                            if monk_staggered_damage_list3[1] == 0:
                                                 monk_staggered_damage_list3 = [staggered_damage, 3]
                                             else:
                                                 unstaggerable_damage = self.calculate_ai_damage(4, 4)
                                     staggered_damage_list = [0, 0, 0]
-                                    if len(monk_staggered_damage_list1) != 0:
+                                    if monk_staggered_damage_list1[1] != 0:
                                         staggered_damage_list[0] = monk_staggered_damage_list1[0]
-                                    if len(monk_staggered_damage_list2) != 0:
+                                    if monk_staggered_damage_list2[1] != 0:
                                         staggered_damage_list[1] = monk_staggered_damage_list2[0]
-                                    if len(monk_staggered_damage_list3) != 0:
+                                    if monk_staggered_damage_list3[1] != 0:
                                         staggered_damage_list[2] = monk_staggered_damage_list3[0]
-                                    champion4_hp = champion4_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3] + unstaggerable_damage)
-                                    champion4_lastRound_damageTaken = (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3] + unstaggerable_damage)
+                                    champion4_hp = champion4_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[2] + unstaggerable_damage)
+                                    champion4_lastRound_damageTaken = (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[2] + unstaggerable_damage)
                                     if champion4_hp < 0:
                                         champion4_hp = 0
                             else:
@@ -7148,6 +7206,10 @@ class GameFrame(tk.Frame):
                                 champion4_lastRound_damageTaken = self.calculate_ai_damage(4, 4)
                                 if champion4_hp < 0:
                                     champion4_hp = 0
+                            if champion4_thorns != 0:
+                                ai4_hp = ai4_hp - 200
+                            if ai4_hp < 0:
+                                ai4_hp = 0
                         elif taunter_counter == 5:
                             if len(champion5_guarded) != 0:
                                 guard_list = []
@@ -7163,16 +7225,12 @@ class GameFrame(tk.Frame):
                                     guard_list = sorted(guard_list, reverse=True)
                                     if guard_list[0] == 101:
                                         ai4_hp = ai4_hp - ai4_attack[1]
-                                        if champion5_thorns[0] == 1:
-                                            ai4_hp = ai4_hp - 200
-                                        if ai4_hp < 0:
-                                            ai4_hp = 0
                                     if guard_list[0] == 100:
                                         champion5_hp = champion5_hp
                                     if guard_list[0] == 99:
                                         bodyguard_counter = 1
                                         for champions in CHAMPION_LIST:
-                                            if champions == VETERAN_BODYGUARD.name:
+                                            if champions == VETERAN_BODYGUARD.title:
                                                 break
                                             bodyguard_counter += 1
                                         if bodyguard_counter == 1:
@@ -7200,28 +7258,28 @@ class GameFrame(tk.Frame):
                                             champion5_lastRound_damageTaken = self.calculate_ai_damage(5, 4)
                                             if champion5_hp < 0:
                                                 champion5_hp = 0
-                            elif CHAMPION_LIST[4] == MONK.name:
+                            elif CHAMPION_LIST[4] == MONK.title:
                                     staggered_damage = (self.calculate_ai_damage(5, 4) / 3)
                                     unstaggerable_damage = 0
-                                    if len(monk_staggered_damage_list1) == 0:
+                                    if monk_staggered_damage_list1[1] == 0:
                                         monk_staggered_damage_list1 = [staggered_damage, 3]
                                     else:
-                                        if len(monk_staggered_damage_list2) == 0:
+                                        if monk_staggered_damage_list2[1] == 0:
                                             monk_staggered_damage_list2 = [staggered_damage, 3]
                                         else:
-                                            if len(monk_staggered_damage_list3) == 0:
+                                            if monk_staggered_damage_list3[1] == 0:
                                                 monk_staggered_damage_list3 = [staggered_damage, 3]
                                             else:
                                                 unstaggerable_damage = self.calculate_ai_damage(5, 4)
                                     staggered_damage_list = [0, 0, 0]
-                                    if len(monk_staggered_damage_list1) != 0:
+                                    if monk_staggered_damage_list1[1] != 0:
                                         staggered_damage_list[0] = monk_staggered_damage_list1[0]
-                                    if len(monk_staggered_damage_list2) != 0:
+                                    if monk_staggered_damage_list2[1] != 0:
                                         staggered_damage_list[1] = monk_staggered_damage_list2[0]
-                                    if len(monk_staggered_damage_list3) != 0:
+                                    if monk_staggered_damage_list3[1] != 0:
                                         staggered_damage_list[2] = monk_staggered_damage_list3[0]
-                                    champion5_hp = champion5_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3] + unstaggerable_damage)
-                                    champion5_lastRound_damageTaken = (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3] + unstaggerable_damage)
+                                    champion5_hp = champion5_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[2] + unstaggerable_damage)
+                                    champion5_lastRound_damageTaken = (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[2] + unstaggerable_damage)
                                     if champion5_hp < 0:
                                         champion5_hp = 0
                             else:
@@ -7229,7 +7287,10 @@ class GameFrame(tk.Frame):
                                 champion5_lastRound_damageTaken = self.calculate_ai_damage(5, 4)
                                 if champion5_hp < 0:
                                     champion5_hp = 0
-                        ai4_taunt[1] = ai4_taunt[1] - 1
+                            if champion5_thorns != 0:
+                                ai4_hp = ai4_hp - 200
+                            if ai4_hp < 0:
+                                ai4_hp = 0
                     else:
                         if "Everyone" in ai4_attack_intention:
                             if champion1_hp != 0:
@@ -7247,16 +7308,12 @@ class GameFrame(tk.Frame):
                                         guard_list = sorted(guard_list, reverse=True)
                                         if guard_list[0] == 101:
                                             ai4_hp = ai4_hp - ai4_attack[1]
-                                            if champion5_thorns[0] == 1:
-                                                ai4_hp = ai4_hp - 200
-                                            if ai4_hp < 0:
-                                                ai4_hp = 0
                                         if guard_list[0] == 100:
                                             champion1_hp = champion1_hp
                                         if guard_list[0] == 99:
                                             bodyguard_counter = 1
                                             for champions in CHAMPION_LIST:
-                                                if champions == VETERAN_BODYGUARD.name:
+                                                if champions == VETERAN_BODYGUARD.title:
                                                     break
                                                 bodyguard_counter += 1
                                             if bodyguard_counter == 1:
@@ -7284,28 +7341,28 @@ class GameFrame(tk.Frame):
                                                 champion5_lastRound_damageTaken = self.calculate_ai_damage(5, 4)
                                                 if champion5_hp < 0:
                                                     champion5_hp = 0
-                                elif CHAMPION_LIST[0] == MONK.name:
+                                elif CHAMPION_LIST[0] == MONK.title:
                                     staggered_damage = (self.calculate_ai_damage(1, 4) / 3)
                                     unstaggerable_damage = 0
-                                    if len(monk_staggered_damage_list1) == 0:
+                                    if monk_staggered_damage_list1[1] == 0:
                                         monk_staggered_damage_list1 = [staggered_damage, 3]
                                     else:
-                                        if len(monk_staggered_damage_list2) == 0:
+                                        if monk_staggered_damage_list2[1] == 0:
                                             monk_staggered_damage_list2 = [staggered_damage, 3]
                                         else:
-                                            if len(monk_staggered_damage_list3) == 0:
+                                            if monk_staggered_damage_list3[1] == 0:
                                                 monk_staggered_damage_list3 = [staggered_damage, 3]
                                             else:
                                                 unstaggerable_damage = self.calculate_ai_damage(1, 4)
                                     staggered_damage_list = [0, 0, 0]
-                                    if len(monk_staggered_damage_list1) != 0:
+                                    if monk_staggered_damage_list1[1] != 0:
                                         staggered_damage_list[0] = monk_staggered_damage_list1[0]
-                                    if len(monk_staggered_damage_list2) != 0:
+                                    if monk_staggered_damage_list2[1] != 0:
                                         staggered_damage_list[1] = monk_staggered_damage_list2[0]
-                                    if len(monk_staggered_damage_list3) != 0:
+                                    if monk_staggered_damage_list3[1] != 0:
                                         staggered_damage_list[2] = monk_staggered_damage_list3[0]
-                                    champion1_hp = champion1_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3] + unstaggerable_damage)
-                                    champion1_lastRound_damageTaken = (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3] + unstaggerable_damage)
+                                    champion1_hp = champion1_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[2] + unstaggerable_damage)
+                                    champion1_lastRound_damageTaken = (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[2] + unstaggerable_damage)
                                     if champion1_hp < 0:
                                         champion1_hp = 0
                                 else:
@@ -7313,6 +7370,10 @@ class GameFrame(tk.Frame):
                                     champion1_lastRound_damageTaken = self.calculate_ai_damage(1, 4)
                                     if champion1_hp < 0:
                                         champion1_hp = 0
+                                if champion1_thorns != 0:
+                                    ai4_hp = ai4_hp - 200
+                                if ai4_hp < 0:
+                                    ai4_hp = 0
                             if champion2_hp != 0:
                                 if len(champion2_guarded) != 0:
                                     guard_list = []
@@ -7328,16 +7389,12 @@ class GameFrame(tk.Frame):
                                         guard_list = sorted(guard_list, reverse=True)
                                         if guard_list[0] == 101:
                                             ai4_hp = ai4_hp - ai4_attack[1]
-                                            if champion5_thorns[0] == 1:
-                                                ai4_hp = ai4_hp - 200
-                                            if ai4_hp < 0:
-                                                ai4_hp = 0
                                         if guard_list[0] == 100:
                                             champion2_hp = champion2_hp
                                         if guard_list[0] == 99:
                                             bodyguard_counter = 1
                                             for champions in CHAMPION_LIST:
-                                                if champions == VETERAN_BODYGUARD.name:
+                                                if champions == VETERAN_BODYGUARD.title:
                                                     break
                                                 bodyguard_counter += 1
                                             if bodyguard_counter == 1:
@@ -7365,28 +7422,28 @@ class GameFrame(tk.Frame):
                                                 champion5_lastRound_damageTaken = self.calculate_ai_damage(5, 4)
                                                 if champion5_hp < 0:
                                                     champion5_hp = 0
-                                elif CHAMPION_LIST[1] == MONK.name:
+                                elif CHAMPION_LIST[1] == MONK.title:
                                     staggered_damage = (self.calculate_ai_damage(2, 4) / 3)
                                     unstaggerable_damage = 0
-                                    if len(monk_staggered_damage_list1) == 0:
+                                    if monk_staggered_damage_list1[1] == 0:
                                         monk_staggered_damage_list1 = [staggered_damage, 3]
                                     else:
-                                        if len(monk_staggered_damage_list2) == 0:
+                                        if monk_staggered_damage_list2[1] == 0:
                                             monk_staggered_damage_list2 = [staggered_damage, 3]
                                         else:
-                                            if len(monk_staggered_damage_list3) == 0:
+                                            if monk_staggered_damage_list3[1] == 0:
                                                 monk_staggered_damage_list3 = [staggered_damage, 3]
                                             else:
                                                 unstaggerable_damage = self.calculate_ai_damage(2, 4)
                                     staggered_damage_list = [0, 0, 0]
-                                    if len(monk_staggered_damage_list1) != 0:
+                                    if monk_staggered_damage_list1[1] != 0:
                                         staggered_damage_list[0] = monk_staggered_damage_list1[0]
-                                    if len(monk_staggered_damage_list2) != 0:
+                                    if monk_staggered_damage_list2[1] != 0:
                                         staggered_damage_list[1] = monk_staggered_damage_list2[0]
-                                    if len(monk_staggered_damage_list3) != 0:
+                                    if monk_staggered_damage_list3[1] != 0:
                                         staggered_damage_list[2] = monk_staggered_damage_list3[0]
-                                    champion2_hp = champion2_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3] + unstaggerable_damage)
-                                    champion2_lastRound_damageTaken = (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3] + unstaggerable_damage)
+                                    champion2_hp = champion2_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[2] + unstaggerable_damage)
+                                    champion2_lastRound_damageTaken = (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[2] + unstaggerable_damage)
                                     if champion2_hp < 0:
                                         champion2_hp = 0
                                 else:
@@ -7394,6 +7451,10 @@ class GameFrame(tk.Frame):
                                     champion2_lastRound_damageTaken = self.calculate_ai_damage(2, 4)
                                     if champion2_hp < 0:
                                         champion2_hp = 0
+                                if champion2_thorns != 0:
+                                    ai4_hp = ai4_hp - 200
+                                if ai4_hp < 0:
+                                    ai4_hp = 0
                             if champion3_hp != 0:
                                 if len(champion3_guarded) != 0:
                                     guard_list = []
@@ -7409,16 +7470,12 @@ class GameFrame(tk.Frame):
                                         guard_list = sorted(guard_list, reverse=True)
                                         if guard_list[0] == 101:
                                             ai4_hp = ai4_hp - ai4_attack[1]
-                                            if champion5_thorns[0] == 1:
-                                                ai4_hp = ai4_hp - 200
-                                            if ai4_hp < 0:
-                                                ai4_hp = 0
                                         if guard_list[0] == 100:
                                             champion3_hp = champion3_hp
                                         if guard_list[0] == 99:
                                             bodyguard_counter = 1
                                             for champions in CHAMPION_LIST:
-                                                if champions == VETERAN_BODYGUARD.name:
+                                                if champions == VETERAN_BODYGUARD.title:
                                                     break
                                                 bodyguard_counter += 1
                                             if bodyguard_counter == 1:
@@ -7446,28 +7503,28 @@ class GameFrame(tk.Frame):
                                                 champion5_lastRound_damageTaken = self.calculate_ai_damage(5, 4)
                                                 if champion5_hp < 0:
                                                     champion5_hp = 0
-                                elif CHAMPION_LIST[2] == MONK.name:
+                                elif CHAMPION_LIST[2] == MONK.title:
                                     staggered_damage = (self.calculate_ai_damage(3, 4) / 3)
                                     unstaggerable_damage = 0
-                                    if len(monk_staggered_damage_list1) == 0:
+                                    if monk_staggered_damage_list1[1] == 0:
                                         monk_staggered_damage_list1 = [staggered_damage, 3]
                                     else:
-                                        if len(monk_staggered_damage_list2) == 0:
+                                        if monk_staggered_damage_list2[1] == 0:
                                             monk_staggered_damage_list2 = [staggered_damage, 3]
                                         else:
-                                            if len(monk_staggered_damage_list3) == 0:
+                                            if monk_staggered_damage_list3[1] == 0:
                                                 monk_staggered_damage_list3 = [staggered_damage, 3]
                                             else:
                                                 unstaggerable_damage = self.calculate_ai_damage(3, 4)
                                     staggered_damage_list = [0, 0, 0]
-                                    if len(monk_staggered_damage_list1) != 0:
+                                    if monk_staggered_damage_list1[1] != 0:
                                         staggered_damage_list[0] = monk_staggered_damage_list1[0]
-                                    if len(monk_staggered_damage_list2) != 0:
+                                    if monk_staggered_damage_list2[1] != 0:
                                         staggered_damage_list[1] = monk_staggered_damage_list2[0]
-                                    if len(monk_staggered_damage_list3) != 0:
+                                    if monk_staggered_damage_list3[1] != 0:
                                         staggered_damage_list[2] = monk_staggered_damage_list3[0]
-                                    champion3_hp = champion3_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3] + unstaggerable_damage)
-                                    champion3_lastRound_damageTaken = (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3] + unstaggerable_damage)
+                                    champion3_hp = champion3_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[2] + unstaggerable_damage)
+                                    champion3_lastRound_damageTaken = (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[2] + unstaggerable_damage)
                                     if champion3_hp < 0:
                                         champion3_hp = 0
                                 else:
@@ -7475,6 +7532,10 @@ class GameFrame(tk.Frame):
                                     champion3_lastRound_damageTaken = self.calculate_ai_damage(3, 4)
                                     if champion3_hp < 0:
                                         champion3_hp = 0
+                                if champion3_thorns != 0:
+                                    ai4_hp = ai4_hp - 200
+                                if ai4_hp < 0:
+                                    ai4_hp = 0
                             if champion4_hp != 0:
                                 if len(champion4_guarded) != 0:
                                     guard_list = []
@@ -7490,7 +7551,7 @@ class GameFrame(tk.Frame):
                                         guard_list = sorted(guard_list, reverse=True)
                                         if guard_list[0] == 101:
                                             ai4_hp = ai4_hp - ai4_attack[1]
-                                            if champion5_thorns[0] == 1:
+                                            if champion4_thorns != 0:
                                                 ai4_hp = ai4_hp - 200
                                             if ai4_hp < 0:
                                                 ai4_hp = 0
@@ -7499,7 +7560,7 @@ class GameFrame(tk.Frame):
                                         if guard_list[0] == 99:
                                             bodyguard_counter = 1
                                             for champions in CHAMPION_LIST:
-                                                if champions == VETERAN_BODYGUARD.name:
+                                                if champions == VETERAN_BODYGUARD.title:
                                                     break
                                                 bodyguard_counter += 1
                                             if bodyguard_counter == 1:
@@ -7527,28 +7588,28 @@ class GameFrame(tk.Frame):
                                                 champion5_lastRound_damageTaken = self.calculate_ai_damage(5, 4)
                                                 if champion5_hp < 0:
                                                     champion5_hp = 0
-                                elif CHAMPION_LIST[3] == MONK.name:
+                                elif CHAMPION_LIST[3] == MONK.title:
                                     staggered_damage = (self.calculate_ai_damage(4, 4) / 3)
                                     unstaggerable_damage = 0
-                                    if len(monk_staggered_damage_list1) == 0:
+                                    if monk_staggered_damage_list1[1] == 0:
                                         monk_staggered_damage_list1 = [staggered_damage, 3]
                                     else:
-                                        if len(monk_staggered_damage_list2) == 0:
+                                        if monk_staggered_damage_list2[1] == 0:
                                             monk_staggered_damage_list2 = [staggered_damage, 3]
                                         else:
-                                            if len(monk_staggered_damage_list3) == 0:
+                                            if monk_staggered_damage_list3[1] == 0:
                                                 monk_staggered_damage_list3 = [staggered_damage, 3]
                                             else:
                                                 unstaggerable_damage = self.calculate_ai_damage(4, 4)
                                     staggered_damage_list = [0, 0, 0]
-                                    if len(monk_staggered_damage_list1) != 0:
+                                    if monk_staggered_damage_list1[1] != 0:
                                         staggered_damage_list[0] = monk_staggered_damage_list1[0]
-                                    if len(monk_staggered_damage_list2) != 0:
+                                    if monk_staggered_damage_list2[1] != 0:
                                         staggered_damage_list[1] = monk_staggered_damage_list2[0]
-                                    if len(monk_staggered_damage_list3) != 0:
+                                    if monk_staggered_damage_list3[1] != 0:
                                         staggered_damage_list[2] = monk_staggered_damage_list3[0]
-                                    champion4_hp = champion4_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3] + unstaggerable_damage)
-                                    champion4_lastRound_damageTaken = (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3] + unstaggerable_damage)
+                                    champion4_hp = champion4_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[2] + unstaggerable_damage)
+                                    champion4_lastRound_damageTaken = (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[2] + unstaggerable_damage)
                                     if champion4_hp < 0:
                                         champion4_hp = 0
                                 else:
@@ -7556,6 +7617,10 @@ class GameFrame(tk.Frame):
                                     champion4_lastRound_damageTaken = self.calculate_ai_damage(4, 4)
                                     if champion4_hp < 0:
                                         champion4_hp = 0
+                                if champion4_thorns != 0:
+                                    ai4_hp = ai4_hp - 200
+                                if ai4_hp < 0:
+                                    ai4_hp = 0
                             if champion5_hp != 0:
                                 if len(champion5_guarded) != 0:
                                     guard_list = []
@@ -7571,16 +7636,12 @@ class GameFrame(tk.Frame):
                                         guard_list = sorted(guard_list, reverse=True)
                                         if guard_list[0] == 101:
                                             ai4_hp = ai4_hp - ai4_attack[1]
-                                            if champion5_thorns[0] == 1:
-                                                ai4_hp = ai4_hp - 200
-                                            if ai4_hp < 0:
-                                                ai4_hp = 0
                                         if guard_list[0] == 100:
                                             champion5_hp = champion5_hp
                                         if guard_list[0] == 99:
                                             bodyguard_counter = 1
                                             for champions in CHAMPION_LIST:
-                                                if champions == VETERAN_BODYGUARD.name:
+                                                if champions == VETERAN_BODYGUARD.title:
                                                     break
                                                 bodyguard_counter += 1
                                             if bodyguard_counter == 1:
@@ -7608,28 +7669,28 @@ class GameFrame(tk.Frame):
                                                 champion5_lastRound_damageTaken = self.calculate_ai_damage(5, 4)
                                                 if champion5_hp < 0:
                                                     champion5_hp = 0
-                                elif CHAMPION_LIST[4] == MONK.name:
+                                elif CHAMPION_LIST[4] == MONK.title:
                                     staggered_damage = (self.calculate_ai_damage(5, 4) / 3)
                                     unstaggerable_damage = 0
-                                    if len(monk_staggered_damage_list1) == 0:
+                                    if monk_staggered_damage_list1[1] == 0:
                                         monk_staggered_damage_list1 = [staggered_damage, 3]
                                     else:
-                                        if len(monk_staggered_damage_list2) == 0:
+                                        if monk_staggered_damage_list2[1] == 0:
                                             monk_staggered_damage_list2 = [staggered_damage, 3]
                                         else:
-                                            if len(monk_staggered_damage_list3) == 0:
+                                            if monk_staggered_damage_list3[1] == 0:
                                                 monk_staggered_damage_list3 = [staggered_damage, 3]
                                             else:
                                                 unstaggerable_damage = self.calculate_ai_damage(5, 4)
                                     staggered_damage_list = [0, 0, 0]
-                                    if len(monk_staggered_damage_list1) != 0:
+                                    if monk_staggered_damage_list1[1] != 0:
                                         staggered_damage_list[0] = monk_staggered_damage_list1[0]
-                                    if len(monk_staggered_damage_list2) != 0:
+                                    if monk_staggered_damage_list2[1] != 0:
                                         staggered_damage_list[1] = monk_staggered_damage_list2[0]
-                                    if len(monk_staggered_damage_list3) != 0:
+                                    if monk_staggered_damage_list3[1] != 0:
                                         staggered_damage_list[2] = monk_staggered_damage_list3[0]
-                                    champion5_hp = champion5_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3] + unstaggerable_damage)
-                                    champion5_lastRound_damageTaken = (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3] + unstaggerable_damage)
+                                    champion5_hp = champion5_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[2] + unstaggerable_damage)
+                                    champion5_lastRound_damageTaken = (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[2] + unstaggerable_damage)
                                     if champion5_hp < 0:
                                         champion5_hp = 0
                                 else:
@@ -7637,6 +7698,10 @@ class GameFrame(tk.Frame):
                                     champion5_lastRound_damageTaken = self.calculate_ai_damage(5, 4)
                                     if champion5_hp < 0:
                                         champion5_hp = 0
+                                if champion5_thorns != 0:
+                                    ai4_hp = ai4_hp - 200
+                                if ai4_hp < 0:
+                                    ai4_hp = 0
                         else:
                             for indiv_champion in CHAMPION_LIST:
                                 if indiv_champion in ai4_attack_intention:
@@ -7660,16 +7725,12 @@ class GameFrame(tk.Frame):
                                                 guard_list = sorted(guard_list, reverse=True)
                                                 if guard_list[0] == 101:
                                                     ai4_hp = ai4_hp - ai4_attack[1]
-                                                    if champion5_thorns[0] == 1:
-                                                        ai4_hp = ai4_hp - 200
-                                                    if ai4_hp < 0:
-                                                        ai4_hp = 0
                                                 if guard_list[0] == 100:
                                                     champion1_hp = champion1_hp
                                                 if guard_list[0] == 99:
                                                     bodyguard_counter = 1
                                                     for champions in CHAMPION_LIST:
-                                                        if champions == VETERAN_BODYGUARD.name:
+                                                        if champions == VETERAN_BODYGUARD.title:
                                                             break
                                                         bodyguard_counter += 1
                                                     if bodyguard_counter == 1:
@@ -7697,28 +7758,28 @@ class GameFrame(tk.Frame):
                                                         champion5_lastRound_damageTaken = self.calculate_ai_damage(5, 4)
                                                         if champion5_hp < 0:
                                                             champion5_hp = 0
-                                        elif CHAMPION_LIST[0] == MONK.name:
+                                        elif CHAMPION_LIST[0] == MONK.title:
                                             staggered_damage = (self.calculate_ai_damage(1, 4) / 3)
                                             unstaggerable_damage = 0
-                                            if len(monk_staggered_damage_list1) == 0:
+                                            if monk_staggered_damage_list1[1] == 0:
                                                 monk_staggered_damage_list1 = [staggered_damage, 3]
                                             else:
-                                                if len(monk_staggered_damage_list2) == 0:
+                                                if monk_staggered_damage_list2[1] == 0:
                                                     monk_staggered_damage_list2 = [staggered_damage, 3]
                                                 else:
-                                                    if len(monk_staggered_damage_list3) == 0:
+                                                    if monk_staggered_damage_list3[1] == 0:
                                                         monk_staggered_damage_list3 = [staggered_damage, 3]
                                                     else:
                                                         unstaggerable_damage = self.calculate_ai_damage(1, 4)
                                             staggered_damage_list = [0, 0, 0]
-                                            if len(monk_staggered_damage_list1) != 0:
+                                            if monk_staggered_damage_list1[1] != 0:
                                                 staggered_damage_list[0] = monk_staggered_damage_list1[0]
-                                            if len(monk_staggered_damage_list2) != 0:
+                                            if monk_staggered_damage_list2[1] != 0:
                                                 staggered_damage_list[1] = monk_staggered_damage_list2[0]
-                                            if len(monk_staggered_damage_list3) != 0:
+                                            if monk_staggered_damage_list3[1] != 0:
                                                 staggered_damage_list[2] = monk_staggered_damage_list3[0]
-                                            champion1_hp = champion1_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3] + unstaggerable_damage)
-                                            champion1_lastRound_damageTaken = (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3] + unstaggerable_damage)
+                                            champion1_hp = champion1_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[2] + unstaggerable_damage)
+                                            champion1_lastRound_damageTaken = (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[2] + unstaggerable_damage)
                                             if champion1_hp < 0:
                                                 champion1_hp = 0
                                         else:
@@ -7726,6 +7787,10 @@ class GameFrame(tk.Frame):
                                             champion1_lastRound_damageTaken = self.calculate_ai_damage(1, 4)
                                             if champion1_hp < 0:
                                                 champion1_hp = 0
+                                        if champion1_thorns != 0:
+                                            ai4_hp = ai4_hp - 200
+                                        if ai4_hp < 0:
+                                            ai4_hp = 0
                                     if counter == 2:
                                         if len(champion2_guarded) != 0:
                                             guard_list = []
@@ -7741,16 +7806,12 @@ class GameFrame(tk.Frame):
                                                 guard_list = sorted(guard_list, reverse=True)
                                                 if guard_list[0] == 101:
                                                     ai4_hp = ai4_hp - ai4_attack[1]
-                                                    if champion5_thorns[0] == 1:
-                                                        ai4_hp = ai4_hp - 200
-                                                    if ai4_hp < 0:
-                                                        ai4_hp = 0
                                                 if guard_list[0] == 100:
                                                     champion2_hp = champion2_hp
                                                 if guard_list[0] == 99:
                                                     bodyguard_counter = 1
                                                     for champions in CHAMPION_LIST:
-                                                        if champions == VETERAN_BODYGUARD.name:
+                                                        if champions == VETERAN_BODYGUARD.title:
                                                             break
                                                         bodyguard_counter += 1
                                                     if bodyguard_counter == 1:
@@ -7778,28 +7839,28 @@ class GameFrame(tk.Frame):
                                                         champion5_lastRound_damageTaken = self.calculate_ai_damage(5, 4)
                                                         if champion5_hp < 0:
                                                             champion5_hp = 0
-                                        elif CHAMPION_LIST[1] == MONK.name:
+                                        elif CHAMPION_LIST[1] == MONK.title:
                                             staggered_damage = (self.calculate_ai_damage(2, 4) / 3)
                                             unstaggerable_damage = 0
-                                            if len(monk_staggered_damage_list1) == 0:
+                                            if monk_staggered_damage_list1[1] == 0:
                                                 monk_staggered_damage_list1 = [staggered_damage, 3]
                                             else:
-                                                if len(monk_staggered_damage_list2) == 0:
+                                                if monk_staggered_damage_list2[1] == 0:
                                                     monk_staggered_damage_list2 = [staggered_damage, 3]
                                                 else:
-                                                    if len(monk_staggered_damage_list3) == 0:
+                                                    if monk_staggered_damage_list3[1] == 0:
                                                         monk_staggered_damage_list3 = [staggered_damage, 3]
                                                     else:
                                                         unstaggerable_damage = self.calculate_ai_damage(2, 4)
                                             staggered_damage_list = [0, 0, 0]
-                                            if len(monk_staggered_damage_list1) != 0:
+                                            if monk_staggered_damage_list1[1] != 0:
                                                 staggered_damage_list[0] = monk_staggered_damage_list1[0]
-                                            if len(monk_staggered_damage_list2) != 0:
+                                            if monk_staggered_damage_list2[1] != 0:
                                                 staggered_damage_list[1] = monk_staggered_damage_list2[0]
-                                            if len(monk_staggered_damage_list3) != 0:
+                                            if monk_staggered_damage_list3[1] != 0:
                                                 staggered_damage_list[2] = monk_staggered_damage_list3[0]
-                                            champion2_hp = champion2_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3] + unstaggerable_damage)
-                                            champion2_lastRound_damageTaken = (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3] + unstaggerable_damage)
+                                            champion2_hp = champion2_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[2] + unstaggerable_damage)
+                                            champion2_lastRound_damageTaken = (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[2] + unstaggerable_damage)
                                             if champion2_hp < 0:
                                                 champion2_hp = 0
                                         else:
@@ -7807,6 +7868,10 @@ class GameFrame(tk.Frame):
                                             champion2_lastRound_damageTaken = self.calculate_ai_damage(2, 4)
                                             if champion2_hp < 0:
                                                 champion2_hp = 0
+                                        if champion2_thorns != 0:
+                                            ai4_hp = ai4_hp - 200
+                                        if ai4_hp < 0:
+                                            ai4_hp = 0
                                     if counter == 3:
                                         if len(champion3_guarded) != 0:
                                             guard_list = []
@@ -7822,16 +7887,12 @@ class GameFrame(tk.Frame):
                                                 guard_list = sorted(guard_list, reverse=True)
                                                 if guard_list[0] == 101:
                                                     ai4_hp = ai4_hp - ai4_attack[1]
-                                                    if champion5_thorns[0] == 1:
-                                                        ai4_hp = ai4_hp - 200
-                                                    if ai4_hp < 0:
-                                                        ai4_hp = 0
                                                 if guard_list[0] == 100:
                                                     champion3_hp = champion3_hp
                                                 if guard_list[0] == 99:
                                                     bodyguard_counter = 1
                                                     for champions in CHAMPION_LIST:
-                                                        if champions == VETERAN_BODYGUARD.name:
+                                                        if champions == VETERAN_BODYGUARD.title:
                                                             break
                                                         bodyguard_counter += 1
                                                     if bodyguard_counter == 1:
@@ -7859,28 +7920,28 @@ class GameFrame(tk.Frame):
                                                         champion5_lastRound_damageTaken = self.calculate_ai_damage(5, 4)
                                                         if champion5_hp < 0:
                                                             champion5_hp = 0
-                                        elif CHAMPION_LIST[2] == MONK.name:
+                                        elif CHAMPION_LIST[2] == MONK.title:
                                             staggered_damage = (self.calculate_ai_damage(3, 4) / 3)
                                             unstaggerable_damage = 0
-                                            if len(monk_staggered_damage_list1) == 0:
+                                            if monk_staggered_damage_list1[1] == 0:
                                                 monk_staggered_damage_list1 = [staggered_damage, 3]
                                             else:
-                                                if len(monk_staggered_damage_list2) == 0:
+                                                if monk_staggered_damage_list2[1] == 0:
                                                     monk_staggered_damage_list2 = [staggered_damage, 3]
                                                 else:
-                                                    if len(monk_staggered_damage_list3) == 0:
+                                                    if monk_staggered_damage_list3[1] == 0:
                                                         monk_staggered_damage_list3 = [staggered_damage, 3]
                                                     else:
                                                         unstaggerable_damage = self.calculate_ai_damage(3, 4)
                                             staggered_damage_list = [0, 0, 0]
-                                            if len(monk_staggered_damage_list1) != 0:
+                                            if monk_staggered_damage_list1[1] != 0:
                                                 staggered_damage_list[0] = monk_staggered_damage_list1[0]
-                                            if len(monk_staggered_damage_list2) != 0:
+                                            if monk_staggered_damage_list2[1] != 0:
                                                 staggered_damage_list[1] = monk_staggered_damage_list2[0]
-                                            if len(monk_staggered_damage_list3) != 0:
+                                            if monk_staggered_damage_list3[1] != 0:
                                                 staggered_damage_list[2] = monk_staggered_damage_list3[0]
-                                            champion3_hp = champion3_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3] + unstaggerable_damage)
-                                            champion3_lastRound_damageTaken = (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3] + unstaggerable_damage)
+                                            champion3_hp = champion3_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[2] + unstaggerable_damage)
+                                            champion3_lastRound_damageTaken = (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[2] + unstaggerable_damage)
                                             if champion3_hp < 0:
                                                 champion3_hp = 0
                                         else:
@@ -7888,6 +7949,10 @@ class GameFrame(tk.Frame):
                                             champion3_lastRound_damageTaken = self.calculate_ai_damage(3, 4)
                                             if champion3_hp < 0:
                                                 champion3_hp = 0
+                                        if champion3_thorns != 0:
+                                            ai4_hp = ai4_hp - 200
+                                        if ai4_hp < 0:
+                                            ai4_hp = 0
                                     if counter == 4:
                                         if len(champion4_guarded) != 0:
                                             guard_list = []
@@ -7903,16 +7968,12 @@ class GameFrame(tk.Frame):
                                                 guard_list = sorted(guard_list, reverse=True)
                                                 if guard_list[0] == 101:
                                                     ai4_hp = ai4_hp - ai4_attack[1]
-                                                    if champion5_thorns[0] == 1:
-                                                        ai4_hp = ai4_hp - 200
-                                                    if ai4_hp < 0:
-                                                        ai4_hp = 0
                                                 if guard_list[0] == 100:
                                                     champion4_hp = champion4_hp
                                                 if guard_list[0] == 99:
                                                     bodyguard_counter = 1
                                                     for champions in CHAMPION_LIST:
-                                                        if champions == VETERAN_BODYGUARD.name:
+                                                        if champions == VETERAN_BODYGUARD.title:
                                                             break
                                                         bodyguard_counter += 1
                                                     if bodyguard_counter == 1:
@@ -7940,28 +8001,28 @@ class GameFrame(tk.Frame):
                                                         champion5_lastRound_damageTaken = self.calculate_ai_damage(5, 4)
                                                         if champion5_hp < 0:
                                                             champion5_hp = 0
-                                        elif CHAMPION_LIST[3] == MONK.name:
+                                        elif CHAMPION_LIST[3] == MONK.title:
                                             staggered_damage = (self.calculate_ai_damage(4, 4) / 3)
                                             unstaggerable_damage = 0
-                                            if len(monk_staggered_damage_list1) == 0:
+                                            if monk_staggered_damage_list1[1] == 0:
                                                 monk_staggered_damage_list1 = [staggered_damage, 3]
                                             else:
-                                                if len(monk_staggered_damage_list2) == 0:
+                                                if monk_staggered_damage_list2[1] == 0:
                                                     monk_staggered_damage_list2 = [staggered_damage, 3]
                                                 else:
-                                                    if len(monk_staggered_damage_list3) == 0:
+                                                    if monk_staggered_damage_list3[1] == 0:
                                                         monk_staggered_damage_list3 = [staggered_damage, 3]
                                                     else:
                                                         unstaggerable_damage = self.calculate_ai_damage(4, 4)
                                             staggered_damage_list = [0, 0, 0]
-                                            if len(monk_staggered_damage_list1) != 0:
+                                            if monk_staggered_damage_list1[1] != 0:
                                                 staggered_damage_list[0] = monk_staggered_damage_list1[0]
-                                            if len(monk_staggered_damage_list2) != 0:
+                                            if monk_staggered_damage_list2[1] != 0:
                                                 staggered_damage_list[1] = monk_staggered_damage_list2[0]
-                                            if len(monk_staggered_damage_list3) != 0:
+                                            if monk_staggered_damage_list3[1] != 0:
                                                 staggered_damage_list[2] = monk_staggered_damage_list3[0]
-                                            champion4_hp = champion4_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3] + unstaggerable_damage)
-                                            champion4_lastRound_damageTaken = (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3] + unstaggerable_damage)
+                                            champion4_hp = champion4_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[2] + unstaggerable_damage)
+                                            champion4_lastRound_damageTaken = (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[2] + unstaggerable_damage)
                                             if champion4_hp < 0:
                                                 champion4_hp = 0
                                         else:
@@ -7969,6 +8030,10 @@ class GameFrame(tk.Frame):
                                             champion4_lastRound_damageTaken = self.calculate_ai_damage(4, 4)
                                             if champion4_hp < 0:
                                                 champion4_hp = 0
+                                        if champion4_thorns != 0:
+                                            ai4_hp = ai4_hp - 200
+                                        if ai4_hp < 0:
+                                            ai4_hp = 0
                                     if counter == 5:
                                         if len(champion5_guarded) != 0:
                                             guard_list = []
@@ -7984,16 +8049,12 @@ class GameFrame(tk.Frame):
                                                 guard_list = sorted(guard_list, reverse=True)
                                                 if guard_list[0] == 101:
                                                     ai4_hp = ai4_hp - ai4_attack[1]
-                                                    if champion5_thorns[0] == 1:
-                                                        ai4_hp = ai4_hp - 200
-                                                    if ai4_hp < 0:
-                                                        ai4_hp = 0
                                                 if guard_list[0] == 100:
                                                     champion5_hp = champion5_hp
                                                 if guard_list[0] == 99:
                                                     bodyguard_counter = 1
                                                     for champions in CHAMPION_LIST:
-                                                        if champions == VETERAN_BODYGUARD.name:
+                                                        if champions == VETERAN_BODYGUARD.title:
                                                             break
                                                         bodyguard_counter += 1
                                                     if bodyguard_counter == 1:
@@ -8021,28 +8082,28 @@ class GameFrame(tk.Frame):
                                                         champion5_lastRound_damageTaken = self.calculate_ai_damage(5, 4)
                                                         if champion5_hp < 0:
                                                             champion5_hp = 0
-                                        elif CHAMPION_LIST[4] == MONK.name:
+                                        elif CHAMPION_LIST[4] == MONK.title:
                                             staggered_damage = (self.calculate_ai_damage(5, 4) / 3)
                                             unstaggerable_damage = 0
-                                            if len(monk_staggered_damage_list1) == 0:
+                                            if monk_staggered_damage_list1[1] == 0:
                                                 monk_staggered_damage_list1 = [staggered_damage, 3]
                                             else:
-                                                if len(monk_staggered_damage_list2) == 0:
+                                                if monk_staggered_damage_list2[1] == 0:
                                                     monk_staggered_damage_list2 = [staggered_damage, 3]
                                                 else:
-                                                    if len(monk_staggered_damage_list3) == 0:
+                                                    if monk_staggered_damage_list3[1] == 0:
                                                         monk_staggered_damage_list3 = [staggered_damage, 3]
                                                     else:
                                                         unstaggerable_damage = self.calculate_ai_damage(5, 4)
                                             staggered_damage_list = [0, 0, 0]
-                                            if len(monk_staggered_damage_list1) != 0:
+                                            if monk_staggered_damage_list1[1] != 0:
                                                 staggered_damage_list[0] = monk_staggered_damage_list1[0]
-                                            if len(monk_staggered_damage_list2) != 0:
+                                            if monk_staggered_damage_list2[1] != 0:
                                                 staggered_damage_list[1] = monk_staggered_damage_list2[0]
-                                            if len(monk_staggered_damage_list3) != 0:
+                                            if monk_staggered_damage_list3[1] != 0:
                                                 staggered_damage_list[2] = monk_staggered_damage_list3[0]
-                                            champion5_hp = champion5_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3] + unstaggerable_damage)
-                                            champion5_lastRound_damageTaken = (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3] + unstaggerable_damage)
+                                            champion5_hp = champion5_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[2] + unstaggerable_damage)
+                                            champion5_lastRound_damageTaken = (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[2] + unstaggerable_damage)
                                             if champion5_hp < 0:
                                                 champion5_hp = 0
                                         else:
@@ -8050,6 +8111,10 @@ class GameFrame(tk.Frame):
                                             champion5_lastRound_damageTaken = self.calculate_ai_damage(5, 4)
                                             if champion5_hp < 0:
                                                 champion5_hp = 0
+                                        if champion5_thorns != 0:
+                                            ai4_hp = ai4_hp - 200
+                                        if ai4_hp < 0:
+                                            ai4_hp = 0
                 if monster_var == 5:
                     if ai5_hp == 0:
                         continue
@@ -8105,16 +8170,12 @@ class GameFrame(tk.Frame):
                                     guard_list = sorted(guard_list, reverse=True)
                                     if guard_list[0] == 101:
                                         ai5_hp = ai5_hp - ai5_attack[1]
-                                        if champion1_thorns[0] == 1:
-                                            ai5_hp = ai5_hp - 200
-                                        if ai5_hp < 0:
-                                            ai5_hp = 0
                                     if guard_list[0] == 100:
                                         champion1_hp = champion1_hp
                                     if guard_list[0] == 99:
                                         bodyguard_counter = 1
                                         for champions in CHAMPION_LIST:
-                                            if champions == VETERAN_BODYGUARD.name:
+                                            if champions == VETERAN_BODYGUARD.title:
                                                 break
                                             bodyguard_counter += 1
                                         if bodyguard_counter == 1:
@@ -8142,28 +8203,28 @@ class GameFrame(tk.Frame):
                                             champion5_lastRound_damageTaken = self.calculate_ai_damage(5, 5)
                                             if champion5_hp < 0:
                                                 champion5_hp = 0
-                            elif CHAMPION_LIST[0] == MONK.name:
+                            elif CHAMPION_LIST[0] == MONK.title:
                                     staggered_damage = (self.calculate_ai_damage(1, 5) / 3)
                                     unstaggerable_damage = 0
-                                    if len(monk_staggered_damage_list1) == 0:
+                                    if monk_staggered_damage_list1[1] == 0:
                                         monk_staggered_damage_list1 = [staggered_damage, 3]
                                     else:
-                                        if len(monk_staggered_damage_list2) == 0:
+                                        if monk_staggered_damage_list2[1] == 0:
                                             monk_staggered_damage_list2 = [staggered_damage, 3]
                                         else:
-                                            if len(monk_staggered_damage_list3) == 0:
+                                            if monk_staggered_damage_list3[1] == 0:
                                                 monk_staggered_damage_list3 = [staggered_damage, 3]
                                             else:
                                                 unstaggerable_damage = self.calculate_ai_damage(1, 5)
                                     staggered_damage_list = [0, 0, 0]
-                                    if len(monk_staggered_damage_list1) != 0:
+                                    if monk_staggered_damage_list1[1] != 0:
                                         staggered_damage_list[0] = monk_staggered_damage_list1[0]
-                                    if len(monk_staggered_damage_list2) != 0:
+                                    if monk_staggered_damage_list2[1] != 0:
                                         staggered_damage_list[1] = monk_staggered_damage_list2[0]
-                                    if len(monk_staggered_damage_list3) != 0:
+                                    if monk_staggered_damage_list3[1] != 0:
                                         staggered_damage_list[2] = monk_staggered_damage_list3[0]
-                                    champion1_hp = champion1_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3] + unstaggerable_damage)
-                                    champion1_lastRound_damageTaken = (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3] + unstaggerable_damage)
+                                    champion1_hp = champion1_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[2] + unstaggerable_damage)
+                                    champion1_lastRound_damageTaken = (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[2] + unstaggerable_damage)
                                     if champion1_hp < 0:
                                         champion1_hp = 0
                             else:
@@ -8171,6 +8232,10 @@ class GameFrame(tk.Frame):
                                 champion1_lastRound_damageTaken = self.calculate_ai_damage(1, 5)
                                 if champion1_hp < 0:
                                     champion1_hp = 0
+                            if champion1_thorns != 0:
+                                ai5_hp = ai5_hp - 200
+                            if ai5_hp < 0:
+                                ai5_hp = 0
                         elif taunter_counter == 2:
                             if len(champion2_guarded) != 0:
                                 guard_list = []
@@ -8186,7 +8251,7 @@ class GameFrame(tk.Frame):
                                     guard_list = sorted(guard_list, reverse=True)
                                     if guard_list[0] == 101:
                                         ai5_hp = ai5_hp - ai5_attack[1]
-                                        if champion2_thorns[0] == 1:
+                                        if champion2_thorns != 0:
                                             ai5_hp = ai5_hp - 200
                                         if ai5_hp < 0:
                                             ai5_hp = 0
@@ -8195,7 +8260,7 @@ class GameFrame(tk.Frame):
                                     if guard_list[0] == 99:
                                         bodyguard_counter = 1
                                         for champions in CHAMPION_LIST:
-                                            if champions == VETERAN_BODYGUARD.name:
+                                            if champions == VETERAN_BODYGUARD.title:
                                                 break
                                             bodyguard_counter += 1
                                         if bodyguard_counter == 1:
@@ -8223,28 +8288,28 @@ class GameFrame(tk.Frame):
                                             champion5_lastRound_damageTaken = self.calculate_ai_damage(5, 5)
                                             if champion5_hp < 0:
                                                 champion5_hp = 0
-                            elif CHAMPION_LIST[1] == MONK.name:
+                            elif CHAMPION_LIST[1] == MONK.title:
                                     staggered_damage = (self.calculate_ai_damage(2, 5) / 3)
                                     unstaggerable_damage = 0
-                                    if len(monk_staggered_damage_list1) == 0:
+                                    if monk_staggered_damage_list1[1] == 0:
                                         monk_staggered_damage_list1 = [staggered_damage, 3]
                                     else:
-                                        if len(monk_staggered_damage_list2) == 0:
+                                        if monk_staggered_damage_list2[1] == 0:
                                             monk_staggered_damage_list2 = [staggered_damage, 3]
                                         else:
-                                            if len(monk_staggered_damage_list3) == 0:
+                                            if monk_staggered_damage_list3[1] == 0:
                                                 monk_staggered_damage_list3 = [staggered_damage, 3]
                                             else:
                                                 unstaggerable_damage = self.calculate_ai_damage(2, 5)
                                     staggered_damage_list = [0, 0, 0]
-                                    if len(monk_staggered_damage_list1) != 0:
+                                    if monk_staggered_damage_list1[1] != 0:
                                         staggered_damage_list[0] = monk_staggered_damage_list1[0]
-                                    if len(monk_staggered_damage_list2) != 0:
+                                    if monk_staggered_damage_list2[1] != 0:
                                         staggered_damage_list[1] = monk_staggered_damage_list2[0]
-                                    if len(monk_staggered_damage_list3) != 0:
+                                    if monk_staggered_damage_list3[1] != 0:
                                         staggered_damage_list[2] = monk_staggered_damage_list3[0]
-                                    champion2_hp = champion2_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3] + unstaggerable_damage)
-                                    champion2_lastRound_damageTaken = (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3] + unstaggerable_damage)
+                                    champion2_hp = champion2_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[2] + unstaggerable_damage)
+                                    champion2_lastRound_damageTaken = (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[2] + unstaggerable_damage)
                                     if champion2_hp < 0:
                                         champion2_hp = 0
                             else:
@@ -8252,6 +8317,10 @@ class GameFrame(tk.Frame):
                                 champion2_lastRound_damageTaken = self.calculate_ai_damage(2, 5)
                                 if champion2_hp < 0:
                                     champion2_hp = 0
+                            if champion2_thorns != 0:
+                                ai5_hp = ai5_hp - 200
+                            if ai5_hp < 0:
+                                ai5_hp = 0
                         elif taunter_counter == 3:
                             if len(champion3_guarded) != 0:
                                 guard_list = []
@@ -8267,7 +8336,7 @@ class GameFrame(tk.Frame):
                                     guard_list = sorted(guard_list, reverse=True)
                                     if guard_list[0] == 101:
                                         ai5_hp = ai5_hp - ai5_attack[1]
-                                        if champion3_thorns[0] == 1:
+                                        if champion3_thorns != 0:
                                             ai5_hp = ai5_hp - 200
                                         if ai5_hp < 0:
                                             ai5_hp = 0
@@ -8276,7 +8345,7 @@ class GameFrame(tk.Frame):
                                     if guard_list[0] == 99:
                                         bodyguard_counter = 1
                                         for champions in CHAMPION_LIST:
-                                            if champions == VETERAN_BODYGUARD.name:
+                                            if champions == VETERAN_BODYGUARD.title:
                                                 break
                                             bodyguard_counter += 1
                                         if bodyguard_counter == 1:
@@ -8304,28 +8373,28 @@ class GameFrame(tk.Frame):
                                             champion5_lastRound_damageTaken = self.calculate_ai_damage(5, 5)
                                             if champion5_hp < 0:
                                                 champion5_hp = 0
-                            elif CHAMPION_LIST[2] == MONK.name:
+                            elif CHAMPION_LIST[2] == MONK.title:
                                     staggered_damage = (self.calculate_ai_damage(3, 5) / 3)
                                     unstaggerable_damage = 0
-                                    if len(monk_staggered_damage_list1) == 0:
+                                    if monk_staggered_damage_list1[1] == 0:
                                         monk_staggered_damage_list1 = [staggered_damage, 3]
                                     else:
-                                        if len(monk_staggered_damage_list2) == 0:
+                                        if monk_staggered_damage_list2[1] == 0:
                                             monk_staggered_damage_list2 = [staggered_damage, 3]
                                         else:
-                                            if len(monk_staggered_damage_list3) == 0:
+                                            if monk_staggered_damage_list3[1] == 0:
                                                 monk_staggered_damage_list3 = [staggered_damage, 3]
                                             else:
                                                 unstaggerable_damage = self.calculate_ai_damage(3, 5)
                                     staggered_damage_list = [0, 0, 0]
-                                    if len(monk_staggered_damage_list1) != 0:
+                                    if monk_staggered_damage_list1[1] != 0:
                                         staggered_damage_list[0] = monk_staggered_damage_list1[0]
-                                    if len(monk_staggered_damage_list2) != 0:
+                                    if monk_staggered_damage_list2[1] != 0:
                                         staggered_damage_list[1] = monk_staggered_damage_list2[0]
-                                    if len(monk_staggered_damage_list3) != 0:
+                                    if monk_staggered_damage_list3[1] != 0:
                                         staggered_damage_list[2] = monk_staggered_damage_list3[0]
-                                    champion3_hp = champion3_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3] + unstaggerable_damage)
-                                    champion3_lastRound_damageTaken = (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3] + unstaggerable_damage)
+                                    champion3_hp = champion3_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[2] + unstaggerable_damage)
+                                    champion3_lastRound_damageTaken = (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[2] + unstaggerable_damage)
                                     if champion3_hp < 0:
                                         champion3_hp = 0
                             else:
@@ -8333,6 +8402,10 @@ class GameFrame(tk.Frame):
                                 champion3_lastRound_damageTaken = self.calculate_ai_damage(3, 5)
                                 if champion3_hp < 0:
                                     champion3_hp = 0
+                        if champion3_thorns != 0:
+                            ai5_hp = ai5_hp - 200
+                        if ai5_hp < 0:
+                            ai5_hp = 0
                         elif taunter_counter == 4:
                             if len(champion4_guarded) != 0:
                                 guard_list = []
@@ -8348,7 +8421,7 @@ class GameFrame(tk.Frame):
                                     guard_list = sorted(guard_list, reverse=True)
                                     if guard_list[0] == 101:
                                         ai5_hp = ai5_hp - ai5_attack[1]
-                                        if champion4_thorns[0] == 1:
+                                        if champion4_thorns != 0:
                                             ai5_hp = ai5_hp - 200
                                         if ai5_hp < 0:
                                             ai5_hp = 0
@@ -8357,7 +8430,7 @@ class GameFrame(tk.Frame):
                                     if guard_list[0] == 99:
                                         bodyguard_counter = 1
                                         for champions in CHAMPION_LIST:
-                                            if champions == VETERAN_BODYGUARD.name:
+                                            if champions == VETERAN_BODYGUARD.title:
                                                 break
                                             bodyguard_counter += 1
                                         if bodyguard_counter == 1:
@@ -8385,28 +8458,28 @@ class GameFrame(tk.Frame):
                                             champion5_lastRound_damageTaken = self.calculate_ai_damage(5, 5)
                                             if champion5_hp < 0:
                                                 champion5_hp = 0
-                            elif CHAMPION_LIST[3] == MONK.name:
+                            elif CHAMPION_LIST[3] == MONK.title:
                                     staggered_damage = (self.calculate_ai_damage(4, 5) / 3)
                                     unstaggerable_damage = 0
-                                    if len(monk_staggered_damage_list1) == 0:
+                                    if monk_staggered_damage_list1[1] == 0:
                                         monk_staggered_damage_list1 = [staggered_damage, 3]
                                     else:
-                                        if len(monk_staggered_damage_list2) == 0:
+                                        if monk_staggered_damage_list2[1] == 0:
                                             monk_staggered_damage_list2 = [staggered_damage, 3]
                                         else:
-                                            if len(monk_staggered_damage_list3) == 0:
+                                            if monk_staggered_damage_list3[1] == 0:
                                                 monk_staggered_damage_list3 = [staggered_damage, 3]
                                             else:
                                                 unstaggerable_damage = self.calculate_ai_damage(4, 5)
                                     staggered_damage_list = [0, 0, 0]
-                                    if len(monk_staggered_damage_list1) != 0:
+                                    if monk_staggered_damage_list1[1] != 0:
                                         staggered_damage_list[0] = monk_staggered_damage_list1[0]
-                                    if len(monk_staggered_damage_list2) != 0:
+                                    if monk_staggered_damage_list2[1] != 0:
                                         staggered_damage_list[1] = monk_staggered_damage_list2[0]
-                                    if len(monk_staggered_damage_list3) != 0:
+                                    if monk_staggered_damage_list3[1] != 0:
                                         staggered_damage_list[2] = monk_staggered_damage_list3[0]
-                                    champion4_hp = champion4_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3] + unstaggerable_damage)
-                                    champion4_lastRound_damageTaken = (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3] + unstaggerable_damage)
+                                    champion4_hp = champion4_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[2] + unstaggerable_damage)
+                                    champion4_lastRound_damageTaken = (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[2] + unstaggerable_damage)
                                     if champion4_hp < 0:
                                         champion4_hp = 0
                             else:
@@ -8414,6 +8487,10 @@ class GameFrame(tk.Frame):
                                 champion4_lastRound_damageTaken = self.calculate_ai_damage(4, 5)
                                 if champion4_hp < 0:
                                     champion4_hp = 0
+                            if champion4_thorns != 0:
+                                ai5_hp = ai5_hp - 200
+                            if ai5_hp < 0:
+                                ai5_hp = 0
                         elif taunter_counter == 5:
                             if len(champion5_guarded) != 0:
                                 guard_list = []
@@ -8429,16 +8506,12 @@ class GameFrame(tk.Frame):
                                     guard_list = sorted(guard_list, reverse=True)
                                     if guard_list[0] == 101:
                                         ai5_hp = ai5_hp - ai5_attack[1]
-                                        if champion5_thorns[0] == 1:
-                                            ai5_hp = ai5_hp - 200
-                                        if ai5_hp < 0:
-                                            ai5_hp = 0
                                     if guard_list[0] == 100:
                                         champion5_hp = champion5_hp
                                     if guard_list[0] == 99:
                                         bodyguard_counter = 1
                                         for champions in CHAMPION_LIST:
-                                            if champions == VETERAN_BODYGUARD.name:
+                                            if champions == VETERAN_BODYGUARD.title:
                                                 break
                                             bodyguard_counter += 1
                                         if bodyguard_counter == 1:
@@ -8466,28 +8539,28 @@ class GameFrame(tk.Frame):
                                             champion5_lastRound_damageTaken = self.calculate_ai_damage(5, 5)
                                             if champion5_hp < 0:
                                                 champion5_hp = 0
-                            elif CHAMPION_LIST[4] == MONK.name:
+                            elif CHAMPION_LIST[4] == MONK.title:
                                     staggered_damage = (self.calculate_ai_damage(5, 5) / 3)
                                     unstaggerable_damage = 0
-                                    if len(monk_staggered_damage_list1) == 0:
+                                    if monk_staggered_damage_list1[1] == 0:
                                         monk_staggered_damage_list1 = [staggered_damage, 3]
                                     else:
-                                        if len(monk_staggered_damage_list2) == 0:
+                                        if monk_staggered_damage_list2[1] == 0:
                                             monk_staggered_damage_list2 = [staggered_damage, 3]
                                         else:
-                                            if len(monk_staggered_damage_list3) == 0:
+                                            if monk_staggered_damage_list3[1] == 0:
                                                 monk_staggered_damage_list3 = [staggered_damage, 3]
                                             else:
                                                 unstaggerable_damage = self.calculate_ai_damage(5, 5)
                                     staggered_damage_list = [0, 0, 0]
-                                    if len(monk_staggered_damage_list1) != 0:
+                                    if monk_staggered_damage_list1[1] != 0:
                                         staggered_damage_list[0] = monk_staggered_damage_list1[0]
-                                    if len(monk_staggered_damage_list2) != 0:
+                                    if monk_staggered_damage_list2[1] != 0:
                                         staggered_damage_list[1] = monk_staggered_damage_list2[0]
-                                    if len(monk_staggered_damage_list3) != 0:
+                                    if monk_staggered_damage_list3[1] != 0:
                                         staggered_damage_list[2] = monk_staggered_damage_list3[0]
-                                    champion5_hp = champion5_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3] + unstaggerable_damage)
-                                    champion5_lastRound_damageTaken = (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3] + unstaggerable_damage)
+                                    champion5_hp = champion5_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[2] + unstaggerable_damage)
+                                    champion5_lastRound_damageTaken = (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[2] + unstaggerable_damage)
                                     if champion5_hp < 0:
                                         champion5_hp = 0
                             else:
@@ -8495,7 +8568,10 @@ class GameFrame(tk.Frame):
                                 champion5_lastRound_damageTaken = self.calculate_ai_damage(5, 5)
                                 if champion5_hp < 0:
                                     champion5_hp = 0
-                            ai5_taunt[1] = ai5_taunt[1] - 1
+                            if champion5_thorns != 0:
+                                ai5_hp = ai5_hp - 200
+                            if ai5_hp < 0:
+                                ai5_hp = 0
                     else:
                         if "Everyone" in ai5_attack_intention:
                             if champion1_hp != 0:
@@ -8513,16 +8589,12 @@ class GameFrame(tk.Frame):
                                         guard_list = sorted(guard_list, reverse=True)
                                         if guard_list[0] == 101:
                                             ai5_hp = ai5_hp - ai5_attack[1]
-                                            if champion5_thorns[0] == 1:
-                                                ai5_hp = ai5_hp - 200
-                                            if ai5_hp < 0:
-                                                ai5_hp = 0
                                         if guard_list[0] == 100:
                                             champion1_hp = champion1_hp
                                         if guard_list[0] == 99:
                                             bodyguard_counter = 1
                                             for champions in CHAMPION_LIST:
-                                                if champions == VETERAN_BODYGUARD.name:
+                                                if champions == VETERAN_BODYGUARD.title:
                                                     break
                                                 bodyguard_counter += 1
                                             if bodyguard_counter == 1:
@@ -8550,28 +8622,28 @@ class GameFrame(tk.Frame):
                                                 champion5_lastRound_damageTaken = self.calculate_ai_damage(5, 5)
                                                 if champion5_hp < 0:
                                                     champion5_hp = 0
-                                elif CHAMPION_LIST[0] == MONK.name:
+                                elif CHAMPION_LIST[0] == MONK.title:
                                     staggered_damage = (self.calculate_ai_damage(1, 5) / 3)
                                     unstaggerable_damage = 0
-                                    if len(monk_staggered_damage_list1) == 0:
+                                    if monk_staggered_damage_list1[1] == 0:
                                         monk_staggered_damage_list1 = [staggered_damage, 3]
                                     else:
-                                        if len(monk_staggered_damage_list2) == 0:
+                                        if monk_staggered_damage_list2[1] == 0:
                                             monk_staggered_damage_list2 = [staggered_damage, 3]
                                         else:
-                                            if len(monk_staggered_damage_list3) == 0:
+                                            if monk_staggered_damage_list3[1] == 0:
                                                 monk_staggered_damage_list3 = [staggered_damage, 3]
                                             else:
                                                 unstaggerable_damage = self.calculate_ai_damage(1, 5)
                                     staggered_damage_list = [0, 0, 0]
-                                    if len(monk_staggered_damage_list1) != 0:
+                                    if monk_staggered_damage_list1[1] != 0:
                                         staggered_damage_list[0] = monk_staggered_damage_list1[0]
-                                    if len(monk_staggered_damage_list2) != 0:
+                                    if monk_staggered_damage_list2[1] != 0:
                                         staggered_damage_list[1] = monk_staggered_damage_list2[0]
-                                    if len(monk_staggered_damage_list3) != 0:
+                                    if monk_staggered_damage_list3[1] != 0:
                                         staggered_damage_list[2] = monk_staggered_damage_list3[0]
-                                    champion1_hp = champion1_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3] + unstaggerable_damage)
-                                    champion1_lastRound_damageTaken = (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3] + unstaggerable_damage)
+                                    champion1_hp = champion1_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[2] + unstaggerable_damage)
+                                    champion1_lastRound_damageTaken = (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[2] + unstaggerable_damage)
                                     if champion1_hp < 0:
                                         champion1_hp = 0
                                 else:
@@ -8579,6 +8651,10 @@ class GameFrame(tk.Frame):
                                     champion1_lastRound_damageTaken = self.calculate_ai_damage(1, 5)
                                     if champion1_hp < 0:
                                         champion1_hp = 0
+                                if champion1_thorns != 0:
+                                    ai5_hp = ai5_hp - 200
+                                if ai5_hp < 0:
+                                    ai5_hp = 0
                             if champion2_hp != 0:
                                 if len(champion2_guarded) != 0:
                                     guard_list = []
@@ -8594,16 +8670,12 @@ class GameFrame(tk.Frame):
                                         guard_list = sorted(guard_list, reverse=True)
                                         if guard_list[0] == 101:
                                             ai5_hp = ai5_hp - ai5_attack[1]
-                                            if champion5_thorns[0] == 1:
-                                                ai5_hp = ai5_hp - 200
-                                            if ai5_hp < 0:
-                                                ai5_hp = 0
                                         if guard_list[0] == 100:
                                             champion2_hp = champion2_hp
                                         if guard_list[0] == 99:
                                             bodyguard_counter = 1
                                             for champions in CHAMPION_LIST:
-                                                if champions == VETERAN_BODYGUARD.name:
+                                                if champions == VETERAN_BODYGUARD.title:
                                                     break
                                                 bodyguard_counter += 1
                                             if bodyguard_counter == 1:
@@ -8631,28 +8703,28 @@ class GameFrame(tk.Frame):
                                                 champion5_lastRound_damageTaken = self.calculate_ai_damage(5, 5)
                                                 if champion5_hp < 0:
                                                     champion5_hp = 0
-                                elif CHAMPION_LIST[1] == MONK.name:
+                                elif CHAMPION_LIST[1] == MONK.title:
                                     staggered_damage = (self.calculate_ai_damage(2, 5) / 3)
                                     unstaggerable_damage = 0
-                                    if len(monk_staggered_damage_list1) == 0:
+                                    if monk_staggered_damage_list1[1] == 0:
                                         monk_staggered_damage_list1 = [staggered_damage, 3]
                                     else:
-                                        if len(monk_staggered_damage_list2) == 0:
+                                        if monk_staggered_damage_list2[1] == 0:
                                             monk_staggered_damage_list2 = [staggered_damage, 3]
                                         else:
-                                            if len(monk_staggered_damage_list3) == 0:
+                                            if monk_staggered_damage_list3[1] == 0:
                                                 monk_staggered_damage_list3 = [staggered_damage, 3]
                                             else:
                                                 unstaggerable_damage = self.calculate_ai_damage(2, 5)
                                     staggered_damage_list = [0, 0, 0]
-                                    if len(monk_staggered_damage_list1) != 0:
+                                    if monk_staggered_damage_list1[1] != 0:
                                         staggered_damage_list[0] = monk_staggered_damage_list1[0]
-                                    if len(monk_staggered_damage_list2) != 0:
+                                    if monk_staggered_damage_list2[1] != 0:
                                         staggered_damage_list[1] = monk_staggered_damage_list2[0]
-                                    if len(monk_staggered_damage_list3) != 0:
+                                    if monk_staggered_damage_list3[1] != 0:
                                         staggered_damage_list[2] = monk_staggered_damage_list3[0]
-                                    champion2_hp = champion2_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3] + unstaggerable_damage)
-                                    champion2_lastRound_damageTaken = (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3] + unstaggerable_damage)
+                                    champion2_hp = champion2_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[2] + unstaggerable_damage)
+                                    champion2_lastRound_damageTaken = (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[2] + unstaggerable_damage)
                                     if champion2_hp < 0:
                                         champion2_hp = 0
                                 else:
@@ -8660,6 +8732,10 @@ class GameFrame(tk.Frame):
                                     champion2_lastRound_damageTaken = self.calculate_ai_damage(2, 5)
                                     if champion2_hp < 0:
                                         champion2_hp = 0
+                                if champion2_thorns != 0:
+                                    ai5_hp = ai5_hp - 200
+                                if ai5_hp < 0:
+                                    ai5_hp = 0
                             if champion3_hp != 0:
                                 if len(champion3_guarded) != 0:
                                     guard_list = []
@@ -8675,16 +8751,12 @@ class GameFrame(tk.Frame):
                                         guard_list = sorted(guard_list, reverse=True)
                                         if guard_list[0] == 101:
                                             ai5_hp = ai5_hp - ai5_attack[1]
-                                            if champion5_thorns[0] == 1:
-                                                ai5_hp = ai5_hp - 200
-                                            if ai5_hp < 0:
-                                                ai5_hp = 0
                                         if guard_list[0] == 100:
                                             champion3_hp = champion3_hp
                                         if guard_list[0] == 99:
                                             bodyguard_counter = 1
                                             for champions in CHAMPION_LIST:
-                                                if champions == VETERAN_BODYGUARD.name:
+                                                if champions == VETERAN_BODYGUARD.title:
                                                     break
                                                 bodyguard_counter += 1
                                             if bodyguard_counter == 1:
@@ -8712,28 +8784,28 @@ class GameFrame(tk.Frame):
                                                 champion5_lastRound_damageTaken = self.calculate_ai_damage(5, 5)
                                                 if champion5_hp < 0:
                                                     champion5_hp = 0
-                                elif CHAMPION_LIST[2] == MONK.name:
+                                elif CHAMPION_LIST[2] == MONK.title:
                                     staggered_damage = (self.calculate_ai_damage(3, 5) / 3)
                                     unstaggerable_damage = 0
-                                    if len(monk_staggered_damage_list1) == 0:
+                                    if monk_staggered_damage_list1[1] == 0:
                                         monk_staggered_damage_list1 = [staggered_damage, 3]
                                     else:
-                                        if len(monk_staggered_damage_list2) == 0:
+                                        if monk_staggered_damage_list2[1] == 0:
                                             monk_staggered_damage_list2 = [staggered_damage, 3]
                                         else:
-                                            if len(monk_staggered_damage_list3) == 0:
+                                            if monk_staggered_damage_list3[1] == 0:
                                                 monk_staggered_damage_list3 = [staggered_damage, 3]
                                             else:
                                                 unstaggerable_damage = self.calculate_ai_damage(3, 5)
                                     staggered_damage_list = [0, 0, 0]
-                                    if len(monk_staggered_damage_list1) != 0:
+                                    if monk_staggered_damage_list1[1] != 0:
                                         staggered_damage_list[0] = monk_staggered_damage_list1[0]
-                                    if len(monk_staggered_damage_list2) != 0:
+                                    if monk_staggered_damage_list2[1] != 0:
                                         staggered_damage_list[1] = monk_staggered_damage_list2[0]
-                                    if len(monk_staggered_damage_list3) != 0:
+                                    if monk_staggered_damage_list3[1] != 0:
                                         staggered_damage_list[2] = monk_staggered_damage_list3[0]
-                                    champion3_hp = champion3_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3] + unstaggerable_damage)
-                                    champion3_lastRound_damageTaken = (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3] + unstaggerable_damage)
+                                    champion3_hp = champion3_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[2] + unstaggerable_damage)
+                                    champion3_lastRound_damageTaken = (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[2] + unstaggerable_damage)
                                     if champion3_hp < 0:
                                         champion3_hp = 0
                                 else:
@@ -8741,6 +8813,10 @@ class GameFrame(tk.Frame):
                                     champion3_lastRound_damageTaken = self.calculate_ai_damage(3, 5)
                                     if champion3_hp < 0:
                                         champion3_hp = 0
+                                if champion3_thorns != 0:
+                                    ai5_hp = ai5_hp - 200
+                                if ai5_hp < 0:
+                                    ai5_hp = 0
                             if champion4_hp != 0:
                                 if len(champion4_guarded) != 0:
                                     guard_list = []
@@ -8756,7 +8832,7 @@ class GameFrame(tk.Frame):
                                         guard_list = sorted(guard_list, reverse=True)
                                         if guard_list[0] == 101:
                                             ai5_hp = ai5_hp - ai5_attack[1]
-                                            if champion5_thorns[0] == 1:
+                                            if champion4_thorns != 0:
                                                 ai5_hp = ai5_hp - 200
                                             if ai5_hp < 0:
                                                 ai5_hp = 0
@@ -8765,7 +8841,7 @@ class GameFrame(tk.Frame):
                                         if guard_list[0] == 99:
                                             bodyguard_counter = 1
                                             for champions in CHAMPION_LIST:
-                                                if champions == VETERAN_BODYGUARD.name:
+                                                if champions == VETERAN_BODYGUARD.title:
                                                     break
                                                 bodyguard_counter += 1
                                             if bodyguard_counter == 1:
@@ -8793,28 +8869,28 @@ class GameFrame(tk.Frame):
                                                 champion5_lastRound_damageTaken = self.calculate_ai_damage(5, 5)
                                                 if champion5_hp < 0:
                                                     champion5_hp = 0
-                                elif CHAMPION_LIST[3] == MONK.name:
+                                elif CHAMPION_LIST[3] == MONK.title:
                                     staggered_damage = (self.calculate_ai_damage(4, 5) / 3)
                                     unstaggerable_damage = 0
-                                    if len(monk_staggered_damage_list1) == 0:
+                                    if monk_staggered_damage_list1[1] == 0:
                                         monk_staggered_damage_list1 = [staggered_damage, 3]
                                     else:
-                                        if len(monk_staggered_damage_list2) == 0:
+                                        if monk_staggered_damage_list2[1] == 0:
                                             monk_staggered_damage_list2 = [staggered_damage, 3]
                                         else:
-                                            if len(monk_staggered_damage_list3) == 0:
+                                            if monk_staggered_damage_list3[1] == 0:
                                                 monk_staggered_damage_list3 = [staggered_damage, 3]
                                             else:
                                                 unstaggerable_damage = self.calculate_ai_damage(4, 5)
                                     staggered_damage_list = [0, 0, 0]
-                                    if len(monk_staggered_damage_list1) != 0:
+                                    if monk_staggered_damage_list1[1] != 0:
                                         staggered_damage_list[0] = monk_staggered_damage_list1[0]
-                                    if len(monk_staggered_damage_list2) != 0:
+                                    if monk_staggered_damage_list2[1] != 0:
                                         staggered_damage_list[1] = monk_staggered_damage_list2[0]
-                                    if len(monk_staggered_damage_list3) != 0:
+                                    if monk_staggered_damage_list3[1] != 0:
                                         staggered_damage_list[2] = monk_staggered_damage_list3[0]
-                                    champion4_hp = champion4_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3] + unstaggerable_damage)
-                                    champion4_lastRound_damageTaken = (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3] + unstaggerable_damage)
+                                    champion4_hp = champion4_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[2] + unstaggerable_damage)
+                                    champion4_lastRound_damageTaken = (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[2] + unstaggerable_damage)
                                     if champion4_hp < 0:
                                         champion4_hp = 0
                                 else:
@@ -8822,6 +8898,10 @@ class GameFrame(tk.Frame):
                                     champion4_lastRound_damageTaken = self.calculate_ai_damage(4, 5)
                                     if champion4_hp < 0:
                                         champion4_hp = 0
+                                if champion4_thorns != 0:
+                                    ai5_hp = ai5_hp - 200
+                                if ai5_hp < 0:
+                                    ai5_hp = 0
                             if champion5_hp != 0:
                                 if len(champion5_guarded) != 0:
                                     guard_list = []
@@ -8837,16 +8917,12 @@ class GameFrame(tk.Frame):
                                         guard_list = sorted(guard_list, reverse=True)
                                         if guard_list[0] == 101:
                                             ai5_hp = ai5_hp - ai5_attack[1]
-                                            if champion5_thorns[0] == 1:
-                                                ai5_hp = ai5_hp - 200
-                                            if ai5_hp < 0:
-                                                ai5_hp = 0
                                         if guard_list[0] == 100:
                                             champion5_hp = champion5_hp
                                         if guard_list[0] == 99:
                                             bodyguard_counter = 1
                                             for champions in CHAMPION_LIST:
-                                                if champions == VETERAN_BODYGUARD.name:
+                                                if champions == VETERAN_BODYGUARD.title:
                                                     break
                                                 bodyguard_counter += 1
                                             if bodyguard_counter == 1:
@@ -8874,28 +8950,28 @@ class GameFrame(tk.Frame):
                                                 champion5_lastRound_damageTaken = self.calculate_ai_damage(5, 5)
                                                 if champion5_hp < 0:
                                                     champion5_hp = 0
-                                elif CHAMPION_LIST[4] == MONK.name:
+                                elif CHAMPION_LIST[4] == MONK.title:
                                     staggered_damage = (self.calculate_ai_damage(5, 5) / 3)
                                     unstaggerable_damage = 0
-                                    if len(monk_staggered_damage_list1) == 0:
+                                    if monk_staggered_damage_list1[1] == 0:
                                         monk_staggered_damage_list1 = [staggered_damage, 3]
                                     else:
-                                        if len(monk_staggered_damage_list2) == 0:
+                                        if monk_staggered_damage_list2[1] == 0:
                                             monk_staggered_damage_list2 = [staggered_damage, 3]
                                         else:
-                                            if len(monk_staggered_damage_list3) == 0:
+                                            if monk_staggered_damage_list3[1] == 0:
                                                 monk_staggered_damage_list3 = [staggered_damage, 3]
                                             else:
                                                 unstaggerable_damage = self.calculate_ai_damage(5, 5)
                                     staggered_damage_list = [0, 0, 0]
-                                    if len(monk_staggered_damage_list1) != 0:
+                                    if monk_staggered_damage_list1[1] != 0:
                                         staggered_damage_list[0] = monk_staggered_damage_list1[0]
-                                    if len(monk_staggered_damage_list2) != 0:
+                                    if monk_staggered_damage_list2[1] != 0:
                                         staggered_damage_list[1] = monk_staggered_damage_list2[0]
-                                    if len(monk_staggered_damage_list3) != 0:
+                                    if monk_staggered_damage_list3[1] != 0:
                                         staggered_damage_list[2] = monk_staggered_damage_list3[0]
-                                    champion5_hp = champion5_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3] + unstaggerable_damage)
-                                    champion5_lastRound_damageTaken = (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3] + unstaggerable_damage)
+                                    champion5_hp = champion5_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[2] + unstaggerable_damage)
+                                    champion5_lastRound_damageTaken = (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[2] + unstaggerable_damage)
                                     if champion5_hp < 0:
                                         champion5_hp = 0
                                 else:
@@ -8903,6 +8979,10 @@ class GameFrame(tk.Frame):
                                     champion5_lastRound_damageTaken = self.calculate_ai_damage(5, 5)
                                     if champion5_hp < 0:
                                         champion5_hp = 0
+                                if champion5_thorns != 0:
+                                    ai5_hp = ai5_hp - 200
+                                if ai5_hp < 0:
+                                    ai5_hp = 0
                         else:
                             for indiv_champion in CHAMPION_LIST:
                                 if indiv_champion in ai5_attack_intention:
@@ -8926,16 +9006,12 @@ class GameFrame(tk.Frame):
                                                 guard_list = sorted(guard_list, reverse=True)
                                                 if guard_list[0] == 101:
                                                     ai5_hp = ai5_hp - ai5_attack[1]
-                                                    if champion5_thorns[0] == 1:
-                                                        ai5_hp = ai5_hp - 200
-                                                    if ai5_hp < 0:
-                                                        ai5_hp = 0
                                                 if guard_list[0] == 100:
                                                     champion1_hp = champion1_hp
                                                 if guard_list[0] == 99:
                                                     bodyguard_counter = 1
                                                     for champions in CHAMPION_LIST:
-                                                        if champions == VETERAN_BODYGUARD.name:
+                                                        if champions == VETERAN_BODYGUARD.title:
                                                             break
                                                         bodyguard_counter += 1
                                                     if bodyguard_counter == 1:
@@ -8963,28 +9039,28 @@ class GameFrame(tk.Frame):
                                                         champion5_lastRound_damageTaken = self.calculate_ai_damage(5, 5)
                                                         if champion5_hp < 0:
                                                             champion5_hp = 0
-                                        elif CHAMPION_LIST[0] == MONK.name:
+                                        elif CHAMPION_LIST[0] == MONK.title:
                                             staggered_damage = (self.calculate_ai_damage(1, 5) / 3)
                                             unstaggerable_damage = 0
-                                            if len(monk_staggered_damage_list1) == 0:
+                                            if monk_staggered_damage_list1[1] == 0:
                                                 monk_staggered_damage_list1 = [staggered_damage, 3]
                                             else:
-                                                if len(monk_staggered_damage_list2) == 0:
+                                                if monk_staggered_damage_list2[1] == 0:
                                                     monk_staggered_damage_list2 = [staggered_damage, 3]
                                                 else:
-                                                    if len(monk_staggered_damage_list3) == 0:
+                                                    if monk_staggered_damage_list3[1] == 0:
                                                         monk_staggered_damage_list3 = [staggered_damage, 3]
                                                     else:
                                                         unstaggerable_damage = self.calculate_ai_damage(1, 5)
                                             staggered_damage_list = [0, 0, 0]
-                                            if len(monk_staggered_damage_list1) != 0:
+                                            if monk_staggered_damage_list1[1] != 0:
                                                 staggered_damage_list[0] = monk_staggered_damage_list1[0]
-                                            if len(monk_staggered_damage_list2) != 0:
+                                            if monk_staggered_damage_list2[1] != 0:
                                                 staggered_damage_list[1] = monk_staggered_damage_list2[0]
-                                            if len(monk_staggered_damage_list3) != 0:
+                                            if monk_staggered_damage_list3[1] != 0:
                                                 staggered_damage_list[2] = monk_staggered_damage_list3[0]
-                                            champion1_hp = champion1_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3] + unstaggerable_damage)
-                                            champion1_lastRound_damageTaken = (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3] + unstaggerable_damage)
+                                            champion1_hp = champion1_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[2] + unstaggerable_damage)
+                                            champion1_lastRound_damageTaken = (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[2] + unstaggerable_damage)
                                             if champion1_hp < 0:
                                                 champion1_hp = 0
                                         else:
@@ -8992,6 +9068,10 @@ class GameFrame(tk.Frame):
                                             champion1_lastRound_damageTaken = self.calculate_ai_damage(1, 5)
                                             if champion1_hp < 0:
                                                 champion1_hp = 0
+                                        if champion1_thorns != 0:
+                                            ai5_hp = ai5_hp - 200
+                                        if ai5_hp < 0:
+                                            ai5_hp = 0
                                     if counter == 2:
                                         if len(champion2_guarded) != 0:
                                             guard_list = []
@@ -9007,16 +9087,12 @@ class GameFrame(tk.Frame):
                                                 guard_list = sorted(guard_list, reverse=True)
                                                 if guard_list[0] == 101:
                                                     ai5_hp = ai5_hp - ai5_attack[1]
-                                                    if champion5_thorns[0] == 1:
-                                                        ai5_hp = ai5_hp - 200
-                                                    if ai5_hp < 0:
-                                                        ai5_hp = 0
                                                 if guard_list[0] == 100:
                                                     champion2_hp = champion2_hp
                                                 if guard_list[0] == 99:
                                                     bodyguard_counter = 1
                                                     for champions in CHAMPION_LIST:
-                                                        if champions == VETERAN_BODYGUARD.name:
+                                                        if champions == VETERAN_BODYGUARD.title:
                                                             break
                                                         bodyguard_counter += 1
                                                     if bodyguard_counter == 1:
@@ -9044,28 +9120,28 @@ class GameFrame(tk.Frame):
                                                         champion5_lastRound_damageTaken = self.calculate_ai_damage(5, 5)
                                                         if champion5_hp < 0:
                                                             champion5_hp = 0
-                                        elif CHAMPION_LIST[1] == MONK.name:
+                                        elif CHAMPION_LIST[1] == MONK.title:
                                             staggered_damage = (self.calculate_ai_damage(2, 5) / 3)
                                             unstaggerable_damage = 0
-                                            if len(monk_staggered_damage_list1) == 0:
+                                            if monk_staggered_damage_list1[1] == 0:
                                                 monk_staggered_damage_list1 = [staggered_damage, 3]
                                             else:
-                                                if len(monk_staggered_damage_list2) == 0:
+                                                if monk_staggered_damage_list2[1] == 0:
                                                     monk_staggered_damage_list2 = [staggered_damage, 3]
                                                 else:
-                                                    if len(monk_staggered_damage_list3) == 0:
+                                                    if monk_staggered_damage_list3[1] == 0:
                                                         monk_staggered_damage_list3 = [staggered_damage, 3]
                                                     else:
                                                         unstaggerable_damage = self.calculate_ai_damage(2, 5)
                                             staggered_damage_list = [0, 0, 0]
-                                            if len(monk_staggered_damage_list1) != 0:
+                                            if monk_staggered_damage_list1[1] != 0:
                                                 staggered_damage_list[0] = monk_staggered_damage_list1[0]
-                                            if len(monk_staggered_damage_list2) != 0:
+                                            if monk_staggered_damage_list2[1] != 0:
                                                 staggered_damage_list[1] = monk_staggered_damage_list2[0]
-                                            if len(monk_staggered_damage_list3) != 0:
+                                            if monk_staggered_damage_list3[1] != 0:
                                                 staggered_damage_list[2] = monk_staggered_damage_list3[0]
-                                            champion2_hp = champion2_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3] + unstaggerable_damage)
-                                            champion2_lastRound_damageTaken = (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3] + unstaggerable_damage)
+                                            champion2_hp = champion2_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[2] + unstaggerable_damage)
+                                            champion2_lastRound_damageTaken = (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[2] + unstaggerable_damage)
                                             if champion2_hp < 0:
                                                 champion2_hp = 0
                                         else:
@@ -9073,6 +9149,10 @@ class GameFrame(tk.Frame):
                                             champion2_lastRound_damageTaken = self.calculate_ai_damage(2, 5)
                                             if champion2_hp < 0:
                                                 champion2_hp = 0
+                                        if champion2_thorns != 0:
+                                            ai5_hp = ai5_hp - 200
+                                        if ai5_hp < 0:
+                                            ai5_hp = 0
                                     if counter == 3:
                                         if len(champion3_guarded) != 0:
                                             guard_list = []
@@ -9088,16 +9168,12 @@ class GameFrame(tk.Frame):
                                                 guard_list = sorted(guard_list, reverse=True)
                                                 if guard_list[0] == 101:
                                                     ai5_hp = ai5_hp - ai5_attack[1]
-                                                    if champion5_thorns[0] == 1:
-                                                        ai5_hp = ai5_hp - 200
-                                                    if ai5_hp < 0:
-                                                        ai5_hp = 0
                                                 if guard_list[0] == 100:
                                                     champion3_hp = champion3_hp
                                                 if guard_list[0] == 99:
                                                     bodyguard_counter = 1
                                                     for champions in CHAMPION_LIST:
-                                                        if champions == VETERAN_BODYGUARD.name:
+                                                        if champions == VETERAN_BODYGUARD.title:
                                                             break
                                                         bodyguard_counter += 1
                                                     if bodyguard_counter == 1:
@@ -9125,28 +9201,28 @@ class GameFrame(tk.Frame):
                                                         champion5_lastRound_damageTaken = self.calculate_ai_damage(5, 5)
                                                         if champion5_hp < 0:
                                                             champion5_hp = 0
-                                        elif CHAMPION_LIST[2] == MONK.name:
+                                        elif CHAMPION_LIST[2] == MONK.title:
                                             staggered_damage = (self.calculate_ai_damage(3, 5) / 3)
                                             unstaggerable_damage = 0
-                                            if len(monk_staggered_damage_list1) == 0:
+                                            if monk_staggered_damage_list1[1] == 0:
                                                 monk_staggered_damage_list1 = [staggered_damage, 3]
                                             else:
-                                                if len(monk_staggered_damage_list2) == 0:
+                                                if monk_staggered_damage_list2[1] == 0:
                                                     monk_staggered_damage_list2 = [staggered_damage, 3]
                                                 else:
-                                                    if len(monk_staggered_damage_list3) == 0:
+                                                    if monk_staggered_damage_list3[1] == 0:
                                                         monk_staggered_damage_list3 = [staggered_damage, 3]
                                                     else:
                                                         unstaggerable_damage = self.calculate_ai_damage(3, 5)
                                             staggered_damage_list = [0, 0, 0]
-                                            if len(monk_staggered_damage_list1) != 0:
+                                            if monk_staggered_damage_list1[1] != 0:
                                                 staggered_damage_list[0] = monk_staggered_damage_list1[0]
-                                            if len(monk_staggered_damage_list2) != 0:
+                                            if monk_staggered_damage_list2[1] != 0:
                                                 staggered_damage_list[1] = monk_staggered_damage_list2[0]
-                                            if len(monk_staggered_damage_list3) != 0:
+                                            if monk_staggered_damage_list3[1] != 0:
                                                 staggered_damage_list[2] = monk_staggered_damage_list3[0]
-                                            champion3_hp = champion3_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3] + unstaggerable_damage)
-                                            champion3_lastRound_damageTaken = (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3] + unstaggerable_damage)
+                                            champion3_hp = champion3_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[2] + unstaggerable_damage)
+                                            champion3_lastRound_damageTaken = (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[2] + unstaggerable_damage)
                                             if champion3_hp < 0:
                                                 champion3_hp = 0
                                         else:
@@ -9154,6 +9230,10 @@ class GameFrame(tk.Frame):
                                             champion3_lastRound_damageTaken = self.calculate_ai_damage(3, 5)
                                             if champion3_hp < 0:
                                                 champion3_hp = 0
+                                        if champion3_thorns != 0:
+                                            ai5_hp = ai5_hp - 200
+                                        if ai5_hp < 0:
+                                            ai5_hp = 0
                                     if counter == 4:
                                         if len(champion4_guarded) != 0:
                                             guard_list = []
@@ -9169,16 +9249,12 @@ class GameFrame(tk.Frame):
                                                 guard_list = sorted(guard_list, reverse=True)
                                                 if guard_list[0] == 101:
                                                     ai5_hp = ai5_hp - ai5_attack[1]
-                                                    if champion5_thorns[0] == 1:
-                                                        ai5_hp = ai5_hp - 200
-                                                    if ai5_hp < 0:
-                                                        ai5_hp = 0
                                                 if guard_list[0] == 100:
                                                     champion4_hp = champion4_hp
                                                 if guard_list[0] == 99:
                                                     bodyguard_counter = 1
                                                     for champions in CHAMPION_LIST:
-                                                        if champions == VETERAN_BODYGUARD.name:
+                                                        if champions == VETERAN_BODYGUARD.title:
                                                             break
                                                         bodyguard_counter += 1
                                                     if bodyguard_counter == 1:
@@ -9206,28 +9282,28 @@ class GameFrame(tk.Frame):
                                                         champion5_lastRound_damageTaken = self.calculate_ai_damage(5, 5)
                                                         if champion5_hp < 0:
                                                             champion5_hp = 0
-                                        elif CHAMPION_LIST[3] == MONK.name:
+                                        elif CHAMPION_LIST[3] == MONK.title:
                                             staggered_damage = (self.calculate_ai_damage(4, 5) / 3)
                                             unstaggerable_damage = 0
-                                            if len(monk_staggered_damage_list1) == 0:
+                                            if monk_staggered_damage_list1[1] == 0:
                                                 monk_staggered_damage_list1 = [staggered_damage, 3]
                                             else:
-                                                if len(monk_staggered_damage_list2) == 0:
+                                                if monk_staggered_damage_list2[1] == 0:
                                                     monk_staggered_damage_list2 = [staggered_damage, 3]
                                                 else:
-                                                    if len(monk_staggered_damage_list3) == 0:
+                                                    if monk_staggered_damage_list3[1] == 0:
                                                         monk_staggered_damage_list3 = [staggered_damage, 3]
                                                     else:
                                                         unstaggerable_damage = self.calculate_ai_damage(4, 5)
                                             staggered_damage_list = [0, 0, 0]
-                                            if len(monk_staggered_damage_list1) != 0:
+                                            if monk_staggered_damage_list1[1] != 0:
                                                 staggered_damage_list[0] = monk_staggered_damage_list1[0]
-                                            if len(monk_staggered_damage_list2) != 0:
+                                            if monk_staggered_damage_list2[1] != 0:
                                                 staggered_damage_list[1] = monk_staggered_damage_list2[0]
-                                            if len(monk_staggered_damage_list3) != 0:
+                                            if monk_staggered_damage_list3[1] != 0:
                                                 staggered_damage_list[2] = monk_staggered_damage_list3[0]
-                                            champion4_hp = champion4_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3] + unstaggerable_damage)
-                                            champion4_lastRound_damageTaken = (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3] + unstaggerable_damage)
+                                            champion4_hp = champion4_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[2] + unstaggerable_damage)
+                                            champion4_lastRound_damageTaken = (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[2] + unstaggerable_damage)
                                             if champion4_hp < 0:
                                                 champion4_hp = 0
                                         else:
@@ -9235,6 +9311,10 @@ class GameFrame(tk.Frame):
                                             champion4_lastRound_damageTaken = self.calculate_ai_damage(4, 5)
                                             if champion4_hp < 0:
                                                 champion4_hp = 0
+                                        if champion4_thorns != 0:
+                                            ai5_hp = ai5_hp - 200
+                                        if ai5_hp < 0:
+                                            ai5_hp = 0
                                     if counter == 5:
                                         if len(champion5_guarded) != 0:
                                             guard_list = []
@@ -9250,16 +9330,12 @@ class GameFrame(tk.Frame):
                                                 guard_list = sorted(guard_list, reverse=True)
                                                 if guard_list[0] == 101:
                                                     ai5_hp = ai5_hp - ai5_attack[1]
-                                                    if champion5_thorns[0] == 1:
-                                                        ai5_hp = ai5_hp - 200
-                                                    if ai5_hp < 0:
-                                                        ai5_hp = 0
                                                 if guard_list[0] == 100:
                                                     champion5_hp = champion5_hp
                                                 if guard_list[0] == 99:
                                                     bodyguard_counter = 1
                                                     for champions in CHAMPION_LIST:
-                                                        if champions == VETERAN_BODYGUARD.name:
+                                                        if champions == VETERAN_BODYGUARD.title:
                                                             break
                                                         bodyguard_counter += 1
                                                     if bodyguard_counter == 1:
@@ -9287,28 +9363,28 @@ class GameFrame(tk.Frame):
                                                         champion5_lastRound_damageTaken = self.calculate_ai_damage(5, 5)
                                                         if champion5_hp < 0:
                                                             champion5_hp = 0
-                                        elif CHAMPION_LIST[4] == MONK.name:
+                                        elif CHAMPION_LIST[4] == MONK.title:
                                             staggered_damage = (self.calculate_ai_damage(5, 5) / 3)
                                             unstaggerable_damage = 0
-                                            if len(monk_staggered_damage_list1) == 0:
+                                            if monk_staggered_damage_list1[1] == 0:
                                                 monk_staggered_damage_list1 = [staggered_damage, 3]
                                             else:
-                                                if len(monk_staggered_damage_list2) == 0:
+                                                if monk_staggered_damage_list2[1] == 0:
                                                     monk_staggered_damage_list2 = [staggered_damage, 3]
                                                 else:
-                                                    if len(monk_staggered_damage_list3) == 0:
+                                                    if monk_staggered_damage_list3[1] == 0:
                                                         monk_staggered_damage_list3 = [staggered_damage, 3]
                                                     else:
                                                         unstaggerable_damage = self.calculate_ai_damage(5, 5)
                                             staggered_damage_list = [0, 0, 0]
-                                            if len(monk_staggered_damage_list1) != 0:
+                                            if monk_staggered_damage_list1[1] != 0:
                                                 staggered_damage_list[0] = monk_staggered_damage_list1[0]
-                                            if len(monk_staggered_damage_list2) != 0:
+                                            if monk_staggered_damage_list2[1] != 0:
                                                 staggered_damage_list[1] = monk_staggered_damage_list2[0]
-                                            if len(monk_staggered_damage_list3) != 0:
+                                            if monk_staggered_damage_list3[1] != 0:
                                                 staggered_damage_list[2] = monk_staggered_damage_list3[0]
-                                            champion5_hp = champion5_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3] + unstaggerable_damage)
-                                            champion5_lastRound_damageTaken = (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[3] + unstaggerable_damage)
+                                            champion5_hp = champion5_hp - (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[2] + unstaggerable_damage)
+                                            champion5_lastRound_damageTaken = (staggered_damage_list[0] + staggered_damage_list[1] + staggered_damage_list[2] + unstaggerable_damage)
                                             if champion5_hp < 0:
                                                 champion5_hp = 0
                                         else:
@@ -9316,6 +9392,10 @@ class GameFrame(tk.Frame):
                                             champion5_lastRound_damageTaken = self.calculate_ai_damage(5, 5)
                                             if champion5_hp < 0:
                                                 champion5_hp = 0
+                                        if champion5_thorns != 0:
+                                            ai5_hp = ai5_hp - 200
+                                        if ai5_hp < 0:
+                                            ai5_hp = 0
             if ai1_brittle != 0:
                 ai1_brittle = ai1_brittle - 1
             if ai2_brittle != 0:
@@ -9356,6 +9436,102 @@ class GameFrame(tk.Frame):
                 ai4_taunt[1] = ai4_taunt[1] - 1
             if ai5_taunt[1] != 0:
                 ai5_taunt[1] = ai5_taunt[1] - 1
+            champion1_guarded = []
+            champion2_guarded = []
+            champion3_guarded = []
+            champion4_guarded = []
+            champion5_guarded = []
+            champion1_defensive = []
+            champion2_defensive = []
+            champion3_defensive = []
+            champion4_defensive = []
+            champion5_defensive = []
+            if champion1_fullPotential != 0:
+                champion1_fullPotential = champion1_fullPotential - 1
+            if champion2_fullPotential != 0:
+                champion2_fullPotential = champion2_fullPotential - 1
+            if champion3_fullPotential != 0:
+                champion3_fullPotential = champion3_fullPotential - 1
+            if champion4_fullPotential != 0:
+                champion4_fullPotential = champion4_fullPotential - 1
+            if champion5_fullPotential != 0:
+                champion5_fullPotential = champion5_fullPotential - 1
+            if champion1_muscleEnlarger != 0:
+                champion1_muscleEnlarger = champion1_muscleEnlarger - 1
+            if champion2_muscleEnlarger != 0:
+                champion2_muscleEnlarger = champion2_muscleEnlarger - 1
+            if champion3_muscleEnlarger != 0:
+                champion3_muscleEnlarger = champion3_muscleEnlarger - 1
+            if champion4_muscleEnlarger != 0:
+                champion4_muscleEnlarger = champion4_muscleEnlarger - 1
+            if champion5_muscleEnlarger != 0:
+                champion5_muscleEnlarger = champion5_muscleEnlarger - 1
+            if champion1_JAXD != 0:
+                champion1_JAXD = champion1_JAXD - 1
+            if champion2_JAXD != 0:
+                champion2_JAXD = champion2_JAXD - 1
+            if champion3_JAXD != 0:
+                champion3_JAXD = champion3_JAXD - 1
+            if champion4_JAXD != 0:
+                champion4_JAXD = champion4_JAXD - 1
+            if champion5_JAXD != 0:
+                champion5_JAXD = champion5_JAXD - 1
+            if champion1_blessing != 0:
+                champion1_blessing = champion1_blessing - 1
+            if champion2_blessing != 0:
+                champion2_blessing = champion2_blessing - 1
+            if champion3_blessing != 0:
+                champion3_blessing = champion3_blessing - 1
+            if champion4_blessing != 0:
+                champion4_blessing = champion4_blessing - 1
+            if champion5_blessing != 0:
+                champion5_blessing = champion5_blessing - 1
+            if monk_staggered_damage_list1[1] != 0:
+                monk_staggered_damage_list1[1] = monk_staggered_damage_list1[1] - 1
+            if monk_staggered_damage_list2[1] != 0:
+                monk_staggered_damage_list2[1] = monk_staggered_damage_list2[1] - 1
+            if monk_staggered_damage_list3[1] != 0:
+                monk_staggered_damage_list3[1] = monk_staggered_damage_list3[1] - 1
+            if champion1_fortification != 0:
+                champion1_fortification = champion1_fortification - 1
+            if champion2_fortification != 0:
+                champion2_fortification = champion2_fortification - 1
+            if champion3_fortification != 0:
+                champion3_fortification = champion3_fortification - 1
+            if champion4_fortification != 0:
+                champion4_fortification = champion4_fortification - 1
+            if champion5_fortification != 0:
+                champion5_fortification = champion5_fortification - 1
+            if champion1_enrage != 0:
+                champion1_enrage = champion1_enrage - 1
+            if champion2_enrage != 0:
+                champion2_enrage = champion2_enrage - 1
+            if champion3_enrage != 0:
+                champion3_enrage = champion3_enrage - 1
+            if champion4_enrage != 0:
+                champion4_enrage = champion4_enrage - 1
+            if champion5_enrage != 0:
+                champion5_enrage = champion5_enrage - 1
+            if champion1_play_dead != 0:
+                champion1_play_dead = champion1_play_dead - 1
+            if champion2_play_dead != 0:
+                champion2_play_dead = champion2_play_dead - 1
+            if champion3_play_dead != 0:
+                champion3_play_dead = champion3_play_dead - 1
+            if champion4_play_dead != 0:
+                champion4_play_dead = champion4_play_dead - 1
+            if champion5_play_dead != 0:
+                champion5_play_dead = champion5_play_dead - 1
+            if champion1_thorns != 0:
+                champion1_thorns = champion1_thorns - 1
+            if champion2_thorns != 0:
+                champion2_thorns = champion2_thorns - 1
+            if champion3_thorns != 0:
+                champion3_thorns = champion3_thorns - 1
+            if champion4_thorns != 0:
+                champion4_thorns = champion4_thorns - 1
+            if champion5_thorns != 0:
+                champion5_thorns = champion5_thorns - 1
             current_turn = "MN"
             self.next_turn()
     def calculate_ai_damage(self, champion_position, ai_position):
@@ -9365,46 +9541,46 @@ class GameFrame(tk.Frame):
             else:
                 ai1_damage_done = ai1_attack[1]
             if champion_position == 1:
-                if champion1_fortification[0] == 1:
+                if champion1_fortification != 0:
                     ai1_damage_done = ai1_damage_done * 0.7
                 if champion1_aura == 2:
                     ai1_damage_done = ai1_damage_done * 0.9
-                if "Defensive Stance" in champion1_guarded:
+                if "Defensive Stance" in champion1_defensive:
                     ai1_damage_done = ai1_damage_done * 0.7
-                if "Enharden Nerves" in champion1_guarded:
+                if "Enharden Nerves" in champion1_defensive:
                     ai1_damage_done = ai1_damage_done * 0.6
-                if "Magical Barrier" in champion1_guarded:
+                if "Magical Barrier" in champion1_defensive:
                     ai1_damage_done = ai1_damage_done - 1000
                     if ai1_damage_done < 0:
                         ai1_damage_done = 0
             if champion_position == 2:
-                if champion2_fortification[0] == 1:
+                if champion2_fortification != 0:
                     ai1_damage_done = ai1_damage_done * 0.7
                 if champion2_aura != 0:
                     ai1_damage_done = ai1_damage_done * 0.9
-                if "Defensive Stance" in champion2_guarded:
+                if "Defensive Stance" in champion2_defensive:
                     ai1_damage_done = ai1_damage_done * 0.7
-                if "Enharden Nerves" in champion2_guarded:
+                if "Enharden Nerves" in champion2_defensive:
                     ai1_damage_done = ai1_damage_done * 0.6
-                if "Magical Barrier" in champion2_guarded:
+                if "Magical Barrier" in champion2_defensive:
                     ai1_damage_done = ai1_damage_done - 1000
                     if ai1_damage_done < 0:
                         ai1_damage_done = 0
             if champion_position == 3:
-                if champion3_fortification[0] == 1:
+                if champion3_fortification != 0:
                     ai1_damage_done = ai1_damage_done * 0.7
                 if champion3_aura != 0:
                     ai1_damage_done = ai1_damage_done * 0.9
-                if "Defensive Stance" in champion3_guarded:
+                if "Defensive Stance" in champion3_defensive:
                     ai1_damage_done = ai1_damage_done * 0.7
-                if "Enharden Nerves" in champion3_guarded:
+                if "Enharden Nerves" in champion3_defensive:
                     ai1_damage_done = ai1_damage_done * 0.6
-                if "Magical Barrier" in champion3_guarded:
+                if "Magical Barrier" in champion3_defensive:
                     ai1_damage_done = ai1_damage_done - 1000
                     if ai1_damage_done < 0:
                         ai1_damage_done = 0
             if champion_position == 4:
-                if champion4_fortification[0] == 1:
+                if champion4_fortification != 0:
                     ai1_damage_done = ai1_damage_done * 0.7
                 if champion4_aura != 0:
                     ai1_damage_done = ai1_damage_done * 0.9
@@ -9417,7 +9593,7 @@ class GameFrame(tk.Frame):
                     if ai1_damage_done < 0:
                         ai1_damage_done = 0
             if champion_position == 5:
-                if champion5_fortification[0] == 1:
+                if champion5_fortification != 0:
                     ai1_damage_done = ai1_damage_done * 0.7
                 if champion5_aura != 0:
                     ai1_damage_done = ai1_damage_done * 0.9
@@ -9436,46 +9612,46 @@ class GameFrame(tk.Frame):
             else:
                 ai2_damage_done = ai2_attack[1]
             if champion_position == 1:
-                if champion1_fortification[0] == 1:
+                if champion1_fortification != 0:
                     ai2_damage_done = ai2_damage_done * 0.7
                 if champion1_aura == 2:
                     ai2_damage_done = ai2_damage_done * 0.9
-                if "Defensive Stance" in champion1_guarded:
+                if "Defensive Stance" in champion1_defensive:
                     ai2_damage_done = ai2_damage_done * 0.7
-                if "Enharden Nerves" in champion1_guarded:
+                if "Enharden Nerves" in champion1_defensive:
                     ai2_damage_done = ai2_damage_done * 0.6
-                if "Magical Barrier" in champion1_guarded:
+                if "Magical Barrier" in champion1_defensive:
                     ai2_damage_done = ai2_damage_done - 1000
                     if ai2_damage_done < 0:
                         ai2_damage_done = 0
             if champion_position == 2:
-                if champion2_fortification[0] == 1:
+                if champion2_fortification != 0:
                     ai2_damage_done = ai2_damage_done * 0.7
                 if champion2_aura != 0:
                     ai2_damage_done = ai2_damage_done * 0.9
-                if "Defensive Stance" in champion2_guarded:
+                if "Defensive Stance" in champion2_defensive:
                     ai2_damage_done = ai2_damage_done * 0.7
-                if "Enharden Nerves" in champion2_guarded:
+                if "Enharden Nerves" in champion2_defensive:
                     ai2_damage_done = ai2_damage_done * 0.6
-                if "Magical Barrier" in champion2_guarded:
+                if "Magical Barrier" in champion2_defensive:
                     ai2_damage_done = ai2_damage_done - 1000
                     if ai2_damage_done < 0:
                         ai2_damage_done = 0
             if champion_position == 3:
-                if champion3_fortification[0] == 1:
+                if champion3_fortification != 0:
                     ai2_damage_done = ai2_damage_done * 0.7
                 if champion3_aura != 0:
                     ai2_damage_done = ai2_damage_done * 0.9
-                if "Defensive Stance" in champion3_guarded:
+                if "Defensive Stance" in champion3_defensive:
                     ai2_damage_done = ai2_damage_done * 0.7
-                if "Enharden Nerves" in champion3_guarded:
+                if "Enharden Nerves" in champion3_defensive:
                     ai2_damage_done = ai2_damage_done * 0.6
-                if "Magical Barrier" in champion3_guarded:
+                if "Magical Barrier" in champion3_defensive:
                     ai2_damage_done = ai2_damage_done - 1000
                     if ai2_damage_done < 0:
                         ai2_damage_done = 0
             if champion_position == 4:
-                if champion4_fortification[0] == 1:
+                if champion4_fortification != 0:
                     ai2_damage_done = ai2_damage_done * 0.7
                 if champion4_aura != 0:
                     ai2_damage_done = ai2_damage_done * 0.9
@@ -9488,7 +9664,7 @@ class GameFrame(tk.Frame):
                     if ai2_damage_done < 0:
                         ai2_damage_done = 0
             if champion_position == 5:
-                if champion5_fortification[0] == 1:
+                if champion5_fortification != 0:
                     ai2_damage_done = ai2_damage_done * 0.7
                 if champion5_aura != 0:
                     ai2_damage_done = ai2_damage_done * 0.9
@@ -9507,46 +9683,46 @@ class GameFrame(tk.Frame):
             else:
                 ai3_damage_done = ai3_attack[1]
             if champion_position == 1:
-                if champion1_fortification[0] == 1:
+                if champion1_fortification != 0:
                     ai3_damage_done = ai3_damage_done * 0.7
                 if champion1_aura == 2:
                     ai3_damage_done = ai3_damage_done * 0.9
-                if "Defensive Stance" in champion1_guarded:
+                if "Defensive Stance" in champion1_defensive:
                     ai3_damage_done = ai3_damage_done * 0.7
-                if "Enharden Nerves" in champion1_guarded:
+                if "Enharden Nerves" in champion1_defensive:
                     ai3_damage_done = ai3_damage_done * 0.6
-                if "Magical Barrier" in champion1_guarded:
+                if "Magical Barrier" in champion1_defensive:
                     ai3_damage_done = ai3_damage_done - 1000
                     if ai3_damage_done < 0:
                         ai3_damage_done = 0
             if champion_position == 2:
-                if champion2_fortification[0] == 1:
+                if champion2_fortification != 0:
                     ai3_damage_done = ai3_damage_done * 0.7
                 if champion2_aura != 0:
                     ai3_damage_done = ai3_damage_done * 0.9
-                if "Defensive Stance" in champion2_guarded:
+                if "Defensive Stance" in champion2_defensive:
                     ai3_damage_done = ai3_damage_done * 0.7
-                if "Enharden Nerves" in champion2_guarded:
+                if "Enharden Nerves" in champion2_defensive:
                     ai3_damage_done = ai3_damage_done * 0.6
-                if "Magical Barrier" in champion2_guarded:
+                if "Magical Barrier" in champion2_defensive:
                     ai3_damage_done = ai3_damage_done - 1000
                     if ai3_damage_done < 0:
                         ai3_damage_done = 0
             if champion_position == 3:
-                if champion3_fortification[0] == 1:
+                if champion3_fortification != 0:
                     ai3_damage_done = ai3_damage_done * 0.7
                 if champion3_aura != 1:
                     ai3_damage_done = ai3_damage_done * 0.9
-                if "Defensive Stance" in champion3_guarded:
+                if "Defensive Stance" in champion3_defensive:
                     ai3_damage_done = ai3_damage_done * 0.7
-                if "Enharden Nerves" in champion3_guarded:
+                if "Enharden Nerves" in champion3_defensive:
                     ai3_damage_done = ai3_damage_done * 0.6
-                if "Magical Barrier" in champion3_guarded:
+                if "Magical Barrier" in champion3_defensive:
                     ai3_damage_done = ai3_damage_done - 1000
                     if ai3_damage_done < 0:
                         ai3_damage_done = 0
             if champion_position == 4:
-                if champion4_fortification[0] == 1:
+                if champion4_fortification != 0:
                     ai3_damage_done = ai3_damage_done * 0.7
                 if champion4_aura != 0:
                     ai3_damage_done = ai3_damage_done * 0.9
@@ -9559,7 +9735,7 @@ class GameFrame(tk.Frame):
                     if ai3_damage_done < 0:
                         ai3_damage_done = 0
             if champion_position == 5:
-                if champion5_fortification[0] == 1:
+                if champion5_fortification != 0:
                     ai3_damage_done = ai3_damage_done * 0.7
                 if champion5_aura != 0:
                     ai3_damage_done = ai3_damage_done * 0.9
@@ -9578,46 +9754,46 @@ class GameFrame(tk.Frame):
             else:
                 ai4_damage_done = ai4_attack[1]
             if champion_position == 1:
-                if champion1_fortification[0] == 1:
+                if champion1_fortification != 0:
                     ai4_damage_done = ai4_damage_done * 0.7
                 if champion1_aura == 2:
                     ai4_damage_done = ai4_damage_done * 0.9
-                if "Defensive Stance" in champion1_guarded:
+                if "Defensive Stance" in champion1_defensive:
                     ai4_damage_done = ai4_damage_done * 0.7
-                if "Enharden Nerves" in champion1_guarded:
+                if "Enharden Nerves" in champion1_defensive:
                     ai4_damage_done = ai4_damage_done * 0.6
-                if "Magical Barrier" in champion1_guarded:
+                if "Magical Barrier" in champion1_defensive:
                     ai4_damage_done = ai4_damage_done - 1000
                     if ai4_damage_done < 0:
                         ai4_damage_done = 0
             if champion_position == 2:
-                if champion2_fortification[0] == 1:
+                if champion2_fortification != 0:
                     ai4_damage_done = ai4_damage_done * 0.7
                 if champion2_aura != 0:
                     ai4_damage_done = ai4_damage_done * 0.9
-                if "Defensive Stance" in champion2_guarded:
+                if "Defensive Stance" in champion2_defensive:
                     ai4_damage_done = ai4_damage_done * 0.7
-                if "Enharden Nerves" in champion2_guarded:
+                if "Enharden Nerves" in champion2_defensive:
                     ai4_damage_done = ai4_damage_done * 0.6
-                if "Magical Barrier" in champion2_guarded:
+                if "Magical Barrier" in champion2_defensive:
                     ai4_damage_done = ai4_damage_done - 1000
                     if ai4_damage_done < 0:
                         ai4_damage_done = 0
             if champion_position == 3:
-                if champion3_fortification[0] == 1:
+                if champion3_fortification != 0:
                     ai4_damage_done = ai4_damage_done * 0.7
                 if champion3_aura != 0:
                     ai4_damage_done = ai4_damage_done * 0.9
-                if "Defensive Stance" in champion3_guarded:
+                if "Defensive Stance" in champion3_defensive:
                     ai4_damage_done = ai4_damage_done * 0.7
-                if "Enharden Nerves" in champion3_guarded:
+                if "Enharden Nerves" in champion3_defensive:
                     ai4_damage_done = ai4_damage_done * 0.6
-                if "Magical Barrier" in champion3_guarded:
+                if "Magical Barrier" in champion3_defensive:
                     ai4_damage_done = ai4_damage_done - 1000
                     if ai4_damage_done < 0:
                         ai4_damage_done = 0
             if champion_position == 4:
-                if champion4_fortification[0] == 1:
+                if champion4_fortification != 0:
                     ai4_damage_done = ai4_damage_done * 0.7
                 if champion4_aura != 0:
                     ai4_damage_done = ai4_damage_done * 0.9
@@ -9630,7 +9806,7 @@ class GameFrame(tk.Frame):
                     if ai4_damage_done < 0:
                         ai4_damage_done = 0
             if champion_position == 5:
-                if champion5_fortification[0] == 1:
+                if champion5_fortification != 0:
                     ai4_damage_done = ai4_damage_done * 0.7
                 if champion5_aura != 0:
                     ai4_damage_done = ai4_damage_done * 0.9
@@ -9649,46 +9825,46 @@ class GameFrame(tk.Frame):
             else:
                 ai5_damage_done = ai5_attack[1]
             if champion_position == 1:
-                if champion1_fortification[0] == 1:
+                if champion1_fortification != 0:
                     ai5_damage_done = ai5_damage_done * 0.7
                 if champion1_aura == 2:
                     ai5_damage_done = ai5_damage_done * 0.9
-                if "Defensive Stance" in champion1_guarded:
+                if "Defensive Stance" in champion1_defensive:
                     ai5_damage_done = ai5_damage_done * 0.7
-                if "Enharden Nerves" in champion1_guarded:
+                if "Enharden Nerves" in champion1_defensive:
                     ai5_damage_done = ai5_damage_done * 0.6
-                if "Magical Barrier" in champion1_guarded:
+                if "Magical Barrier" in champion1_defensive:
                     ai5_damage_done = ai5_damage_done - 1000
                     if ai5_damage_done < 0:
                         ai5_damage_done = 0
             if champion_position == 2:
-                if champion2_fortification[0] == 1:
+                if champion2_fortification != 0:
                     ai5_damage_done = ai5_damage_done * 0.7
                 if champion2_aura != 0:
                     ai5_damage_done = ai5_damage_done * 0.9
-                if "Defensive Stance" in champion2_guarded:
+                if "Defensive Stance" in champion2_defensive:
                     ai5_damage_done = ai5_damage_done * 0.7
-                if "Enharden Nerves" in champion2_guarded:
+                if "Enharden Nerves" in champion2_defensive:
                     ai5_damage_done = ai5_damage_done * 0.6
-                if "Magical Barrier" in champion2_guarded:
+                if "Magical Barrier" in champion2_defensive:
                     ai5_damage_done = ai5_damage_done - 1000
                     if ai5_damage_done < 0:
                         ai5_damage_done = 0
             if champion_position == 3:
-                if champion3_fortification[0] == 1:
+                if champion3_fortification != 0:
                     ai5_damage_done = ai5_damage_done * 0.7
                 if champion3_aura != 0:
                     ai5_damage_done = ai5_damage_done * 0.9
-                if "Defensive Stance" in champion3_guarded:
+                if "Defensive Stance" in champion3_defensive:
                     ai5_damage_done = ai5_damage_done * 0.7
-                if "Enharden Nerves" in champion3_guarded:
+                if "Enharden Nerves" in champion3_defensive:
                     ai5_damage_done = ai5_damage_done * 0.6
-                if "Magical Barrier" in champion3_guarded:
+                if "Magical Barrier" in champion3_defensive:
                     ai5_damage_done = ai5_damage_done - 1000
                     if ai5_damage_done < 0:
                         ai5_damage_done = 0
             if champion_position == 4:
-                if champion4_fortification[0] == 1:
+                if champion4_fortification != 0:
                     ai5_damage_done = ai5_damage_done * 0.7
                 if champion4_aura != 0:
                     ai5_damage_done = ai5_damage_done * 0.9
@@ -9701,7 +9877,7 @@ class GameFrame(tk.Frame):
                     if ai5_damage_done < 0:
                         ai5_damage_done = 0
             if champion_position == 5:
-                if champion5_fortification[0] == 1:
+                if champion5_fortification != 0:
                     ai5_damage_done = ai5_damage_done * 0.7
                 if champion5_aura != 0:
                     ai5_damage_done = ai5_damage_done * 0.9
@@ -9714,7 +9890,7 @@ class GameFrame(tk.Frame):
                     if ai5_damage_done < 0:
                         ai5_damage_done = 0
             return math.ceil(ai5_damage_done)
-    
+
     def combat_to_progression(self):
         global roomLevel, floorLevel, from_combat, permaHealthMod
         roomLevel += 1
@@ -9727,13 +9903,28 @@ class GameFrame(tk.Frame):
         from_combat = 1
         self.DungeonFloorProgress()
 
+    def combat_to_endgame(self):
+        global current_dungeon_label
+        for widget in dungeon_game_frame.winfo_children():
+            widget.destroy()
+        current_dungeon_label.destroy()
+        teams_current_condition_label.destroy()
+        current_floor_label.destroy()
+        self.EndGameSaving()
+
     def check_if_power_conduit_text(self):
+        counter = 1
+        attack_text = ""
         for character in CHAMPION_LIST:
-            if character == "Power Conduit":
-                attack_text = "Cannot Attack"
-                break
-            else:
-                attack_text = "Attack"
+            turn_check = "C{}".format(counter)
+            if current_turn == turn_check:
+                if character == "Power Conduit":
+                    attack_text = "Cannot Attack"
+                    break
+                else:
+                    attack_text = "Attack"
+                    break
+            counter += 1
         return attack_text
 
     def check_if_power_conduit_command(self):
@@ -9796,7 +9987,7 @@ class GameFrame(tk.Frame):
                     play_dead_requirements[1] = play_dead_requirements[1] - 1
                 if rushed_rest_requirements[1] > 0:
                     rushed_rest_requirements[1] = rushed_rest_requirements[1] - 1
-            if CHAMPION_LIST[0] == "Brawlist ":
+            if CHAMPION_LIST[0] == "Brawlist":
                 if uppercut_requirements[1] > 0:
                     uppercut_requirements[1] = uppercut_requirements[1] - 1
                 if defensive_stance_requirements[1] > 0:
@@ -9885,7 +10076,7 @@ class GameFrame(tk.Frame):
                     play_dead_requirements[1] = play_dead_requirements[1] - 1
                 if rushed_rest_requirements[1] > 0:
                     rushed_rest_requirements[1] = rushed_rest_requirements[1] - 1
-            if CHAMPION_LIST[1] == "Brawlist ":
+            if CHAMPION_LIST[1] == "Brawlist":
                 if uppercut_requirements[1] > 0:
                     uppercut_requirements[1] = uppercut_requirements[1] - 1
                 if defensive_stance_requirements[1] > 0:
@@ -9974,7 +10165,7 @@ class GameFrame(tk.Frame):
                     play_dead_requirements[1] = play_dead_requirements[1] - 1
                 if rushed_rest_requirements[1] > 0:
                     rushed_rest_requirements[1] = rushed_rest_requirements[1] - 1
-            if CHAMPION_LIST[2] == "Brawlist ":
+            if CHAMPION_LIST[2] == "Brawlist":
                 if uppercut_requirements[1] > 0:
                     uppercut_requirements[1] = uppercut_requirements[1] - 1
                 if defensive_stance_requirements[1] > 0:
@@ -10063,7 +10254,7 @@ class GameFrame(tk.Frame):
                     play_dead_requirements[1] = play_dead_requirements[1] - 1
                 if rushed_rest_requirements[1] > 0:
                     rushed_rest_requirements[1] = rushed_rest_requirements[1] - 1
-            if CHAMPION_LIST[3] == "Brawlist ":
+            if CHAMPION_LIST[3] == "Brawlist":
                 if uppercut_requirements[1] > 0:
                     uppercut_requirements[1] = uppercut_requirements[1] - 1
                 if defensive_stance_requirements[1] > 0:
@@ -10152,7 +10343,7 @@ class GameFrame(tk.Frame):
                     play_dead_requirements[1] = play_dead_requirements[1] - 1
                 if rushed_rest_requirements[1] > 0:
                     rushed_rest_requirements[1] = rushed_rest_requirements[1] - 1
-            if CHAMPION_LIST[4] == "Brawlist ":
+            if CHAMPION_LIST[4] == "Brawlist":
                 if uppercut_requirements[1] > 0:
                     uppercut_requirements[1] = uppercut_requirements[1] - 1
                 if defensive_stance_requirements[1] > 0:
@@ -10216,22 +10407,22 @@ class GameFrame(tk.Frame):
             attack1_button = tk.Button(dungeon_game_frame, text=attack_button_text_list[0], width=50, height=4,
                                        command=lambda: self.champion_attacks(attack_button_text_list_temp[0]))
             attack1_button_details = tk.Button(dungeon_game_frame,
-                                               text="{} Details".format(attack_button_text_list_temp[0]), width=38,
+                                               text="{} Details (TBI)".format(attack_button_text_list_temp[0]), width=38,
                                                height=1)
             attack2_button = tk.Button(dungeon_game_frame, text=attack_button_text_list[1], width=50, height=4,
                                        command=lambda: self.champion_attacks(attack_button_text_list_temp[1]))
             attack2_button_details = tk.Button(dungeon_game_frame,
-                                               text="{} Details".format(attack_button_text_list_temp[1]), width=38,
+                                               text="{} Details (TBI)".format(attack_button_text_list_temp[1]), width=38,
                                                height=1)
             attack3_button = tk.Button(dungeon_game_frame, text=attack_button_text_list[2], width=50, height=4,
                                        command=lambda: self.champion_attacks(attack_button_text_list_temp[2]))
             attack3_button_details = tk.Button(dungeon_game_frame,
-                                               text="{} Details".format(attack_button_text_list_temp[2]), width=38,
+                                               text="{} Details (TBI)".format(attack_button_text_list_temp[2]), width=38,
                                                height=1)
             attack4_button = tk.Button(dungeon_game_frame, text=attack_button_text_list[3], width=50, height=4,
                                        command=lambda: self.champion_attacks(attack_button_text_list_temp[3]))
             attack4_button_details = tk.Button(dungeon_game_frame,
-                                               text="{} Details".format(attack_button_text_list_temp[3]), width=38,
+                                               text="{} Details (TBI)".format(attack_button_text_list_temp[3]), width=38,
                                                height=1)
             back_button = tk.Button(dungeon_game_frame, text="Back", command=self.player_combat_champion1)
             back_button.grid(row=20, column=2, pady=20)
@@ -10251,22 +10442,22 @@ class GameFrame(tk.Frame):
             attack1_button = tk.Button(dungeon_game_frame, text=attack_button_text_list[0], width=50, height=4,
                                        command=lambda: self.champion_attacks(attack_button_text_list_temp[0]))
             attack1_button_details = tk.Button(dungeon_game_frame,
-                                               text="{} Details".format(attack_button_text_list_temp[0]), width=38,
+                                               text="{} Details (TBI)".format(attack_button_text_list_temp[0]), width=38,
                                                height=1)
             attack2_button = tk.Button(dungeon_game_frame, text=attack_button_text_list[1], width=50, height=4,
                                        command=lambda: self.champion_attacks(attack_button_text_list_temp[1]))
             attack2_button_details = tk.Button(dungeon_game_frame,
-                                               text="{} Details".format(attack_button_text_list_temp[1]), width=38,
+                                               text="{} Details (TBI)".format(attack_button_text_list_temp[1]), width=38,
                                                height=1)
             attack3_button = tk.Button(dungeon_game_frame, text=attack_button_text_list[2], width=50, height=4,
                                        command=lambda: self.champion_attacks(attack_button_text_list_temp[2]))
             attack3_button_details = tk.Button(dungeon_game_frame,
-                                               text="{} Details".format(attack_button_text_list_temp[2]), width=38,
+                                               text="{} Details (TBI)".format(attack_button_text_list_temp[2]), width=38,
                                                height=1)
             attack4_button = tk.Button(dungeon_game_frame, text=attack_button_text_list[3], width=50, height=4,
                                        command=lambda: self.champion_attacks(attack_button_text_list_temp[3]))
             attack4_button_details = tk.Button(dungeon_game_frame,
-                                               text="{} Details".format(attack_button_text_list_temp[3]), width=38,
+                                               text="{} Details (TBI)".format(attack_button_text_list_temp[3]), width=38,
                                                height=1)
             back_button = tk.Button(dungeon_game_frame, text="Back", command=self.player_combat_champion2)
             back_button.grid(row=20, column=2, pady=20)
@@ -10286,22 +10477,22 @@ class GameFrame(tk.Frame):
             attack1_button = tk.Button(dungeon_game_frame, text=attack_button_text_list[0], width=50, height=4,
                                        command=lambda: self.champion_attacks(attack_button_text_list_temp[0]))
             attack1_button_details = tk.Button(dungeon_game_frame,
-                                               text="{} Details".format(attack_button_text_list_temp[0]), width=38,
+                                               text="{} Details (TBI)".format(attack_button_text_list_temp[0]), width=38,
                                                height=1)
             attack2_button = tk.Button(dungeon_game_frame, text=attack_button_text_list[1], width=50, height=4,
                                        command=lambda: self.champion_attacks(attack_button_text_list_temp[1]))
             attack2_button_details = tk.Button(dungeon_game_frame,
-                                               text="{} Details".format(attack_button_text_list_temp[1]), width=38,
+                                               text="{} Details (TBI)".format(attack_button_text_list_temp[1]), width=38,
                                                height=1)
             attack3_button = tk.Button(dungeon_game_frame, text=attack_button_text_list[2], width=50, height=4,
                                        command=lambda: self.champion_attacks(attack_button_text_list_temp[2]))
             attack3_button_details = tk.Button(dungeon_game_frame,
-                                               text="{} Details".format(attack_button_text_list_temp[2]), width=38,
+                                               text="{} Details (TBI)".format(attack_button_text_list_temp[2]), width=38,
                                                height=1)
             attack4_button = tk.Button(dungeon_game_frame, text=attack_button_text_list[3], width=50, height=4,
                                        command=lambda: self.champion_attacks(attack_button_text_list_temp[3]))
             attack4_button_details = tk.Button(dungeon_game_frame,
-                                               text="{} Details".format(attack_button_text_list_temp[3]), width=38,
+                                               text="{} Details (TBI)".format(attack_button_text_list_temp[3]), width=38,
                                                height=1)
             back_button = tk.Button(dungeon_game_frame, text="Back", command=self.player_combat_champion3)
             back_button.grid(row=20, column=2, pady=20)
@@ -10321,22 +10512,22 @@ class GameFrame(tk.Frame):
             attack1_button = tk.Button(dungeon_game_frame, text=attack_button_text_list[0], width=50, height=4,
                                        command=lambda: self.champion_attacks(attack_button_text_list_temp[0]))
             attack1_button_details = tk.Button(dungeon_game_frame,
-                                               text="{} Details".format(attack_button_text_list_temp[0]), width=38,
+                                               text="{} Details (TBI)".format(attack_button_text_list_temp[0]), width=38,
                                                height=1)
             attack2_button = tk.Button(dungeon_game_frame, text=attack_button_text_list[1], width=50, height=4,
                                        command=lambda: self.champion_attacks(attack_button_text_list_temp[1]))
             attack2_button_details = tk.Button(dungeon_game_frame,
-                                               text="{} Details".format(attack_button_text_list_temp[1]), width=38,
+                                               text="{} Details (TBI)".format(attack_button_text_list_temp[1]), width=38,
                                                height=1)
             attack3_button = tk.Button(dungeon_game_frame, text=attack_button_text_list[2], width=50, height=4,
                                        command=lambda: self.champion_attacks(attack_button_text_list_temp[2]))
             attack3_button_details = tk.Button(dungeon_game_frame,
-                                               text="{} Details".format(attack_button_text_list_temp[2]), width=38,
+                                               text="{} Details (TBI)".format(attack_button_text_list_temp[2]), width=38,
                                                height=1)
             attack4_button = tk.Button(dungeon_game_frame, text=attack_button_text_list[3], width=50, height=4,
                                        command=lambda: self.champion_attacks(attack_button_text_list_temp[3]))
             attack4_button_details = tk.Button(dungeon_game_frame,
-                                               text="{} Details".format(attack_button_text_list_temp[3]), width=38,
+                                               text="{} Details (TBI)".format(attack_button_text_list_temp[3]), width=38,
                                                height=1)
             back_button = tk.Button(dungeon_game_frame, text="Back", command=self.player_combat_champion4)
             back_button.grid(row=20, column=2, pady=20)
@@ -10356,22 +10547,22 @@ class GameFrame(tk.Frame):
             attack1_button = tk.Button(dungeon_game_frame, text=attack_button_text_list[0], width=50, height=4,
                                        command=lambda: self.champion_attacks(attack_button_text_list_temp[0]))
             attack1_button_details = tk.Button(dungeon_game_frame,
-                                               text="{} Details".format(attack_button_text_list_temp[0]), width=38,
+                                               text="{} Details (TBI)".format(attack_button_text_list_temp[0]), width=38,
                                                height=1)
             attack2_button = tk.Button(dungeon_game_frame, text=attack_button_text_list[1], width=50, height=4,
                                        command=lambda: self.champion_attacks(attack_button_text_list_temp[1]))
             attack2_button_details = tk.Button(dungeon_game_frame,
-                                               text="{} Details".format(attack_button_text_list_temp[1]), width=38,
+                                               text="{} Details (TBI)".format(attack_button_text_list_temp[1]), width=38,
                                                height=1)
             attack3_button = tk.Button(dungeon_game_frame, text=attack_button_text_list[2], width=50, height=4,
                                        command=lambda: self.champion_attacks(attack_button_text_list_temp[2]))
             attack3_button_details = tk.Button(dungeon_game_frame,
-                                               text="{} Details".format(attack_button_text_list_temp[2]), width=38,
+                                               text="{} Details (TBI)".format(attack_button_text_list_temp[2]), width=38,
                                                height=1)
             attack4_button = tk.Button(dungeon_game_frame, text=attack_button_text_list[3], width=50, height=4,
                                        command=lambda: self.champion_attacks(attack_button_text_list_temp[3]))
             attack4_button_details = tk.Button(dungeon_game_frame,
-                                               text="{} Details".format(attack_button_text_list_temp[3]), width=38,
+                                               text="{} Details (TBI)".format(attack_button_text_list_temp[3]), width=38,
                                                height=1)
             back_button = tk.Button(dungeon_game_frame, text="Back", command=self.player_combat_champion5)
             back_button.grid(row=20, column=2, pady=20)
@@ -10403,10 +10594,7 @@ class GameFrame(tk.Frame):
                                 champion1_rp = champion1_rp - palm_strike_requirements[0]
                                 palm_strike_requirements[1] = palm_strike_requirements[2]
                                 champion1_rp = champion1_rp + palm_strike_requirements[3]
-                                if len(champion1_big_external_buffs) != 1:
-                                    damage_done = math.ceil((MONK.ap + champion1_small_external_buffs[0]) * champion1_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(MONK.ap + champion1_small_external_buffs[0])
+                                damage_done = math.ceil(MONK.ap * self.calculate_champion_damage(1))
                                 ability_data = ["Palm Strike", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -10415,10 +10603,7 @@ class GameFrame(tk.Frame):
                                 champion2_rp = champion2_rp - palm_strike_requirements[0]
                                 palm_strike_requirements[1] = palm_strike_requirements[2]
                                 champion2_rp = champion2_rp + palm_strike_requirements[3]
-                                if len(champion2_big_external_buffs) != 1:
-                                    damage_done = math.ceil((MONK.ap + champion2_small_external_buffs[0]) * champion2_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(MONK.ap + champion2_small_external_buffs[0])
+                                damage_done = math.ceil(MONK.ap * self.calculate_champion_damage(2))
                                 ability_data = ["Palm Strike", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -10427,10 +10612,7 @@ class GameFrame(tk.Frame):
                                 champion3_rp = champion3_rp - palm_strike_requirements[0]
                                 palm_strike_requirements[1] = palm_strike_requirements[2]
                                 champion3_rp = champion3_rp + palm_strike_requirements[3]
-                                if len(champion3_big_external_buffs) != 1:
-                                    damage_done = math.ceil((MONK.ap + champion3_small_external_buffs[0]) * champion3_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(MONK.ap + champion3_small_external_buffs[0])
+                                damage_done = math.ceil(MONK.ap * self.calculate_champion_damage(3))
                                 ability_data = ["Palm Strike", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -10439,10 +10621,7 @@ class GameFrame(tk.Frame):
                                 champion4_rp = champion4_rp - palm_strike_requirements[0]
                                 palm_strike_requirements[1] = palm_strike_requirements[2]
                                 champion4_rp = champion4_rp + palm_strike_requirements[3]
-                                if len(champion4_big_external_buffs) != 1:
-                                    damage_done = math.ceil((MONK.ap + champion4_small_external_buffs[0]) * champion4_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(MONK.ap + champion4_small_external_buffs[0])
+                                damage_done = math.ceil(MONK.ap * self.calculate_champion_damage(4))
                                 ability_data = ["Palm Strike", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -10451,11 +10630,7 @@ class GameFrame(tk.Frame):
                                 champion5_rp = champion5_rp - palm_strike_requirements[0]
                                 palm_strike_requirements[1] = palm_strike_requirements[2]
                                 champion5_rp = champion5_rp + palm_strike_requirements[3]
-                                if len(champion5_big_external_buffs) != 1:
-                                    damage_done = math.ceil((MONK.ap + champion5_small_external_buffs[0]) *
-                                                   champion5_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(MONK.ap + champion5_small_external_buffs[0])
+                                damage_done = math.ceil(MONK.ap * self.calculate_champion_damage(5))
                                 ability_data = ["Palm Strike", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -10473,11 +10648,7 @@ class GameFrame(tk.Frame):
                                     champion1_rp = champion1_rp - leg_sweep_requirements[0]
                                     leg_sweep_requirements[1] = leg_sweep_requirements[2]
                                     champion1_rp = champion1_rp + leg_sweep_requirements[3]
-                                    if len(champion1_big_external_buffs) != 1:
-                                        damage_done = math.ceil((MONK.ap + champion1_small_external_buffs[0]) *
-                                                       champion1_big_external_buffs[0])
-                                    else:
-                                        damage_done = math.ceil(MONK.ap + champion1_small_external_buffs[0])
+                                    damage_done = math.ceil(MONK.ap * self.calculate_champion_damage(1))
                                     ability_data = ["Leg Sweep", "enemy", "1T", damage_done]
                                 else:
                                     return
@@ -10486,11 +10657,7 @@ class GameFrame(tk.Frame):
                                     champion2_rp = champion2_rp - leg_sweep_requirements[0]
                                     leg_sweep_requirements[1] = leg_sweep_requirements[2]
                                     champion2_rp = champion2_rp + leg_sweep_requirements[3]
-                                    if len(champion2_big_external_buffs) != 1:
-                                        damage_done = math.ceil((MONK.ap + champion2_small_external_buffs[0]) *
-                                                       champion2_big_external_buffs[0])
-                                    else:
-                                        damage_done = math.ceil(MONK.ap + champion2_small_external_buffs[0])
+                                    damage_done = math.ceil(MONK.ap * self.calculate_champion_damage(2))
                                     ability_data = ["Leg Sweep", "enemy", "1T", damage_done]
                                 else:
                                     return
@@ -10499,11 +10666,7 @@ class GameFrame(tk.Frame):
                                     champion3_rp = champion3_rp - leg_sweep_requirements[0]
                                     leg_sweep_requirements[1] = leg_sweep_requirements[2]
                                     champion3_rp = champion3_rp + leg_sweep_requirements[3]
-                                    if len(champion3_big_external_buffs) != 1:
-                                        damage_done = math.ceil((MONK.ap + champion3_small_external_buffs[0]) *
-                                                       champion3_big_external_buffs[0])
-                                    else:
-                                        damage_done = math.ceil(MONK.ap + champion3_small_external_buffs[0])
+                                    damage_done = math.ceil(MONK.ap * self.calculate_champion_damage(3))
                                     ability_data = ["Leg Sweep", "enemy", "1T", damage_done]
                                 else:
                                     return
@@ -10512,11 +10675,7 @@ class GameFrame(tk.Frame):
                                     champion4_rp = champion4_rp - leg_sweep_requirements[0]
                                     leg_sweep_requirements[1] = leg_sweep_requirements[2]
                                     champion4_rp = champion4_rp + leg_sweep_requirements[3]
-                                    if len(champion4_big_external_buffs) != 1:
-                                        damage_done = math.ceil((MONK.ap + champion4_small_external_buffs[0]) *
-                                                       champion4_big_external_buffs[0])
-                                    else:
-                                        damage_done = math.ceil(MONK.ap + champion4_small_external_buffs[0])
+                                    damage_done = math.ceil(MONK.ap * self.calculate_champion_damage(4))
                                     ability_data = ["Leg Sweep", "enemy", "1T", damage_done]
                                 else:
                                     return
@@ -10525,11 +10684,7 @@ class GameFrame(tk.Frame):
                                     champion5_rp = champion5_rp - leg_sweep_requirements[0]
                                     leg_sweep_requirements[1] = leg_sweep_requirements[2]
                                     champion5_rp = champion5_rp + leg_sweep_requirements[3]
-                                    if len(champion5_big_external_buffs) != 1:
-                                        damage_done = math.ceil((MONK.ap + champion5_small_external_buffs[0]) *
-                                                       champion5_big_external_buffs[0])
-                                    else:
-                                        damage_done = math.ceil(MONK.ap + champion5_small_external_buffs[0])
+                                    damage_done = math.ceil(MONK.ap * self.calculate_champion_damage(5))
                                     ability_data = ["Leg Sweep", "enemy", "1T", damage_done]
                                 else:
                                     return
@@ -10546,10 +10701,7 @@ class GameFrame(tk.Frame):
                                 champion1_rp = champion1_rp - bloodthirst_requirements[0]
                                 bloodthirst_requirements[1] = bloodthirst_requirements[2]
                                 champion1_rp = champion1_rp + bloodthirst_requirements[3]
-                                if len(champion1_big_external_buffs) != 1:
-                                    damage_done = math.ceil((BARBARIAN.ap + champion1_small_external_buffs[0]) * champion1_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(BARBARIAN.ap + champion1_small_external_buffs[0])
+                                damage_done = math.ceil(BARBARIAN.ap * self.calculate_champion_damage(1))
                                 ability_data = ["Bloodthirst", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -10558,10 +10710,7 @@ class GameFrame(tk.Frame):
                                 champion2_rp = champion2_rp - bloodthirst_requirements[0]
                                 bloodthirst_requirements[1] = bloodthirst_requirements[2]
                                 champion2_rp = champion2_rp + bloodthirst_requirements[3]
-                                if len(champion2_big_external_buffs) != 1:
-                                    damage_done = math.ceil((BARBARIAN.ap + champion2_small_external_buffs[0]) * champion2_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(BARBARIAN.ap + champion2_small_external_buffs[0])
+                                damage_done = math.ceil(BARBARIAN.ap * self.calculate_champion_damage(2))
                                 ability_data = ["Bloodthirst", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -10570,10 +10719,7 @@ class GameFrame(tk.Frame):
                                 champion3_rp = champion3_rp - bloodthirst_requirements[0]
                                 bloodthirst_requirements[1] = bloodthirst_requirements[2]
                                 champion3_rp = champion3_rp + bloodthirst_requirements[3]
-                                if len(champion3_big_external_buffs) != 1:
-                                    damage_done = math.ceil((BARBARIAN.ap + champion3_small_external_buffs[0]) * champion3_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(BARBARIAN.ap + champion3_small_external_buffs[0])
+                                damage_done = math.ceil(BARBARIAN.ap * self.calculate_champion_damage(3))
                                 ability_data = ["Bloodthirst", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -10582,10 +10728,7 @@ class GameFrame(tk.Frame):
                                 champion4_rp = champion4_rp - bloodthirst_requirements[0]
                                 bloodthirst_requirements[1] = bloodthirst_requirements[2]
                                 champion4_rp = champion4_rp + bloodthirst_requirements[3]
-                                if len(champion4_big_external_buffs) != 1:
-                                    damage_done = math.ceil((BARBARIAN.ap + champion4_small_external_buffs[0]) * champion4_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(BARBARIAN.ap + champion4_small_external_buffs[0])
+                                damage_done = math.ceil(BARBARIAN.ap * self.calculate_champion_damage(4))
                                 ability_data = ["Bloodthirst", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -10594,11 +10737,7 @@ class GameFrame(tk.Frame):
                                 champion5_rp = champion5_rp - bloodthirst_requirements[0]
                                 bloodthirst_requirements[1] = bloodthirst_requirements[2]
                                 champion5_rp = champion5_rp + bloodthirst_requirements[3]
-                                if len(champion5_big_external_buffs) != 1:
-                                    damage_done = math.ceil((BARBARIAN.ap + champion5_small_external_buffs[0]) *
-                                                   champion5_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(BARBARIAN.ap + champion5_small_external_buffs[0])
+                                damage_done = math.ceil(BARBARIAN.ap * self.calculate_champion_damage(5))
                                 ability_data = ["Bloodthirst", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -10615,11 +10754,7 @@ class GameFrame(tk.Frame):
                                 champion1_rp = champion1_rp - pulverize_requirements[0]
                                 pulverize_requirements[1] = pulverize_requirements[2]
                                 champion1_rp = champion1_rp + pulverize_requirements[3]
-                                if len(champion1_big_external_buffs) != 1:
-                                    damage_done = math.ceil((BARBARIAN.ap + champion1_small_external_buffs[0]) *
-                                                   champion1_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(BARBARIAN.ap + champion1_small_external_buffs[0])
+                                damage_done = math.ceil(BARBARIAN.ap * self.calculate_champion_damage(1))
                                 ability_data = ["Pulverize", "enemy", "2T", damage_done]
                             else:
                                 return
@@ -10628,11 +10763,7 @@ class GameFrame(tk.Frame):
                                 champion2_rp = champion2_rp - pulverize_requirements[0]
                                 pulverize_requirements[1] = pulverize_requirements[2]
                                 champion2_rp = champion2_rp + pulverize_requirements[3]
-                                if len(champion2_big_external_buffs) != 1:
-                                    damage_done = math.ceil((BARBARIAN.ap + champion2_small_external_buffs[0]) *
-                                                   champion2_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(BARBARIAN.ap + champion2_small_external_buffs[0])
+                                damage_done = math.ceil(BARBARIAN.ap * self.calculate_champion_damage(2))
                                 ability_data = ["Pulverize", "enemy", "2T", damage_done]
                             else:
                                 return
@@ -10641,11 +10772,7 @@ class GameFrame(tk.Frame):
                                 champion3_rp = champion3_rp - pulverize_requirements[0]
                                 pulverize_requirements[1] = pulverize_requirements[2]
                                 champion3_rp = champion3_rp + pulverize_requirements[3]
-                                if len(champion3_big_external_buffs) != 1:
-                                    damage_done = math.ceil((BARBARIAN.ap + champion3_small_external_buffs[0]) *
-                                                   champion3_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(BARBARIAN.ap + champion3_small_external_buffs[0])
+                                damage_done = math.ceil(BARBARIAN.ap * self.calculate_champion_damage(3))
                                 ability_data = ["Pulverize", "enemy", "2T", damage_done]
                             else:
                                 return
@@ -10654,11 +10781,7 @@ class GameFrame(tk.Frame):
                                 champion4_rp = champion4_rp - pulverize_requirements[0]
                                 pulverize_requirements[1] = pulverize_requirements[2]
                                 champion4_rp = champion4_rp + pulverize_requirements[3]
-                                if len(champion4_big_external_buffs) != 1:
-                                    damage_done = math.ceil((BARBARIAN.ap + champion4_small_external_buffs[0]) *
-                                                   champion4_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(BARBARIAN.ap + champion4_small_external_buffs[0])
+                                damage_done = math.ceil(BARBARIAN.ap * self.calculate_champion_damage(4))
                                 ability_data = ["Pulverize", "enemy", "2T", damage_done]
                             else:
                                 return
@@ -10667,11 +10790,7 @@ class GameFrame(tk.Frame):
                                 champion5_rp = champion5_rp - pulverize_requirements[0]
                                 pulverize_requirements[1] = pulverize_requirements[2]
                                 champion5_rp = champion5_rp + pulverize_requirements[3]
-                                if len(champion5_big_external_buffs) != 1:
-                                    damage_done = math.ceil((BARBARIAN.ap + champion5_small_external_buffs[0]) *
-                                                   champion5_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(BARBARIAN.ap + champion5_small_external_buffs[0])
+                                damage_done = math.ceil(BARBARIAN.ap * self.calculate_champion_damage(5))
                                 ability_data = ["Pulverize", "enemy", "2T", damage_done]
                             else:
                                 return
@@ -10688,11 +10807,8 @@ class GameFrame(tk.Frame):
                                 champion1_rp = champion1_rp - shield_bash_requirements[0]
                                 shield_bash_requirements[1] = shield_bash_requirements[2]
                                 champion1_rp = champion1_rp + shield_bash_requirements[3]
-                                if len(champion1_big_external_buffs) != 1:
-                                    damage_done = math.ceil((VETERAN_BODYGUARD.ap + champion1_small_external_buffs[0]) *
-                                                   champion1_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(VETERAN_BODYGUARD.ap + champion1_small_external_buffs[0])
+                                damage_done = math.ceil(VETERAN_BODYGUARD.ap * self.calculate_champion_damage(1))
+                                damage_done = math.ceil(VETERAN_BODYGUARD.ap * self.calculate_champion_damage(1))
                                 ability_data = ["Shield Bash", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -10701,11 +10817,8 @@ class GameFrame(tk.Frame):
                                 champion2_rp = champion2_rp - shield_bash_requirements[0]
                                 shield_bash_requirements[1] = shield_bash_requirements[2]
                                 champion2_rp = champion2_rp + shield_bash_requirements[3]
-                                if len(champion2_big_external_buffs) != 1:
-                                    damage_done = math.ceil((VETERAN_BODYGUARD.ap + champion2_small_external_buffs[0]) *
-                                                   champion2_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(VETERAN_BODYGUARD.ap + champion2_small_external_buffs[0])
+                                damage_done = math.ceil(VETERAN_BODYGUARD.ap * self.calculate_champion_damage(2))
+                                damage_done = math.ceil(VETERAN_BODYGUARD.ap * self.calculate_champion_damage(2))
                                 ability_data = ["Shield Bash", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -10714,11 +10827,8 @@ class GameFrame(tk.Frame):
                                 champion3_rp = champion3_rp - shield_bash_requirements[0]
                                 shield_bash_requirements[1] = shield_bash_requirements[2]
                                 champion3_rp = champion3_rp + shield_bash_requirements[3]
-                                if len(champion3_big_external_buffs) != 1:
-                                    damage_done = math.ceil((VETERAN_BODYGUARD.ap + champion3_small_external_buffs[0]) *
-                                                   champion3_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(VETERAN_BODYGUARD.ap + champion3_small_external_buffs[0])
+                                damage_done = math.ceil(VETERAN_BODYGUARD.ap * self.calculate_champion_damage(3))
+                                damage_done = math.ceil(VETERAN_BODYGUARD.ap * self.calculate_champion_damage(3))
                                 ability_data = ["Shield Bash", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -10727,11 +10837,8 @@ class GameFrame(tk.Frame):
                                 champion4_rp = champion4_rp - shield_bash_requirements[0]
                                 shield_bash_requirements[1] = shield_bash_requirements[2]
                                 champion4_rp = champion4_rp + shield_bash_requirements[3]
-                                if len(champion4_big_external_buffs) != 1:
-                                    damage_done = math.ceil((VETERAN_BODYGUARD.ap + champion4_small_external_buffs[0]) *
-                                                   champion4_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(VETERAN_BODYGUARD.ap + champion4_small_external_buffs[0])
+                                damage_done = math.ceil(VETERAN_BODYGUARD.ap * self.calculate_champion_damage(4))
+                                damage_done = math.ceil(VETERAN_BODYGUARD.ap * self.calculate_champion_damage(4))
                                 ability_data = ["Shield Bash", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -10740,11 +10847,8 @@ class GameFrame(tk.Frame):
                                 champion5_rp = champion5_rp - shield_bash_requirements[0]
                                 shield_bash_requirements[1] = shield_bash_requirements[2]
                                 champion5_rp = champion5_rp + shield_bash_requirements[3]
-                                if len(champion5_big_external_buffs) != 1:
-                                    damage_done = math.ceil((VETERAN_BODYGUARD.ap + champion5_small_external_buffs[0]) *
-                                                   champion5_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(VETERAN_BODYGUARD.ap + champion5_small_external_buffs[0])
+                                damage_done = math.ceil(VETERAN_BODYGUARD.ap * self.calculate_champion_damage(5))
+                                damage_done = math.ceil(VETERAN_BODYGUARD.ap * self.calculate_champion_damage(5))
                                 ability_data = ["Shield Bash", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -10761,11 +10865,8 @@ class GameFrame(tk.Frame):
                                 champion1_rp = champion1_rp - trainwreck_requirements[0]
                                 trainwreck_requirements[1] = trainwreck_requirements[2]
                                 champion1_rp = champion1_rp + trainwreck_requirements[3]
-                                if len(champion1_big_external_buffs) != 1:
-                                    damage_done = math.ceil((VETERAN_BODYGUARD.ap + champion1_small_external_buffs[0]) *
-                                                   champion1_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(VETERAN_BODYGUARD.ap + champion1_small_external_buffs[0])
+                                damage_done = math.ceil(VETERAN_BODYGUARD.ap * self.calculate_champion_damage(1))
+                                damage_done = math.ceil(VETERAN_BODYGUARD.ap * self.calculate_champion_damage(1))
                                 ability_data = ["Trainwreck", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -10774,11 +10875,8 @@ class GameFrame(tk.Frame):
                                 champion2_rp = champion2_rp - trainwreck_requirements[0]
                                 trainwreck_requirements[1] = trainwreck_requirements[2]
                                 champion2_rp = champion2_rp + trainwreck_requirements[3]
-                                if len(champion2_big_external_buffs) != 1:
-                                    damage_done = math.ceil((VETERAN_BODYGUARD.ap + champion2_small_external_buffs[0]) *
-                                                   champion2_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(VETERAN_BODYGUARD.ap + champion2_small_external_buffs[0])
+                                damage_done = math.ceil(VETERAN_BODYGUARD.ap * self.calculate_champion_damage(2))
+                                damage_done = math.ceil(VETERAN_BODYGUARD.ap * self.calculate_champion_damage(2))
                                 ability_data = ["Trainwreck", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -10787,11 +10885,8 @@ class GameFrame(tk.Frame):
                                 champion3_rp = champion3_rp - trainwreck_requirements[0]
                                 trainwreck_requirements[1] = trainwreck_requirements[2]
                                 champion3_rp = champion3_rp + trainwreck_requirements[3]
-                                if len(champion3_big_external_buffs) != 1:
-                                    damage_done = math.ceil((VETERAN_BODYGUARD.ap + champion3_small_external_buffs[0]) *
-                                                   champion3_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(VETERAN_BODYGUARD.ap + champion3_small_external_buffs[0])
+                                damage_done = math.ceil(VETERAN_BODYGUARD.ap * self.calculate_champion_damage(3))
+                                damage_done = math.ceil(VETERAN_BODYGUARD.ap * self.calculate_champion_damage(3))
                                 ability_data = ["Trainwreck", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -10800,11 +10895,8 @@ class GameFrame(tk.Frame):
                                 champion4_rp = champion4_rp - trainwreck_requirements[0]
                                 trainwreck_requirements[1] = trainwreck_requirements[2]
                                 champion4_rp = champion4_rp + trainwreck_requirements[3]
-                                if len(champion4_big_external_buffs) != 1:
-                                    damage_done = math.ceil((VETERAN_BODYGUARD.ap + champion4_small_external_buffs[0]) *
-                                                   champion4_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(VETERAN_BODYGUARD.ap + champion4_small_external_buffs[0])
+                                damage_done = math.ceil(VETERAN_BODYGUARD.ap * self.calculate_champion_damage(4))
+                                damage_done = math.ceil(VETERAN_BODYGUARD.ap * self.calculate_champion_damage(4))
                                 ability_data = ["Trainwreck", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -10813,11 +10905,8 @@ class GameFrame(tk.Frame):
                                 champion5_rp = champion5_rp - trainwreck_requirements[0]
                                 trainwreck_requirements[1] = trainwreck_requirements[2]
                                 champion5_rp = champion5_rp + trainwreck_requirements[3]
-                                if len(champion5_big_external_buffs) != 1:
-                                    damage_done = math.ceil((VETERAN_BODYGUARD.ap + champion5_small_external_buffs[0]) *
-                                                   champion5_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(VETERAN_BODYGUARD.ap + champion5_small_external_buffs[0])
+                                damage_done = math.ceil(VETERAN_BODYGUARD.ap * self.calculate_champion_damage(5))
+                                damage_done = math.ceil(VETERAN_BODYGUARD.ap * self.calculate_champion_damage(5))
                                 ability_data = ["Trainwreck", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -10834,11 +10923,8 @@ class GameFrame(tk.Frame):
                                 champion1_rp = champion1_rp - pierce_requirements[0]
                                 pierce_requirements[1] = pierce_requirements[2]
                                 champion1_rp = champion1_rp + pierce_requirements[3]
-                                if len(champion1_big_external_buffs) != 1:
-                                    damage_done = math.ceil((MASTER_FENCER.ap + champion1_small_external_buffs[0]) *
-                                                   champion1_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(MASTER_FENCER.ap + champion1_small_external_buffs[0])
+                                damage_done = math.ceil(MASTER_FENCER.ap * self.calculate_champion_damage(1))
+                                damage_done = math.ceil(MASTER_FENCER.ap * self.calculate_champion_damage(1))
                                 ability_data = ["Pierce", "enemy", "2T", damage_done]
                             else:
                                 return
@@ -10847,11 +10933,8 @@ class GameFrame(tk.Frame):
                                 champion2_rp = champion2_rp - pierce_requirements[0]
                                 pierce_requirements[1] = pierce_requirements[2]
                                 champion2_rp = champion2_rp + pierce_requirements[3]
-                                if len(champion2_big_external_buffs) != 1:
-                                    damage_done = math.ceil((MASTER_FENCER.ap + champion2_small_external_buffs[0]) *
-                                                   champion2_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(MASTER_FENCER.ap + champion2_small_external_buffs[0])
+                                damage_done = math.ceil(MASTER_FENCER.ap * self.calculate_champion_damage(2))
+                                damage_done = math.ceil(MASTER_FENCER.ap * self.calculate_champion_damage(2))
                                 ability_data = ["Pierce", "enemy", "2T", damage_done]
                             else:
                                 return
@@ -10860,11 +10943,8 @@ class GameFrame(tk.Frame):
                                 champion3_rp = champion3_rp - pierce_requirements[0]
                                 pierce_requirements[1] = pierce_requirements[2]
                                 champion3_rp = champion3_rp + pierce_requirements[3]
-                                if len(champion3_big_external_buffs) != 1:
-                                    damage_done = math.ceil((MASTER_FENCER.ap + champion3_small_external_buffs[0]) *
-                                                   champion3_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(MASTER_FENCER.ap + champion3_small_external_buffs[0])
+                                damage_done = math.ceil(MASTER_FENCER.ap * self.calculate_champion_damage(3))
+                                damage_done = math.ceil(MASTER_FENCER.ap * self.calculate_champion_damage(3))
                                 ability_data = ["Pierce", "enemy", "2T", damage_done]
                             else:
                                 return
@@ -10873,11 +10953,8 @@ class GameFrame(tk.Frame):
                                 champion4_rp = champion4_rp - pierce_requirements[0]
                                 pierce_requirements[1] = pierce_requirements[2]
                                 champion4_rp = champion4_rp + pierce_requirements[3]
-                                if len(champion4_big_external_buffs) != 1:
-                                    damage_done = math.ceil((MASTER_FENCER.ap + champion4_small_external_buffs[0]) *
-                                                   champion4_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(MASTER_FENCER.ap + champion4_small_external_buffs[0])
+                                damage_done = math.ceil(MASTER_FENCER.ap * self.calculate_champion_damage(4))
+                                damage_done = math.ceil(MASTER_FENCER.ap * self.calculate_champion_damage(4))
                                 ability_data = ["Pierce", "enemy", "2T", damage_done]
                             else:
                                 return
@@ -10886,11 +10963,8 @@ class GameFrame(tk.Frame):
                                 champion5_rp = champion5_rp - pierce_requirements[0]
                                 pierce_requirements[1] = pierce_requirements[2]
                                 champion5_rp = champion5_rp + pierce_requirements[3]
-                                if len(champion5_big_external_buffs) != 1:
-                                    damage_done = math.ceil((MASTER_FENCER.ap + champion5_small_external_buffs[0]) *
-                                                   champion5_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(MASTER_FENCER.ap + champion5_small_external_buffs[0])
+                                damage_done = math.ceil(MASTER_FENCER.ap * self.calculate_champion_damage(5))
+                                damage_done = math.ceil(MASTER_FENCER.ap * self.calculate_champion_damage(5))
                                 ability_data = ["Pierce", "enemy", "2T", damage_done]
                             else:
                                 return
@@ -10907,11 +10981,8 @@ class GameFrame(tk.Frame):
                                 champion1_rp = champion1_rp - disruptive_slash_requirements[0]
                                 disruptive_slash_requirements[1] = disruptive_slash_requirements[2]
                                 champion1_rp = champion1_rp + disruptive_slash_requirements[3]
-                                if len(champion1_big_external_buffs) != 1:
-                                    damage_done = math.ceil((MASTER_FENCER.ap + champion1_small_external_buffs[0]) *
-                                                   champion1_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(MASTER_FENCER.ap + champion1_small_external_buffs[0])
+                                damage_done = math.ceil(MASTER_FENCER.ap * self.calculate_champion_damage(1))
+                                damage_done = math.ceil(MASTER_FENCER.ap * self.calculate_champion_damage(1))
                                 ability_data = ["Disruptive Slash", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -10920,11 +10991,8 @@ class GameFrame(tk.Frame):
                                 champion2_rp = champion2_rp - disruptive_slash_requirements[0]
                                 disruptive_slash_requirements[1] = disruptive_slash_requirements[2]
                                 champion2_rp = champion2_rp + disruptive_slash_requirements[3]
-                                if len(champion2_big_external_buffs) != 1:
-                                    damage_done = math.ceil((MASTER_FENCER.ap + champion2_small_external_buffs[0]) *
-                                                   champion2_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(MASTER_FENCER.ap + champion2_small_external_buffs[0])
+                                damage_done = math.ceil(MASTER_FENCER.ap * self.calculate_champion_damage(2))
+                                damage_done = math.ceil(MASTER_FENCER.ap * self.calculate_champion_damage(2))
                                 ability_data = ["Disruptive Slash", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -10933,11 +11001,8 @@ class GameFrame(tk.Frame):
                                 champion3_rp = champion3_rp - disruptive_slash_requirements[0]
                                 disruptive_slash_requirements[1] = disruptive_slash_requirements[2]
                                 champion3_rp = champion3_rp + disruptive_slash_requirements[3]
-                                if len(champion3_big_external_buffs) != 1:
-                                    damage_done = math.ceil((MASTER_FENCER.ap + champion3_small_external_buffs[0]) *
-                                                   champion3_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(MASTER_FENCER.ap + champion3_small_external_buffs[0])
+                                damage_done = math.ceil(MASTER_FENCER.ap * self.calculate_champion_damage(3))
+                                damage_done = math.ceil(MASTER_FENCER.ap * self.calculate_champion_damage(3))
                                 ability_data = ["Disruptive Slash", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -10946,11 +11011,8 @@ class GameFrame(tk.Frame):
                                 champion4_rp = champion4_rp - disruptive_slash_requirements[0]
                                 disruptive_slash_requirements[1] = disruptive_slash_requirements[2]
                                 champion4_rp = champion4_rp + disruptive_slash_requirements[3]
-                                if len(champion4_big_external_buffs) != 1:
-                                    damage_done = math.ceil((MASTER_FENCER.ap + champion4_small_external_buffs[0]) *
-                                                   champion4_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(MASTER_FENCER.ap + champion4_small_external_buffs[0])
+                                damage_done = math.ceil(MASTER_FENCER.ap * self.calculate_champion_damage(4))
+                                damage_done = math.ceil(MASTER_FENCER.ap * self.calculate_champion_damage(4))
                                 ability_data = ["Disruptive Slash", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -10959,11 +11021,8 @@ class GameFrame(tk.Frame):
                                 champion5_rp = champion5_rp - disruptive_slash_requirements[0]
                                 disruptive_slash_requirements[1] = disruptive_slash_requirements[2]
                                 champion5_rp = champion5_rp + disruptive_slash_requirements[3]
-                                if len(champion5_big_external_buffs) != 1:
-                                    damage_done = math.ceil((MASTER_FENCER.ap + champion5_small_external_buffs[0]) *
-                                                   champion5_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(MASTER_FENCER.ap + champion5_small_external_buffs[0])
+                                damage_done = math.ceil(MASTER_FENCER.ap * self.calculate_champion_damage(5))
+                                damage_done = math.ceil(MASTER_FENCER.ap * self.calculate_champion_damage(5))
                                 ability_data = ["Disruptive Slash", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -10980,11 +11039,8 @@ class GameFrame(tk.Frame):
                                 champion1_rp = champion1_rp - raging_blow_requirements[0]
                                 raging_blow_requirements[1] = raging_blow_requirements[2]
                                 champion1_rp = champion1_rp + raging_blow_requirements[3]
-                                if len(champion1_big_external_buffs) != 1:
-                                    damage_done = math.ceil((BERSERKER.ap + champion1_small_external_buffs[0]) *
-                                                   champion1_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(BERSERKER.ap + champion1_small_external_buffs[0])
+                                damage_done = math.ceil(BERSERKER.ap * self.calculate_champion_damage(1))
+                                damage_done = math.ceil(BERSERKER.ap * self.calculate_champion_damage(1))
                                 ability_data = ["Raging Blow", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -10993,11 +11049,8 @@ class GameFrame(tk.Frame):
                                 champion2_rp = champion2_rp - raging_blow_requirements[0]
                                 raging_blow_requirements[1] = raging_blow_requirements[2]
                                 champion2_rp = champion2_rp + raging_blow_requirements[3]
-                                if len(champion2_big_external_buffs) != 1:
-                                    damage_done = math.ceil((BERSERKER.ap + champion2_small_external_buffs[0]) *
-                                                   champion2_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(BERSERKER.ap + champion2_small_external_buffs[0])
+                                damage_done = math.ceil(BERSERKER.ap * self.calculate_champion_damage(2))
+                                damage_done = math.ceil(BERSERKER.ap * self.calculate_champion_damage(2))
                                 ability_data = ["Raging Blow", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -11006,11 +11059,8 @@ class GameFrame(tk.Frame):
                                 champion3_rp = champion3_rp - raging_blow_requirements[0]
                                 raging_blow_requirements[1] = raging_blow_requirements[2]
                                 champion3_rp = champion3_rp + raging_blow_requirements[3]
-                                if len(champion3_big_external_buffs) != 1:
-                                    damage_done = math.ceil((BERSERKER.ap + champion3_small_external_buffs[0]) *
-                                                   champion3_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(BERSERKER.ap + champion3_small_external_buffs[0])
+                                damage_done = math.ceil(BERSERKER.ap * self.calculate_champion_damage(3))
+                                damage_done = math.ceil(BERSERKER.ap * self.calculate_champion_damage(3))
                                 ability_data = ["Raging Blow", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -11019,11 +11069,8 @@ class GameFrame(tk.Frame):
                                 champion4_rp = champion4_rp - raging_blow_requirements[0]
                                 raging_blow_requirements[1] = raging_blow_requirements[2]
                                 champion4_rp = champion4_rp + raging_blow_requirements[3]
-                                if len(champion4_big_external_buffs) != 1:
-                                    damage_done = math.ceil((BERSERKER.ap + champion4_small_external_buffs[0]) *
-                                                   champion4_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(BERSERKER.ap + champion4_small_external_buffs[0])
+                                damage_done = math.ceil(BERSERKER.ap * self.calculate_champion_damage(4))
+                                damage_done = math.ceil(BERSERKER.ap * self.calculate_champion_damage(4))
                                 ability_data = ["Raging Blow", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -11032,11 +11079,8 @@ class GameFrame(tk.Frame):
                                 champion5_rp = champion5_rp - raging_blow_requirements[0]
                                 raging_blow_requirements[1] = raging_blow_requirements[2]
                                 champion5_rp = champion5_rp + raging_blow_requirements[3]
-                                if len(champion5_big_external_buffs) != 1:
-                                    damage_done = math.ceil((BERSERKER.ap + champion5_small_external_buffs[0]) *
-                                                   champion5_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(BERSERKER.ap + champion5_small_external_buffs[0])
+                                damage_done = math.ceil(BERSERKER.ap * self.calculate_champion_damage(5))
+                                damage_done = math.ceil(BERSERKER.ap * self.calculate_champion_damage(5))
                                 ability_data = ["Raging Blow", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -11053,11 +11097,8 @@ class GameFrame(tk.Frame):
                                 champion1_rp = champion1_rp - rampage_requirements[0]
                                 rampage_requirements[1] = rampage_requirements[2]
                                 champion1_rp = champion1_rp + rampage_requirements[3]
-                                if len(champion1_big_external_buffs) != 1:
-                                    damage_done = math.ceil((BERSERKER.ap + champion1_small_external_buffs[0]) *
-                                                   champion1_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(BERSERKER.ap + champion1_small_external_buffs[0])
+                                damage_done = math.ceil(BERSERKER.ap * self.calculate_champion_damage(1))
+                                damage_done = math.ceil(BERSERKER.ap * self.calculate_champion_damage(1))
                                 ability_data = ["Rampage", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -11066,11 +11107,8 @@ class GameFrame(tk.Frame):
                                 champion2_rp = champion2_rp - rampage_requirements[0]
                                 rampage_requirements[1] = rampage_requirements[2]
                                 champion2_rp = champion2_rp + rampage_requirements[3]
-                                if len(champion2_big_external_buffs) != 1:
-                                    damage_done = math.ceil((BERSERKER.ap + champion2_small_external_buffs[0]) *
-                                                   champion2_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(BERSERKER.ap + champion2_small_external_buffs[0])
+                                damage_done = math.ceil(BERSERKER.ap * self.calculate_champion_damage(2))
+                                damage_done = math.ceil(BERSERKER.ap * self.calculate_champion_damage(2))
                                 ability_data = ["Rampage", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -11079,11 +11117,8 @@ class GameFrame(tk.Frame):
                                 champion3_rp = champion3_rp - rampage_requirements[0]
                                 rampage_requirements[1] = rampage_requirements[2]
                                 champion3_rp = champion3_rp + rampage_requirements[3]
-                                if len(champion3_big_external_buffs) != 1:
-                                    damage_done = math.ceil((BERSERKER.ap + champion3_small_external_buffs[0]) *
-                                                   champion3_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(BERSERKER.ap + champion3_small_external_buffs[0])
+                                damage_done = math.ceil(BERSERKER.ap * self.calculate_champion_damage(3))
+                                damage_done = math.ceil(BERSERKER.ap * self.calculate_champion_damage(3))
                                 ability_data = ["Rampage", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -11092,11 +11127,8 @@ class GameFrame(tk.Frame):
                                 champion4_rp = champion4_rp - rampage_requirements[0]
                                 rampage_requirements[1] = rampage_requirements[2]
                                 champion4_rp = champion4_rp + rampage_requirements[3]
-                                if len(champion4_big_external_buffs) != 1:
-                                    damage_done = math.ceil((BERSERKER.ap + champion4_small_external_buffs[0]) *
-                                                   champion4_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(BERSERKER.ap + champion4_small_external_buffs[0])
+                                damage_done = math.ceil(BERSERKER.ap * self.calculate_champion_damage(4))
+                                damage_done = math.ceil(BERSERKER.ap * self.calculate_champion_damage(4))
                                 ability_data = ["Rampage", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -11105,11 +11137,8 @@ class GameFrame(tk.Frame):
                                 champion5_rp = champion5_rp - rampage_requirements[0]
                                 rampage_requirements[1] = rampage_requirements[2]
                                 champion5_rp = champion5_rp + rampage_requirements[3]
-                                if len(champion5_big_external_buffs) != 1:
-                                    damage_done = math.ceil((BERSERKER.ap + champion5_small_external_buffs[0]) *
-                                                   champion5_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(BERSERKER.ap + champion5_small_external_buffs[0])
+                                damage_done = math.ceil(BERSERKER.ap * self.calculate_champion_damage(5))
+                                damage_done = math.ceil(BERSERKER.ap * self.calculate_champion_damage(5))
                                 ability_data = ["Rampage", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -11126,11 +11155,8 @@ class GameFrame(tk.Frame):
                                 champion1_rp = champion1_rp - serrated_slash_requirements[0]
                                 serrated_slash_requirements[1] = serrated_slash_requirements[2]
                                 champion1_rp = champion1_rp + serrated_slash_requirements[3]
-                                if len(champion1_big_external_buffs) != 1:
-                                    damage_done = math.ceil((ROGUE.ap + champion1_small_external_buffs[0]) *
-                                                   champion1_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(ROGUE.ap + champion1_small_external_buffs[0])
+                                damage_done = math.ceil(ROGUE.ap * self.calculate_champion_damage(1))
+                                damage_done = math.ceil(ROGUE.ap * self.calculate_champion_damage(1))
                                 ability_data = ["Serrated Slash", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -11139,11 +11165,8 @@ class GameFrame(tk.Frame):
                                 champion2_rp = champion2_rp - serrated_slash_requirements[0]
                                 serrated_slash_requirements[1] = serrated_slash_requirements[2]
                                 champion2_rp = champion2_rp + serrated_slash_requirements[3]
-                                if len(champion2_big_external_buffs) != 1:
-                                    damage_done = math.ceil((ROGUE.ap + champion2_small_external_buffs[0]) *
-                                                   champion2_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(ROGUE.ap + champion2_small_external_buffs[0])
+                                damage_done = math.ceil(ROGUE.ap * self.calculate_champion_damage(2))
+                                damage_done = math.ceil(ROGUE.ap * self.calculate_champion_damage(2))
                                 ability_data = ["Serrated Slash", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -11152,11 +11175,8 @@ class GameFrame(tk.Frame):
                                 champion3_rp = champion3_rp - serrated_slash_requirements[0]
                                 serrated_slash_requirements[1] = serrated_slash_requirements[2]
                                 champion3_rp = champion3_rp + serrated_slash_requirements[3]
-                                if len(champion3_big_external_buffs) != 1:
-                                    damage_done = math.ceil((ROGUE.ap + champion3_small_external_buffs[0]) *
-                                                   champion3_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(ROGUE.ap + champion3_small_external_buffs[0])
+                                damage_done = math.ceil(ROGUE.ap * self.calculate_champion_damage(3))
+                                damage_done = math.ceil(ROGUE.ap * self.calculate_champion_damage(3))
                                 ability_data = ["Serrated Slash", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -11165,11 +11185,8 @@ class GameFrame(tk.Frame):
                                 champion4_rp = champion4_rp - serrated_slash_requirements[0]
                                 serrated_slash_requirements[1] = serrated_slash_requirements[2]
                                 champion4_rp = champion4_rp + serrated_slash_requirements[3]
-                                if len(champion4_big_external_buffs) != 1:
-                                    damage_done = math.ceil((ROGUE.ap + champion4_small_external_buffs[0]) *
-                                                   champion4_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil( ROGUE.ap + champion4_small_external_buffs[0])
+                                damage_done = math.ceil(ROGUE.ap * self.calculate_champion_damage(4))
+                                damage_done = math.ceil( ROGUE.ap * self.calculate_champion_damage(4))
                                 ability_data = ["Serrated Slash", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -11178,11 +11195,8 @@ class GameFrame(tk.Frame):
                                 champion5_rp = champion5_rp - serrated_slash_requirements[0]
                                 serrated_slash_requirements[1] = serrated_slash_requirements[2]
                                 champion5_rp = champion5_rp + serrated_slash_requirements[3]
-                                if len(champion5_big_external_buffs) != 1:
-                                    damage_done = math.ceil((ROGUE.ap + champion5_small_external_buffs[0]) *
-                                                   champion5_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(     ROGUE.ap + champion5_small_external_buffs[0])
+                                damage_done = math.ceil(ROGUE.ap * self.calculate_champion_damage(5))
+                                damage_done = math.ceil(     ROGUE.ap * self.calculate_champion_damage(5))
                                 ability_data = ["Serrated Slash", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -11199,11 +11213,8 @@ class GameFrame(tk.Frame):
                                 champion1_rp = champion1_rp - eviscerate_requirements[0]
                                 eviscerate_requirements[1] = eviscerate_requirements[2]
                                 champion1_rp = champion1_rp + eviscerate_requirements[3]
-                                if len(champion1_big_external_buffs) != 1:
-                                    damage_done = math.ceil((ROGUE.ap + champion1_small_external_buffs[0]) *
-                                                   champion1_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(     ROGUE.ap + champion1_small_external_buffs[0])
+                                damage_done = math.ceil(ROGUE.ap * self.calculate_champion_damage(1))
+                                damage_done = math.ceil(     ROGUE.ap * self.calculate_champion_damage(1))
                                 ability_data = ["Eviscerate", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -11212,11 +11223,8 @@ class GameFrame(tk.Frame):
                                 champion2_rp = champion2_rp - eviscerate_requirements[0]
                                 eviscerate_requirements[1] = eviscerate_requirements[2]
                                 champion2_rp = champion2_rp + eviscerate_requirements[3]
-                                if len(champion2_big_external_buffs) != 1:
-                                    damage_done = math.ceil((ROGUE.ap + champion2_small_external_buffs[0]) *
-                                                   champion2_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(     ROGUE.ap + champion2_small_external_buffs[0])
+                                damage_done = math.ceil(ROGUE.ap * self.calculate_champion_damage(2))
+                                damage_done = math.ceil(     ROGUE.ap * self.calculate_champion_damage(2))
                                 ability_data = ["Eviscerate", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -11225,11 +11233,8 @@ class GameFrame(tk.Frame):
                                 champion3_rp = champion3_rp - eviscerate_requirements[0]
                                 eviscerate_requirements[1] = eviscerate_requirements[2]
                                 champion3_rp = champion3_rp + eviscerate_requirements[3]
-                                if len(champion3_big_external_buffs) != 1:
-                                    damage_done = math.ceil((ROGUE.ap + champion3_small_external_buffs[0]) *
-                                                   champion3_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(     ROGUE.ap + champion3_small_external_buffs[0])
+                                damage_done = math.ceil(ROGUE.ap * self.calculate_champion_damage(3))
+                                damage_done = math.ceil(     ROGUE.ap * self.calculate_champion_damage(3))
                                 ability_data = ["Eviscerate", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -11238,11 +11243,8 @@ class GameFrame(tk.Frame):
                                 champion4_rp = champion4_rp - eviscerate_requirements[0]
                                 eviscerate_requirements[1] = eviscerate_requirements[2]
                                 champion4_rp = champion4_rp + eviscerate_requirements[3]
-                                if len(champion4_big_external_buffs) != 1:
-                                    damage_done = math.ceil((ROGUE.ap + champion4_small_external_buffs[0]) *
-                                                   champion4_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(     ROGUE.ap + champion4_small_external_buffs[0])
+                                damage_done = math.ceil(ROGUE.ap * self.calculate_champion_damage(4))
+                                damage_done = math.ceil(     ROGUE.ap * self.calculate_champion_damage(4))
                                 ability_data = ["Eviscerate", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -11251,11 +11253,8 @@ class GameFrame(tk.Frame):
                                 champion5_rp = champion5_rp - eviscerate_requirements[0]
                                 eviscerate_requirements[1] = eviscerate_requirements[2]
                                 champion5_rp = champion5_rp + eviscerate_requirements[3]
-                                if len(champion5_big_external_buffs) != 1:
-                                    damage_done = math.ceil((ROGUE.ap + champion5_small_external_buffs[0]) *
-                                                   champion5_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(     ROGUE.ap + champion5_small_external_buffs[0])
+                                damage_done = math.ceil(ROGUE.ap * self.calculate_champion_damage(5))
+                                damage_done = math.ceil(     ROGUE.ap * self.calculate_champion_damage(5))
                                 ability_data = ["Eviscerate", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -11272,11 +11271,8 @@ class GameFrame(tk.Frame):
                                 champion1_rp = champion1_rp - spear_thrust_requirements[0]
                                 spear_thrust_requirements[1] = spear_thrust_requirements[2]
                                 champion1_rp = champion1_rp + spear_thrust_requirements[3]
-                                if len(champion1_big_external_buffs) != 1:
-                                    damage_done = math.ceil((SURVIVALIST.ap + champion1_small_external_buffs[0]) *
-                                                   champion1_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(     SURVIVALIST.ap + champion1_small_external_buffs[0])
+                                damage_done = math.ceil(SURVIVALIST.ap * self.calculate_champion_damage(1))
+                                damage_done = math.ceil(     SURVIVALIST.ap * self.calculate_champion_damage(1))
                                 ability_data = ["Spear Thrust", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -11285,11 +11281,8 @@ class GameFrame(tk.Frame):
                                 champion2_rp = champion2_rp - spear_thrust_requirements[0]
                                 spear_thrust_requirements[1] = spear_thrust_requirements[2]
                                 champion2_rp = champion2_rp + spear_thrust_requirements[3]
-                                if len(champion2_big_external_buffs) != 1:
-                                    damage_done = math.ceil((SURVIVALIST.ap + champion2_small_external_buffs[0]) *
-                                                   champion2_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(     SURVIVALIST.ap + champion2_small_external_buffs[0])
+                                damage_done = math.ceil(SURVIVALIST.ap * self.calculate_champion_damage(2))
+                                damage_done = math.ceil(     SURVIVALIST.ap * self.calculate_champion_damage(2))
                                 ability_data = ["Spear Thrust", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -11298,11 +11291,8 @@ class GameFrame(tk.Frame):
                                 champion3_rp = champion3_rp - spear_thrust_requirements[0]
                                 spear_thrust_requirements[1] = spear_thrust_requirements[2]
                                 champion3_rp = champion3_rp + spear_thrust_requirements[3]
-                                if len(champion3_big_external_buffs) != 1:
-                                    damage_done = math.ceil((SURVIVALIST.ap + champion3_small_external_buffs[0]) *
-                                                   champion3_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(     SURVIVALIST.ap + champion3_small_external_buffs[0])
+                                damage_done = math.ceil(SURVIVALIST.ap * self.calculate_champion_damage(3))
+                                damage_done = math.ceil(     SURVIVALIST.ap * self.calculate_champion_damage(3))
                                 ability_data = ["Spear Thrust", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -11311,11 +11301,8 @@ class GameFrame(tk.Frame):
                                 champion4_rp = champion4_rp - spear_thrust_requirements[0]
                                 spear_thrust_requirements[1] = spear_thrust_requirements[2]
                                 champion4_rp = champion4_rp + spear_thrust_requirements[3]
-                                if len(champion4_big_external_buffs) != 1:
-                                    damage_done = math.ceil((SURVIVALIST.ap + champion4_small_external_buffs[0]) *
-                                                   champion4_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(     SURVIVALIST.ap + champion4_small_external_buffs[0])
+                                damage_done = math.ceil(SURVIVALIST.ap * self.calculate_champion_damage(4))
+                                damage_done = math.ceil(     SURVIVALIST.ap * self.calculate_champion_damage(4))
                                 ability_data = ["Spear Thrust", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -11324,11 +11311,8 @@ class GameFrame(tk.Frame):
                                 champion5_rp = champion5_rp - spear_thrust_requirements[0]
                                 spear_thrust_requirements[1] = spear_thrust_requirements[2]
                                 champion5_rp = champion5_rp + spear_thrust_requirements[3]
-                                if len(champion5_big_external_buffs) != 1:
-                                    damage_done = math.ceil((SURVIVALIST.ap + champion5_small_external_buffs[0]) *
-                                                   champion5_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(     SURVIVALIST.ap + champion5_small_external_buffs[0])
+                                damage_done = math.ceil(SURVIVALIST.ap * self.calculate_champion_damage(5))
+                                damage_done = math.ceil(     SURVIVALIST.ap * self.calculate_champion_damage(5))
                                 ability_data = ["Spear Thrust", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -11345,11 +11329,8 @@ class GameFrame(tk.Frame):
                                 champion1_rp = champion1_rp - scrap_bomb_requirements[0]
                                 scrap_bomb_requirements[1] = scrap_bomb_requirements[2]
                                 champion1_rp = champion1_rp + scrap_bomb_requirements[3]
-                                if len(champion1_big_external_buffs) != 1:
-                                    damage_done = math.ceil((SURVIVALIST.ap + champion1_small_external_buffs[0]) *
-                                                   champion1_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(SURVIVALIST.ap + champion1_small_external_buffs[0])
+                                damage_done = math.ceil(SURVIVALIST.ap * self.calculate_champion_damage(1))
+                                damage_done = math.ceil(SURVIVALIST.ap * self.calculate_champion_damage(1))
                                 ability_data = ["Scrap Bomb", "enemy", "AOE", damage_done]
                             else:
                                 return
@@ -11358,11 +11339,8 @@ class GameFrame(tk.Frame):
                                 champion2_rp = champion2_rp - scrap_bomb_requirements[0]
                                 scrap_bomb_requirements[1] = scrap_bomb_requirements[2]
                                 champion2_rp = champion2_rp + scrap_bomb_requirements[3]
-                                if len(champion2_big_external_buffs) != 1:
-                                    damage_done = math.ceil((SURVIVALIST.ap + champion2_small_external_buffs[0]) *
-                                                   champion2_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(SURVIVALIST.ap + champion2_small_external_buffs[0])
+                                damage_done = math.ceil(SURVIVALIST.ap * self.calculate_champion_damage(2))
+                                damage_done = math.ceil(SURVIVALIST.ap * self.calculate_champion_damage(2))
                                 ability_data = ["Scrap Bomb", "enemy", "AOE", damage_done]
                             else:
                                 return
@@ -11371,11 +11349,8 @@ class GameFrame(tk.Frame):
                                 champion3_rp = champion3_rp - scrap_bomb_requirements[0]
                                 scrap_bomb_requirements[1] = scrap_bomb_requirements[2]
                                 champion3_rp = champion3_rp + scrap_bomb_requirements[3]
-                                if len(champion3_big_external_buffs) != 1:
-                                    damage_done = math.ceil((SURVIVALIST.ap + champion3_small_external_buffs[0]) *
-                                                   champion3_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(SURVIVALIST.ap + champion3_small_external_buffs[0])
+                                damage_done = math.ceil(SURVIVALIST.ap * self.calculate_champion_damage(3))
+                                damage_done = math.ceil(SURVIVALIST.ap * self.calculate_champion_damage(3))
                                 ability_data = ["Scrap Bomb", "enemy", "AOE", damage_done]
                             else:
                                 return
@@ -11384,11 +11359,8 @@ class GameFrame(tk.Frame):
                                 champion4_rp = champion4_rp - scrap_bomb_requirements[0]
                                 scrap_bomb_requirements[1] = scrap_bomb_requirements[2]
                                 champion4_rp = champion4_rp + scrap_bomb_requirements[3]
-                                if len(champion4_big_external_buffs) != 1:
-                                    damage_done = math.ceil((SURVIVALIST.ap + champion4_small_external_buffs[0]) *
-                                                   champion4_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(SURVIVALIST.ap + champion4_small_external_buffs[0])
+                                damage_done = math.ceil(SURVIVALIST.ap * self.calculate_champion_damage(4))
+                                damage_done = math.ceil(SURVIVALIST.ap * self.calculate_champion_damage(4))
                                 ability_data = ["Scrap Bomb", "enemy", "AOE", damage_done]
                             else:
                                 return
@@ -11397,11 +11369,8 @@ class GameFrame(tk.Frame):
                                 champion5_rp = champion5_rp - scrap_bomb_requirements[0]
                                 scrap_bomb_requirements[1] = scrap_bomb_requirements[2]
                                 champion5_rp = champion5_rp + scrap_bomb_requirements[3]
-                                if len(champion5_big_external_buffs) != 1:
-                                    damage_done = math.ceil((SURVIVALIST.ap + champion5_small_external_buffs[0]) *
-                                                   champion5_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(SURVIVALIST.ap + champion5_small_external_buffs[0])
+                                damage_done = math.ceil(SURVIVALIST.ap * self.calculate_champion_damage(5))
+                                damage_done = math.ceil(SURVIVALIST.ap * self.calculate_champion_damage(5))
                                 ability_data = ["Scrap Bomb", "enemy", "AOE", damage_done]
                             else:
                                 return
@@ -11418,11 +11387,8 @@ class GameFrame(tk.Frame):
                                 champion1_rp = champion1_rp - tactical_punch_requirements[0]
                                 tactical_punch_requirements[1] = tactical_punch_requirements[2]
                                 champion1_rp = champion1_rp + tactical_punch_requirements[3]
-                                if len(champion1_big_external_buffs) != 1:
-                                    damage_done = math.ceil((BRAWLIST.ap + champion1_small_external_buffs[0]) *
-                                                   champion1_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(BRAWLIST.ap + champion1_small_external_buffs[0])
+                                damage_done = math.ceil(BRAWLIST.ap * self.calculate_champion_damage(1))
+                                damage_done = math.ceil(BRAWLIST.ap * self.calculate_champion_damage(1))
                                 ability_data = ["Tactical Punch", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -11431,11 +11397,8 @@ class GameFrame(tk.Frame):
                                 champion2_rp = champion2_rp - tactical_punch_requirements[0]
                                 tactical_punch_requirements[1] = tactical_punch_requirements[2]
                                 champion2_rp = champion2_rp + tactical_punch_requirements[3]
-                                if len(champion2_big_external_buffs) != 1:
-                                    damage_done = math.ceil((BRAWLIST.ap + champion2_small_external_buffs[0]) *
-                                                   champion2_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(     BRAWLIST.ap + champion2_small_external_buffs[0])
+                                damage_done = math.ceil(BRAWLIST.ap * self.calculate_champion_damage(2))
+                                damage_done = math.ceil(     BRAWLIST.ap * self.calculate_champion_damage(2))
                                 ability_data = ["Tactical Punch", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -11444,11 +11407,8 @@ class GameFrame(tk.Frame):
                                 champion3_rp = champion3_rp - tactical_punch_requirements[0]
                                 tactical_punch_requirements[1] = tactical_punch_requirements[2]
                                 champion3_rp = champion3_rp + tactical_punch_requirements[3]
-                                if len(champion3_big_external_buffs) != 1:
-                                    damage_done = math.ceil((BRAWLIST.ap + champion3_small_external_buffs[0]) *
-                                                   champion3_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(     BRAWLIST.ap + champion3_small_external_buffs[0])
+                                damage_done = math.ceil(BRAWLIST.ap * self.calculate_champion_damage(3))
+                                damage_done = math.ceil(     BRAWLIST.ap * self.calculate_champion_damage(3))
                                 ability_data = ["Tactical Punch", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -11457,11 +11417,8 @@ class GameFrame(tk.Frame):
                                 champion4_rp = champion4_rp - tactical_punch_requirements[0]
                                 tactical_punch_requirements[1] = tactical_punch_requirements[2]
                                 champion4_rp = champion4_rp + tactical_punch_requirements[3]
-                                if len(champion4_big_external_buffs) != 1:
-                                    damage_done = math.ceil((BRAWLIST.ap + champion4_small_external_buffs[0]) *
-                                                   champion4_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(     BRAWLIST.ap + champion4_small_external_buffs[0])
+                                damage_done = math.ceil(BRAWLIST.ap * self.calculate_champion_damage(4))
+                                damage_done = math.ceil(     BRAWLIST.ap * self.calculate_champion_damage(4))
                                 ability_data = ["Tactical Punch", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -11470,11 +11427,8 @@ class GameFrame(tk.Frame):
                                 champion5_rp = champion5_rp - tactical_punch_requirements[0]
                                 tactical_punch_requirements[1] = tactical_punch_requirements[2]
                                 champion5_rp = champion5_rp + tactical_punch_requirements[3]
-                                if len(champion5_big_external_buffs) != 1:
-                                    damage_done = math.ceil((BRAWLIST.ap + champion5_small_external_buffs[0]) *
-                                                   champion5_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(     BRAWLIST.ap + champion5_small_external_buffs[0])
+                                damage_done = math.ceil(BRAWLIST.ap * self.calculate_champion_damage(5))
+                                damage_done = math.ceil(     BRAWLIST.ap * self.calculate_champion_damage(5))
                                 ability_data = ["Tactical Punch", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -11491,11 +11445,8 @@ class GameFrame(tk.Frame):
                                 champion1_rp = champion1_rp - uppercut_requirements[0]
                                 uppercut_requirements[1] = uppercut_requirements[2]
                                 champion1_rp = champion1_rp + uppercut_requirements[3]
-                                if len(champion1_big_external_buffs) != 1:
-                                    damage_done = math.ceil((BRAWLIST.ap + champion1_small_external_buffs[0]) *
-                                                   champion1_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(     BRAWLIST.ap + champion1_small_external_buffs[0])
+                                damage_done = math.ceil(BRAWLIST.ap * self.calculate_champion_damage(1))
+                                damage_done = math.ceil(     BRAWLIST.ap * self.calculate_champion_damage(1))
                                 ability_data = ["Uppercut", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -11504,11 +11455,8 @@ class GameFrame(tk.Frame):
                                 champion2_rp = champion2_rp - uppercut_requirements[0]
                                 uppercut_requirements[1] = uppercut_requirements[2]
                                 champion2_rp = champion2_rp + uppercut_requirements[3]
-                                if len(champion2_big_external_buffs) != 1:
-                                    damage_done = math.ceil((BRAWLIST.ap + champion2_small_external_buffs[0]) *
-                                                   champion2_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(     BRAWLIST.ap + champion2_small_external_buffs[0])
+                                damage_done = math.ceil(BRAWLIST.ap * self.calculate_champion_damage(2))
+                                damage_done = math.ceil(     BRAWLIST.ap * self.calculate_champion_damage(2))
                                 ability_data = ["Uppercut", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -11517,11 +11465,8 @@ class GameFrame(tk.Frame):
                                 champion3_rp = champion3_rp - uppercut_requirements[0]
                                 uppercut_requirements[1] = uppercut_requirements[2]
                                 champion3_rp = champion3_rp + uppercut_requirements[3]
-                                if len(champion3_big_external_buffs) != 1:
-                                    damage_done = math.ceil((BRAWLIST.ap + champion3_small_external_buffs[0]) *
-                                                   champion3_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(     BRAWLIST.ap + champion3_small_external_buffs[0])
+                                damage_done = math.ceil(BRAWLIST.ap * self.calculate_champion_damage(3))
+                                damage_done = math.ceil(     BRAWLIST.ap * self.calculate_champion_damage(3))
                                 ability_data = ["Uppercut", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -11530,11 +11475,8 @@ class GameFrame(tk.Frame):
                                 champion4_rp = champion4_rp - uppercut_requirements[0]
                                 uppercut_requirements[1] = uppercut_requirements[2]
                                 champion4_rp = champion4_rp + uppercut_requirements[3]
-                                if len(champion4_big_external_buffs) != 1:
-                                    damage_done = math.ceil((BRAWLIST.ap + champion4_small_external_buffs[0]) *
-                                                   champion4_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(     BRAWLIST.ap + champion4_small_external_buffs[0])
+                                damage_done = math.ceil(BRAWLIST.ap * self.calculate_champion_damage(4))
+                                damage_done = math.ceil(     BRAWLIST.ap * self.calculate_champion_damage(4))
                                 ability_data = ["Uppercut", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -11543,11 +11485,8 @@ class GameFrame(tk.Frame):
                                 champion5_rp = champion5_rp - uppercut_requirements[0]
                                 uppercut_requirements[1] = uppercut_requirements[2]
                                 champion5_rp = champion5_rp + uppercut_requirements[3]
-                                if len(champion5_big_external_buffs) != 1:
-                                    damage_done = math.ceil((BRAWLIST.ap + champion5_small_external_buffs[0]) *
-                                                   champion5_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(     BRAWLIST.ap + champion5_small_external_buffs[0])
+                                damage_done = math.ceil(BRAWLIST.ap * self.calculate_champion_damage(5))
+                                damage_done = math.ceil(     BRAWLIST.ap * self.calculate_champion_damage(5))
                                 ability_data = ["Uppercut", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -11564,11 +11503,8 @@ class GameFrame(tk.Frame):
                                 champion1_rp = champion1_rp - frost_bolt_requirements[0]
                                 frost_bolt_requirements[1] = frost_bolt_requirements[2]
                                 champion1_rp = champion1_rp + frost_bolt_requirements[3]
-                                if len(champion1_big_external_buffs) != 1:
-                                    damage_done = math.ceil((ACADEMIC_MAGE.ap + champion1_small_external_buffs[0]) *
-                                                   champion1_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(     ACADEMIC_MAGE.ap + champion1_small_external_buffs[0])
+                                damage_done = math.ceil(ACADEMIC_MAGE.ap * self.calculate_champion_damage(1))
+                                damage_done = math.ceil(     ACADEMIC_MAGE.ap * self.calculate_champion_damage(1))
                                 ability_data = ["Frost Bolt", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -11577,11 +11513,8 @@ class GameFrame(tk.Frame):
                                 champion2_rp = champion2_rp - frost_bolt_requirements[0]
                                 frost_bolt_requirements[1] = frost_bolt_requirements[2]
                                 champion2_rp = champion2_rp + frost_bolt_requirements[3]
-                                if len(champion2_big_external_buffs) != 1:
-                                    damage_done = math.ceil((ACADEMIC_MAGE.ap + champion2_small_external_buffs[0]) *
-                                                   champion2_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(     ACADEMIC_MAGE.ap + champion2_small_external_buffs[0])
+                                damage_done = math.ceil(ACADEMIC_MAGE.ap * self.calculate_champion_damage(2))
+                                damage_done = math.ceil(     ACADEMIC_MAGE.ap * self.calculate_champion_damage(2))
                                 ability_data = ["Frost Bolt", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -11590,11 +11523,8 @@ class GameFrame(tk.Frame):
                                 champion3_rp = champion3_rp - frost_bolt_requirements[0]
                                 frost_bolt_requirements[1] = frost_bolt_requirements[2]
                                 champion3_rp = champion3_rp + frost_bolt_requirements[3]
-                                if len(champion3_big_external_buffs) != 1:
-                                    damage_done = math.ceil((ACADEMIC_MAGE.ap + champion3_small_external_buffs[0]) *
-                                                   champion3_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(     ACADEMIC_MAGE.ap + champion3_small_external_buffs[0])
+                                damage_done = math.ceil(ACADEMIC_MAGE.ap * self.calculate_champion_damage(3))
+                                damage_done = math.ceil(     ACADEMIC_MAGE.ap * self.calculate_champion_damage(3))
                                 ability_data = ["Frost Bolt", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -11603,11 +11533,8 @@ class GameFrame(tk.Frame):
                                 champion4_rp = champion4_rp - frost_bolt_requirements[0]
                                 frost_bolt_requirements[1] = frost_bolt_requirements[2]
                                 champion4_rp = champion4_rp + frost_bolt_requirements[3]
-                                if len(champion4_big_external_buffs) != 1:
-                                    damage_done = math.ceil((ACADEMIC_MAGE.ap + champion4_small_external_buffs[0]) *
-                                                   champion4_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(     ACADEMIC_MAGE.ap + champion4_small_external_buffs[0])
+                                damage_done = math.ceil(ACADEMIC_MAGE.ap * self.calculate_champion_damage(4))
+                                damage_done = math.ceil(     ACADEMIC_MAGE.ap * self.calculate_champion_damage(4))
                                 ability_data = ["Frost Bolt", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -11616,11 +11543,8 @@ class GameFrame(tk.Frame):
                                 champion5_rp = champion5_rp - frost_bolt_requirements[0]
                                 frost_bolt_requirements[1] = frost_bolt_requirements[2]
                                 champion5_rp = champion5_rp + frost_bolt_requirements[3]
-                                if len(champion5_big_external_buffs) != 1:
-                                    damage_done = math.ceil((ACADEMIC_MAGE.ap + champion5_small_external_buffs[0]) *
-                                                   champion5_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(     ACADEMIC_MAGE.ap + champion5_small_external_buffs[0])
+                                damage_done = math.ceil(ACADEMIC_MAGE.ap * self.calculate_champion_damage(5))
+                                damage_done = math.ceil(     ACADEMIC_MAGE.ap * self.calculate_champion_damage(5))
                                 ability_data = ["Frost Bolt", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -11637,11 +11561,8 @@ class GameFrame(tk.Frame):
                                 champion1_rp = champion1_rp - fireball_requirements[0]
                                 fireball_requirements[1] = fireball_requirements[2]
                                 champion1_rp = champion1_rp + fireball_requirements[3]
-                                if len(champion1_big_external_buffs) != 1:
-                                    damage_done = math.ceil((ACADEMIC_MAGE.ap + champion1_small_external_buffs[0]) *
-                                                   champion1_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(     ACADEMIC_MAGE.ap + champion1_small_external_buffs[0])
+                                damage_done = math.ceil(ACADEMIC_MAGE.ap * self.calculate_champion_damage(1))
+                                damage_done = math.ceil(     ACADEMIC_MAGE.ap * self.calculate_champion_damage(1))
                                 ability_data = ["Fireball", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -11650,11 +11571,8 @@ class GameFrame(tk.Frame):
                                 champion2_rp = champion2_rp - fireball_requirements[0]
                                 fireball_requirements[1] = fireball_requirements[2]
                                 champion2_rp = champion2_rp + fireball_requirements[3]
-                                if len(champion2_big_external_buffs) != 1:
-                                    damage_done = math.ceil((ACADEMIC_MAGE.ap + champion2_small_external_buffs[0]) *
-                                                   champion2_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(     ACADEMIC_MAGE.ap + champion2_small_external_buffs[0])
+                                damage_done = math.ceil(ACADEMIC_MAGE.ap * self.calculate_champion_damage(2))
+                                damage_done = math.ceil(     ACADEMIC_MAGE.ap * self.calculate_champion_damage(2))
                                 ability_data = ["Fireball", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -11663,11 +11581,8 @@ class GameFrame(tk.Frame):
                                 champion3_rp = champion3_rp - fireball_requirements[0]
                                 fireball_requirements[1] = fireball_requirements[2]
                                 champion3_rp = champion3_rp + fireball_requirements[3]
-                                if len(champion3_big_external_buffs) != 1:
-                                    damage_done = math.ceil((ACADEMIC_MAGE.ap + champion3_small_external_buffs[0]) *
-                                                   champion3_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(     ACADEMIC_MAGE.ap + champion3_small_external_buffs[0])
+                                damage_done = math.ceil(ACADEMIC_MAGE.ap * self.calculate_champion_damage(3))
+                                damage_done = math.ceil(     ACADEMIC_MAGE.ap * self.calculate_champion_damage(3))
                                 ability_data = ["Fireball", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -11676,11 +11591,8 @@ class GameFrame(tk.Frame):
                                 champion4_rp = champion4_rp - fireball_requirements[0]
                                 fireball_requirements[1] = fireball_requirements[2]
                                 champion4_rp = champion4_rp + fireball_requirements[3]
-                                if len(champion4_big_external_buffs) != 1:
-                                    damage_done = math.ceil((ACADEMIC_MAGE.ap + champion4_small_external_buffs[0]) *
-                                                   champion4_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(     ACADEMIC_MAGE.ap + champion4_small_external_buffs[0])
+                                damage_done = math.ceil(ACADEMIC_MAGE.ap * self.calculate_champion_damage(4))
+                                damage_done = math.ceil(     ACADEMIC_MAGE.ap * self.calculate_champion_damage(4))
                                 ability_data = ["Fireball", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -11689,11 +11601,8 @@ class GameFrame(tk.Frame):
                                 champion5_rp = champion5_rp - fireball_requirements[0]
                                 fireball_requirements[1] = fireball_requirements[2]
                                 champion5_rp = champion5_rp + fireball_requirements[3]
-                                if len(champion5_big_external_buffs) != 1:
-                                    damage_done = math.ceil((ACADEMIC_MAGE.ap + champion5_small_external_buffs[0]) *
-                                                   champion5_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(     ACADEMIC_MAGE.ap + champion5_small_external_buffs[0])
+                                damage_done = math.ceil(ACADEMIC_MAGE.ap * self.calculate_champion_damage(5))
+                                damage_done = math.ceil(     ACADEMIC_MAGE.ap * self.calculate_champion_damage(5))
                                 ability_data = ["Fireball", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -11710,11 +11619,8 @@ class GameFrame(tk.Frame):
                                 champion1_rp = champion1_rp - venusfly_snap_requirements[0]
                                 venusfly_snap_requirements[1] = venusfly_snap_requirements[2]
                                 champion1_rp = champion1_rp + venusfly_snap_requirements[3]
-                                if len(champion1_big_external_buffs) != 1:
-                                    damage_done = math.ceil((DRUID.ap + champion1_small_external_buffs[0]) *
-                                                   champion1_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(     DRUID.ap + champion1_small_external_buffs[0])
+                                damage_done = math.ceil(DRUID.ap * self.calculate_champion_damage(1))
+                                damage_done = math.ceil(     DRUID.ap * self.calculate_champion_damage(1))
                                 ability_data = ["Venus-fly Snap", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -11723,11 +11629,8 @@ class GameFrame(tk.Frame):
                                 champion2_rp = champion2_rp - venusfly_snap_requirements[0]
                                 venusfly_snap_requirements[1] = venusfly_snap_requirements[2]
                                 champion2_rp = champion2_rp + venusfly_snap_requirements[3]
-                                if len(champion2_big_external_buffs) != 1:
-                                    damage_done = math.ceil((DRUID.ap + champion2_small_external_buffs[0]) *
-                                                   champion2_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(     DRUID.ap + champion2_small_external_buffs[0])
+                                damage_done = math.ceil(DRUID.ap * self.calculate_champion_damage(2))
+                                damage_done = math.ceil(     DRUID.ap * self.calculate_champion_damage(2))
                                 ability_data = ["Venus-fly Snap", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -11736,11 +11639,8 @@ class GameFrame(tk.Frame):
                                 champion3_rp = champion3_rp - venusfly_snap_requirements[0]
                                 venusfly_snap_requirements[1] = venusfly_snap_requirements[2]
                                 champion3_rp = champion3_rp + venusfly_snap_requirements[3]
-                                if len(champion3_big_external_buffs) != 1:
-                                    damage_done = math.ceil((DRUID.ap + champion3_small_external_buffs[0]) *
-                                                   champion3_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(     DRUID.ap + champion3_small_external_buffs[0])
+                                damage_done = math.ceil(DRUID.ap * self.calculate_champion_damage(3))
+                                damage_done = math.ceil(     DRUID.ap * self.calculate_champion_damage(3))
                                 ability_data = ["Venus-fly Snap", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -11749,11 +11649,8 @@ class GameFrame(tk.Frame):
                                 champion4_rp = champion4_rp - venusfly_snap_requirements[0]
                                 venusfly_snap_requirements[1] = venusfly_snap_requirements[2]
                                 champion4_rp = champion4_rp + venusfly_snap_requirements[3]
-                                if len(champion4_big_external_buffs) != 1:
-                                    damage_done = math.ceil((DRUID.ap + champion4_small_external_buffs[0]) *
-                                                   champion4_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(     DRUID.ap + champion4_small_external_buffs[0])
+                                damage_done = math.ceil(DRUID.ap * self.calculate_champion_damage(4))
+                                damage_done = math.ceil(     DRUID.ap * self.calculate_champion_damage(4))
                                 ability_data = ["Venus-fly Snap", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -11762,11 +11659,8 @@ class GameFrame(tk.Frame):
                                 champion5_rp = champion5_rp - venusfly_snap_requirements[0]
                                 venusfly_snap_requirements[1] = venusfly_snap_requirements[2]
                                 champion5_rp = champion5_rp + venusfly_snap_requirements[3]
-                                if len(champion5_big_external_buffs) != 1:
-                                    damage_done = math.ceil((DRUID.ap + champion5_small_external_buffs[0]) *
-                                                   champion5_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(     DRUID.ap + champion5_small_external_buffs[0])
+                                damage_done = math.ceil(DRUID.ap * self.calculate_champion_damage(5))
+                                damage_done = math.ceil(     DRUID.ap * self.calculate_champion_damage(5))
                                 ability_data = ["Venus-fly Snap", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -11783,11 +11677,8 @@ class GameFrame(tk.Frame):
                                 champion1_rp = champion1_rp - vine_swipe_requirements[0]
                                 vine_swipe_requirements[1] = vine_swipe_requirements[2]
                                 champion1_rp = champion1_rp + vine_swipe_requirements[3]
-                                if len(champion1_big_external_buffs) != 1:
-                                    damage_done = math.ceil((DRUID.ap + champion1_small_external_buffs[0]) *
-                                                   champion1_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(     DRUID.ap + champion1_small_external_buffs[0])
+                                damage_done = math.ceil(DRUID.ap * self.calculate_champion_damage(1))
+                                damage_done = math.ceil(     DRUID.ap * self.calculate_champion_damage(1))
                                 ability_data = ["Vine-Swipe", "enemy", "2T", damage_done]
                             else:
                                 return
@@ -11796,11 +11687,8 @@ class GameFrame(tk.Frame):
                                 champion2_rp = champion2_rp - vine_swipe_requirements[0]
                                 vine_swipe_requirements[1] = vine_swipe_requirements[2]
                                 champion2_rp = champion2_rp + vine_swipe_requirements[3]
-                                if len(champion2_big_external_buffs) != 1:
-                                    damage_done = math.ceil((DRUID.ap + champion2_small_external_buffs[0]) *
-                                                   champion2_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(     DRUID.ap + champion2_small_external_buffs[0])
+                                damage_done = math.ceil(DRUID.ap * self.calculate_champion_damage(2))
+                                damage_done = math.ceil(     DRUID.ap * self.calculate_champion_damage(2))
                                 ability_data = ["Vine-Swipe", "enemy", "2T", damage_done]
                             else:
                                 return
@@ -11809,11 +11697,8 @@ class GameFrame(tk.Frame):
                                 champion3_rp = champion3_rp - vine_swipe_requirements[0]
                                 vine_swipe_requirements[1] = vine_swipe_requirements[2]
                                 champion3_rp = champion3_rp + vine_swipe_requirements[3]
-                                if len(champion3_big_external_buffs) != 1:
-                                    damage_done = math.ceil((DRUID.ap + champion3_small_external_buffs[0]) *
-                                                   champion3_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(     DRUID.ap + champion3_small_external_buffs[0])
+                                damage_done = math.ceil(DRUID.ap * self.calculate_champion_damage(3))
+                                damage_done = math.ceil(     DRUID.ap * self.calculate_champion_damage(3))
                                 ability_data = ["Vine-Swipe", "enemy", "2T", damage_done]
                             else:
                                 return
@@ -11822,11 +11707,8 @@ class GameFrame(tk.Frame):
                                 champion4_rp = champion4_rp - vine_swipe_requirements[0]
                                 vine_swipe_requirements[1] = vine_swipe_requirements[2]
                                 champion4_rp = champion4_rp + vine_swipe_requirements[3]
-                                if len(champion4_big_external_buffs) != 1:
-                                    damage_done = math.ceil((DRUID.ap + champion4_small_external_buffs[0]) *
-                                                   champion4_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(     DRUID.ap + champion4_small_external_buffs[0])
+                                damage_done = math.ceil(DRUID.ap * self.calculate_champion_damage(4))
+                                damage_done = math.ceil(     DRUID.ap * self.calculate_champion_damage(4))
                                 ability_data = ["Vine-Swipe", "enemy", "2T", damage_done]
                             else:
                                 return
@@ -11835,11 +11717,8 @@ class GameFrame(tk.Frame):
                                 champion5_rp = champion5_rp - vine_swipe_requirements[0]
                                 vine_swipe_requirements[1] = vine_swipe_requirements[2]
                                 champion5_rp = champion5_rp + vine_swipe_requirements[3]
-                                if len(champion5_big_external_buffs) != 1:
-                                    damage_done = math.ceil((DRUID.ap + champion5_small_external_buffs[0]) *
-                                                   champion5_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(     DRUID.ap + champion5_small_external_buffs[0])
+                                damage_done = math.ceil(DRUID.ap * self.calculate_champion_damage(5))
+                                damage_done = math.ceil(     DRUID.ap * self.calculate_champion_damage(5))
                                 ability_data = ["Vine-Swipe", "enemy", "2T", damage_done]
                             else:
                                 return
@@ -11856,11 +11735,8 @@ class GameFrame(tk.Frame):
                                 champion1_rp = champion1_rp - black_bolt_requirements[0]
                                 black_bolt_requirements[1] = black_bolt_requirements[2]
                                 champion1_rp = champion1_rp + black_bolt_requirements[3]
-                                if len(champion1_big_external_buffs) != 1:
-                                    damage_done = math.ceil((WARLOCK.ap + champion1_small_external_buffs[0]) *
-                                                   champion1_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(     WARLOCK.ap + champion1_small_external_buffs[0])
+                                damage_done = math.ceil(WARLOCK.ap * self.calculate_champion_damage(1))
+                                damage_done = math.ceil(     WARLOCK.ap * self.calculate_champion_damage(1))
                                 ability_data = ["Black Bolt", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -11869,11 +11745,8 @@ class GameFrame(tk.Frame):
                                 champion2_rp = champion2_rp - black_bolt_requirements[0]
                                 black_bolt_requirements[1] = black_bolt_requirements[2]
                                 champion2_rp = champion2_rp + black_bolt_requirements[3]
-                                if len(champion2_big_external_buffs) != 1:
-                                    damage_done = math.ceil((WARLOCK.ap + champion2_small_external_buffs[0]) *
-                                                   champion2_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(     WARLOCK.ap + champion2_small_external_buffs[0])
+                                damage_done = math.ceil(WARLOCK.ap * self.calculate_champion_damage(2))
+                                damage_done = math.ceil(     WARLOCK.ap * self.calculate_champion_damage(2))
                                 ability_data = ["Black Bolt", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -11882,11 +11755,8 @@ class GameFrame(tk.Frame):
                                 champion3_rp = champion3_rp - black_bolt_requirements[0]
                                 black_bolt_requirements[1] = black_bolt_requirements[2]
                                 champion3_rp = champion3_rp + black_bolt_requirements[3]
-                                if len(champion3_big_external_buffs) != 1:
-                                    damage_done = math.ceil((WARLOCK.ap + champion3_small_external_buffs[0]) *
-                                                   champion3_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(     WARLOCK.ap + champion3_small_external_buffs[0])
+                                damage_done = math.ceil(WARLOCK.ap * self.calculate_champion_damage(3))
+                                damage_done = math.ceil(     WARLOCK.ap * self.calculate_champion_damage(3))
                                 ability_data = ["Black Bolt", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -11895,11 +11765,8 @@ class GameFrame(tk.Frame):
                                 champion4_rp = champion4_rp - black_bolt_requirements[0]
                                 black_bolt_requirements[1] = black_bolt_requirements[2]
                                 champion4_rp = champion4_rp + black_bolt_requirements[3]
-                                if len(champion4_big_external_buffs) != 1:
-                                    damage_done = math.ceil((WARLOCK.ap + champion4_small_external_buffs[0]) *
-                                                   champion4_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(     WARLOCK.ap + champion4_small_external_buffs[0])
+                                damage_done = math.ceil(WARLOCK.ap * self.calculate_champion_damage(4))
+                                damage_done = math.ceil(     WARLOCK.ap * self.calculate_champion_damage(4))
                                 ability_data = ["Black Bolt", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -11908,11 +11775,8 @@ class GameFrame(tk.Frame):
                                 champion5_rp = champion5_rp - black_bolt_requirements[0]
                                 black_bolt_requirements[1] = black_bolt_requirements[2]
                                 champion5_rp = champion5_rp + black_bolt_requirements[3]
-                                if len(champion5_big_external_buffs) != 1:
-                                    damage_done = math.ceil((WARLOCK.ap + champion5_small_external_buffs[0]) *
-                                                   champion5_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(     WARLOCK.ap + champion5_small_external_buffs[0])
+                                damage_done = math.ceil(WARLOCK.ap * self.calculate_champion_damage(5))
+                                damage_done = math.ceil(     WARLOCK.ap * self.calculate_champion_damage(5))
                                 ability_data = ["Black Bolt", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -11929,11 +11793,8 @@ class GameFrame(tk.Frame):
                                 champion1_rp = champion1_rp - void_infusion_requirements[0]
                                 void_infusion_requirements[1] = void_infusion_requirements[2]
                                 champion1_rp = champion1_rp + void_infusion_requirements[3]
-                                if len(champion1_big_external_buffs) != 1:
-                                    damage_done = math.ceil((WARLOCK.ap + champion1_small_external_buffs[0]) *
-                                                   champion1_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(     WARLOCK.ap + champion1_small_external_buffs[0])
+                                damage_done = math.ceil(WARLOCK.ap * self.calculate_champion_damage(1))
+                                damage_done = math.ceil(     WARLOCK.ap * self.calculate_champion_damage(1))
                                 ability_data = ["Void Infusion", "self", "1T", damage_done]
                             else:
                                 return
@@ -11942,11 +11803,8 @@ class GameFrame(tk.Frame):
                                 champion2_rp = champion2_rp - void_infusion_requirements[0]
                                 void_infusion_requirements[1] = void_infusion_requirements[2]
                                 champion2_rp = champion2_rp + void_infusion_requirements[3]
-                                if len(champion2_big_external_buffs) != 1:
-                                    damage_done = math.ceil((WARLOCK.ap + champion2_small_external_buffs[0]) *
-                                                   champion2_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(     WARLOCK.ap + champion2_small_external_buffs[0])
+                                damage_done = math.ceil(WARLOCK.ap * self.calculate_champion_damage(2))
+                                damage_done = math.ceil(     WARLOCK.ap * self.calculate_champion_damage(2))
                                 ability_data = ["Void Infusion", "self", "1T", damage_done]
                             else:
                                 return
@@ -11955,11 +11813,8 @@ class GameFrame(tk.Frame):
                                 champion3_rp = champion3_rp - void_infusion_requirements[0]
                                 void_infusion_requirements[1] = void_infusion_requirements[2]
                                 champion3_rp = champion3_rp + void_infusion_requirements[3]
-                                if len(champion3_big_external_buffs) != 1:
-                                    damage_done = math.ceil((WARLOCK.ap + champion3_small_external_buffs[0]) *
-                                                   champion3_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(     WARLOCK.ap + champion3_small_external_buffs[0])
+                                damage_done = math.ceil(WARLOCK.ap * self.calculate_champion_damage(3))
+                                damage_done = math.ceil(     WARLOCK.ap * self.calculate_champion_damage(3))
                                 ability_data = ["Void Infusion", "self", "1T", damage_done]
                             else:
                                 return
@@ -11968,11 +11823,8 @@ class GameFrame(tk.Frame):
                                 champion4_rp = champion4_rp - void_infusion_requirements[0]
                                 void_infusion_requirements[1] = void_infusion_requirements[2]
                                 champion4_rp = champion4_rp + void_infusion_requirements[3]
-                                if len(champion4_big_external_buffs) != 1:
-                                    damage_done = math.ceil((WARLOCK.ap + champion4_small_external_buffs[0]) *
-                                                   champion4_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(     WARLOCK.ap + champion4_small_external_buffs[0])
+                                damage_done = math.ceil(WARLOCK.ap * self.calculate_champion_damage(4))
+                                damage_done = math.ceil(     WARLOCK.ap * self.calculate_champion_damage(4))
                                 ability_data = ["Void Infusion", "self", "1T", damage_done]
                             else:
                                 return
@@ -11981,11 +11833,8 @@ class GameFrame(tk.Frame):
                                 champion5_rp = champion5_rp - void_infusion_requirements[0]
                                 void_infusion_requirements[1] = void_infusion_requirements[2]
                                 champion5_rp = champion5_rp + void_infusion_requirements[3]
-                                if len(champion5_big_external_buffs) != 1:
-                                    damage_done = math.ceil((WARLOCK.ap + champion5_small_external_buffs[0]) *
-                                                   champion5_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(     WARLOCK.ap + champion5_small_external_buffs[0])
+                                damage_done = math.ceil(WARLOCK.ap * self.calculate_champion_damage(5))
+                                damage_done = math.ceil(     WARLOCK.ap * self.calculate_champion_damage(5))
                                 ability_data = ["Void Infusion", "self", "1T", damage_done]
                             else:
                                 return
@@ -12002,11 +11851,8 @@ class GameFrame(tk.Frame):
                                 champion1_rp = champion1_rp - drain_life_requirements[0]
                                 drain_life_requirements[1] = drain_life_requirements[2]
                                 champion1_rp = champion1_rp + drain_life_requirements[3]
-                                if len(champion1_big_external_buffs) != 1:
-                                    damage_done = math.ceil((BLOODMANCER.ap + champion1_small_external_buffs[0]) *
-                                                   champion1_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(     BLOODMANCER.ap + champion1_small_external_buffs[0])
+                                damage_done = math.ceil(BLOODMANCER.ap * self.calculate_champion_damage(1))
+                                damage_done = math.ceil(     BLOODMANCER.ap * self.calculate_champion_damage(1))
                                 ability_data = ["Drain Life", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -12015,11 +11861,8 @@ class GameFrame(tk.Frame):
                                 champion2_rp = champion2_rp - drain_life_requirements[0]
                                 drain_life_requirements[1] = drain_life_requirements[2]
                                 champion2_rp = champion2_rp + drain_life_requirements[3]
-                                if len(champion2_big_external_buffs) != 1:
-                                    damage_done = math.ceil((BLOODMANCER.ap + champion2_small_external_buffs[0]) *
-                                                   champion2_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(     BLOODMANCER.ap + champion2_small_external_buffs[0])
+                                damage_done = math.ceil(BLOODMANCER.ap * self.calculate_champion_damage(2))
+                                damage_done = math.ceil(     BLOODMANCER.ap * self.calculate_champion_damage(2))
                                 ability_data = ["Drain Life", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -12028,11 +11871,8 @@ class GameFrame(tk.Frame):
                                 champion3_rp = champion3_rp - drain_life_requirements[0]
                                 drain_life_requirements[1] = drain_life_requirements[2]
                                 champion3_rp = champion3_rp + drain_life_requirements[3]
-                                if len(champion3_big_external_buffs) != 1:
-                                    damage_done = math.ceil((BLOODMANCER.ap + champion3_small_external_buffs[0]) *
-                                                   champion3_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(     BLOODMANCER.ap + champion3_small_external_buffs[0])
+                                damage_done = math.ceil(BLOODMANCER.ap * self.calculate_champion_damage(3))
+                                damage_done = math.ceil(     BLOODMANCER.ap * self.calculate_champion_damage(3))
                                 ability_data = ["Drain Life", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -12041,11 +11881,8 @@ class GameFrame(tk.Frame):
                                 champion4_rp = champion4_rp - drain_life_requirements[0]
                                 drain_life_requirements[1] = drain_life_requirements[2]
                                 champion4_rp = champion4_rp + drain_life_requirements[3]
-                                if len(champion4_big_external_buffs) != 1:
-                                    damage_done = math.ceil((BLOODMANCER.ap + champion4_small_external_buffs[0]) *
-                                                   champion4_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(     BLOODMANCER.ap + champion4_small_external_buffs[0])
+                                damage_done = math.ceil(BLOODMANCER.ap * self.calculate_champion_damage(4))
+                                damage_done = math.ceil(     BLOODMANCER.ap * self.calculate_champion_damage(4))
                                 ability_data = ["Drain Life", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -12054,11 +11891,8 @@ class GameFrame(tk.Frame):
                                 champion5_rp = champion5_rp - drain_life_requirements[0]
                                 drain_life_requirements[1] = drain_life_requirements[2]
                                 champion5_rp = champion5_rp + drain_life_requirements[3]
-                                if len(champion5_big_external_buffs) != 1:
-                                    damage_done = math.ceil((BLOODMANCER.ap + champion5_small_external_buffs[0]) *
-                                                   champion5_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(     BLOODMANCER.ap + champion5_small_external_buffs[0])
+                                damage_done = math.ceil(BLOODMANCER.ap * self.calculate_champion_damage(5))
+                                damage_done = math.ceil(     BLOODMANCER.ap * self.calculate_champion_damage(5))
                                 ability_data = ["Drain Life", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -12075,11 +11909,8 @@ class GameFrame(tk.Frame):
                                 champion1_rp = champion1_rp - blood_spike_requirements[0]
                                 blood_spike_requirements[1] = blood_spike_requirements[2]
                                 champion1_rp = champion1_rp + blood_spike_requirements[3]
-                                if len(champion1_big_external_buffs) != 1:
-                                    damage_done = math.ceil(((BLOODMANCER.ap * 2)+ champion1_small_external_buffs[0]) *
-                                                   champion1_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(     (BLOODMANCER.ap * 2) + champion1_small_external_buffs[0])
+                                damage_done = math.ceil((BLOODMANCER.ap * 2)* self.calculate_champion_damage(1))
+                                damage_done = math.ceil(     (BLOODMANCER.ap * 2) * self.calculate_champion_damage(1))
                                 ability_data = ["Blood Spike", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -12088,11 +11919,8 @@ class GameFrame(tk.Frame):
                                 champion2_rp = champion2_rp - blood_spike_requirements[0]
                                 blood_spike_requirements[1] = blood_spike_requirements[2]
                                 champion2_rp = champion2_rp + blood_spike_requirements[3]
-                                if len(champion2_big_external_buffs) != 1:
-                                    damage_done = math.ceil(((BLOODMANCER.ap * 2) + champion2_small_external_buffs[0]) *
-                                                   champion2_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(     (BLOODMANCER.ap * 2) + champion2_small_external_buffs[0])
+                                damage_done = math.ceil((BLOODMANCER.ap * 2) * self.calculate_champion_damage(2))
+                                damage_done = math.ceil(     (BLOODMANCER.ap * 2) * self.calculate_champion_damage(2))
                                 ability_data = ["Blood Spike", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -12101,11 +11929,8 @@ class GameFrame(tk.Frame):
                                 champion3_rp = champion3_rp - blood_spike_requirements[0]
                                 blood_spike_requirements[1] = blood_spike_requirements[2]
                                 champion3_rp = champion3_rp + blood_spike_requirements[3]
-                                if len(champion3_big_external_buffs) != 1:
-                                    damage_done = math.ceil(((BLOODMANCER.ap * 2) + champion3_small_external_buffs[0]) *
-                                                   champion3_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(     (BLOODMANCER.ap * 2) + champion3_small_external_buffs[0])
+                                damage_done = math.ceil((BLOODMANCER.ap * 2) * self.calculate_champion_damage(3))
+                                damage_done = math.ceil(     (BLOODMANCER.ap * 2) * self.calculate_champion_damage(3))
                                 ability_data = ["Blood Spike", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -12114,11 +11939,8 @@ class GameFrame(tk.Frame):
                                 champion4_rp = champion4_rp - blood_spike_requirements[0]
                                 blood_spike_requirements[1] = blood_spike_requirements[2]
                                 champion4_rp = champion4_rp + blood_spike_requirements[3]
-                                if len(champion4_big_external_buffs) != 1:
-                                    damage_done = math.ceil(((BLOODMANCER.ap * 2) + champion4_small_external_buffs[0]) *
-                                                   champion4_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(     (BLOODMANCER.ap * 2) + champion4_small_external_buffs[0])
+                                damage_done = math.ceil((BLOODMANCER.ap * 2) * self.calculate_champion_damage(4))
+                                damage_done = math.ceil(     (BLOODMANCER.ap * 2) * self.calculate_champion_damage(4))
                                 ability_data = ["Blood Spike", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -12127,11 +11949,8 @@ class GameFrame(tk.Frame):
                                 champion5_rp = champion5_rp - blood_spike_requirements[0]
                                 blood_spike_requirements[1] = blood_spike_requirements[2]
                                 champion5_rp = champion5_rp + blood_spike_requirements[3]
-                                if len(champion5_big_external_buffs) != 1:
-                                    damage_done = math.ceil(((BLOODMANCER.ap * 2) + champion5_small_external_buffs[0]) *
-                                                   champion5_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(     (BLOODMANCER.ap * 2) + champion5_small_external_buffs[0])
+                                damage_done = math.ceil((BLOODMANCER.ap * 2) * self.calculate_champion_damage(5))
+                                damage_done = math.ceil(     (BLOODMANCER.ap * 2) * self.calculate_champion_damage(5))
                                 ability_data = ["Blood Spike", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -12148,11 +11967,8 @@ class GameFrame(tk.Frame):
                                 champion1_rp = champion1_rp - overhand_justice_requirements[0]
                                 overhand_justice_requirements[1] = overhand_justice_requirements[2]
                                 champion1_rp = champion1_rp + overhand_justice_requirements[3]
-                                if len(champion1_big_external_buffs) != 1:
-                                    damage_done = math.ceil((PALADIN.ap + champion1_small_external_buffs[0]) *
-                                                   champion1_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(     PALADIN.ap + champion1_small_external_buffs[0])
+                                damage_done = math.ceil(PALADIN.ap * self.calculate_champion_damage(1))
+                                damage_done = math.ceil(     PALADIN.ap * self.calculate_champion_damage(1))
                                 ability_data = ["Overhand Justice", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -12161,11 +11977,8 @@ class GameFrame(tk.Frame):
                                 champion2_rp = champion2_rp - overhand_justice_requirements[0]
                                 overhand_justice_requirements[1] = overhand_justice_requirements[2]
                                 champion2_rp = champion2_rp + overhand_justice_requirements[3]
-                                if len(champion2_big_external_buffs) != 1:
-                                    damage_done = math.ceil((PALADIN.ap + champion2_small_external_buffs[0]) *
-                                                   champion2_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(     PALADIN.ap + champion2_small_external_buffs[0])
+                                damage_done = math.ceil(PALADIN.ap * self.calculate_champion_damage(2))
+                                damage_done = math.ceil(     PALADIN.ap * self.calculate_champion_damage(2))
                                 ability_data = ["Overhand Justice", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -12174,11 +11987,8 @@ class GameFrame(tk.Frame):
                                 champion3_rp = champion3_rp - overhand_justice_requirements[0]
                                 overhand_justice_requirements[1] = overhand_justice_requirements[2]
                                 champion3_rp = champion3_rp + overhand_justice_requirements[3]
-                                if len(champion3_big_external_buffs) != 1:
-                                    damage_done = math.ceil((PALADIN.ap + champion3_small_external_buffs[0]) *
-                                                   champion3_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(     PALADIN.ap + champion3_small_external_buffs[0])
+                                damage_done = math.ceil(PALADIN.ap * self.calculate_champion_damage(3))
+                                damage_done = math.ceil(     PALADIN.ap * self.calculate_champion_damage(3))
                                 ability_data = ["Overhand Justice", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -12187,11 +11997,8 @@ class GameFrame(tk.Frame):
                                 champion4_rp = champion4_rp - overhand_justice_requirements[0]
                                 overhand_justice_requirements[1] = overhand_justice_requirements[2]
                                 champion4_rp = champion4_rp + overhand_justice_requirements[3]
-                                if len(champion4_big_external_buffs) != 1:
-                                    damage_done = math.ceil((PALADIN.ap + champion4_small_external_buffs[0]) *
-                                                   champion4_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(     PALADIN.ap + champion4_small_external_buffs[0])
+                                damage_done = math.ceil(PALADIN.ap * self.calculate_champion_damage(4))
+                                damage_done = math.ceil(     PALADIN.ap * self.calculate_champion_damage(4))
                                 ability_data = ["Overhand Justice", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -12200,11 +12007,8 @@ class GameFrame(tk.Frame):
                                 champion5_rp = champion5_rp - overhand_justice_requirements[0]
                                 overhand_justice_requirements[1] = overhand_justice_requirements[2]
                                 champion5_rp = champion5_rp + overhand_justice_requirements[3]
-                                if len(champion5_big_external_buffs) != 1:
-                                    damage_done = math.ceil((PALADIN.ap + champion5_small_external_buffs[0]) *
-                                                   champion5_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(     PALADIN.ap + champion5_small_external_buffs[0])
+                                damage_done = math.ceil(PALADIN.ap * self.calculate_champion_damage(5))
+                                damage_done = math.ceil(     PALADIN.ap * self.calculate_champion_damage(5))
                                 ability_data = ["Overhand Justice", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -12221,11 +12025,8 @@ class GameFrame(tk.Frame):
                                 champion1_rp = champion1_rp - righteous_blow_requirements[0]
                                 righteous_blow_requirements[1] = righteous_blow_requirements[2]
                                 champion1_rp = champion1_rp + righteous_blow_requirements[3]
-                                if len(champion1_big_external_buffs) != 1:
-                                    damage_done = math.ceil((PALADIN.ap + champion1_small_external_buffs[0]) *
-                                                   champion1_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(     PALADIN.ap + champion1_small_external_buffs[0])
+                                damage_done = math.ceil(PALADIN.ap * self.calculate_champion_damage(1))
+                                damage_done = math.ceil(     PALADIN.ap * self.calculate_champion_damage(1))
                                 ability_data = ["Righteous Blow", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -12234,11 +12035,8 @@ class GameFrame(tk.Frame):
                                 champion2_rp = champion2_rp - righteous_blow_requirements[0]
                                 righteous_blow_requirements[1] = righteous_blow_requirements[2]
                                 champion2_rp = champion2_rp + righteous_blow_requirements[3]
-                                if len(champion2_big_external_buffs) != 1:
-                                    damage_done = math.ceil((PALADIN.ap + champion2_small_external_buffs[0]) *
-                                                   champion2_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(     PALADIN.ap + champion2_small_external_buffs[0])
+                                damage_done = math.ceil(PALADIN.ap * self.calculate_champion_damage(2))
+                                damage_done = math.ceil(     PALADIN.ap * self.calculate_champion_damage(2))
                                 ability_data = ["Righteous Blow", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -12247,11 +12045,8 @@ class GameFrame(tk.Frame):
                                 champion3_rp = champion3_rp - righteous_blow_requirements[0]
                                 righteous_blow_requirements[1] = righteous_blow_requirements[2]
                                 champion3_rp = champion3_rp + righteous_blow_requirements[3]
-                                if len(champion3_big_external_buffs) != 1:
-                                    damage_done = math.ceil((PALADIN.ap + champion3_small_external_buffs[0]) *
-                                                   champion3_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(     PALADIN.ap + champion3_small_external_buffs[0])
+                                damage_done = math.ceil(PALADIN.ap * self.calculate_champion_damage(3))
+                                damage_done = math.ceil(     PALADIN.ap * self.calculate_champion_damage(3))
                                 ability_data = ["Righteous Blow", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -12260,11 +12055,8 @@ class GameFrame(tk.Frame):
                                 champion4_rp = champion4_rp - righteous_blow_requirements[0]
                                 righteous_blow_requirements[1] = righteous_blow_requirements[2]
                                 champion4_rp = champion4_rp + righteous_blow_requirements[3]
-                                if len(champion4_big_external_buffs) != 1:
-                                    damage_done = math.ceil((PALADIN.ap + champion4_small_external_buffs[0]) *
-                                                   champion4_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(     PALADIN.ap + champion4_small_external_buffs[0])
+                                damage_done = math.ceil(PALADIN.ap * self.calculate_champion_damage(4))
+                                damage_done = math.ceil(     PALADIN.ap * self.calculate_champion_damage(4))
                                 ability_data = ["Righteous Blow", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -12273,11 +12065,8 @@ class GameFrame(tk.Frame):
                                 champion5_rp = champion5_rp - righteous_blow_requirements[0]
                                 righteous_blow_requirements[1] = righteous_blow_requirements[2]
                                 champion5_rp = champion5_rp + righteous_blow_requirements[3]
-                                if len(champion5_big_external_buffs) != 1:
-                                    damage_done = math.ceil((PALADIN.ap + champion5_small_external_buffs[0]) *
-                                                   champion5_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(     PALADIN.ap + champion5_small_external_buffs[0])
+                                damage_done = math.ceil(PALADIN.ap * self.calculate_champion_damage(5))
+                                damage_done = math.ceil(     PALADIN.ap * self.calculate_champion_damage(5))
                                 ability_data = ["Righteous Blow", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -12294,11 +12083,8 @@ class GameFrame(tk.Frame):
                                 champion1_rp = champion1_rp - steady_shot_requirements[0]
                                 steady_shot_requirements[1] = steady_shot_requirements[2]
                                 champion1_rp = champion1_rp + steady_shot_requirements[3]
-                                if len(champion1_big_external_buffs) != 1:
-                                    damage_done = math.ceil((CASTLE_RANGER.ap + champion1_small_external_buffs[0]) *
-                                                   champion1_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(     CASTLE_RANGER.ap + champion1_small_external_buffs[0])
+                                damage_done = math.ceil(CASTLE_RANGER.ap * self.calculate_champion_damage(1))
+                                damage_done = math.ceil(     CASTLE_RANGER.ap * self.calculate_champion_damage(1))
                                 ability_data = ["Steady Shot", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -12307,11 +12093,8 @@ class GameFrame(tk.Frame):
                                 champion2_rp = champion2_rp - steady_shot_requirements[0]
                                 steady_shot_requirements[1] = steady_shot_requirements[2]
                                 champion2_rp = champion2_rp + steady_shot_requirements[3]
-                                if len(champion2_big_external_buffs) != 1:
-                                    damage_done = math.ceil((CASTLE_RANGER.ap + champion2_small_external_buffs[0]) *
-                                                   champion2_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(     CASTLE_RANGER.ap + champion2_small_external_buffs[0])
+                                damage_done = math.ceil(CASTLE_RANGER.ap * self.calculate_champion_damage(2))
+                                damage_done = math.ceil(     CASTLE_RANGER.ap * self.calculate_champion_damage(2))
                                 ability_data = ["Steady Shot", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -12320,11 +12103,8 @@ class GameFrame(tk.Frame):
                                 champion3_rp = champion3_rp - steady_shot_requirements[0]
                                 steady_shot_requirements[1] = steady_shot_requirements[2]
                                 champion3_rp = champion3_rp + steady_shot_requirements[3]
-                                if len(champion3_big_external_buffs) != 1:
-                                    damage_done = math.ceil((CASTLE_RANGER.ap + champion3_small_external_buffs[0]) *
-                                                   champion3_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(     CASTLE_RANGER.ap + champion3_small_external_buffs[0])
+                                damage_done = math.ceil(CASTLE_RANGER.ap * self.calculate_champion_damage(3))
+                                damage_done = math.ceil(     CASTLE_RANGER.ap * self.calculate_champion_damage(3))
                                 ability_data = ["Steady Shot", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -12333,11 +12113,8 @@ class GameFrame(tk.Frame):
                                 champion4_rp = champion4_rp - steady_shot_requirements[0]
                                 steady_shot_requirements[1] = steady_shot_requirements[2]
                                 champion4_rp = champion4_rp + steady_shot_requirements[3]
-                                if len(champion4_big_external_buffs) != 1:
-                                    damage_done = math.ceil((CASTLE_RANGER.ap + champion4_small_external_buffs[0]) *
-                                                   champion4_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(     CASTLE_RANGER.ap + champion4_small_external_buffs[0])
+                                damage_done = math.ceil(CASTLE_RANGER.ap * self.calculate_champion_damage(4))
+                                damage_done = math.ceil(     CASTLE_RANGER.ap * self.calculate_champion_damage(4))
                                 ability_data = ["Steady Shot", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -12346,11 +12123,8 @@ class GameFrame(tk.Frame):
                                 champion5_rp = champion5_rp - steady_shot_requirements[0]
                                 steady_shot_requirements[1] = steady_shot_requirements[2]
                                 champion5_rp = champion5_rp + steady_shot_requirements[3]
-                                if len(champion5_big_external_buffs) != 1:
-                                    damage_done = math.ceil((CASTLE_RANGER.ap + champion5_small_external_buffs[0]) *
-                                                   champion5_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(     CASTLE_RANGER.ap + champion5_small_external_buffs[0])
+                                damage_done = math.ceil(CASTLE_RANGER.ap * self.calculate_champion_damage(5))
+                                damage_done = math.ceil(     CASTLE_RANGER.ap * self.calculate_champion_damage(5))
                                 ability_data = ["Steady Shot", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -12367,11 +12141,8 @@ class GameFrame(tk.Frame):
                                 champion1_rp = champion1_rp - power_opt_requirements[0]
                                 power_opt_requirements[1] = power_opt_requirements[2]
                                 champion1_rp = champion1_rp + power_opt_requirements[3]
-                                if len(champion1_big_external_buffs) != 1:
-                                    damage_done = math.ceil((CASTLE_RANGER.ap + champion1_small_external_buffs[0]) *
-                                                   champion1_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(     CASTLE_RANGER.ap + champion1_small_external_buffs[0])
+                                damage_done = math.ceil(CASTLE_RANGER.ap * self.calculate_champion_damage(1))
+                                damage_done = math.ceil(     CASTLE_RANGER.ap * self.calculate_champion_damage(1))
                                 ability_data = ["Power Opt", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -12380,11 +12151,8 @@ class GameFrame(tk.Frame):
                                 champion2_rp = champion2_rp - power_opt_requirements[0]
                                 power_opt_requirements[1] = power_opt_requirements[2]
                                 champion2_rp = champion2_rp + power_opt_requirements[3]
-                                if len(champion2_big_external_buffs) != 1:
-                                    damage_done = math.ceil((CASTLE_RANGER.ap + champion2_small_external_buffs[0]) *
-                                                   champion2_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(     CASTLE_RANGER.ap + champion2_small_external_buffs[0])
+                                damage_done = math.ceil(CASTLE_RANGER.ap * self.calculate_champion_damage(2))
+                                damage_done = math.ceil(     CASTLE_RANGER.ap * self.calculate_champion_damage(2))
                                 ability_data = ["Power Opt", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -12393,11 +12161,8 @@ class GameFrame(tk.Frame):
                                 champion3_rp = champion3_rp - power_opt_requirements[0]
                                 power_opt_requirements[1] = power_opt_requirements[2]
                                 champion3_rp = champion3_rp + power_opt_requirements[3]
-                                if len(champion3_big_external_buffs) != 1:
-                                    damage_done = math.ceil((CASTLE_RANGER.ap + champion3_small_external_buffs[0]) *
-                                                   champion3_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(     CASTLE_RANGER.ap + champion3_small_external_buffs[0])
+                                damage_done = math.ceil(CASTLE_RANGER.ap * self.calculate_champion_damage(3))
+                                damage_done = math.ceil(     CASTLE_RANGER.ap * self.calculate_champion_damage(3))
                                 ability_data = ["Power Opt", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -12406,11 +12171,8 @@ class GameFrame(tk.Frame):
                                 champion4_rp = champion4_rp - power_opt_requirements[0]
                                 power_opt_requirements[1] = power_opt_requirements[2]
                                 champion4_rp = champion4_rp + power_opt_requirements[3]
-                                if len(champion4_big_external_buffs) != 1:
-                                    damage_done = math.ceil((CASTLE_RANGER.ap + champion4_small_external_buffs[0]) *
-                                                   champion4_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(     CASTLE_RANGER.ap + champion4_small_external_buffs[0])
+                                damage_done = math.ceil(CASTLE_RANGER.ap * self.calculate_champion_damage(4))
+                                damage_done = math.ceil(     CASTLE_RANGER.ap * self.calculate_champion_damage(4))
                                 ability_data = ["Power Opt", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -12419,11 +12181,8 @@ class GameFrame(tk.Frame):
                                 champion5_rp = champion5_rp - power_opt_requirements[0]
                                 power_opt_requirements[1] = power_opt_requirements[2]
                                 champion5_rp = champion5_rp + power_opt_requirements[3]
-                                if len(champion5_big_external_buffs) != 1:
-                                    damage_done = math.ceil((CASTLE_RANGER.ap + champion5_small_external_buffs[0]) *
-                                                   champion5_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(     CASTLE_RANGER.ap + champion5_small_external_buffs[0])
+                                damage_done = math.ceil(CASTLE_RANGER.ap * self.calculate_champion_damage(5))
+                                damage_done = math.ceil(     CASTLE_RANGER.ap * self.calculate_champion_damage(5))
                                 ability_data = ["Power Opt", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -12440,11 +12199,8 @@ class GameFrame(tk.Frame):
                                 champion1_rp = champion1_rp - lightning_bolt_requirements[0]
                                 lightning_bolt_requirements[1] = lightning_bolt_requirements[2]
                                 champion1_rp = champion1_rp + lightning_bolt_requirements[3]
-                                if len(champion1_big_external_buffs) != 1:
-                                    damage_done = math.ceil((THUNDER_APPRENTICE.ap + champion1_small_external_buffs[0]) *
-                                                   champion1_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(     THUNDER_APPRENTICE.ap + champion1_small_external_buffs[0])
+                                damage_done = math.ceil(THUNDER_APPRENTICE.ap * self.calculate_champion_damage(1))
+                                damage_done = math.ceil(     THUNDER_APPRENTICE.ap * self.calculate_champion_damage(1))
                                 ability_data = ["Lightning Bolt", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -12453,11 +12209,8 @@ class GameFrame(tk.Frame):
                                 champion2_rp = champion2_rp - lightning_bolt_requirements[0]
                                 lightning_bolt_requirements[1] = lightning_bolt_requirements[2]
                                 champion2_rp = champion2_rp + lightning_bolt_requirements[3]
-                                if len(champion2_big_external_buffs) != 1:
-                                    damage_done = math.ceil((THUNDER_APPRENTICE.ap + champion2_small_external_buffs[0]) *
-                                                   champion2_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(     THUNDER_APPRENTICE.ap + champion2_small_external_buffs[0])
+                                damage_done = math.ceil(THUNDER_APPRENTICE.ap * self.calculate_champion_damage(2))
+                                damage_done = math.ceil(     THUNDER_APPRENTICE.ap * self.calculate_champion_damage(2))
                                 ability_data = ["Lightning Bolt", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -12466,11 +12219,8 @@ class GameFrame(tk.Frame):
                                 champion3_rp = champion3_rp - lightning_bolt_requirements[0]
                                 lightning_bolt_requirements[1] = lightning_bolt_requirements[2]
                                 champion3_rp = champion3_rp + lightning_bolt_requirements[3]
-                                if len(champion3_big_external_buffs) != 1:
-                                    damage_done = math.ceil((THUNDER_APPRENTICE.ap + champion3_small_external_buffs[0]) *
-                                                   champion3_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(     THUNDER_APPRENTICE.ap + champion3_small_external_buffs[0])
+                                damage_done = math.ceil(THUNDER_APPRENTICE.ap * self.calculate_champion_damage(3))
+                                damage_done = math.ceil(     THUNDER_APPRENTICE.ap * self.calculate_champion_damage(3))
                                 ability_data = ["Lightning Bolt", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -12479,11 +12229,8 @@ class GameFrame(tk.Frame):
                                 champion4_rp = champion4_rp - lightning_bolt_requirements[0]
                                 lightning_bolt_requirements[1] = lightning_bolt_requirements[2]
                                 champion4_rp = champion4_rp + lightning_bolt_requirements[3]
-                                if len(champion4_big_external_buffs) != 1:
-                                    damage_done = math.ceil((THUNDER_APPRENTICE.ap + champion4_small_external_buffs[0]) *
-                                                   champion4_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(     THUNDER_APPRENTICE.ap + champion4_small_external_buffs[0])
+                                damage_done = math.ceil(THUNDER_APPRENTICE.ap * self.calculate_champion_damage(4))
+                                damage_done = math.ceil(     THUNDER_APPRENTICE.ap * self.calculate_champion_damage(4))
                                 ability_data = ["Lightning Bolt", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -12492,11 +12239,8 @@ class GameFrame(tk.Frame):
                                 champion5_rp = champion5_rp - lightning_bolt_requirements[0]
                                 lightning_bolt_requirements[1] = lightning_bolt_requirements[2]
                                 champion5_rp = champion5_rp + lightning_bolt_requirements[3]
-                                if len(champion5_big_external_buffs) != 1:
-                                    damage_done = math.ceil((THUNDER_APPRENTICE.ap + champion5_small_external_buffs[0]) *
-                                                   champion5_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(     THUNDER_APPRENTICE.ap + champion5_small_external_buffs[0])
+                                damage_done = math.ceil(THUNDER_APPRENTICE.ap * self.calculate_champion_damage(5))
+                                damage_done = math.ceil(     THUNDER_APPRENTICE.ap * self.calculate_champion_damage(5))
                                 ability_data = ["Lightning Bolt", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -12513,11 +12257,8 @@ class GameFrame(tk.Frame):
                                 champion1_rp = champion1_rp - chain_lightning_requirements[0]
                                 chain_lightning_requirements[1] = chain_lightning_requirements[2]
                                 champion1_rp = champion1_rp + chain_lightning_requirements[3]
-                                if len(champion1_big_external_buffs) != 1:
-                                    damage_done = math.ceil((THUNDER_APPRENTICE.ap + champion1_small_external_buffs[0]) *
-                                                   champion1_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(     THUNDER_APPRENTICE.ap + champion1_small_external_buffs[0])
+                                damage_done = math.ceil(THUNDER_APPRENTICE.ap * self.calculate_champion_damage(1))
+                                damage_done = math.ceil(     THUNDER_APPRENTICE.ap * self.calculate_champion_damage(1))
                                 ability_data = ["Chain Lightning", "enemy", "AOE", damage_done]
                             else:
                                 return
@@ -12526,11 +12267,8 @@ class GameFrame(tk.Frame):
                                 champion2_rp = champion2_rp - chain_lightning_requirements[0]
                                 chain_lightning_requirements[1] = chain_lightning_requirements[2]
                                 champion2_rp = champion2_rp + chain_lightning_requirements[3]
-                                if len(champion2_big_external_buffs) != 1:
-                                    damage_done = math.ceil((THUNDER_APPRENTICE.ap + champion2_small_external_buffs[0]) *
-                                                   champion2_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(     THUNDER_APPRENTICE.ap + champion2_small_external_buffs[0])
+                                damage_done = math.ceil(THUNDER_APPRENTICE.ap * self.calculate_champion_damage(2))
+                                damage_done = math.ceil(     THUNDER_APPRENTICE.ap * self.calculate_champion_damage(2))
                                 ability_data = ["Chain Lightning", "enemy", "AOE", damage_done]
                             else:
                                 return
@@ -12539,11 +12277,8 @@ class GameFrame(tk.Frame):
                                 champion3_rp = champion3_rp - chain_lightning_requirements[0]
                                 chain_lightning_requirements[1] = chain_lightning_requirements[2]
                                 champion3_rp = champion3_rp + chain_lightning_requirements[3]
-                                if len(champion3_big_external_buffs) != 1:
-                                    damage_done = math.ceil((THUNDER_APPRENTICE.ap + champion3_small_external_buffs[0]) *
-                                                   champion3_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(     THUNDER_APPRENTICE.ap + champion3_small_external_buffs[0])
+                                damage_done = math.ceil(THUNDER_APPRENTICE.ap * self.calculate_champion_damage(3))
+                                damage_done = math.ceil(     THUNDER_APPRENTICE.ap * self.calculate_champion_damage(3))
                                 ability_data = ["Chain Lightning", "enemy", "AOE", damage_done]
                             else:
                                 return
@@ -12552,11 +12287,8 @@ class GameFrame(tk.Frame):
                                 champion4_rp = champion4_rp - chain_lightning_requirements[0]
                                 chain_lightning_requirements[1] = chain_lightning_requirements[2]
                                 champion4_rp = champion4_rp + chain_lightning_requirements[3]
-                                if len(champion4_big_external_buffs) != 1:
-                                    damage_done = math.ceil((THUNDER_APPRENTICE.ap + champion4_small_external_buffs[0]) *
-                                                   champion4_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(     THUNDER_APPRENTICE.ap + champion4_small_external_buffs[0])
+                                damage_done = math.ceil(THUNDER_APPRENTICE.ap * self.calculate_champion_damage(4))
+                                damage_done = math.ceil(     THUNDER_APPRENTICE.ap * self.calculate_champion_damage(4))
                                 ability_data = ["Chain Lightning", "enemy", "AOE", damage_done]
                             else:
                                 return
@@ -12565,11 +12297,8 @@ class GameFrame(tk.Frame):
                                 champion5_rp = champion5_rp - chain_lightning_requirements[0]
                                 chain_lightning_requirements[1] = chain_lightning_requirements[2]
                                 champion5_rp = champion5_rp + chain_lightning_requirements[3]
-                                if len(champion5_big_external_buffs) != 1:
-                                    damage_done = math.ceil((THUNDER_APPRENTICE.ap + champion5_small_external_buffs[0]) *
-                                                   champion5_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(     THUNDER_APPRENTICE.ap + champion5_small_external_buffs[0])
+                                damage_done = math.ceil(THUNDER_APPRENTICE.ap * self.calculate_champion_damage(5))
+                                damage_done = math.ceil(     THUNDER_APPRENTICE.ap * self.calculate_champion_damage(5))
                                 ability_data = ["Chain Lightning", "enemy", "AOE", damage_done]
                             else:
                                 return
@@ -12586,11 +12315,8 @@ class GameFrame(tk.Frame):
                                 champion1_rp = champion1_rp - rock_barrage_requirements[0]
                                 rock_barrage_requirements[1] = rock_barrage_requirements[2]
                                 champion1_rp = champion1_rp + rock_barrage_requirements[3]
-                                if len(champion1_big_external_buffs) != 1:
-                                    damage_done = math.ceil((EARTH_SPEAKER.ap + champion1_small_external_buffs[0]) *
-                                                   champion1_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(     EARTH_SPEAKER.ap + champion1_small_external_buffs[0])
+                                damage_done = math.ceil(EARTH_SPEAKER.ap * self.calculate_champion_damage(1))
+                                damage_done = math.ceil(     EARTH_SPEAKER.ap * self.calculate_champion_damage(1))
                                 ability_data = ["Rock Barrage", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -12599,11 +12325,8 @@ class GameFrame(tk.Frame):
                                 champion2_rp = champion2_rp - rock_barrage_requirements[0]
                                 rock_barrage_requirements[1] = rock_barrage_requirements[2]
                                 champion2_rp = champion2_rp + rock_barrage_requirements[3]
-                                if len(champion2_big_external_buffs) != 1:
-                                    damage_done = math.ceil((EARTH_SPEAKER.ap + champion2_small_external_buffs[0]) *
-                                                   champion2_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(     EARTH_SPEAKER.ap + champion2_small_external_buffs[0])
+                                damage_done = math.ceil(EARTH_SPEAKER.ap * self.calculate_champion_damage(2))
+                                damage_done = math.ceil(     EARTH_SPEAKER.ap * self.calculate_champion_damage(2))
                                 ability_data = ["Rock Barrage", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -12612,11 +12335,8 @@ class GameFrame(tk.Frame):
                                 champion3_rp = champion3_rp - rock_barrage_requirements[0]
                                 rock_barrage_requirements[1] = rock_barrage_requirements[2]
                                 champion3_rp = champion3_rp + rock_barrage_requirements[3]
-                                if len(champion3_big_external_buffs) != 1:
-                                    damage_done = math.ceil((EARTH_SPEAKER.ap + champion3_small_external_buffs[0]) *
-                                                   champion3_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(     EARTH_SPEAKER.ap + champion3_small_external_buffs[0])
+                                damage_done = math.ceil(EARTH_SPEAKER.ap * self.calculate_champion_damage(3))
+                                damage_done = math.ceil(     EARTH_SPEAKER.ap * self.calculate_champion_damage(3))
                                 ability_data = ["Rock Barrage", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -12625,11 +12345,8 @@ class GameFrame(tk.Frame):
                                 champion4_rp = champion4_rp - rock_barrage_requirements[0]
                                 rock_barrage_requirements[1] = rock_barrage_requirements[2]
                                 champion4_rp = champion4_rp + rock_barrage_requirements[3]
-                                if len(champion4_big_external_buffs) != 1:
-                                    damage_done = math.ceil((EARTH_SPEAKER.ap + champion4_small_external_buffs[0]) *
-                                                   champion4_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(     EARTH_SPEAKER.ap + champion4_small_external_buffs[0])
+                                damage_done = math.ceil(EARTH_SPEAKER.ap * self.calculate_champion_damage(4))
+                                damage_done = math.ceil(     EARTH_SPEAKER.ap * self.calculate_champion_damage(4))
                                 ability_data = ["Rock Barrage", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -12638,11 +12355,8 @@ class GameFrame(tk.Frame):
                                 champion5_rp = champion5_rp - rock_barrage_requirements[0]
                                 rock_barrage_requirements[1] = rock_barrage_requirements[2]
                                 champion5_rp = champion5_rp + rock_barrage_requirements[3]
-                                if len(champion5_big_external_buffs) != 1:
-                                    damage_done = math.ceil((EARTH_SPEAKER.ap + champion5_small_external_buffs[0]) *
-                                                   champion5_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(     EARTH_SPEAKER.ap + champion5_small_external_buffs[0])
+                                damage_done = math.ceil(EARTH_SPEAKER.ap * self.calculate_champion_damage(5))
+                                damage_done = math.ceil(     EARTH_SPEAKER.ap * self.calculate_champion_damage(5))
                                 ability_data = ["Rock Barrage", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -12659,11 +12373,8 @@ class GameFrame(tk.Frame):
                                 champion1_rp = champion1_rp - shimmering_bolt_requirements[0]
                                 shimmering_bolt_requirements[1] = shimmering_bolt_requirements[2]
                                 champion1_rp = champion1_rp + shimmering_bolt_requirements[3]
-                                if len(champion1_big_external_buffs) != 1:
-                                    damage_done = math.ceil((PRIEST_OF_THE_DEVOTED.ap + champion1_small_external_buffs[0]) *
-                                                   champion1_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(     PRIEST_OF_THE_DEVOTED.ap + champion1_small_external_buffs[0])
+                                damage_done = math.ceil(PRIEST_OF_THE_DEVOTED.ap * self.calculate_champion_damage(1))
+                                damage_done = math.ceil(     PRIEST_OF_THE_DEVOTED.ap * self.calculate_champion_damage(1))
                                 ability_data = ["Shimmering Bolt", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -12672,11 +12383,8 @@ class GameFrame(tk.Frame):
                                 champion2_rp = champion2_rp - shimmering_bolt_requirements[0]
                                 shimmering_bolt_requirements[1] = shimmering_bolt_requirements[2]
                                 champion2_rp = champion2_rp + shimmering_bolt_requirements[3]
-                                if len(champion2_big_external_buffs) != 1:
-                                    damage_done = math.ceil((PRIEST_OF_THE_DEVOTED.ap + champion2_small_external_buffs[0]) *
-                                                   champion2_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(     PRIEST_OF_THE_DEVOTED.ap + champion2_small_external_buffs[0])
+                                damage_done = math.ceil(PRIEST_OF_THE_DEVOTED.ap * self.calculate_champion_damage(2))
+                                damage_done = math.ceil(     PRIEST_OF_THE_DEVOTED.ap * self.calculate_champion_damage(2))
                                 ability_data = ["Shimmering Bolt", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -12685,11 +12393,8 @@ class GameFrame(tk.Frame):
                                 champion3_rp = champion3_rp - shimmering_bolt_requirements[0]
                                 shimmering_bolt_requirements[1] = shimmering_bolt_requirements[2]
                                 champion3_rp = champion3_rp + shimmering_bolt_requirements[3]
-                                if len(champion3_big_external_buffs) != 1:
-                                    damage_done = math.ceil((PRIEST_OF_THE_DEVOTED.ap + champion3_small_external_buffs[0]) *
-                                                   champion3_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(     PRIEST_OF_THE_DEVOTED.ap + champion3_small_external_buffs[0])
+                                damage_done = math.ceil(PRIEST_OF_THE_DEVOTED.ap * self.calculate_champion_damage(3))
+                                damage_done = math.ceil(     PRIEST_OF_THE_DEVOTED.ap * self.calculate_champion_damage(3))
                                 ability_data = ["Shimmering Bolt", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -12698,11 +12403,8 @@ class GameFrame(tk.Frame):
                                 champion4_rp = champion4_rp - shimmering_bolt_requirements[0]
                                 shimmering_bolt_requirements[1] = shimmering_bolt_requirements[2]
                                 champion4_rp = champion4_rp + shimmering_bolt_requirements[3]
-                                if len(champion4_big_external_buffs) != 1:
-                                    damage_done = math.ceil((PRIEST_OF_THE_DEVOTED.ap + champion4_small_external_buffs[0]) *
-                                                   champion4_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(     PRIEST_OF_THE_DEVOTED.ap + champion4_small_external_buffs[0])
+                                damage_done = math.ceil(PRIEST_OF_THE_DEVOTED.ap * self.calculate_champion_damage(4))
+                                damage_done = math.ceil(     PRIEST_OF_THE_DEVOTED.ap * self.calculate_champion_damage(4))
                                 ability_data = ["Shimmering Bolt", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -12711,11 +12413,8 @@ class GameFrame(tk.Frame):
                                 champion5_rp = champion5_rp - shimmering_bolt_requirements[0]
                                 shimmering_bolt_requirements[1] = shimmering_bolt_requirements[2]
                                 champion5_rp = champion5_rp + shimmering_bolt_requirements[3]
-                                if len(champion5_big_external_buffs) != 1:
-                                    damage_done = math.ceil((PRIEST_OF_THE_DEVOTED.ap + champion5_small_external_buffs[0]) *
-                                                   champion5_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(     PRIEST_OF_THE_DEVOTED.ap + champion5_small_external_buffs[0])
+                                damage_done = math.ceil(PRIEST_OF_THE_DEVOTED.ap * self.calculate_champion_damage(5))
+                                damage_done = math.ceil(     PRIEST_OF_THE_DEVOTED.ap * self.calculate_champion_damage(5))
                                 ability_data = ["Shimmering Bolt", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -12732,11 +12431,8 @@ class GameFrame(tk.Frame):
                                 champion1_rp = champion1_rp - divine_smite_requirements[0]
                                 divine_smite_requirements[1] = divine_smite_requirements[2]
                                 champion1_rp = champion1_rp + divine_smite_requirements[3]
-                                if len(champion1_big_external_buffs) != 1:
-                                    damage_done = math.ceil((PRIEST_OF_THE_DEVOTED.ap + champion1_small_external_buffs[0]) *
-                                                   champion1_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(     PRIEST_OF_THE_DEVOTED.ap + champion1_small_external_buffs[0])
+                                damage_done = math.ceil(PRIEST_OF_THE_DEVOTED.ap * self.calculate_champion_damage(1))
+                                damage_done = math.ceil(     PRIEST_OF_THE_DEVOTED.ap * self.calculate_champion_damage(1))
                                 ability_data = ["Divine Smite", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -12745,11 +12441,8 @@ class GameFrame(tk.Frame):
                                 champion2_rp = champion2_rp - divine_smite_requirements[0]
                                 divine_smite_requirements[1] = divine_smite_requirements[2]
                                 champion2_rp = champion2_rp + divine_smite_requirements[3]
-                                if len(champion2_big_external_buffs) != 1:
-                                    damage_done = math.ceil((PRIEST_OF_THE_DEVOTED.ap + champion2_small_external_buffs[0]) *
-                                                   champion2_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(     PRIEST_OF_THE_DEVOTED.ap + champion2_small_external_buffs[0])
+                                damage_done = math.ceil(PRIEST_OF_THE_DEVOTED.ap * self.calculate_champion_damage(2))
+                                damage_done = math.ceil(     PRIEST_OF_THE_DEVOTED.ap * self.calculate_champion_damage(2))
                                 ability_data = ["Divine Smite", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -12758,11 +12451,8 @@ class GameFrame(tk.Frame):
                                 champion3_rp = champion3_rp - divine_smite_requirements[0]
                                 divine_smite_requirements[1] = divine_smite_requirements[2]
                                 champion3_rp = champion3_rp + divine_smite_requirements[3]
-                                if len(champion3_big_external_buffs) != 1:
-                                    damage_done = math.ceil((PRIEST_OF_THE_DEVOTED.ap + champion3_small_external_buffs[0]) *
-                                                   champion3_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(     PRIEST_OF_THE_DEVOTED.ap + champion3_small_external_buffs[0])
+                                damage_done = math.ceil(PRIEST_OF_THE_DEVOTED.ap * self.calculate_champion_damage(3))
+                                damage_done = math.ceil(     PRIEST_OF_THE_DEVOTED.ap * self.calculate_champion_damage(3))
                                 ability_data = ["Divine Smite", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -12771,11 +12461,8 @@ class GameFrame(tk.Frame):
                                 champion4_rp = champion4_rp - divine_smite_requirements[0]
                                 divine_smite_requirements[1] = divine_smite_requirements[2]
                                 champion4_rp = champion4_rp + divine_smite_requirements[3]
-                                if len(champion4_big_external_buffs) != 1:
-                                    damage_done = math.ceil((PRIEST_OF_THE_DEVOTED.ap + champion4_small_external_buffs[0]) *
-                                                   champion4_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(     PRIEST_OF_THE_DEVOTED.ap + champion4_small_external_buffs[0])
+                                damage_done = math.ceil(PRIEST_OF_THE_DEVOTED.ap * self.calculate_champion_damage(4))
+                                damage_done = math.ceil(     PRIEST_OF_THE_DEVOTED.ap * self.calculate_champion_damage(4))
                                 ability_data = ["Divine Smite", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -12784,11 +12471,8 @@ class GameFrame(tk.Frame):
                                 champion5_rp = champion5_rp - divine_smite_requirements[0]
                                 divine_smite_requirements[1] = divine_smite_requirements[2]
                                 champion5_rp = champion5_rp + divine_smite_requirements[3]
-                                if len(champion5_big_external_buffs) != 1:
-                                    damage_done = math.ceil((PRIEST_OF_THE_DEVOTED.ap + champion5_small_external_buffs[0]) *
-                                                   champion5_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(     PRIEST_OF_THE_DEVOTED.ap + champion5_small_external_buffs[0])
+                                damage_done = math.ceil(PRIEST_OF_THE_DEVOTED.ap * self.calculate_champion_damage(5))
+                                damage_done = math.ceil(     PRIEST_OF_THE_DEVOTED.ap * self.calculate_champion_damage(5))
                                 ability_data = ["Divine Smite", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -12805,11 +12489,8 @@ class GameFrame(tk.Frame):
                                 champion1_rp = champion1_rp - cybernetic_blast_requirements[0]
                                 cybernetic_blast_requirements[1] = cybernetic_blast_requirements[2]
                                 champion1_rp = champion1_rp + cybernetic_blast_requirements[3]
-                                if len(champion1_big_external_buffs) != 1:
-                                    damage_done = math.ceil((TIME_WALKER.ap + champion1_small_external_buffs[0]) *
-                                                   champion1_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(     TIME_WALKER.ap + champion1_small_external_buffs[0])
+                                damage_done = math.ceil(TIME_WALKER.ap * self.calculate_champion_damage(1))
+                                damage_done = math.ceil(     TIME_WALKER.ap * self.calculate_champion_damage(1))
                                 ability_data = ["Cybernetic Blast", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -12818,11 +12499,8 @@ class GameFrame(tk.Frame):
                                 champion2_rp = champion2_rp - cybernetic_blast_requirements[0]
                                 cybernetic_blast_requirements[1] = cybernetic_blast_requirements[2]
                                 champion2_rp = champion2_rp + cybernetic_blast_requirements[3]
-                                if len(champion2_big_external_buffs) != 1:
-                                    damage_done = math.ceil((TIME_WALKER.ap + champion2_small_external_buffs[0]) *
-                                                   champion2_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(     TIME_WALKER.ap + champion2_small_external_buffs[0])
+                                damage_done = math.ceil(TIME_WALKER.ap * self.calculate_champion_damage(2))
+                                damage_done = math.ceil(     TIME_WALKER.ap * self.calculate_champion_damage(2))
                                 ability_data = ["Cybernetic Blast", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -12831,11 +12509,8 @@ class GameFrame(tk.Frame):
                                 champion3_rp = champion3_rp - cybernetic_blast_requirements[0]
                                 cybernetic_blast_requirements[1] = cybernetic_blast_requirements[2]
                                 champion3_rp = champion3_rp + cybernetic_blast_requirements[3]
-                                if len(champion3_big_external_buffs) != 1:
-                                    damage_done = math.ceil((TIME_WALKER.ap + champion3_small_external_buffs[0]) *
-                                                   champion3_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(     TIME_WALKER.ap + champion3_small_external_buffs[0])
+                                damage_done = math.ceil(TIME_WALKER.ap * self.calculate_champion_damage(3))
+                                damage_done = math.ceil(     TIME_WALKER.ap * self.calculate_champion_damage(3))
                                 ability_data = ["Cybernetic Blast", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -12844,11 +12519,8 @@ class GameFrame(tk.Frame):
                                 champion4_rp = champion4_rp - cybernetic_blast_requirements[0]
                                 cybernetic_blast_requirements[1] = cybernetic_blast_requirements[2]
                                 champion4_rp = champion4_rp + cybernetic_blast_requirements[3]
-                                if len(champion4_big_external_buffs) != 1:
-                                    damage_done = math.ceil((TIME_WALKER.ap + champion4_small_external_buffs[0]) *
-                                                   champion4_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(     TIME_WALKER.ap + champion4_small_external_buffs[0])
+                                damage_done = math.ceil(TIME_WALKER.ap * self.calculate_champion_damage(4))
+                                damage_done = math.ceil(     TIME_WALKER.ap * self.calculate_champion_damage(4))
                                 ability_data = ["Cybernetic Blast", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -12857,11 +12529,8 @@ class GameFrame(tk.Frame):
                                 champion5_rp = champion5_rp - cybernetic_blast_requirements[0]
                                 cybernetic_blast_requirements[1] = cybernetic_blast_requirements[2]
                                 champion5_rp = champion5_rp + cybernetic_blast_requirements[3]
-                                if len(champion5_big_external_buffs) != 1:
-                                    damage_done = math.ceil((TIME_WALKER.ap + champion5_small_external_buffs[0]) *
-                                                   champion5_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(TIME_WALKER.ap + champion5_small_external_buffs[0])
+                                damage_done = math.ceil(TIME_WALKER.ap * self.calculate_champion_damage(5))
+                                damage_done = math.ceil(TIME_WALKER.ap * self.calculate_champion_damage(5))
                                 ability_data = ["Cybernetic Blast", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -12878,10 +12547,8 @@ class GameFrame(tk.Frame):
                                 champion1_rp = champion1_rp - throw_scissors_requirements[0]
                                 throw_scissors_requirements[1] = throw_scissors_requirements[2]
                                 champion1_rp = champion1_rp + throw_scissors_requirements[3]
-                                if len(champion1_big_external_buffs) != 1:
-                                    damage_done = math.ceil(     CHILD_OF_MEDICINE.ap + champion1_small_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(CHILD_OF_MEDICINE.ap + champion1_small_external_buffs[0])
+                                damage_done = math.ceil(CHILD_OF_MEDICINE.ap * self.calculate_champion_damage(1))
+                                damage_done = math.ceil(CHILD_OF_MEDICINE.ap * self.calculate_champion_damage(1))
                                 ability_data = ["Throw Scissors", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -12890,11 +12557,8 @@ class GameFrame(tk.Frame):
                                 champion2_rp = champion2_rp - throw_scissors_requirements[0]
                                 throw_scissors_requirements[1] = throw_scissors_requirements[2]
                                 champion2_rp = champion2_rp + throw_scissors_requirements[3]
-                                if len(champion2_big_external_buffs) != 1:
-                                    damage_done = math.ceil((CHILD_OF_MEDICINE.ap + champion2_small_external_buffs[0]) *
-                                                   champion2_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(CHILD_OF_MEDICINE.ap + champion2_small_external_buffs[0])
+                                damage_done = math.ceil(CHILD_OF_MEDICINE.ap * self.calculate_champion_damage(2))
+                                damage_done = math.ceil(CHILD_OF_MEDICINE.ap * self.calculate_champion_damage(2))
                                 ability_data = ["Throw Scissors", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -12903,11 +12567,8 @@ class GameFrame(tk.Frame):
                                 champion3_rp = champion3_rp - throw_scissors_requirements[0]
                                 throw_scissors_requirements[1] = throw_scissors_requirements[2]
                                 champion3_rp = champion3_rp + throw_scissors_requirements[3]
-                                if len(champion3_big_external_buffs) != 1:
-                                    damage_done = math.ceil((CHILD_OF_MEDICINE.ap + champion3_small_external_buffs[0]) *
-                                                   champion3_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(CHILD_OF_MEDICINE.ap + champion3_small_external_buffs[0])
+                                damage_done = math.ceil(CHILD_OF_MEDICINE.ap * self.calculate_champion_damage(3))
+                                damage_done = math.ceil(CHILD_OF_MEDICINE.ap * self.calculate_champion_damage(3))
                                 ability_data = ["Throw Scissors", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -12916,11 +12577,8 @@ class GameFrame(tk.Frame):
                                 champion4_rp = champion4_rp - throw_scissors_requirements[0]
                                 throw_scissors_requirements[1] = throw_scissors_requirements[2]
                                 champion4_rp = champion4_rp + throw_scissors_requirements[3]
-                                if len(champion4_big_external_buffs) != 1:
-                                    damage_done = math.ceil((CHILD_OF_MEDICINE.ap + champion4_small_external_buffs[0]) *
-                                                   champion4_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(CHILD_OF_MEDICINE.ap + champion4_small_external_buffs[0])
+                                damage_done = math.ceil(CHILD_OF_MEDICINE.ap * self.calculate_champion_damage(4))
+                                damage_done = math.ceil(CHILD_OF_MEDICINE.ap * self.calculate_champion_damage(4))
                                 ability_data = ["Throw Scissors", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -12929,11 +12587,8 @@ class GameFrame(tk.Frame):
                                 champion5_rp = champion5_rp - throw_scissors_requirements[0]
                                 throw_scissors_requirements[1] = throw_scissors_requirements[2]
                                 champion5_rp = champion5_rp + throw_scissors_requirements[3]
-                                if len(champion5_big_external_buffs) != 1:
-                                    damage_done = math.ceil((CHILD_OF_MEDICINE.ap + champion5_small_external_buffs[0]) *
-                                                   champion5_big_external_buffs[0])
-                                else:
-                                    damage_done = math.ceil(CHILD_OF_MEDICINE.ap + champion5_small_external_buffs[0])
+                                damage_done = math.ceil(CHILD_OF_MEDICINE.ap * self.calculate_champion_damage(5))
+                                damage_done = math.ceil(CHILD_OF_MEDICINE.ap * self.calculate_champion_damage(5))
                                 ability_data = ["Throw Scissors", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -12952,22 +12607,22 @@ class GameFrame(tk.Frame):
             special1_button = tk.Button(dungeon_game_frame, text=special_button_text_list[0], width=50, height=4,
                                        command=lambda: self.champion_specials(special_button_text_list_temp[0]))
             special1_button_details = tk.Button(dungeon_game_frame,
-                                                text="{} Details".format(special_button_text_list_temp[0]), width=38,
+                                                text="{} Details (TBI)".format(special_button_text_list_temp[0]), width=38,
                                                 height=1)
             special2_button = tk.Button(dungeon_game_frame, text=special_button_text_list[1], width=50, height=4,
                                        command=lambda: self.champion_specials(special_button_text_list_temp[1]))
             special2_button_details = tk.Button(dungeon_game_frame,
-                                                text="{} Details".format(special_button_text_list_temp[1]), width=38,
+                                                text="{} Details (TBI)".format(special_button_text_list_temp[1]), width=38,
                                                 height=1)
             special3_button = tk.Button(dungeon_game_frame, text=special_button_text_list[2], width=50, height=4,
                                        command=lambda: self.champion_specials(special_button_text_list_temp[2]))
             special3_button_details = tk.Button(dungeon_game_frame,
-                                                text="{} Details".format(special_button_text_list_temp[2]), width=38,
+                                                text="{} Details (TBI)".format(special_button_text_list_temp[2]), width=38,
                                                 height=1)
             special4_button = tk.Button(dungeon_game_frame, text=special_button_text_list[3], width=50, height=4,
                                        command=lambda: self.champion_specials(special_button_text_list_temp[3]))
             special4_button_details = tk.Button(dungeon_game_frame,
-                                                text="{} Details".format(special_button_text_list_temp[3]), width=38,
+                                                text="{} Details (TBI)".format(special_button_text_list_temp[3]), width=38,
                                                 height=1)
             back_button = tk.Button(dungeon_game_frame, text="Back", command=self.player_combat_champion1)
             back_button.grid(row=20, column=2, pady=20)
@@ -12987,22 +12642,22 @@ class GameFrame(tk.Frame):
             special1_button = tk.Button(dungeon_game_frame, text=special_button_text_list[0], width=50, height=4,
                                        command=lambda: self.champion_specials(special_button_text_list_temp[0]))
             special1_button_details = tk.Button(dungeon_game_frame,
-                                                text="{} Details".format(special_button_text_list_temp[0]), width=38,
+                                                text="{} Details (TBI)".format(special_button_text_list_temp[0]), width=38,
                                                 height=1)
             special2_button = tk.Button(dungeon_game_frame, text=special_button_text_list[1], width=50, height=4,
                                        command=lambda: self.champion_specials(special_button_text_list_temp[1]))
             special2_button_details = tk.Button(dungeon_game_frame,
-                                                text="{} Details".format(special_button_text_list_temp[1]), width=38,
+                                                text="{} Details (TBI)".format(special_button_text_list_temp[1]), width=38,
                                                 height=1)
             special3_button = tk.Button(dungeon_game_frame, text=special_button_text_list[2], width=50, height=4,
                                        command=lambda: self.champion_specials(special_button_text_list_temp[2]))
             special3_button_details = tk.Button(dungeon_game_frame,
-                                                text="{} Details".format(special_button_text_list_temp[2]), width=38,
+                                                text="{} Details (TBI)".format(special_button_text_list_temp[2]), width=38,
                                                 height=1)
             special4_button = tk.Button(dungeon_game_frame, text=special_button_text_list[3], width=50, height=4,
                                        command=lambda: self.champion_specials(special_button_text_list_temp[3]))
             special4_button_details = tk.Button(dungeon_game_frame,
-                                                text="{} Details".format(special_button_text_list_temp[3]), width=38,
+                                                text="{} Details (TBI)".format(special_button_text_list_temp[3]), width=38,
                                                 height=1)
             back_button = tk.Button(dungeon_game_frame, text="Back", command=self.player_combat_champion2)
             back_button.grid(row=20, column=2, pady=20)
@@ -13022,22 +12677,22 @@ class GameFrame(tk.Frame):
             special1_button = tk.Button(dungeon_game_frame, text=special_button_text_list[0], width=50, height=4,
                                        command=lambda: self.champion_specials(special_button_text_list_temp[0]))
             special1_button_details = tk.Button(dungeon_game_frame,
-                                                text="{} Details".format(special_button_text_list_temp[0]), width=38,
+                                                text="{} Details (TBI)".format(special_button_text_list_temp[0]), width=38,
                                                 height=1)
             special2_button = tk.Button(dungeon_game_frame, text=special_button_text_list[1], width=50, height=4,
                                        command=lambda: self.champion_specials(special_button_text_list_temp[1]))
             special2_button_details = tk.Button(dungeon_game_frame,
-                                                text="{} Details".format(special_button_text_list_temp[1]), width=38,
+                                                text="{} Details (TBI)".format(special_button_text_list_temp[1]), width=38,
                                                 height=1)
             special3_button = tk.Button(dungeon_game_frame, text=special_button_text_list[2], width=50, height=4,
                                        command=lambda: self.champion_specials(special_button_text_list_temp[2]))
             special3_button_details = tk.Button(dungeon_game_frame,
-                                                text="{} Details".format(special_button_text_list_temp[2]), width=38,
+                                                text="{} Details (TBI)".format(special_button_text_list_temp[2]), width=38,
                                                 height=1)
             special4_button = tk.Button(dungeon_game_frame, text=special_button_text_list[3], width=50, height=4,
                                        command=lambda: self.champion_specials(special_button_text_list_temp[3]))
             special4_button_details = tk.Button(dungeon_game_frame,
-                                                text="{} Details".format(special_button_text_list_temp[3]), width=38,
+                                                text="{} Details (TBI)".format(special_button_text_list_temp[3]), width=38,
                                                 height=1)
             back_button = tk.Button(dungeon_game_frame, text="Back", command=self.player_combat_champion3)
             back_button.grid(row=20, column=2, pady=20)
@@ -13057,22 +12712,22 @@ class GameFrame(tk.Frame):
             special1_button = tk.Button(dungeon_game_frame, text=special_button_text_list[0], width=50, height=4,
                                        command=lambda: self.champion_specials(special_button_text_list_temp[0]))
             special1_button_details = tk.Button(dungeon_game_frame,
-                                                text="{} Details".format(special_button_text_list_temp[0]), width=38,
+                                                text="{} Details (TBI)".format(special_button_text_list_temp[0]), width=38,
                                                 height=1)
             special2_button = tk.Button(dungeon_game_frame, text=special_button_text_list[1], width=50, height=4,
                                        command=lambda: self.champion_specials(special_button_text_list_temp[1]))
             special2_button_details = tk.Button(dungeon_game_frame,
-                                                text="{} Details".format(special_button_text_list_temp[1]), width=38,
+                                                text="{} Details (TBI)".format(special_button_text_list_temp[1]), width=38,
                                                 height=1)
             special3_button = tk.Button(dungeon_game_frame, text=special_button_text_list[2], width=50, height=4,
                                        command=lambda: self.champion_specials(special_button_text_list_temp[2]))
             special3_button_details = tk.Button(dungeon_game_frame,
-                                                text="{} Details".format(special_button_text_list_temp[2]), width=38,
+                                                text="{} Details (TBI)".format(special_button_text_list_temp[2]), width=38,
                                                 height=1)
             special4_button = tk.Button(dungeon_game_frame, text=special_button_text_list[3], width=50, height=4,
                                        command=lambda: self.champion_specials(special_button_text_list_temp[3]))
             special4_button_details = tk.Button(dungeon_game_frame,
-                                                text="{} Details".format(special_button_text_list_temp[3]), width=38,
+                                                text="{} Details (TBI)".format(special_button_text_list_temp[3]), width=38,
                                                 height=1)
             back_button = tk.Button(dungeon_game_frame, text="Back", command=self.player_combat_champion4)
             back_button.grid(row=20, column=2, pady=20)
@@ -13092,22 +12747,22 @@ class GameFrame(tk.Frame):
             special1_button = tk.Button(dungeon_game_frame, text=special_button_text_list[0], width=50, height=4,
                                        command=lambda: self.champion_specials(special_button_text_list_temp[0]))
             special1_button_details = tk.Button(dungeon_game_frame,
-                                                text="{} Details".format(special_button_text_list_temp[0]), width=38,
+                                                text="{} Details (TBI)".format(special_button_text_list_temp[0]), width=38,
                                                 height=1)
             special2_button = tk.Button(dungeon_game_frame, text=special_button_text_list[1], width=50, height=4,
                                        command=lambda: self.champion_specials(special_button_text_list_temp[1]))
             special2_button_details = tk.Button(dungeon_game_frame,
-                                                text="{} Details".format(special_button_text_list_temp[1]), width=38,
+                                                text="{} Details (TBI)".format(special_button_text_list_temp[1]), width=38,
                                                 height=1)
             special3_button = tk.Button(dungeon_game_frame, text=special_button_text_list[2], width=50, height=4,
                                        command=lambda: self.champion_specials(special_button_text_list_temp[2]))
             special3_button_details = tk.Button(dungeon_game_frame,
-                                                text="{} Details".format(special_button_text_list_temp[2]), width=38,
+                                                text="{} Details (TBI)".format(special_button_text_list_temp[2]), width=38,
                                                 height=1)
             special4_button = tk.Button(dungeon_game_frame, text=special_button_text_list[3], width=50, height=4,
                                        command=lambda: self.champion_specials(special_button_text_list_temp[3]))
             special4_button_details = tk.Button(dungeon_game_frame,
-                                                text="{} Details".format(special_button_text_list_temp[3]), width=38,
+                                                text="{} Details (TBI)".format(special_button_text_list_temp[3]), width=38,
                                                 height=1)
             back_button = tk.Button(dungeon_game_frame, text="Back", command=self.player_combat_champion5)
             back_button.grid(row=20, column=2, pady=20)
@@ -13620,11 +13275,8 @@ class GameFrame(tk.Frame):
                                 champion1_rp = champion1_rp - garrote_requirements[0]
                                 garrote_requirements[1] = garrote_requirements[2]
                                 champion1_rp = champion1_rp + garrote_requirements[3]
-                                if len(champion1_big_external_buffs) != 1:
-                                    damage_done = ((ROGUE.ap + champion1_small_external_buffs[0]) *
-                                                   champion1_big_external_buffs[0])
-                                else:
-                                    damage_done = (ROGUE.ap + champion1_small_external_buffs[0])
+                                damage_done = math.ceil(ROGUE.ap * self.calculate_champion_damage(1))
+                                damage_done = math.ceil(ROGUE.ap * self.calculate_champion_damage(1))
                                 ability_data = ["Garrote", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -13633,11 +13285,8 @@ class GameFrame(tk.Frame):
                                 champion2_rp = champion2_rp - garrote_requirements[0]
                                 garrote_requirements[1] = garrote_requirements[2]
                                 champion2_rp = champion2_rp + garrote_requirements[3]
-                                if len(champion2_big_external_buffs) != 1:
-                                    damage_done = ((ROGUE.ap + champion2_small_external_buffs[0]) *
-                                                   champion2_big_external_buffs[0])
-                                else:
-                                    damage_done = (ROGUE.ap + champion2_small_external_buffs[0])
+                                damage_done = math.ceil(ROGUE.ap * self.calculate_champion_damage(2))
+                                damage_done = math.ceil(ROGUE.ap * self.calculate_champion_damage(2))
                                 ability_data = ["Garrote", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -13646,11 +13295,8 @@ class GameFrame(tk.Frame):
                                 champion3_rp = champion3_rp - garrote_requirements[0]
                                 garrote_requirements[1] = garrote_requirements[2]
                                 champion3_rp = champion3_rp + garrote_requirements[3]
-                                if len(champion3_big_external_buffs) != 1:
-                                    damage_done = ((ROGUE.ap + champion3_small_external_buffs[0]) *
-                                                   champion3_big_external_buffs[0])
-                                else:
-                                    damage_done = (ROGUE.ap + champion3_small_external_buffs[0])
+                                damage_done = math.ceil(ROGUE.ap * self.calculate_champion_damage(3))
+                                damage_done = math.ceil(ROGUE.ap * self.calculate_champion_damage(3))
                                 ability_data = ["Garrote", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -13659,11 +13305,8 @@ class GameFrame(tk.Frame):
                                 champion4_rp = champion4_rp - garrote_requirements[0]
                                 garrote_requirements[1] = garrote_requirements[2]
                                 champion4_rp = champion4_rp + garrote_requirements[3]
-                                if len(champion4_big_external_buffs) != 1:
-                                    damage_done = ((ROGUE.ap + champion4_small_external_buffs[0]) *
-                                                   champion4_big_external_buffs[0])
-                                else:
-                                    damage_done = (ROGUE.ap + champion4_small_external_buffs[0])
+                                damage_done = math.ceil(ROGUE.ap * self.calculate_champion_damage(4))
+                                damage_done = math.ceil(ROGUE.ap * self.calculate_champion_damage(4))
                                 ability_data = ["Garrote", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -13672,11 +13315,8 @@ class GameFrame(tk.Frame):
                                 champion5_rp = champion5_rp - garrote_requirements[0]
                                 garrote_requirements[1] = garrote_requirements[2]
                                 champion5_rp = champion5_rp + garrote_requirements[3]
-                                if len(champion5_big_external_buffs) != 1:
-                                    damage_done = ((ROGUE.ap + champion5_small_external_buffs[0]) *
-                                                   champion5_big_external_buffs[0])
-                                else:
-                                    damage_done = (ROGUE.ap + champion5_small_external_buffs[0])
+                                damage_done = math.ceil(ROGUE.ap * self.calculate_champion_damage(5))
+                                damage_done = math.ceil(ROGUE.ap * self.calculate_champion_damage(5))
                                 ability_data = ["Garrote", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -13693,11 +13333,8 @@ class GameFrame(tk.Frame):
                                 champion1_rp = champion1_rp - exploit_weakness_requirements[0]
                                 exploit_weakness_requirements[1] = exploit_weakness_requirements[2]
                                 champion1_rp = champion1_rp + exploit_weakness_requirements[3]
-                                if len(champion1_big_external_buffs) != 1:
-                                    damage_done = ((ROGUE.ap + champion1_small_external_buffs[0]) *
-                                                   champion1_big_external_buffs[0])
-                                else:
-                                    damage_done = (ROGUE.ap + champion1_small_external_buffs[0])
+                                damage_done = math.ceil(ROGUE.ap * self.calculate_champion_damage(1))
+                                damage_done = math.ceil(ROGUE.ap * self.calculate_champion_damage(1))
                                 ability_data = ["Exploit Weakness", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -13706,11 +13343,8 @@ class GameFrame(tk.Frame):
                                 champion2_rp = champion2_rp - exploit_weakness_requirements[0]
                                 exploit_weakness_requirements[1] = exploit_weakness_requirements[2]
                                 champion2_rp = champion2_rp + exploit_weakness_requirements[3]
-                                if len(champion2_big_external_buffs) != 1:
-                                    damage_done = ((ROGUE.ap + champion2_small_external_buffs[0]) *
-                                                   champion2_big_external_buffs[0])
-                                else:
-                                    damage_done = (ROGUE.ap + champion2_small_external_buffs[0])
+                                damage_done = math.ceil(ROGUE.ap * self.calculate_champion_damage(2))
+                                damage_done = math.ceil(ROGUE.ap * self.calculate_champion_damage(2))
                                 ability_data = ["Exploit Weakness", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -13719,11 +13353,8 @@ class GameFrame(tk.Frame):
                                 champion3_rp = champion3_rp - exploit_weakness_requirements[0]
                                 exploit_weakness_requirements[1] = exploit_weakness_requirements[2]
                                 champion3_rp = champion3_rp + exploit_weakness_requirements[3]
-                                if len(champion3_big_external_buffs) != 1:
-                                    damage_done = ((ROGUE.ap + champion3_small_external_buffs[0]) *
-                                                   champion3_big_external_buffs[0])
-                                else:
-                                    damage_done = (ROGUE.ap + champion3_small_external_buffs[0])
+                                damage_done = math.ceil(ROGUE.ap * self.calculate_champion_damage(3))
+                                damage_done = math.ceil(ROGUE.ap * self.calculate_champion_damage(3))
                                 ability_data = ["Exploit Weakness", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -13732,11 +13363,8 @@ class GameFrame(tk.Frame):
                                 champion4_rp = champion4_rp - exploit_weakness_requirements[0]
                                 exploit_weakness_requirements[1] = exploit_weakness_requirements[2]
                                 champion4_rp = champion4_rp + exploit_weakness_requirements[3]
-                                if len(champion4_big_external_buffs) != 1:
-                                    damage_done = ((ROGUE.ap + champion4_small_external_buffs[0]) *
-                                                   champion4_big_external_buffs[0])
-                                else:
-                                    damage_done = (ROGUE.ap + champion4_small_external_buffs[0])
+                                damage_done = math.ceil(ROGUE.ap * self.calculate_champion_damage(4))
+                                damage_done = math.ceil(ROGUE.ap * self.calculate_champion_damage(4))
                                 ability_data = ["Exploit Weakness", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -13745,11 +13373,8 @@ class GameFrame(tk.Frame):
                                 champion5_rp = champion5_rp - exploit_weakness_requirements[0]
                                 exploit_weakness_requirements[1] = exploit_weakness_requirements[2]
                                 champion5_rp = champion5_rp + exploit_weakness_requirements[3]
-                                if len(champion5_big_external_buffs) != 1:
-                                    damage_done = ((ROGUE.ap + champion5_small_external_buffs[0]) *
-                                                   champion5_big_external_buffs[0])
-                                else:
-                                    damage_done = (ROGUE.ap + champion5_small_external_buffs[0])
+                                damage_done = math.ceil(ROGUE.ap * self.calculate_champion_damage(5))
+                                damage_done = math.ceil(ROGUE.ap * self.calculate_champion_damage(5))
                                 ability_data = ["Exploit Weakness", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -13910,11 +13535,8 @@ class GameFrame(tk.Frame):
                                 champion1_rp = champion1_rp - rushdown_requirements[0]
                                 rushdown_requirements[1] = rushdown_requirements[2]
                                 champion1_rp = champion1_rp + rushdown_requirements[3]
-                                if len(champion1_big_external_buffs) != 1:
-                                    damage_done = ((BRAWLIST.ap + champion1_small_external_buffs[0]) *
-                                                   champion1_big_external_buffs[0])
-                                else:
-                                    damage_done = (BRAWLIST.ap + champion1_small_external_buffs[0])
+                                damage_done = math.ceil(BRAWLIST.ap * self.calculate_champion_damage(1))
+                                damage_done = math.ceil(BRAWLIST.ap * self.calculate_champion_damage(1))
                                 ability_data = ["Rushdown", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -13923,11 +13545,8 @@ class GameFrame(tk.Frame):
                                 champion2_rp = champion2_rp - rushdown_requirements[0]
                                 rushdown_requirements[1] = rushdown_requirements[2]
                                 champion2_rp = champion2_rp + rushdown_requirements[3]
-                                if len(champion2_big_external_buffs) != 1:
-                                    damage_done = ((BRAWLIST.ap + champion2_small_external_buffs[0]) *
-                                                   champion2_big_external_buffs[0])
-                                else:
-                                    damage_done = (BRAWLIST.ap + champion2_small_external_buffs[0])
+                                damage_done = math.ceil(BRAWLIST.ap * self.calculate_champion_damage(2))
+                                damage_done = math.ceil(BRAWLIST.ap * self.calculate_champion_damage(2))
                                 ability_data = ["Rushdown", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -13936,11 +13555,8 @@ class GameFrame(tk.Frame):
                                 champion3_rp = champion3_rp - rushdown_requirements[0]
                                 rushdown_requirements[1] = rushdown_requirements[2]
                                 champion3_rp = champion3_rp + rushdown_requirements[3]
-                                if len(champion3_big_external_buffs) != 1:
-                                    damage_done = ((BRAWLIST.ap + champion3_small_external_buffs[0]) *
-                                                   champion3_big_external_buffs[0])
-                                else:
-                                    damage_done = (BRAWLIST.ap + champion3_small_external_buffs[0])
+                                damage_done = math.ceil(BRAWLIST.ap * self.calculate_champion_damage(3))
+                                damage_done = math.ceil(BRAWLIST.ap * self.calculate_champion_damage(3))
                                 ability_data = ["Rushdown", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -13949,11 +13565,8 @@ class GameFrame(tk.Frame):
                                 champion4_rp = champion4_rp - rushdown_requirements[0]
                                 rushdown_requirements[1] = rushdown_requirements[2]
                                 champion4_rp = champion4_rp + rushdown_requirements[3]
-                                if len(champion4_big_external_buffs) != 1:
-                                    damage_done = ((BRAWLIST.ap + champion4_small_external_buffs[0]) *
-                                                   champion4_big_external_buffs[0])
-                                else:
-                                    damage_done = (BRAWLIST.ap + champion4_small_external_buffs[0])
+                                damage_done = math.ceil(BRAWLIST.ap * self.calculate_champion_damage(4))
+                                damage_done = math.ceil(BRAWLIST.ap * self.calculate_champion_damage(4))
                                 ability_data = ["Rushdown", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -13962,11 +13575,8 @@ class GameFrame(tk.Frame):
                                 champion5_rp = champion5_rp - rushdown_requirements[0]
                                 rushdown_requirements[1] = rushdown_requirements[2]
                                 champion5_rp = champion5_rp + rushdown_requirements[3]
-                                if len(champion5_big_external_buffs) != 1:
-                                    damage_done = ((BRAWLIST.ap + champion5_small_external_buffs[0]) *
-                                                   champion5_big_external_buffs[0])
-                                else:
-                                    damage_done = (BRAWLIST.ap + champion5_small_external_buffs[0])
+                                damage_done = math.ceil(BRAWLIST.ap * self.calculate_champion_damage(5))
+                                damage_done = math.ceil(BRAWLIST.ap * self.calculate_champion_damage(5))
                                 ability_data = ["Rushdown", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -13983,11 +13593,8 @@ class GameFrame(tk.Frame):
                                 champion1_rp = champion1_rp - arcane_brilliance_requirements[0]
                                 arcane_brilliance_requirements[1] = arcane_brilliance_requirements[2]
                                 champion1_rp = champion1_rp + arcane_brilliance_requirements[3]
-                                if len(champion1_big_external_buffs) != 1:
-                                    damage_done = ((ACADEMIC_MAGE.ap + champion1_small_external_buffs[0]) *
-                                                   champion1_big_external_buffs[0])
-                                else:
-                                    damage_done = (ACADEMIC_MAGE.ap + champion1_small_external_buffs[0])
+                                damage_done = math.ceil(ACADEMIC_MAGE.ap * self.calculate_champion_damage(1))
+                                damage_done = math.ceil(ACADEMIC_MAGE.ap * self.calculate_champion_damage(1))
                                 ability_data = ["Arcane Brilliance", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -13996,11 +13603,8 @@ class GameFrame(tk.Frame):
                                 champion2_rp = champion2_rp - arcane_brilliance_requirements[0]
                                 arcane_brilliance_requirements[1] = arcane_brilliance_requirements[2]
                                 champion2_rp = champion2_rp + arcane_brilliance_requirements[3]
-                                if len(champion2_big_external_buffs) != 1:
-                                    damage_done = ((ACADEMIC_MAGE.ap + champion2_small_external_buffs[0]) *
-                                                   champion2_big_external_buffs[0])
-                                else:
-                                    damage_done = (ACADEMIC_MAGE.ap + champion2_small_external_buffs[0])
+                                damage_done = math.ceil(ACADEMIC_MAGE.ap * self.calculate_champion_damage(2))
+                                damage_done = math.ceil(ACADEMIC_MAGE.ap * self.calculate_champion_damage(2))
                                 ability_data = ["Arcane Brilliance", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -14009,11 +13613,8 @@ class GameFrame(tk.Frame):
                                 champion3_rp = champion3_rp - arcane_brilliance_requirements[0]
                                 arcane_brilliance_requirements[1] = arcane_brilliance_requirements[2]
                                 champion3_rp = champion3_rp + arcane_brilliance_requirements[3]
-                                if len(champion3_big_external_buffs) != 1:
-                                    damage_done = ((ACADEMIC_MAGE.ap + champion3_small_external_buffs[0]) *
-                                                   champion3_big_external_buffs[0])
-                                else:
-                                    damage_done = (ACADEMIC_MAGE.ap + champion3_small_external_buffs[0])
+                                damage_done = math.ceil(ACADEMIC_MAGE.ap * self.calculate_champion_damage(3))
+                                damage_done = math.ceil(ACADEMIC_MAGE.ap * self.calculate_champion_damage(3))
                                 ability_data = ["Arcane Brilliance", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -14022,11 +13623,8 @@ class GameFrame(tk.Frame):
                                 champion4_rp = champion4_rp - arcane_brilliance_requirements[0]
                                 arcane_brilliance_requirements[1] = arcane_brilliance_requirements[2]
                                 champion4_rp = champion4_rp + arcane_brilliance_requirements[3]
-                                if len(champion4_big_external_buffs) != 1:
-                                    damage_done = ((ACADEMIC_MAGE.ap + champion4_small_external_buffs[0]) *
-                                                   champion4_big_external_buffs[0])
-                                else:
-                                    damage_done = (ACADEMIC_MAGE.ap + champion4_small_external_buffs[0])
+                                damage_done = math.ceil(ACADEMIC_MAGE.ap * self.calculate_champion_damage(4))
+                                damage_done = math.ceil(ACADEMIC_MAGE.ap * self.calculate_champion_damage(4))
                                 ability_data = ["Arcane Brilliance", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -14035,11 +13633,8 @@ class GameFrame(tk.Frame):
                                 champion5_rp = champion5_rp - arcane_brilliance_requirements[0]
                                 arcane_brilliance_requirements[1] = arcane_brilliance_requirements[2]
                                 champion5_rp = champion5_rp + arcane_brilliance_requirements[3]
-                                if len(champion5_big_external_buffs) != 1:
-                                    damage_done = ((ACADEMIC_MAGE.ap + champion5_small_external_buffs[0]) *
-                                                   champion5_big_external_buffs[0])
-                                else:
-                                    damage_done = (ACADEMIC_MAGE.ap + champion5_small_external_buffs[0])
+                                damage_done = math.ceil(ACADEMIC_MAGE.ap * self.calculate_champion_damage(5))
+                                damage_done = math.ceil(ACADEMIC_MAGE.ap * self.calculate_champion_damage(5))
                                 ability_data = ["Arcane Brilliance", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -14152,11 +13747,8 @@ class GameFrame(tk.Frame):
                                 champion1_rp = champion1_rp - prickle_arena_requirements[0]
                                 prickle_arena_requirements[1] = prickle_arena_requirements[2]
                                 champion1_rp = champion1_rp + prickle_arena_requirements[3]
-                                if len(champion1_big_external_buffs) != 1:
-                                    damage_done = ((DRUID.ap + champion1_small_external_buffs[0]) *
-                                                   champion1_big_external_buffs[0])
-                                else:
-                                    damage_done = (DRUID.ap + champion1_small_external_buffs[0])
+                                damage_done = math.ceil(DRUID.ap * self.calculate_champion_damage(1))
+                                damage_done = math.ceil(DRUID.ap * self.calculate_champion_damage(1))
                                 ability_data = ["Prickle Arena", "enemy", "AOE", damage_done]
                             else:
                                 return
@@ -14165,11 +13757,8 @@ class GameFrame(tk.Frame):
                                 champion2_rp = champion2_rp - prickle_arena_requirements[0]
                                 prickle_arena_requirements[1] = prickle_arena_requirements[2]
                                 champion2_rp = champion2_rp + prickle_arena_requirements[3]
-                                if len(champion2_big_external_buffs) != 1:
-                                    damage_done = ((DRUID.ap + champion2_small_external_buffs[0]) *
-                                                   champion2_big_external_buffs[0])
-                                else:
-                                    damage_done = (DRUID.ap + champion2_small_external_buffs[0])
+                                damage_done = math.ceil(DRUID.ap * self.calculate_champion_damage(2))
+                                damage_done = math.ceil(DRUID.ap * self.calculate_champion_damage(2))
                                 ability_data = ["Prickle Arena", "enemy", "AOE", damage_done]
                             else:
                                 return
@@ -14178,11 +13767,8 @@ class GameFrame(tk.Frame):
                                 champion3_rp = champion3_rp - prickle_arena_requirements[0]
                                 prickle_arena_requirements[1] = prickle_arena_requirements[2]
                                 champion3_rp = champion3_rp + prickle_arena_requirements[3]
-                                if len(champion3_big_external_buffs) != 1:
-                                    damage_done = ((DRUID.ap + champion3_small_external_buffs[0]) *
-                                                   champion3_big_external_buffs[0])
-                                else:
-                                    damage_done = (DRUID.ap + champion3_small_external_buffs[0])
+                                damage_done = math.ceil(DRUID.ap * self.calculate_champion_damage(3))
+                                damage_done = math.ceil(DRUID.ap * self.calculate_champion_damage(3))
                                 ability_data = ["Prickle Arena", "enemy", "AOE", damage_done]
                             else:
                                 return
@@ -14191,11 +13777,8 @@ class GameFrame(tk.Frame):
                                 champion4_rp = champion4_rp - prickle_arena_requirements[0]
                                 prickle_arena_requirements[1] = prickle_arena_requirements[2]
                                 champion4_rp = champion4_rp + prickle_arena_requirements[3]
-                                if len(champion4_big_external_buffs) != 1:
-                                    damage_done = ((DRUID.ap + champion4_small_external_buffs[0]) *
-                                                   champion4_big_external_buffs[0])
-                                else:
-                                    damage_done = (DRUID.ap + champion4_small_external_buffs[0])
+                                damage_done = math.ceil(DRUID.ap * self.calculate_champion_damage(4))
+                                damage_done = math.ceil(DRUID.ap * self.calculate_champion_damage(4))
                                 ability_data = ["Prickle Arena", "enemy", "AOE", damage_done]
                             else:
                                 return
@@ -14204,11 +13787,8 @@ class GameFrame(tk.Frame):
                                 champion5_rp = champion5_rp - prickle_arena_requirements[0]
                                 prickle_arena_requirements[1] = prickle_arena_requirements[2]
                                 champion5_rp = champion5_rp + prickle_arena_requirements[3]
-                                if len(champion5_big_external_buffs) != 1:
-                                    damage_done = ((DRUID.ap + champion5_small_external_buffs[0]) *
-                                                   champion5_big_external_buffs[0])
-                                else:
-                                    damage_done = (DRUID.ap + champion5_small_external_buffs[0])
+                                damage_done = math.ceil(DRUID.ap * self.calculate_champion_damage(5))
+                                damage_done = math.ceil(DRUID.ap * self.calculate_champion_damage(5))
                                 ability_data = ["Prickle Arena", "enemy", "AOE", damage_done]
                             else:
                                 return
@@ -14761,11 +14341,8 @@ class GameFrame(tk.Frame):
                                 champion1_rp = champion1_rp - mistic_bloom_requirements[0]
                                 mistic_bloom_requirements[1] = mistic_bloom_requirements[2]
                                 champion1_rp = champion1_rp + mistic_bloom_requirements[3]
-                                if len(champion1_big_external_buffs) != 1:
-                                    healing_done = ((500 + champion1_small_external_buffs[0]) *
-                                                   champion1_big_external_buffs[0])
-                                else:
-                                    healing_done = (500 + champion1_small_external_buffs[0])
+                                healing_done = math.ceil(500 * self.calculate_champion_damage(1))
+                                healing_done = math.ceil(500 * self.calculate_champion_damage(1))
                                 ability_data = ["Mistic Bloom", "ally", "1T", healing_done]
                             else:
                                 return
@@ -14774,11 +14351,8 @@ class GameFrame(tk.Frame):
                                 champion2_rp = champion2_rp - mistic_bloom_requirements[0]
                                 mistic_bloom_requirements[1] = mistic_bloom_requirements[2]
                                 champion2_rp = champion2_rp + mistic_bloom_requirements[3]
-                                if len(champion2_big_external_buffs) != 1:
-                                    healing_done = ((500 + champion2_small_external_buffs[0]) *
-                                                   champion2_big_external_buffs[0])
-                                else:
-                                    healing_done = (500 + champion2_small_external_buffs[0])
+                                healing_done = math.ceil(500 * self.calculate_champion_damage(2))
+                                healing_done = math.ceil(500 * self.calculate_champion_damage(2))
                                 ability_data = ["Mistic Bloom", "ally", "1T", healing_done]
                             else:
                                 return
@@ -14787,11 +14361,8 @@ class GameFrame(tk.Frame):
                                 champion3_rp = champion3_rp - mistic_bloom_requirements[0]
                                 mistic_bloom_requirements[1] = mistic_bloom_requirements[2]
                                 champion3_rp = champion3_rp + mistic_bloom_requirements[3]
-                                if len(champion3_big_external_buffs) != 1:
-                                    healing_done = ((500 + champion3_small_external_buffs[0]) *
-                                                   champion3_big_external_buffs[0])
-                                else:
-                                    healing_done = (500 + champion3_small_external_buffs[0])
+                                healing_done = math.ceil(500 * self.calculate_champion_damage(3))
+                                healing_done = math.ceil(500 * self.calculate_champion_damage(3))
                                 ability_data = ["Mistic Bloom", "ally", "1T", healing_done]
                             else:
                                 return
@@ -14800,11 +14371,8 @@ class GameFrame(tk.Frame):
                                 champion4_rp = champion4_rp - mistic_bloom_requirements[0]
                                 mistic_bloom_requirements[1] = mistic_bloom_requirements[2]
                                 champion4_rp = champion4_rp + mistic_bloom_requirements[3]
-                                if len(champion4_big_external_buffs) != 1:
-                                    healing_done = ((500 + champion4_small_external_buffs[0]) *
-                                                   champion4_big_external_buffs[0])
-                                else:
-                                    healing_done = (500 + champion4_small_external_buffs[0])
+                                healing_done = math.ceil(500 * self.calculate_champion_damage(4))
+                                healing_done = math.ceil(500 * self.calculate_champion_damage(4))
                                 ability_data = ["Mistic Bloom", "ally", "1T", healing_done]
                             else:
                                 return
@@ -14813,11 +14381,8 @@ class GameFrame(tk.Frame):
                                 champion5_rp = champion5_rp - mistic_bloom_requirements[0]
                                 mistic_bloom_requirements[1] = mistic_bloom_requirements[2]
                                 champion5_rp = champion5_rp + mistic_bloom_requirements[3]
-                                if len(champion5_big_external_buffs) != 1:
-                                    healing_done = ((500 + champion5_small_external_buffs[0]) *
-                                                   champion5_big_external_buffs[0])
-                                else:
-                                    healing_done = (500 + champion5_small_external_buffs[0])
+                                healing_done = math.ceil(500 * self.calculate_champion_damage(5))
+                                healing_done = math.ceil(500 * self.calculate_champion_damage(5))
                                 ability_data = ["Mistic Bloom", "ally", "1T", healing_done]
                             else:
                                 return
@@ -14834,11 +14399,8 @@ class GameFrame(tk.Frame):
                                 champion1_rp = champion1_rp - power_surge_requirements[0]
                                 power_surge_requirements[1] = power_surge_requirements[2]
                                 champion1_rp = champion1_rp + power_surge_requirements[3]
-                                if len(champion1_big_external_buffs) != 1:
-                                    damage_done = ((500 + champion1_small_external_buffs[0]) *
-                                                   champion1_big_external_buffs[0])
-                                else:
-                                    damage_done = (500 + champion1_small_external_buffs[0])
+                                damage_done = math.ceil(500 * self.calculate_champion_damage(1))
+                                damage_done = math.ceil(500 * self.calculate_champion_damage(1))
                                 ability_data = ["Power Surge", "enemy", "AOE", damage_done]
                             else:
                                 return
@@ -14847,11 +14409,8 @@ class GameFrame(tk.Frame):
                                 champion2_rp = champion2_rp - power_surge_requirements[0]
                                 power_surge_requirements[1] = power_surge_requirements[2]
                                 champion2_rp = champion2_rp + power_surge_requirements[3]
-                                if len(champion2_big_external_buffs) != 1:
-                                    damage_done = ((500 + champion2_small_external_buffs[0]) *
-                                                   champion2_big_external_buffs[0])
-                                else:
-                                    damage_done = (500 + champion2_small_external_buffs[0])
+                                damage_done = math.ceil(500 * self.calculate_champion_damage(2))
+                                damage_done = math.ceil(500 * self.calculate_champion_damage(2))
                                 ability_data = ["Power Surge", "enemy", "AOE", damage_done]
                             else:
                                 return
@@ -14860,11 +14419,8 @@ class GameFrame(tk.Frame):
                                 champion3_rp = champion3_rp - power_surge_requirements[0]
                                 power_surge_requirements[1] = power_surge_requirements[2]
                                 champion3_rp = champion3_rp + power_surge_requirements[3]
-                                if len(champion3_big_external_buffs) != 1:
-                                    damage_done = ((500 + champion3_small_external_buffs[0]) *
-                                                   champion3_big_external_buffs[0])
-                                else:
-                                    damage_done = (500 + champion3_small_external_buffs[0])
+                                damage_done = math.ceil(500 * self.calculate_champion_damage(3))
+                                damage_done = math.ceil(500 * self.calculate_champion_damage(3))
                                 ability_data = ["Power Surge", "enemy", "AOE", damage_done]
                             else:
                                 return
@@ -14873,11 +14429,8 @@ class GameFrame(tk.Frame):
                                 champion4_rp = champion4_rp - power_surge_requirements[0]
                                 power_surge_requirements[1] = power_surge_requirements[2]
                                 champion4_rp = champion4_rp + power_surge_requirements[3]
-                                if len(champion4_big_external_buffs) != 1:
-                                    damage_done = ((500 + champion4_small_external_buffs[0]) *
-                                                   champion4_big_external_buffs[0])
-                                else:
-                                    damage_done = (500 + champion4_small_external_buffs[0])
+                                damage_done = math.ceil(500 * self.calculate_champion_damage(4))
+                                damage_done = math.ceil(500 * self.calculate_champion_damage(4))
                                 ability_data = ["Power Surge", "enemy", "AOE", damage_done]
                             else:
                                 return
@@ -14886,11 +14439,8 @@ class GameFrame(tk.Frame):
                                 champion5_rp = champion5_rp - power_surge_requirements[0]
                                 power_surge_requirements[1] = power_surge_requirements[2]
                                 champion5_rp = champion5_rp + power_surge_requirements[3]
-                                if len(champion5_big_external_buffs) != 1:
-                                    damage_done = ((500 + champion5_small_external_buffs[0]) *
-                                                   champion5_big_external_buffs[0])
-                                else:
-                                    damage_done = (500 + champion5_small_external_buffs[0])
+                                damage_done = math.ceil(500 * self.calculate_champion_damage(5))
+                                damage_done = math.ceil(500 * self.calculate_champion_damage(5))
                                 ability_data = ["Power Surge", "enemy", "AOE", damage_done]
                             else:
                                 return
@@ -14955,11 +14505,8 @@ class GameFrame(tk.Frame):
                                 champion1_rp = champion1_rp - healing_surge_requirements[0]
                                 healing_surge_requirements[1] = healing_surge_requirements[2]
                                 champion1_rp = champion1_rp + healing_surge_requirements[3]
-                                if len(champion1_big_external_buffs) != 1:
-                                    healing_done = ((300 + champion1_small_external_buffs[0]) *
-                                                   champion1_big_external_buffs[0])
-                                else:
-                                    healing_done = (300 + champion1_small_external_buffs[0])
+                                healing_done = math.ceil(300 * self.calculate_champion_damage(1))
+                                healing_done = math.ceil(300 * self.calculate_champion_damage(1))
                                 ability_data = ["Healing Surge", "ally", "1T", healing_done]
                             else:
                                 return
@@ -14968,11 +14515,8 @@ class GameFrame(tk.Frame):
                                 champion2_rp = champion2_rp - healing_surge_requirements[0]
                                 healing_surge_requirements[1] = healing_surge_requirements[2]
                                 champion2_rp = champion2_rp + healing_surge_requirements[3]
-                                if len(champion2_big_external_buffs) != 1:
-                                    healing_done = ((300 + champion2_small_external_buffs[0]) *
-                                                   champion2_big_external_buffs[0])
-                                else:
-                                    healing_done = (300 + champion2_small_external_buffs[0])
+                                healing_done = math.ceil(300 * self.calculate_champion_damage(2))
+                                healing_done = math.ceil(300 * self.calculate_champion_damage(2))
                                 ability_data = ["Healing Surge", "ally", "1T", healing_done]
                             else:
                                 return
@@ -14981,11 +14525,8 @@ class GameFrame(tk.Frame):
                                 champion3_rp = champion3_rp - healing_surge_requirements[0]
                                 healing_surge_requirements[1] = healing_surge_requirements[2]
                                 champion3_rp = champion3_rp + healing_surge_requirements[3]
-                                if len(champion3_big_external_buffs) != 1:
-                                    healing_done = ((300 + champion3_small_external_buffs[0]) *
-                                                   champion3_big_external_buffs[0])
-                                else:
-                                    healing_done = (300 + champion3_small_external_buffs[0])
+                                healing_done = math.ceil(300 * self.calculate_champion_damage(3))
+                                healing_done = math.ceil(300 * self.calculate_champion_damage(3))
                                 ability_data = ["Healing Surge", "ally", "1T", healing_done]
                             else:
                                 return
@@ -14994,11 +14535,8 @@ class GameFrame(tk.Frame):
                                 champion4_rp = champion4_rp - healing_surge_requirements[0]
                                 healing_surge_requirements[1] = healing_surge_requirements[2]
                                 champion4_rp = champion4_rp + healing_surge_requirements[3]
-                                if len(champion4_big_external_buffs) != 1:
-                                    healing_done = ((300 + champion4_small_external_buffs[0]) *
-                                                   champion4_big_external_buffs[0])
-                                else:
-                                    healing_done = (300 + champion4_small_external_buffs[0])
+                                healing_done = math.ceil(300 * self.calculate_champion_damage(4))
+                                healing_done = math.ceil(300 * self.calculate_champion_damage(4))
                                 ability_data = ["Healing Surge", "ally", "1T", healing_done]
                             else:
                                 return
@@ -15007,11 +14545,8 @@ class GameFrame(tk.Frame):
                                 champion5_rp = champion5_rp - healing_surge_requirements[0]
                                 healing_surge_requirements[1] = healing_surge_requirements[2]
                                 champion5_rp = champion5_rp + healing_surge_requirements[3]
-                                if len(champion5_big_external_buffs) != 1:
-                                    healing_done = ((300 + champion5_small_external_buffs[0]) *
-                                                   champion5_big_external_buffs[0])
-                                else:
-                                    healing_done = (300 + champion5_small_external_buffs[0])
+                                healing_done = math.ceil(300 * self.calculate_champion_damage(5))
+                                healing_done = math.ceil(300 * self.calculate_champion_damage(5))
                                 ability_data = ["Healing Surge", "ally", "1T", healing_done]
                             else:
                                 return
@@ -15028,11 +14563,8 @@ class GameFrame(tk.Frame):
                                 champion1_rp = champion1_rp - rejuvenating_whirlpool_requirements[0]
                                 rejuvenating_whirlpool_requirements[1] = rejuvenating_whirlpool_requirements[2]
                                 champion1_rp = champion1_rp + rejuvenating_whirlpool_requirements[3]
-                                if len(champion1_big_external_buffs) != 1:
-                                    healing_done = ((300 + champion1_small_external_buffs[0]) *
-                                                   champion1_big_external_buffs[0])
-                                else:
-                                    healing_done = (300 + champion1_small_external_buffs[0])
+                                healing_done = math.ceil(300 * self.calculate_champion_damage(1))
+                                healing_done = math.ceil(300 * self.calculate_champion_damage(1))
                                 ability_data = ["Rejuvenating Whirlpool", "ally", "AOE", healing_done]
                             else:
                                 return
@@ -15041,11 +14573,8 @@ class GameFrame(tk.Frame):
                                 champion2_rp = champion2_rp - rejuvenating_whirlpool_requirements[0]
                                 rejuvenating_whirlpool_requirements[1] = rejuvenating_whirlpool_requirements[2]
                                 champion2_rp = champion2_rp + rejuvenating_whirlpool_requirements[3]
-                                if len(champion2_big_external_buffs) != 1:
-                                    healing_done = ((300 + champion2_small_external_buffs[0]) *
-                                                   champion2_big_external_buffs[0])
-                                else:
-                                    healing_done = (300 + champion2_small_external_buffs[0])
+                                healing_done = math.ceil(300 * self.calculate_champion_damage(2))
+                                healing_done = math.ceil(300 * self.calculate_champion_damage(2))
                                 ability_data = ["Rejuvenating Whirlpool", "ally", "AOE", healing_done]
                             else:
                                 return
@@ -15054,11 +14583,8 @@ class GameFrame(tk.Frame):
                                 champion3_rp = champion3_rp - rejuvenating_whirlpool_requirements[0]
                                 rejuvenating_whirlpool_requirements[1] = rejuvenating_whirlpool_requirements[2]
                                 champion3_rp = champion3_rp + rejuvenating_whirlpool_requirements[3]
-                                if len(champion3_big_external_buffs) != 1:
-                                    healing_done = ((300 + champion3_small_external_buffs[0]) *
-                                                   champion3_big_external_buffs[0])
-                                else:
-                                    healing_done = (300 + champion3_small_external_buffs[0])
+                                healing_done = math.ceil(300 * self.calculate_champion_damage(3))
+                                healing_done = math.ceil(300 * self.calculate_champion_damage(3))
                                 ability_data = ["Rejuvenating Whirlpool", "ally", "AOE", healing_done]
                             else:
                                 return
@@ -15067,11 +14593,8 @@ class GameFrame(tk.Frame):
                                 champion4_rp = champion4_rp - rejuvenating_whirlpool_requirements[0]
                                 rejuvenating_whirlpool_requirements[1] = rejuvenating_whirlpool_requirements[2]
                                 champion4_rp = champion4_rp + rejuvenating_whirlpool_requirements[3]
-                                if len(champion4_big_external_buffs) != 1:
-                                    healing_done = ((300 + champion4_small_external_buffs[0]) *
-                                                   champion4_big_external_buffs[0])
-                                else:
-                                    healing_done = (300 + champion4_small_external_buffs[0])
+                                healing_done = math.ceil(300 * self.calculate_champion_damage(4))
+                                healing_done = math.ceil(300 * self.calculate_champion_damage(4))
                                 ability_data = ["Rejuvenating Whirlpool", "ally", "AOE", healing_done]
                             else:
                                 return
@@ -15080,11 +14603,8 @@ class GameFrame(tk.Frame):
                                 champion5_rp = champion5_rp - rejuvenating_whirlpool_requirements[0]
                                 rejuvenating_whirlpool_requirements[1] = rejuvenating_whirlpool_requirements[2]
                                 champion5_rp = champion5_rp + rejuvenating_whirlpool_requirements[3]
-                                if len(champion5_big_external_buffs) != 1:
-                                    healing_done = ((300 + champion5_small_external_buffs[0]) *
-                                                   champion5_big_external_buffs[0])
-                                else:
-                                    healing_done = (300 + champion5_small_external_buffs[0])
+                                healing_done = math.ceil(300 * self.calculate_champion_damage(5))
+                                healing_done = math.ceil(300 * self.calculate_champion_damage(5))
                                 ability_data = ["Rejuvenating Whirlpool", "ally", "AOE", healing_done]
                             else:
                                 return
@@ -15149,11 +14669,8 @@ class GameFrame(tk.Frame):
                                 champion1_rp = champion1_rp - healing_light_requirements[0]
                                 healing_light_requirements[1] = healing_light_requirements[2]
                                 champion1_rp = champion1_rp + healing_light_requirements[3]
-                                if len(champion1_big_external_buffs) != 1:
-                                    healing_done = ((300 + champion1_small_external_buffs[0]) *
-                                                   champion1_big_external_buffs[0])
-                                else:
-                                    healing_done = (300 + champion1_small_external_buffs[0])
+                                healing_done = math.ceil(300 * self.calculate_champion_damage(1))
+                                healing_done = math.ceil(300 * self.calculate_champion_damage(1))
                                 ability_data = ["Healing Light", "ally", "1T", healing_done]
                             else:
                                 return
@@ -15162,11 +14679,8 @@ class GameFrame(tk.Frame):
                                 champion2_rp = champion2_rp - healing_light_requirements[0]
                                 healing_light_requirements[1] = healing_light_requirements[2]
                                 champion2_rp = champion2_rp + healing_light_requirements[3]
-                                if len(champion2_big_external_buffs) != 1:
-                                    healing_done = ((300 + champion2_small_external_buffs[0]) *
-                                                   champion2_big_external_buffs[0])
-                                else:
-                                    healing_done = (300 + champion2_small_external_buffs[0])
+                                healing_done = math.ceil(300 * self.calculate_champion_damage(2))
+                                healing_done = math.ceil(300 * self.calculate_champion_damage(2))
                                 ability_data = ["Healing Light", "ally", "1T", healing_done]
                             else:
                                 return
@@ -15175,11 +14689,8 @@ class GameFrame(tk.Frame):
                                 champion3_rp = champion3_rp - healing_light_requirements[0]
                                 healing_light_requirements[1] = healing_light_requirements[2]
                                 champion3_rp = champion3_rp + healing_light_requirements[3]
-                                if len(champion3_big_external_buffs) != 1:
-                                    healing_done = ((300 + champion3_small_external_buffs[0]) *
-                                                   champion3_big_external_buffs[0])
-                                else:
-                                    healing_done = (300 + champion3_small_external_buffs[0])
+                                healing_done = math.ceil(300 * self.calculate_champion_damage(3))
+                                healing_done = math.ceil(300 * self.calculate_champion_damage(3))
                                 ability_data = ["Healing Light", "ally", "1T", healing_done]
                             else:
                                 return
@@ -15188,11 +14699,8 @@ class GameFrame(tk.Frame):
                                 champion4_rp = champion4_rp - healing_light_requirements[0]
                                 healing_light_requirements[1] = healing_light_requirements[2]
                                 champion4_rp = champion4_rp + healing_light_requirements[3]
-                                if len(champion4_big_external_buffs) != 1:
-                                    healing_done = ((300 + champion4_small_external_buffs[0]) *
-                                                   champion4_big_external_buffs[0])
-                                else:
-                                    healing_done = (300 + champion4_small_external_buffs[0])
+                                healing_done = math.ceil(300 * self.calculate_champion_damage(4))
+                                healing_done = math.ceil(300 * self.calculate_champion_damage(4))
                                 ability_data = ["Healing Light", "ally", "1T", healing_done]
                             else:
                                 return
@@ -15201,11 +14709,8 @@ class GameFrame(tk.Frame):
                                 champion5_rp = champion5_rp - healing_light_requirements[0]
                                 healing_light_requirements[1] = healing_light_requirements[2]
                                 champion5_rp = champion5_rp + healing_light_requirements[3]
-                                if len(champion5_big_external_buffs) != 1:
-                                    healing_done = ((300 + champion5_small_external_buffs[0]) *
-                                                   champion5_big_external_buffs[0])
-                                else:
-                                    healing_done = (300 + champion5_small_external_buffs[0])
+                                healing_done = math.ceil(300 * self.calculate_champion_damage(5))
+                                healing_done = math.ceil(300 * self.calculate_champion_damage(5))
                                 ability_data = ["Healing Light", "ally", "1T", healing_done]
                             else:
                                 return
@@ -15222,11 +14727,8 @@ class GameFrame(tk.Frame):
                                 champion1_rp = champion1_rp - diffracting_nova_requirements[0]
                                 diffracting_nova_requirements[1] = diffracting_nova_requirements[2]
                                 champion1_rp = champion1_rp + diffracting_nova_requirements[3]
-                                if len(champion1_big_external_buffs) != 1:
-                                    damage_done = ((300 + champion1_small_external_buffs[0]) *
-                                                   champion1_big_external_buffs[0])
-                                else:
-                                    damage_done = (300 + champion1_small_external_buffs[0])
+                                damage_done = math.ceil(300 * self.calculate_champion_damage(1))
+                                damage_done = math.ceil(300 * self.calculate_champion_damage(1))
                                 ability_data = ["Diffracting Nova", "enemy", "AOE", damage_done]
                             else:
                                 return
@@ -15235,11 +14737,8 @@ class GameFrame(tk.Frame):
                                 champion2_rp = champion2_rp - diffracting_nova_requirements[0]
                                 diffracting_nova_requirements[1] = diffracting_nova_requirements[2]
                                 champion2_rp = champion2_rp + diffracting_nova_requirements[3]
-                                if len(champion2_big_external_buffs) != 1:
-                                    damage_done = ((300 + champion2_small_external_buffs[0]) *
-                                                   champion2_big_external_buffs[0])
-                                else:
-                                    damage_done = (300 + champion2_small_external_buffs[0])
+                                damage_done = math.ceil(300 * self.calculate_champion_damage(2))
+                                damage_done = math.ceil(300 * self.calculate_champion_damage(2))
                                 ability_data = ["Diffracting Nova", "enemy", "AOE", damage_done]
                             else:
                                 return
@@ -15248,11 +14747,8 @@ class GameFrame(tk.Frame):
                                 champion3_rp = champion3_rp - diffracting_nova_requirements[0]
                                 diffracting_nova_requirements[1] = diffracting_nova_requirements[2]
                                 champion3_rp = champion3_rp + diffracting_nova_requirements[3]
-                                if len(champion3_big_external_buffs) != 1:
-                                    damage_done = ((300 + champion3_small_external_buffs[0]) *
-                                                   champion3_big_external_buffs[0])
-                                else:
-                                    damage_done = (300 + champion3_small_external_buffs[0])
+                                damage_done = math.ceil(300 * self.calculate_champion_damage(3))
+                                damage_done = math.ceil(300 * self.calculate_champion_damage(3))
                                 ability_data = ["Diffracting Nova", "enemy", "AOE", damage_done]
                             else:
                                 return
@@ -15261,11 +14757,8 @@ class GameFrame(tk.Frame):
                                 champion4_rp = champion4_rp - diffracting_nova_requirements[0]
                                 diffracting_nova_requirements[1] = diffracting_nova_requirements[2]
                                 champion4_rp = champion4_rp + diffracting_nova_requirements[3]
-                                if len(champion4_big_external_buffs) != 1:
-                                    damage_done = ((300 + champion4_small_external_buffs[0]) *
-                                                   champion4_big_external_buffs[0])
-                                else:
-                                    damage_done = (300 + champion4_small_external_buffs[0])
+                                damage_done = math.ceil(300 * self.calculate_champion_damage(4))
+                                damage_done = math.ceil(300 * self.calculate_champion_damage(4))
                                 ability_data = ["Diffracting Nova", "enemy", "AOE", damage_done]
                             else:
                                 return
@@ -15274,11 +14767,8 @@ class GameFrame(tk.Frame):
                                 champion5_rp = champion5_rp - diffracting_nova_requirements[0]
                                 diffracting_nova_requirements[1] = diffracting_nova_requirements[2]
                                 champion5_rp = champion5_rp + diffracting_nova_requirements[3]
-                                if len(champion5_big_external_buffs) != 1:
-                                    damage_done = ((300 + champion5_small_external_buffs[0]) *
-                                                   champion5_big_external_buffs[0])
-                                else:
-                                    damage_done = (300 + champion5_small_external_buffs[0])
+                                damage_done = math.ceil(300 * self.calculate_champion_damage(5))
+                                damage_done = math.ceil(300 * self.calculate_champion_damage(5))
                                 ability_data = ["Diffracting Nova", "enemy", "AOE", damage_done]
                             else:
                                 return
@@ -15295,11 +14785,8 @@ class GameFrame(tk.Frame):
                                 champion1_rp = champion1_rp - nanoheal_bots_requirements[0]
                                 nanoheal_bots_requirements[1] = nanoheal_bots_requirements[2]
                                 champion1_rp = champion1_rp + nanoheal_bots_requirements[3]
-                                if len(champion1_big_external_buffs) != 1:
-                                    healing_done = ((300 + champion1_small_external_buffs[0]) *
-                                                   champion1_big_external_buffs[0])
-                                else:
-                                    healing_done = (300 + champion1_small_external_buffs[0])
+                                healing_done = math.ceil(300 * self.calculate_champion_damage(1))
+                                healing_done = math.ceil(300 * self.calculate_champion_damage(1))
                                 ability_data = ["Nanoheal Bots", "ally", "AOE", healing_done]
                             else:
                                 return
@@ -15308,11 +14795,8 @@ class GameFrame(tk.Frame):
                                 champion2_rp = champion2_rp - nanoheal_bots_requirements[0]
                                 nanoheal_bots_requirements[1] = nanoheal_bots_requirements[2]
                                 champion2_rp = champion2_rp + nanoheal_bots_requirements[3]
-                                if len(champion2_big_external_buffs) != 1:
-                                    healing_done = ((300 + champion2_small_external_buffs[0]) *
-                                                   champion2_big_external_buffs[0])
-                                else:
-                                    healing_done = (300 + champion2_small_external_buffs[0])
+                                healing_done = math.ceil(300 * self.calculate_champion_damage(2))
+                                healing_done = math.ceil(300 * self.calculate_champion_damage(2))
                                 ability_data = ["Nanoheal Bots", "ally", "AOE", healing_done]
                             else:
                                 return
@@ -15321,11 +14805,8 @@ class GameFrame(tk.Frame):
                                 champion3_rp = champion3_rp - nanoheal_bots_requirements[0]
                                 nanoheal_bots_requirements[1] = nanoheal_bots_requirements[2]
                                 champion3_rp = champion3_rp + nanoheal_bots_requirements[3]
-                                if len(champion3_big_external_buffs) != 1:
-                                    healing_done = ((300 + champion3_small_external_buffs[0]) *
-                                                   champion3_big_external_buffs[0])
-                                else:
-                                    healing_done = (300 + champion3_small_external_buffs[0])
+                                healing_done = math.ceil(300 * self.calculate_champion_damage(3))
+                                healing_done = math.ceil(300 * self.calculate_champion_damage(3))
                                 ability_data = ["Nanoheal Bots", "ally", "AOE", healing_done]
                             else:
                                 return
@@ -15334,11 +14815,8 @@ class GameFrame(tk.Frame):
                                 champion4_rp = champion4_rp - nanoheal_bots_requirements[0]
                                 nanoheal_bots_requirements[1] = nanoheal_bots_requirements[2]
                                 champion4_rp = champion4_rp + nanoheal_bots_requirements[3]
-                                if len(champion4_big_external_buffs) != 1:
-                                    healing_done = ((300 + champion4_small_external_buffs[0]) *
-                                                   champion4_big_external_buffs[0])
-                                else:
-                                    healing_done = (300 + champion4_small_external_buffs[0])
+                                healing_done = math.ceil(300 * self.calculate_champion_damage(4))
+                                healing_done = math.ceil(300 * self.calculate_champion_damage(4))
                                 ability_data = ["Nanoheal Bots", "ally", "AOE", healing_done]
                             else:
                                 return
@@ -15347,11 +14825,8 @@ class GameFrame(tk.Frame):
                                 champion5_rp = champion5_rp - nanoheal_bots_requirements[0]
                                 nanoheal_bots_requirements[1] = nanoheal_bots_requirements[2]
                                 champion5_rp = champion5_rp + nanoheal_bots_requirements[3]
-                                if len(champion5_big_external_buffs) != 1:
-                                    healing_done = ((300 + champion5_small_external_buffs[0]) *
-                                                   champion5_big_external_buffs[0])
-                                else:
-                                    healing_done = (300 + champion5_small_external_buffs[0])
+                                healing_done = math.ceil(300 * self.calculate_champion_damage(5))
+                                healing_done = math.ceil(300 * self.calculate_champion_damage(5))
                                 ability_data = ["Nanoheal Bots", "ally", "AOE", healing_done]
                             else:
                                 return
@@ -15464,11 +14939,8 @@ class GameFrame(tk.Frame):
                                 champion1_rp = champion1_rp - bandage_wound_requirements[0]
                                 bandage_wound_requirements[1] = bandage_wound_requirements[2]
                                 champion1_rp = champion1_rp + bandage_wound_requirements[3]
-                                if len(champion1_big_external_buffs) != 1:
-                                    healing_done = ((CHILD_OF_MEDICINE.ap + champion1_small_external_buffs[0]) *
-                                                   champion1_big_external_buffs[0])
-                                else:
-                                    healing_done = (CHILD_OF_MEDICINE.ap + champion1_small_external_buffs[0])
+                                healing_done = math.ceil(CHILD_OF_MEDICINE.ap * self.calculate_champion_damage(1))
+                                healing_done = math.ceil(CHILD_OF_MEDICINE.ap * self.calculate_champion_damage(1))
                                 ability_data = ["Bandage Wound", "ally", "1T", healing_done]
                             else:
                                 return
@@ -15477,11 +14949,8 @@ class GameFrame(tk.Frame):
                                 champion2_rp = champion2_rp - bandage_wound_requirements[0]
                                 bandage_wound_requirements[1] = bandage_wound_requirements[2]
                                 champion2_rp = champion2_rp + bandage_wound_requirements[3]
-                                if len(champion2_big_external_buffs) != 1:
-                                    healing_done = ((CHILD_OF_MEDICINE.ap + champion2_small_external_buffs[0]) *
-                                                   champion2_big_external_buffs[0])
-                                else:
-                                    healing_done = (CHILD_OF_MEDICINE.ap + champion2_small_external_buffs[0])
+                                healing_done = math.ceil(CHILD_OF_MEDICINE.ap * self.calculate_champion_damage(2))
+                                healing_done = math.ceil(CHILD_OF_MEDICINE.ap * self.calculate_champion_damage(2))
                                 ability_data = ["Bandage Wound", "ally", "1T", healing_done]
                             else:
                                 return
@@ -15490,11 +14959,8 @@ class GameFrame(tk.Frame):
                                 champion3_rp = champion3_rp - bandage_wound_requirements[0]
                                 bandage_wound_requirements[1] = bandage_wound_requirements[2]
                                 champion3_rp = champion3_rp + bandage_wound_requirements[3]
-                                if len(champion3_big_external_buffs) != 1:
-                                    healing_done = ((CHILD_OF_MEDICINE.ap + champion3_small_external_buffs[0]) *
-                                                   champion3_big_external_buffs[0])
-                                else:
-                                    healing_done = (CHILD_OF_MEDICINE.ap + champion3_small_external_buffs[0])
+                                healing_done = math.ceil(CHILD_OF_MEDICINE.ap * self.calculate_champion_damage(3))
+                                healing_done = math.ceil(CHILD_OF_MEDICINE.ap * self.calculate_champion_damage(3))
                                 ability_data = ["Bandage Wound", "ally", "1T", healing_done]
                             else:
                                 return
@@ -15503,11 +14969,8 @@ class GameFrame(tk.Frame):
                                 champion4_rp = champion4_rp - bandage_wound_requirements[0]
                                 bandage_wound_requirements[1] = bandage_wound_requirements[2]
                                 champion4_rp = champion4_rp + bandage_wound_requirements[3]
-                                if len(champion4_big_external_buffs) != 1:
-                                    healing_done = ((CHILD_OF_MEDICINE.ap + champion4_small_external_buffs[0]) *
-                                                   champion4_big_external_buffs[0])
-                                else:
-                                    healing_done = (CHILD_OF_MEDICINE.ap + champion4_small_external_buffs[0])
+                                healing_done = math.ceil(CHILD_OF_MEDICINE.ap * self.calculate_champion_damage(4))
+                                healing_done = math.ceil(CHILD_OF_MEDICINE.ap * self.calculate_champion_damage(4))
                                 ability_data = ["Bandage Wound", "ally", "1T", healing_done]
                             else:
                                 return
@@ -15516,11 +14979,8 @@ class GameFrame(tk.Frame):
                                 champion5_rp = champion5_rp - bandage_wound_requirements[0]
                                 bandage_wound_requirements[1] = bandage_wound_requirements[2]
                                 champion5_rp = champion5_rp + bandage_wound_requirements[3]
-                                if len(champion5_big_external_buffs) != 1:
-                                    healing_done = ((CHILD_OF_MEDICINE.ap + champion5_small_external_buffs[0]) *
-                                                   champion5_big_external_buffs[0])
-                                else:
-                                    healing_done = (CHILD_OF_MEDICINE.ap + champion5_small_external_buffs[0])
+                                healing_done = math.ceil(CHILD_OF_MEDICINE.ap * self.calculate_champion_damage(5))
+                                healing_done = math.ceil(CHILD_OF_MEDICINE.ap * self.calculate_champion_damage(5))
                                 ability_data = ["Bandage Wound", "ally", "1T", healing_done]
                             else:
                                 return
@@ -15528,72 +14988,57 @@ class GameFrame(tk.Frame):
             else:
                 return
         elif ability_name == "Perfected Herbal Tea":
-            global Perfected_herbal_tea_requirements
-            if Perfected_herbal_tea_requirements[1] == 0:
+            global perfected_herbal_tea_requirements
+            if perfected_herbal_tea_requirements[1] == 0:
                 for character in CHAMPION_LIST:
                     if character == CHILD_OF_MEDICINE.title:
                         if counter == 1:
-                            if Perfected_herbal_tea_requirements[0] <= champion1_rp:
-                                champion1_rp = champion1_rp - Perfected_herbal_tea_requirements[0]
-                                Perfected_herbal_tea_requirements[1] = Perfected_herbal_tea_requirements[2]
-                                champion1_rp = champion1_rp + Perfected_herbal_tea_requirements[3]
-                                if len(champion1_big_external_buffs) != 1:
-                                    healing_done = ((CHILD_OF_MEDICINE.ap + champion1_small_external_buffs[0]) *
-                                                   champion1_big_external_buffs[0])
-                                else:
-                                    healing_done = (CHILD_OF_MEDICINE.ap + champion1_small_external_buffs[0])
+                            if perfected_herbal_tea_requirements[0] <= champion1_rp:
+                                champion1_rp = champion1_rp - perfected_herbal_tea_requirements[0]
+                                perfected_herbal_tea_requirements[1] = perfected_herbal_tea_requirements[2]
+                                champion1_rp = champion1_rp + perfected_herbal_tea_requirements[3]
+                                healing_done = math.ceil(CHILD_OF_MEDICINE.ap * self.calculate_champion_damage(1))
+                                healing_done = math.ceil(CHILD_OF_MEDICINE.ap * self.calculate_champion_damage(1))
                                 ability_data = ["Perfected Herbal Tea", "ally", "1T", healing_done]
                             else:
                                 return
                         if counter == 2:
-                            if Perfected_herbal_tea_requirements[0] <= champion2_rp:
-                                champion2_rp = champion2_rp - Perfected_herbal_tea_requirements[0]
-                                Perfected_herbal_tea_requirements[1] = Perfected_herbal_tea_requirements[2]
-                                champion2_rp = champion2_rp + Perfected_herbal_tea_requirements[3]
-                                if len(champion2_big_external_buffs) != 1:
-                                    healing_done = ((CHILD_OF_MEDICINE.ap + champion2_small_external_buffs[0]) *
-                                                   champion2_big_external_buffs[0])
-                                else:
-                                    healing_done = (CHILD_OF_MEDICINE.ap + champion2_small_external_buffs[0])
+                            if perfected_herbal_tea_requirements[0] <= champion2_rp:
+                                champion2_rp = champion2_rp - perfected_herbal_tea_requirements[0]
+                                perfected_herbal_tea_requirements[1] = perfected_herbal_tea_requirements[2]
+                                champion2_rp = champion2_rp + perfected_herbal_tea_requirements[3]
+                                healing_done = math.ceil(CHILD_OF_MEDICINE.ap * self.calculate_champion_damage(2))
+                                healing_done = math.ceil(CHILD_OF_MEDICINE.ap * self.calculate_champion_damage(2))
                                 ability_data = ["Perfected Herbal Tea", "ally", "1T", healing_done]
                             else:
                                 return
                         if counter == 3:
-                            if Perfected_herbal_tea_requirements[0] <= champion3_rp:
-                                champion3_rp = champion3_rp - Perfected_herbal_tea_requirements[0]
-                                Perfected_herbal_tea_requirements[1] = Perfected_herbal_tea_requirements[2]
-                                champion3_rp = champion3_rp + Perfected_herbal_tea_requirements[3]
-                                if len(champion3_big_external_buffs) != 1:
-                                    healing_done = ((CHILD_OF_MEDICINE.ap + champion3_small_external_buffs[0]) *
-                                                   champion3_big_external_buffs[0])
-                                else:
-                                    healing_done = (CHILD_OF_MEDICINE.ap + champion3_small_external_buffs[0])
+                            if perfected_herbal_tea_requirements[0] <= champion3_rp:
+                                champion3_rp = champion3_rp - perfected_herbal_tea_requirements[0]
+                                perfected_herbal_tea_requirements[1] = perfected_herbal_tea_requirements[2]
+                                champion3_rp = champion3_rp + perfected_herbal_tea_requirements[3]
+                                healing_done = math.ceil(CHILD_OF_MEDICINE.ap * self.calculate_champion_damage(3))
+                                healing_done = math.ceil(CHILD_OF_MEDICINE.ap * self.calculate_champion_damage(3))
                                 ability_data = ["Perfected Herbal Tea", "ally", "1T", healing_done]
                             else:
                                 return
                         if counter == 4:
-                            if Perfected_herbal_tea_requirements[0] <= champion4_rp:
-                                champion4_rp = champion4_rp - Perfected_herbal_tea_requirements[0]
-                                Perfected_herbal_tea_requirements[1] = Perfected_herbal_tea_requirements[2]
-                                champion4_rp = champion4_rp + Perfected_herbal_tea_requirements[3]
-                                if len(champion4_big_external_buffs) != 1:
-                                    healing_done = ((CHILD_OF_MEDICINE.ap + champion4_small_external_buffs[0]) *
-                                                   champion4_big_external_buffs[0])
-                                else:
-                                    healing_done = (CHILD_OF_MEDICINE.ap + champion4_small_external_buffs[0])
+                            if perfected_herbal_tea_requirements[0] <= champion4_rp:
+                                champion4_rp = champion4_rp - perfected_herbal_tea_requirements[0]
+                                perfected_herbal_tea_requirements[1] = perfected_herbal_tea_requirements[2]
+                                champion4_rp = champion4_rp + perfected_herbal_tea_requirements[3]
+                                healing_done = math.ceil(CHILD_OF_MEDICINE.ap * self.calculate_champion_damage(4))
+                                healing_done = math.ceil(CHILD_OF_MEDICINE.ap * self.calculate_champion_damage(4))
                                 ability_data = ["Perfected Herbal Tea", "ally", "1T", healing_done]
                             else:
                                 return
                         if counter == 5:
-                            if Perfected_herbal_tea_requirements[0] <= champion5_rp:
-                                champion5_rp = champion5_rp - Perfected_herbal_tea_requirements[0]
-                                Perfected_herbal_tea_requirements[1] = Perfected_herbal_tea_requirements[2]
-                                champion5_rp = champion5_rp + Perfected_herbal_tea_requirements[3]
-                                if len(champion5_big_external_buffs) != 1:
-                                    healing_done = ((CHILD_OF_MEDICINE.ap + champion5_small_external_buffs[0]) *
-                                                   champion5_big_external_buffs[0])
-                                else:
-                                    healing_done = (CHILD_OF_MEDICINE.ap + champion5_small_external_buffs[0])
+                            if perfected_herbal_tea_requirements[0] <= champion5_rp:
+                                champion5_rp = champion5_rp - perfected_herbal_tea_requirements[0]
+                                perfected_herbal_tea_requirements[1] = perfected_herbal_tea_requirements[2]
+                                champion5_rp = champion5_rp + perfected_herbal_tea_requirements[3]
+                                healing_done = math.ceil(CHILD_OF_MEDICINE.ap * self.calculate_champion_damage(5))
+                                healing_done = math.ceil(CHILD_OF_MEDICINE.ap * self.calculate_champion_damage(5))
                                 ability_data = ["Perfected Herbal Tea", "ally", "1T", healing_done]
                             else:
                                 return
@@ -15658,8 +15103,7 @@ class GameFrame(tk.Frame):
             rest_confirmation_label = tk.Label(dungeon_game_frame,
                                                text="Are you sure you want this champion to rest for their turn?")
             rest_confirmation_label.grid(row=20, column=2, pady=10)
-            rest_confirmation_button = tk.Button(dungeon_game_frame, text="Yes", command=lambda: self.champion_rest(1),
-                                                 font=self.medium_text_font_bold)
+            rest_confirmation_button = tk.Button(dungeon_game_frame, text="Yes", command=lambda: self.champion_rest(1),             font=self.medium_text_font_bold)
             rest_confirmation_button.grid(row=20, column=1, pady=12)
             back_button = tk.Button(dungeon_game_frame, text="No", command=self.player_combat_champion1,
                                     font=self.medium_text_font_bold)
@@ -15885,16 +15329,16 @@ class GameFrame(tk.Frame):
             else:
                 champion1_supporttarget_frame = tk.Button(dungeon_game_frame,
                                                           text=self.target_frame_ai_champion_text("champion", 1), command=lambda: self.multi_target_check(1))
-                champion1_supporttarget_frame.grid(row=19, column=1)
+                champion1_supporttarget_frame.grid(row=19, column=1, sticky="e")
                 champion2_supporttarget_frame = tk.Button(dungeon_game_frame,
                                                           text=self.target_frame_ai_champion_text("champion", 2), command=lambda: self.multi_target_check(2))
-                champion2_supporttarget_frame.grid(row=19, column=2)
+                champion2_supporttarget_frame.grid(row=19, column=2, sticky="w")
                 champion3_supporttarget_frame = tk.Button(dungeon_game_frame,
                                                           text=self.target_frame_ai_champion_text("champion", 3), command=lambda: self.multi_target_check(3))
-                champion3_supporttarget_frame.grid(row=19, column=3)
+                champion3_supporttarget_frame.grid(row=19, column=2)
                 champion4_supporttarget_frame = tk.Button(dungeon_game_frame,
                                                           text=self.target_frame_ai_champion_text("champion", 4), command=lambda: self.multi_target_check(4))
-                champion4_supporttarget_frame.grid(row=19, column=1, sticky="e")
+                champion4_supporttarget_frame.grid(row=19, column=2, sticky="e")
                 champion5_supporttarget_frame = tk.Button(dungeon_game_frame,
                                                           text=self.target_frame_ai_champion_text("champion", 5), command=lambda: self.multi_target_check(5))
                 champion5_supporttarget_frame.grid(row=19, column=3, sticky="w")
@@ -16016,373 +15460,373 @@ class GameFrame(tk.Frame):
         counter = 0
         if ability_data[0] == "Palm Strike":
             if 1 in target_list:
-                ai1_hp = ai1_hp - ability_data[3]
+                ai1_hp = ai1_hp -math.ceil(ability_data[3] * self.check_brittle(1))
                 self.apply_taunt(1, MONK.title, 2)
             if 2 in target_list:
-                ai2_hp = ai2_hp - ability_data[3]
+                ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2))
                 self.apply_taunt(2, MONK.title, 2)
             if 3 in target_list:
-                ai3_hp = ai3_hp - ability_data[3]
+                ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3))
                 self.apply_taunt(3, MONK.title, 2)
             if 4 in target_list:
-                ai4_hp = ai4_hp - ability_data[3]
+                ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4))
                 self.apply_taunt(4, MONK.title, 2)
             if 5 in target_list:
-                ai5_hp = ai5_hp - ability_data[3]
+                ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5))
                 self.apply_taunt(5, MONK.title, 2)
         elif ability_data[0] == "Leg Sweep":
             if 1 in target_list:
-                ai1_hp = ai1_hp - ability_data[3]
+                ai1_hp = ai1_hp -math.ceil(ability_data[3] * self.check_brittle(1))
                 self.apply_stun(1, 1)
             if 2 in target_list:
-                ai2_hp = ai2_hp - ability_data[3]
+                ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2))
                 self.apply_stun(2, 1)
             if 3 in target_list:
-                ai3_hp = ai3_hp - ability_data[3]
+                ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3))
                 self.apply_stun(3, 1)
             if 4 in target_list:
-                ai4_hp = ai4_hp - ability_data[3]
+                ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4))
                 self.apply_stun(4, 1)
             if 5 in target_list:
-                ai5_hp = ai5_hp - ability_data[3]
+                ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5))
                 self.apply_stun(5, 1)
         elif ability_data[0] == "Pressure Points":
             if 1 in target_list:
-                if ai1_hp < AI_GROUP_HP * 0.2:
+                if ai1_hp < AI_GROUP_HP * 0.6:
                     ai1_hp = 0
                 else:
                     self.apply_stun(1, 3)
             if 2 in target_list:
-                if ai2_hp < AI_GROUP_HP * 0.2:
+                if ai2_hp < AI_GROUP_HP * 0.6:
                     ai2_hp = 0
                 else:
                     self.apply_stun(2, 3)
             if 3 in target_list:
-                if ai3_hp < AI_GROUP_HP * 0.2:
+                if ai3_hp < AI_GROUP_HP * 0.6:
                     ai3_hp = 0
                 else:
                     self.apply_stun(3, 3)
             if 4 in target_list:
-                if ai4_hp < AI_GROUP_HP * 0.2:
+                if ai4_hp < AI_GROUP_HP * 0.6:
                     ai4_hp = 0
                 else:
                     self.apply_stun(4, 3)
             if 5 in target_list:
-                if ai5_hp < AI_GROUP_HP * 0.2:
+                if ai5_hp < AI_GROUP_HP * 0.6:
                     ai5_hp = 0
                 else:
                     self.apply_stun(5, 3)
         elif ability_data[0] == "Bloodthirst":
             if 1 in target_list:
-                ai1_hp = ai1_hp - ability_data[3]
+                ai1_hp = ai1_hp -math.ceil(ability_data[3] * self.check_brittle(1))
                 for champions in CHAMPION_LIST:
                     counter += 1
                     if champions == BARBARIAN.title:
                         if counter == 1:
-                            champion1_hp = champion1_hp + math.ceil(ability_data[3] / 2)
+                            champion1_hp = champion1_hp + math.ceil(ability_data[3] * self.check_brittle(1) / 2)
                             if champion1_hp > CHAMPION_1_HP:
                                  champion1_hp = CHAMPION_1_HP
                         elif counter == 2:
-                            champion2_hp = champion2_hp + math.ceil(ability_data[3] / 2)
+                            champion2_hp = champion2_hp + math.ceil(ability_data[3] * self.check_brittle(1) / 2)
                             if champion2_hp > CHAMPION_2_HP:
                                  champion2_hp = CHAMPION_2_HP
                         elif counter == 3:
-                            champion3_hp = champion3_hp + math.ceil(ability_data[3] / 2)
+                            champion3_hp = champion3_hp + math.ceil(ability_data[3] * self.check_brittle(1) / 2)
                             if champion3_hp > CHAMPION_3_HP:
                                  champion3_hp = CHAMPION_3_HP
                         elif counter == 4:
-                            champion4_hp = champion4_hp + math.ceil(ability_data[3] / 2)
+                            champion4_hp = champion4_hp + math.ceil(ability_data[3] * self.check_brittle(1) / 2)
                             if champion4_hp > CHAMPION_4_HP:
                                  champion4_hp = CHAMPION_4_HP
                         elif counter == 5:
-                            champion5_hp = champion5_hp + math.ceil(ability_data[3] / 2)
+                            champion5_hp = champion5_hp + math.ceil(ability_data[3] * self.check_brittle(1) / 2)
                             if champion5_hp > CHAMPION_5_HP:
                                 champion5_hp = CHAMPION_5_HP
             if 2 in target_list:
-                ai2_hp = ai2_hp - ability_data[3]
+                ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2))
                 for champions in CHAMPION_LIST:
                     counter += 1
                     if champions == BARBARIAN.title:
                         if counter == 1:
-                            champion1_hp = champion1_hp + math.ceil(ability_data[3] / 2)
+                            champion1_hp = champion1_hp + math.ceil(math.ceil(ability_data[3] * self.check_brittle(2)) / 2)
                             if champion1_hp > CHAMPION_1_HP:
                                 champion1_hp = CHAMPION_1_HP
                         elif counter == 2:
-                            champion2_hp = champion2_hp + math.ceil(ability_data[3] / 2)
+                            champion2_hp = champion2_hp + math.ceil(math.ceil(ability_data[3] * self.check_brittle(2)) / 2)
                             if champion2_hp > CHAMPION_2_HP:
                                 champion2_hp = CHAMPION_2_HP
                         elif counter == 3:
-                            champion3_hp = champion3_hp + math.ceil(ability_data[3] / 2)
+                            champion3_hp = champion3_hp + math.ceil(math.ceil(ability_data[3] * self.check_brittle(2)) / 2)
                             if champion3_hp > CHAMPION_3_HP:
                                 champion3_hp = CHAMPION_3_HP
                         elif counter == 4:
-                            champion4_hp = champion4_hp + math.ceil(ability_data[3] / 2)
+                            champion4_hp = champion4_hp + math.ceil(math.ceil(ability_data[3] * self.check_brittle(2)) / 2)
                             if champion4_hp > CHAMPION_4_HP:
                                 champion4_hp = CHAMPION_4_HP
                         elif counter == 5:
-                            champion5_hp = champion5_hp + math.ceil(ability_data[3] / 2)
+                            champion5_hp = champion5_hp + math.ceil(math.ceil(ability_data[3] * self.check_brittle(2)) / 2)
                             if champion5_hp > CHAMPION_5_HP:
                                 champion5_hp = CHAMPION_5_HP
             if 3 in target_list:
-                ai3_hp = ai3_hp - ability_data[3]
+                ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3))
                 for champions in CHAMPION_LIST:
                     counter += 1
                     if champions == BARBARIAN.title:
                         if counter == 1:
-                            champion1_hp = champion1_hp + math.ceil(ability_data[3] / 2)
+                            champion1_hp = champion1_hp + math.ceil(math.ceil(ability_data[3] * self.check_brittle(3)) / 2)
                             if champion1_hp > CHAMPION_1_HP:
                                 champion1_hp = CHAMPION_1_HP
                         elif counter == 2:
-                            champion2_hp = champion2_hp + math.ceil(ability_data[3] / 2)
+                            champion2_hp = champion2_hp + math.ceil(math.ceil(ability_data[3] * self.check_brittle(3)) / 2)
                             if champion2_hp > CHAMPION_2_HP:
                                 champion2_hp = CHAMPION_2_HP
                         elif counter == 3:
-                            champion3_hp = champion3_hp + math.ceil(ability_data[3] / 2)
+                            champion3_hp = champion3_hp + math.ceil(math.ceil(ability_data[3] * self.check_brittle(3)) / 2)
                             if champion3_hp > CHAMPION_3_HP:
                                 champion3_hp = CHAMPION_3_HP
                         elif counter == 4:
-                            champion4_hp = champion4_hp + math.ceil(ability_data[3] / 2)
+                            champion4_hp = champion4_hp + math.ceil(math.ceil(ability_data[3] * self.check_brittle(3)) / 2)
                             if champion4_hp > CHAMPION_4_HP:
                                 champion4_hp = CHAMPION_4_HP
                         elif counter == 5:
-                            champion5_hp = champion5_hp + math.ceil(ability_data[3] / 2)
+                            champion5_hp = champion5_hp + math.ceil(math.ceil(ability_data[3] * self.check_brittle(3)) / 2)
                             if champion5_hp > CHAMPION_5_HP:
                                 champion5_hp = CHAMPION_5_HP
             if 4 in target_list:
-                ai4_hp = ai4_hp - ability_data[3]
+                ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4))
                 for champions in CHAMPION_LIST:
                     counter += 1
                     if champions == BARBARIAN.title:
                         if counter == 1:
-                            champion1_hp = champion1_hp + math.ceil(ability_data[3] / 2)
+                            champion1_hp = champion1_hp + math.ceil(math.ceil(ability_data[3] * self.check_brittle(4)) / 2)
                             if champion1_hp > CHAMPION_1_HP:
                                 champion1_hp = CHAMPION_1_HP
                         elif counter == 2:
-                            champion2_hp = champion2_hp + math.ceil(ability_data[3] / 2)
+                            champion2_hp = champion2_hp + math.ceil(math.ceil(ability_data[3] * self.check_brittle(4)) / 2)
                             if champion2_hp > CHAMPION_2_HP:
                                 champion2_hp = CHAMPION_2_HP
                         elif counter == 3:
-                            champion3_hp = champion3_hp + math.ceil(ability_data[3] / 2)
+                            champion3_hp = champion3_hp + math.ceil(math.ceil(ability_data[3] * self.check_brittle(4)) / 2)
                             if champion3_hp > CHAMPION_3_HP:
                                 champion3_hp = CHAMPION_3_HP
                         elif counter == 4:
-                            champion4_hp = champion4_hp + math.ceil(ability_data[3] / 2)
+                            champion4_hp = champion4_hp + math.ceil(math.ceil(ability_data[3] * self.check_brittle(4)) / 2)
                             if champion4_hp > CHAMPION_4_HP:
                                 champion4_hp = CHAMPION_4_HP
                         elif counter == 5:
-                            champion5_hp = champion5_hp + math.ceil(ability_data[3] / 2)
+                            champion5_hp = champion5_hp + math.ceil(math.ceil(ability_data[3] * self.check_brittle(4)) / 2)
                             if champion5_hp > CHAMPION_5_HP:
                                 champion5_hp = CHAMPION_5_HP
             if 5 in target_list:
-                ai5_hp = ai5_hp - ability_data[3]
+                ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5))
                 for champions in CHAMPION_LIST:
                     counter += 1
                     if champions == BARBARIAN.title:
                         if counter == 1:
-                            champion1_hp = champion1_hp + math.ceil(ability_data[3] / 2)
+                            champion1_hp = champion1_hp + math.ceil(math.ceil(ability_data[3] * self.check_brittle(5)) / 2)
                             if champion1_hp > CHAMPION_1_HP:
                                 champion1_hp = CHAMPION_1_HP
                         elif counter == 2:
-                            champion2_hp = champion2_hp + math.ceil(ability_data[3] / 2)
+                            champion2_hp = champion2_hp + math.ceil(math.ceil(ability_data[3] * self.check_brittle(5)) / 2)
                             if champion2_hp > CHAMPION_2_HP:
                                 champion2_hp = CHAMPION_2_HP
                         elif counter == 3:
-                            champion3_hp = champion3_hp + math.ceil(ability_data[3] / 2)
+                            champion3_hp = champion3_hp + math.ceil(math.ceil(ability_data[3] * self.check_brittle(5)) / 2)
                             if champion3_hp > CHAMPION_3_HP:
                                 champion3_hp = CHAMPION_3_HP
                         elif counter == 4:
-                            champion4_hp = champion4_hp + math.ceil(ability_data[3] / 2)
+                            champion4_hp = champion4_hp + math.ceil(math.ceil(ability_data[3] * self.check_brittle(5)) / 2)
                             if champion4_hp > CHAMPION_4_HP:
                                 champion4_hp = CHAMPION_4_HP
                         elif counter == 5:
-                            champion5_hp = champion5_hp + math.ceil(ability_data[3] / 2)
+                            champion5_hp = champion5_hp + math.ceil(math.ceil(ability_data[3] * self.check_brittle(5)) / 2)
                             if champion5_hp > CHAMPION_5_HP:
                                 champion5_hp = CHAMPION_5_HP
         elif ability_data[0] == "Pulverize":
             if 1 in target_list:
-                ai1_hp = ai1_hp - ability_data[3]
+                ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1))
                 self.apply_taunt(1, BARBARIAN.title, 2)
             if 2 in target_list:
-                ai2_hp = ai2_hp - ability_data[3]
+                ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2))
                 self.apply_taunt(2, BARBARIAN.title, 2)
             if 3 in target_list:
-                ai3_hp = ai3_hp - ability_data[3]
+                ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3))
                 self.apply_taunt(3, BARBARIAN.title, 2)
             if 4 in target_list:
-                ai4_hp = ai4_hp - ability_data[3]
+                ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4))
                 self.apply_taunt(4, BARBARIAN.title, 2)
             if 5 in target_list:
-                ai5_hp = ai5_hp - ability_data[3]
+                ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5))
                 self.apply_taunt(5, BARBARIAN.title, 2)
         elif ability_data[0] == "Shield Bash":
             if 1 in target_list:
-                ai1_hp = ai1_hp - ability_data[3]
+                ai1_hp = ai1_hp -math.ceil(ability_data[3] * self.check_brittle(1))
                 self.apply_weakness(1, 2)
             if 2 in target_list:
-                ai2_hp = ai2_hp - ability_data[3]
+                ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2))
                 self.apply_weakness(2, 2)
             if 3 in target_list:
-                ai3_hp = ai3_hp - ability_data[3]
+                ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3))
                 self.apply_weakness(3, 2)
             if 4 in target_list:
-                ai4_hp = ai4_hp - ability_data[3]
+                ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4))
                 self.apply_weakness(4, 2)
             if 5 in target_list:
-                ai5_hp = ai5_hp - ability_data[3]
+                ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5))
                 self.apply_weakness(5, 2)
         elif ability_data[0] == "Trainwreck":
             if 1 in target_list:
-                ai1_hp = ai1_hp - ability_data[3]
+                ai1_hp = ai1_hp -math.ceil(ability_data[3] * self.check_brittle(1)) * 3
             if 2 in target_list:
-                ai2_hp = ai2_hp - ability_data[3]
+                ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2)) * 3
             if 3 in target_list:
-                ai3_hp = ai3_hp - ability_data[3]
+                ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3)) * 3
             if 4 in target_list:
-                ai4_hp = ai4_hp - ability_data[3]
+                ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4)) * 3
             if 5 in target_list:
-                ai5_hp = ai5_hp - ability_data[3]
+                ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5)) * 3
         elif ability_data[0] == "Pierce":
             if 1 in target_list:
-                ai1_hp = ai1_hp - ability_data[3]
+                ai1_hp = ai1_hp -math.ceil(ability_data[3] * self.check_brittle(1))
             if 2 in target_list:
-                ai2_hp = ai2_hp - ability_data[3]
+                ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2))
             if 3 in target_list:
-                ai3_hp = ai3_hp - ability_data[3]
+                ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3))
             if 4 in target_list:
-                ai4_hp = ai4_hp - ability_data[3]
+                ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4))
             if 5 in target_list:
-                ai5_hp = ai5_hp - ability_data[3]
+                ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5))
         elif ability_data[0] == "Disruptive Slash":
             if 1 in target_list:
-                ai1_hp = ai1_hp - ability_data[3]
+                ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1))
                 self.apply_stun(1, 1)
             if 2 in target_list:
-                ai2_hp = ai2_hp - ability_data[3]
+                ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2))
                 self.apply_stun(2, 1)
             if 3 in target_list:
-                ai3_hp = ai3_hp - ability_data[3]
+                ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3))
                 self.apply_stun(3, 1)
             if 4 in target_list:
-                ai4_hp = ai4_hp - ability_data[3]
+                ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4))
                 self.apply_stun(4, 1)
             if 5 in target_list:
-                ai5_hp = ai5_hp - ability_data[3]
+                ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5))
                 self.apply_stun(5, 1)
         elif ability_data[0] == "Raging Blow":
             if reckless_flurry_buff != 0:
                 if AI_SPAWNED == 1:
-                    ai1_hp = ai1_hp - ability_data[3]
+                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1))
                 if AI_SPAWNED == 2:
-                    ai1_hp = ai1_hp - ability_data[3]
-                    ai2_hp = ai2_hp - ability_data[3]
+                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1))
+                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2))
                 if AI_SPAWNED == 3:
-                    ai1_hp = ai1_hp - ability_data[3]
-                    ai2_hp = ai2_hp - ability_data[3]
-                    ai3_hp = ai3_hp - ability_data[3]
+                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1))
+                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2))
+                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3))
                 if AI_SPAWNED == 4:
-                    ai1_hp = ai1_hp - ability_data[3]
-                    ai2_hp = ai2_hp - ability_data[3]
-                    ai3_hp = ai3_hp - ability_data[3]
-                    ai4_hp = ai4_hp - ability_data[3]
+                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1))
+                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2))
+                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3))
+                    ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4))
                 if AI_SPAWNED == 5:
-                    ai1_hp = ai1_hp - ability_data[3]
-                    ai2_hp = ai2_hp - ability_data[3]
-                    ai3_hp = ai3_hp - ability_data[3]
-                    ai4_hp = ai4_hp - ability_data[3]
-                    ai5_hp = ai5_hp - ability_data[3]
+                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1))
+                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2))
+                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3))
+                    ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4))
+                    ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5))
                 reckless_flurry_buff = reckless_flurry_buff - 1
             else:
                 if 1 in target_list:
-                    ai1_hp = ai1_hp - ability_data[3]
+                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1))
                 if 2 in target_list:
-                    ai2_hp = ai2_hp - ability_data[3]
+                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2))
                 if 3 in target_list:
-                    ai3_hp = ai3_hp - ability_data[3]
+                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3))
                 if 4 in target_list:
-                    ai4_hp = ai4_hp - ability_data[3]
+                    ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4))
                 if 5 in target_list:
-                    ai5_hp = ai5_hp - ability_data[3]
+                    ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5))
         elif ability_data[0] == "Rampage":
             if reckless_flurry_buff != 0:
                 if AI_SPAWNED == 1:
-                    ai1_hp = ai1_hp - ability_data[3]
+                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1)) * 2.5
                 if AI_SPAWNED == 2:
-                    ai1_hp = ai1_hp - ability_data[3]
-                    ai2_hp = ai2_hp - ability_data[3]
+                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1)) * 2.5
+                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2)) * 2.5
                 if AI_SPAWNED == 3:
-                    ai1_hp = ai1_hp - ability_data[3]
-                    ai2_hp = ai2_hp - ability_data[3]
-                    ai3_hp = ai3_hp - ability_data[3]
+                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1)) * 2.5
+                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2)) * 2.5
+                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3)) * 2.5
                 if AI_SPAWNED == 4:
-                    ai1_hp = ai1_hp - ability_data[3]
-                    ai2_hp = ai2_hp - ability_data[3]
-                    ai3_hp = ai3_hp - ability_data[3]
+                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1)) * 2.5
+                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2)) * 2.5
+                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3)) * 2.5
                     ai4_hp = ai4_hp - ability_data[3]
                 if AI_SPAWNED == 5:
-                    ai1_hp = ai1_hp - ability_data[3]
-                    ai2_hp = ai2_hp - ability_data[3]
-                    ai3_hp = ai3_hp - ability_data[3]
-                    ai4_hp = ai4_hp - ability_data[3]
-                    ai5_hp = ai5_hp - ability_data[3]
+                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1)) * 2.5
+                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2)) * 2.5
+                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3)) * 2.5
+                    ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4)) *2.5
+                    ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5)) * 2.5
                 reckless_flurry_buff = reckless_flurry_buff - 1
             else:
                 if 1 in target_list:
-                    ai1_hp = ai1_hp - ability_data[3]
+                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1)) * 2.5
                 if 2 in target_list:
-                    ai2_hp = ai2_hp - ability_data[3]
+                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2)) * 2.5
                 if 3 in target_list:
-                    ai3_hp = ai3_hp - ability_data[3]
+                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3)) * 2.5
                 if 4 in target_list:
-                    ai4_hp = ai4_hp - ability_data[3]
+                    ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4)) * 2.5
                 if 5 in target_list:
-                    ai5_hp = ai5_hp - ability_data[3]
+                    ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5)) * 2.5
         elif ability_data[0] == "Serrated Slash":
             if 1 in target_list:
-                ai1_hp = ai1_hp - ability_data[3]
+                ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1))
                 self.serrated_slash_dot(1, 1)
             if 2 in target_list:
-                ai2_hp = ai2_hp - ability_data[3]
+                ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2))
                 self.serrated_slash_dot(1, 1)
             if 3 in target_list:
-                ai3_hp = ai3_hp - ability_data[3]
+                ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3))
                 self.serrated_slash_dot(1, 1)
             if 4 in target_list:
-                ai4_hp = ai4_hp - ability_data[3]
+                ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4))
                 self.serrated_slash_dot(1, 1)
             if 5 in target_list:
-                ai5_hp = ai5_hp - ability_data[3]
+                ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5))
                 self.serrated_slash_dot(1, 1)
         elif ability_data[0] == "Eviscerate":
             if 1 in target_list:
-                ai1_hp = ai1_hp - ability_data[3]
+                ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1)) * 1.5
                 self.eviscerate_dot(1, 3)
             if 2 in target_list:
-                ai2_hp = ai2_hp - ability_data[3]
+                ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2)) * 1.5
                 self.eviscerate_dot(2, 3)
             if 3 in target_list:
-                ai3_hp = ai3_hp - ability_data[3]
+                ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3)) * 1.5
                 self.eviscerate_dot(3, 3)
             if 4 in target_list:
-                ai4_hp = ai4_hp - ability_data[3]
+                ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4)) * 1.5
                 self.eviscerate_dot(4, 3)
             if 5 in target_list:
-                ai5_hp = ai5_hp - ability_data[3]
+                ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5)) * 1.5
                 self.eviscerate_dot(5, 3)
         elif ability_data[0] == "Garrote":
             if 1 in target_list:
-                ai1_hp = ai1_hp - ability_data[3]
+                ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1))
                 self.garrote_dot(1, 2)
             if 2 in target_list:
-                ai2_hp = ai2_hp - ability_data[3]
+                ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2))
                 self.garrote_dot(2, 2)
             if 3 in target_list:
-                ai3_hp = ai3_hp - ability_data[3]
+                ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3))
                 self.garrote_dot(3, 2)
             if 4 in target_list:
-                ai4_hp = ai4_hp - ability_data[3]
+                ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4))
                 self.garrote_dot(4, 2)
             if 5 in target_list:
-                ai5_hp = ai5_hp - ability_data[3]
+                ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5))
                 self.garrote_dot(5, 2)
         elif ability_data[0] == "Exploit Weakness":
             damage_multipler = 0
@@ -16390,65 +15834,65 @@ class GameFrame(tk.Frame):
                 if len(ai1_statuses) != 0:
                     for status_effect in ai1_statuses:
                         damage_multipler += 1
-                ai1_hp = ai1_hp - (ability_data[3] * (1 + (damage_multipler * 0.3)))
+                ai1_hp = ai1_hp - (math.ceil(ability_data[3] * self.check_brittle(1)) * (1 + (damage_multipler * 0.3)))
             if 2 in target_list:
                 for status_effect in ai2_statuses:
                     damage_multipler += 1
-                ai2_hp = ai2_hp - (ability_data[3] * (1 + (damage_multipler * 0.3)))
+                ai2_hp = ai2_hp - (math.ceil(ability_data[3] * self.check_brittle(2)) * (1 + (damage_multipler * 0.3)))
             if 3 in target_list:
                 for status_effect in ai3_statuses:
                     damage_multipler += 1
-                ai3_hp = ai3_hp - (ability_data[3] * (1 + (damage_multipler * 0.3)))
+                ai3_hp = ai3_hp - (math.ceil(ability_data[3] * self.check_brittle(3)) * (1 + (damage_multipler * 0.3)))
             if 4 in target_list:
                 for status_effect in ai4_statuses:
                     damage_multipler += 1
-                ai4_hp = ai4_hp - (ability_data[3] * (1 + (damage_multipler * 0.3)))
+                ai4_hp = ai4_hp - (math.ceil(ability_data[3] * self.check_brittle(4)) * (1 + (damage_multipler * 0.3)))
             if 5 in target_list:
                 for status_effect in ai5_statuses:
                     damage_multipler += 1
-                ai5_hp = ai5_hp - (ability_data[3] * (1 + (damage_multipler * 0.3)))
+                ai5_hp = ai5_hp - (math.ceil(ability_data[3] * self.check_brittle(5)) * (1 + (damage_multipler * 0.3)))
         elif ability_data[0] == "Spear Thrust":
             if 1 in target_list:
-                ai1_hp = ai1_hp - ability_data[3]
+                ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1)) * 1.4
             if 2 in target_list:
-                ai2_hp = ai2_hp - ability_data[3]
+                ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2)) * 1.4
             if 3 in target_list:
-                ai3_hp = ai3_hp - ability_data[3]
+                ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3)) * 1.4
             if 4 in target_list:
-                ai4_hp = ai4_hp - ability_data[3]
+                ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4)) * 1.4
             if 5 in target_list:
-                ai5_hp = ai5_hp - ability_data[3]
+                ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5)) * 1.4
         elif ability_data[0] == "Scrap Bomb":
             if AI_SPAWNED == 1:
-                ai1_hp = ai1_hp - ability_data[3]
+                ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1))
                 self.apply_weakness(1, 2)
-            if AI_SPAWNED == 3:
-                ai1_hp = ai1_hp - ability_data[3]
-                ai2_hp = ai2_hp - ability_data[3]
+            if AI_SPAWNED == 2:
+                ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1))
+                ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2))
                 self.apply_weakness(1, 2)
                 self.apply_weakness(2, 2)
             if AI_SPAWNED == 3:
-                ai1_hp = ai1_hp - ability_data[3]
-                ai2_hp = ai2_hp - ability_data[3]
-                ai3_hp = ai3_hp - ability_data[3]
+                ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1))
+                ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2))
+                ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3))
                 self.apply_weakness(1, 2)
                 self.apply_weakness(2, 2)
                 self.apply_weakness(3, 2)
             if AI_SPAWNED == 4:
-                ai1_hp = ai1_hp - ability_data[3]
-                ai2_hp = ai2_hp - ability_data[3]
-                ai3_hp = ai3_hp - ability_data[3]
-                ai4_hp = ai4_hp - ability_data[3]
+                ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1))
+                ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2))
+                ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3))
+                ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4))
                 self.apply_weakness(1, 2)
                 self.apply_weakness(2, 2)
                 self.apply_weakness(3, 2)
                 self.apply_weakness(4, 2)
             if AI_SPAWNED == 5:
-                ai1_hp = ai1_hp - ability_data[3]
-                ai2_hp = ai2_hp - ability_data[3]
-                ai3_hp = ai3_hp - ability_data[3]
-                ai4_hp = ai4_hp - ability_data[3]
-                ai5_hp = ai5_hp - ability_data[3]
+                ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1))
+                ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2))
+                ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3))
+                ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4))
+                ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5))
                 self.apply_weakness(1, 2)
                 self.apply_weakness(2, 2)
                 self.apply_weakness(3, 2)
@@ -16457,65 +15901,65 @@ class GameFrame(tk.Frame):
         elif ability_data[0] == "Tactical Punch":
             if 1 in target_list:
                 if ai1_hp > AI_GROUP_HP * 0.66:
-                    ai1_hp = ai1_hp - ability_data[3]
+                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1))
                     self.apply_weakness(1, 1)
                 elif ai1_hp < AI_GROUP_HP * 0.66:
                     if ai1_hp > AI_GROUP_HP * 0.33:
-                        ai1_hp = ai1_hp - ability_data[3]
+                        ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1))
                         self.apply_brittle(1, 1)
                     elif ai1_hp < AI_GROUP_HP * 0.33:
-                        ai1_hp = ai1_hp - ability_data[3] * 1.5
+                        ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1)) * 1.5
             if 2 in target_list:
                 if ai2_hp > AI_GROUP_HP * 0.66:
-                    ai2_hp = ai2_hp - ability_data[3]
+                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2))
                     self.apply_weakness(2, 1)
                 elif ai2_hp < AI_GROUP_HP * 0.66:
                     if ai2_hp > AI_GROUP_HP * 0.33:
-                        ai2hp = ai2_hp - ability_data[3]
+                        ai2hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2))
                         self.apply_brittle(2, 1)
                     elif ai2_hp < AI_GROUP_HP * 0.33:
-                        ai2_hp = ai2_hp - ability_data[3] * 1.5
+                        ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2)) * 1.5
             if 3 in target_list:
                 if ai3_hp > AI_GROUP_HP * 0.66:
-                    ai3_hp = ai3_hp - ability_data[3]
+                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3))
                     self.apply_weakness(3, 1)
                 elif ai3_hp < AI_GROUP_HP * 0.66:
                     if ai3_hp > AI_GROUP_HP * 0.33:
-                        ai3hp = ai3_hp - ability_data[3]
+                        ai3hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3))
                         self.apply_brittle(3, 1)
                     elif ai3_hp < AI_GROUP_HP * 0.33:
-                        ai3_hp = ai3_hp - ability_data[3] * 1.5
+                        ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3)) * 1.5
             if 4 in target_list:
                 if ai4_hp > AI_GROUP_HP * 0.66:
-                    ai4_hp = ai4_hp - ability_data[3]
+                    ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4))
                     self.apply_weakness(4, 1)
                 elif ai4_hp < AI_GROUP_HP * 0.66:
                         if ai4_hp > AI_GROUP_HP * 0.33:
-                            ai4hp = ai4_hp - ability_data[3]
+                            ai4hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4))
                             self.apply_brittle(4, 1)
                         elif ai4_hp < AI_GROUP_HP * 0.33:
-                            ai4_hp = ai4_hp - ability_data[3] * 1.5
+                            ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4)) * 1.5
             if 5 in target_list:
                 if ai5_hp > AI_GROUP_HP * 0.66:
-                    ai5_hp = ai5_hp - ability_data[3]
+                    ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5))
                     self.apply_weakness(5, 1)
                 elif ai5_hp < AI_GROUP_HP * 0.66:
                     if ai5_hp > AI_GROUP_HP * 0.33:
-                        ai5hp = ai5_hp - ability_data[3]
+                        ai5hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5))
                         self.apply_brittle(5, 1)
                     elif ai5_hp < AI_GROUP_HP * 0.33:
-                        ai5_hp = ai5_hp - ability_data[3] * 1.5
+                        ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5)) * 1.5
         elif ability_data[0] == "Uppercut":
             if 1 in target_list:
-                ai1_hp = ai1_hp - ability_data[3] * 1.5
+                ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1)) * 1.8
             if 2 in target_list:
-                ai2_hp = ai2_hp - ability_data[3] * 1.5
+                ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2)) * 1.8
             if 3 in target_list:
-                ai3_hp = ai3_hp - ability_data[3] * 1.5
+                ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3)) * 1.8
             if 4 in target_list:
-                ai4_hp = ai4_hp - ability_data[3] * 1.5
+                ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4)) * 1.8
             if 5 in target_list:
-                ai5_hp = ai5_hp - ability_data[3] * 1.5
+                ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5)) * 1.8
         elif ability_data[0] == "Rushdown":
             ai_list = []
             attacks = ["Tactical Punch", "Uppercut"]
@@ -16564,99 +16008,99 @@ class GameFrame(tk.Frame):
                 if ai_list[0] == 1:
                     if attacks[0] == "Tactical Punch":
                         if ai1_hp > AI_GROUP_HP * 0.66:
-                            ai1_hp = ai1_hp - ability_data[3]
+                            ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1))
                             self.apply_weakness(1, 1)
                         elif ai1_hp < AI_GROUP_HP * 0.66:
                             if ai1_hp > AI_GROUP_HP * 0.33:
-                                ai1_hp = ai1_hp - ability_data[3]
+                                ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1))
                                 self.apply_brittle(1, 1)
                             elif ai1_hp < AI_GROUP_HP * 0.33:
-                                ai1_hp = ai1_hp - ability_data[3] * 1.5
+                                ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1)) * 1.5
                     if attacks[0] == "Uppercut":
-                        ai1_hp = ai1_hp - ability_data[3] * 1.5
+                        ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1)) * 1.8
                 if ai_list[0] == 2:
                     if attacks[0] == "Tactical Punch":
                         if ai2_hp > AI_GROUP_HP * 0.66:
-                            ai2_hp = ai2_hp - ability_data[3]
+                            ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2))
                             self.apply_weakness(2, 1)
                         elif ai2_hp < AI_GROUP_HP * 0.66:
                             if ai2_hp > AI_GROUP_HP * 0.33:
-                                ai2_hp = ai2_hp - ability_data[3]
+                                ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2))
                                 self.apply_brittle(2, 1)
                             elif ai2_hp < AI_GROUP_HP * 0.33:
-                                ai2_hp = ai2_hp - ability_data[3] * 1.5
+                                ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2)) * 1.5
                     if attacks[0] == "Uppercut":
-                        ai2_hp = ai2_hp - ability_data[3] * 1.5
+                        ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2)) * 1.8
                 if ai_list[0] == 3:
                     if attacks[0] == "Tactical Punch":
                         if ai3_hp > AI_GROUP_HP * 0.66:
-                            ai3_hp = ai3_hp - ability_data[3]
+                            ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3))
                             self.apply_weakness(3, 1)
                         elif ai3_hp < AI_GROUP_HP * 0.66:
                             if ai3_hp > AI_GROUP_HP * 0.33:
-                                ai3_hp = ai3_hp - ability_data[3]
+                                ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3))
                                 self.apply_brittle(3, 1)
                             elif ai3_hp < AI_GROUP_HP * 0.33:
-                                ai3_hp = ai3_hp - ability_data[3] * 1.5
+                                ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3)) * 1.5
                     if attacks[0] == "Uppercut":
-                        ai3_hp = ai3_hp - ability_data[3] * 1.5
+                        ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3)) * 1.8
                 if ai_list[0] == 4:
                     if attacks[0] == "Tactical Punch":
                         if ai4_hp > AI_GROUP_HP * 0.66:
-                            ai4_hp = ai4_hp - ability_data[3]
+                            ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4))
                             self.apply_weakness(4, 1)
                         elif ai4_hp < AI_GROUP_HP * 0.66:
                             if ai4_hp > AI_GROUP_HP * 0.33:
-                                ai4_hp = ai4_hp - ability_data[3]
+                                ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4))
                                 self.apply_brittle(4, 1)
                             elif ai4_hp < AI_GROUP_HP * 0.33:
-                                ai4_hp = ai4_hp - ability_data[3] * 1.5
+                                ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4)) * 1.5
                     if attacks[0] == "Uppercut":
-                        ai4_hp = ai4_hp - ability_data[3] * 1.5
+                        ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4)) * 1.8
                 if ai_list[0] == 5:
                     if attacks[0] == "Tactical Punch":
                         if ai5_hp > AI_GROUP_HP * 0.66:
-                            ai5_hp = ai5_hp - ability_data[3]
+                            ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5))
                             self.apply_weakness(5, 1)
                         elif ai5_hp < AI_GROUP_HP * 0.66:
                             if ai5_hp > AI_GROUP_HP * 0.33:
-                                ai5_hp = ai5_hp - ability_data[3]
+                                ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5))
                                 self.apply_brittle(5, 1)
                             elif ai5_hp < AI_GROUP_HP * 0.33:
-                                ai5_hp = ai5_hp - ability_data[3] * 1.5
+                                ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5)) * 1.5
                     if attacks[0] == "Uppercut":
-                        ai5_hp = ai5_hp - ability_data[3] * 1.5
+                        ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5)) * 1.8
         elif ability_data[0] == "Frost Bolt":
             if 1 in target_list:
-                ai1_hp = ai1_hp - ability_data[3]
+                ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1))
                 self.apply_brittle(1, 2)
             if 2 in target_list:
-                ai2_hp = ai2_hp - ability_data[3]
+                ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2))
                 self.apply_brittle(2, 2)
             if 3 in target_list:
-                ai3_hp = ai3_hp - ability_data[3]
+                ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3))
                 self.apply_brittle(3, 2)
             if 4 in target_list:
-                ai4_hp = ai4_hp - ability_data[3]
+                ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4))
                 self.apply_brittle(4, 2)
             if 5 in target_list:
-                ai5_hp = ai5_hp - ability_data[3]
+                ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5))
                 self.apply_brittle(5, 2)
         elif ability_data[0] == "Fireball":
             if 1 in target_list:
-                ai1_hp = ai1_hp - ability_data[3]
+                ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1))
                 self.apply_burn(1, 2)
             if 2 in target_list:
-                ai2_hp = ai2_hp - ability_data[3]
+                ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2))
                 self.apply_burn(2, 2)
             if 3 in target_list:
-                ai3_hp = ai3_hp - ability_data[3]
+                ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3))
                 self.apply_burn(3, 2)
             if 4 in target_list:
-                ai4_hp = ai4_hp - ability_data[3]
+                ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4))
                 self.apply_burn(4, 2)
             if 5 in target_list:
-                ai5_hp = ai5_hp - ability_data[3]
+                ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5))
                 self.apply_burn(5, 2)
         elif ability_data[0] == "Arcane Brilliance":
             ai_list = []
@@ -16705,61 +16149,61 @@ class GameFrame(tk.Frame):
                 random.shuffle(attacks)
                 if ai_list[0] == 1:
                     if attacks[0] == "Frost Bolt":
-                        ai1_hp = ai1_hp - ability_data[3]
+                        ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1))
                         self.apply_brittle(1, 2)
                     if attacks[0] == "Fireball":
                         self.apply_burn(1, 2)
-                        ai1_hp = ai1_hp - ability_data[3]
+                        ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1))
                 if ai_list[0] == 2:
                     if attacks[0] == "Frost Bolt":
-                        ai2_hp = ai2_hp - ability_data[3]
+                        ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2))
                         self.apply_brittle(2, 2)
                     if attacks[0] == "Fireball":
-                        ai2_hp = ai2_hp - ability_data[3]
+                        ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2))
                         self.apply_burn(2, 2)
                 if ai_list[0] == 3:
                     if attacks[0] == "Frost Bolt":
-                        ai3_hp = ai3_hp - ability_data[3]
+                        ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3))
                         self.apply_brittle(3, 2)
                         if attacks[0] == "Fireball":
-                            ai3_hp = ai3_hp - ability_data[3]
+                            ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3))
                             self.apply_burn(3, 2)
                 if ai_list[0] == 4:
                     if attacks[0] == "Frost Bolt":
-                        ai4_hp = ai4_hp - ability_data[3]
+                        ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4))
                         self.apply_brittle(4, 2)
                         if attacks[0] == "Fireball":
-                            ai4_hp = ai4_hp - ability_data[3]
+                            ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4))
                             self.apply_burn(4, 2)
                 if ai_list[0] == 5:
                     if attacks[0] == "Frost Bolt":
-                        ai5_hp = ai5_hp - ability_data[3]
+                        ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5))
                         self.apply_brittle(5, 2)
                         if attacks[0] == "Fireball":
-                            ai5_hp = ai5_hp - ability_data[3]
+                            ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5))
                             self.apply_burn(5, 2)
         elif ability_data[0] == "Venus-fly Snap":
             if 1 in target_list:
-                ai1_hp = ai1_hp - ability_data[3]
+                ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1)) * 1.3
             if 2 in target_list:
-                ai2_hp = ai2_hp - ability_data[3]
+                ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2)) * 1.3
             if 3 in target_list:
-                ai3_hp = ai3_hp - ability_data[3]
+                ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3)) * 1.3
             if 4 in target_list:
-                ai4_hp = ai4_hp - ability_data[3]
+                ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4)) * 1.3
             if 5 in target_list:
-                ai5_hp = ai5_hp - ability_data[3]
+                ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5)) * 1.3
         elif ability_data[0] == "Vine-Swipe":
             if 1 in target_list:
-                ai1_hp = ai1_hp - ability_data[3]
+                ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1))
             if 2 in target_list:
-                ai2_hp = ai2_hp - ability_data[3]
+                ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2))
             if 3 in target_list:
-                ai3_hp = ai3_hp - ability_data[3]
+                ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3))
             if 4 in target_list:
-                ai4_hp = ai4_hp - ability_data[3]
+                ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4))
             if 5 in target_list:
-                ai5_hp = ai5_hp - ability_data[3]
+                ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5))
         elif ability_data[0] == "Prickle Arena":
             if AI_SPAWNED == 1:
                 self.apply_pricked(1)
@@ -16784,20 +16228,16 @@ class GameFrame(tk.Frame):
         elif ability_data[0] == "Black Bolt":
             global void_infusion_stacks
             if 1 in target_list:
-                ai1_hp = ai1_hp - (ability_data[3] + (ability_data[3] * (1 + (void_infusion_stacks * 0.2))))
-                void_infusion_stacks = 0
+                ai1_hp = ai1_hp - (math.ceil(ability_data[3] * self.check_brittle(1)) + (math.ceil(ability_data[3] * self.check_brittle(1)) * (1 + (void_infusion_stacks * 0.2))))
             if 2 in target_list:
-                ai2_hp = ai2_hp - (ability_data[3] + (ability_data[3] * (1 + (void_infusion_stacks * 0.2))))
-                void_infusion_stacks = 0
+                ai2_hp = ai2_hp - (math.ceil(ability_data[3] * self.check_brittle(2)) + (math.ceil(ability_data[3] * self.check_brittle(2)) * (1 + (void_infusion_stacks * 0.2))))
             if 3 in target_list:
-                ai3_hp = ai3_hp - (ability_data[3] + (ability_data[3] * (1 + (void_infusion_stacks * 0.2))))
-                void_infusion_stacks = 0
+                ai3_hp = ai3_hp - (math.ceil(ability_data[3] * self.check_brittle(3)) + (math.ceil(ability_data[3] * self.check_brittle(3)) * (1 + (void_infusion_stacks * 0.2))))
             if 4 in target_list:
-                ai4_hp = ai4_hp - (ability_data[3] + (ability_data[3] * (1 + (void_infusion_stacks * 0.2))))
-                void_infusion_stacks = 0
+                ai4_hp = ai4_hp - (math.ceil(ability_data[3] * self.check_brittle(4)) + (math.ceil(ability_data[3] * self.check_brittle(4)) * (1 + (void_infusion_stacks * 0.2))))
             if 5 in target_list:
-                ai5_hp = ai5_hp - (ability_data[3] + (ability_data[3] * (1 + (void_infusion_stacks * 0.2))))
-                void_infusion_stacks = 0
+                ai5_hp = ai5_hp - (math.ceil(ability_data[3] * self.check_brittle(5)) + (math.ceil(ability_data[3] * self.check_brittle(5)) * (1 + (void_infusion_stacks * 0.2))))
+            void_infusion_stacks = 0
         elif ability_data[0] == "Wound Fissure":
             global ai1_burnDot, ai2_burnDot, ai3_burnDot, ai4_burnDot, ai5_burnDot, \
                 ai1_SerraSlashDot, ai2_SerraSlashDot, ai3_SerraSlashDot, ai4_SerraSlashDot, ai5_SerraSlashDot, \
@@ -17011,142 +16451,142 @@ class GameFrame(tk.Frame):
                     counter = 0
         elif ability_data[0] == "Drain Life":
             if 1 in target_list:
-                ai1_hp = ai1_hp - ability_data[3]
+                ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1))
                 for champions in CHAMPION_LIST:
                     counter += 1
                     if champions == BLOODMANCER.title:
                         if counter == 1:
-                            champion1_hp = champion1_hp + math.ceil(ability_data[3] * 1.5)
+                            champion1_hp = champion1_hp + math.ceil(math.ceil(ability_data[3] * self.check_brittle(1)) * 1.5)
                             if champion1_hp > CHAMPION_1_HP:
                                  champion1_hp = CHAMPION_1_HP
                         elif counter == 2:
-                            champion2_hp = champion2_hp + math.ceil(ability_data[3] * 1.5)
+                            champion2_hp = champion2_hp + math.ceil(math.ceil(ability_data[3] * self.check_brittle(1)) * 1.5)
                             if champion2_hp > CHAMPION_2_HP:
                                  champion2_hp = CHAMPION_2_HP
                         elif counter == 3:
-                            champion3_hp = champion3_hp + math.ceil(ability_data[3] * 1.5)
+                            champion3_hp = champion3_hp + math.ceil(math.ceil(ability_data[3] * self.check_brittle(1)) * 1.5)
                             if champion3_hp > CHAMPION_3_HP:
                                  champion3_hp = CHAMPION_3_HP
                         elif counter == 4:
-                            champion4_hp = champion4_hp + math.ceil(ability_data[3] * 1.5)
+                            champion4_hp = champion4_hp + math.ceil(math.ceil(ability_data[3] * self.check_brittle(1)) * 1.5)
                             if champion4_hp > CHAMPION_4_HP:
                                  champion4_hp = CHAMPION_4_HP
                         elif counter == 5:
-                            champion5_hp = champion5_hp + math.ceil(ability_data[3] * 1.5)
+                            champion5_hp = champion5_hp + math.ceil(math.ceil(ability_data[3] * self.check_brittle(1)) * 1.5)
                             if champion5_hp > CHAMPION_5_HP:
                                 champion5_hp = CHAMPION_5_HP
             if 2 in target_list:
-                ai2_hp = ai2_hp - ability_data[3]
+                ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2))
                 for champions in CHAMPION_LIST:
                     counter += 1
                     if champions == BLOODMANCER.title:
                         if counter == 1:
-                            champion1_hp = champion1_hp + math.ceil(ability_data[3] * 1.5)
+                            champion1_hp = champion1_hp + math.ceil(math.ceil(ability_data[3] * self.check_brittle(2)) * 1.5)
                             if champion1_hp > CHAMPION_1_HP:
                                 champion1_hp = CHAMPION_1_HP
                         elif counter == 2:
-                            champion2_hp = champion2_hp + math.ceil(ability_data[3] * 1.5)
+                            champion2_hp = champion2_hp + math.ceil(math.ceil(ability_data[3] * self.check_brittle(2)) * 1.5)
                             if champion2_hp > CHAMPION_2_HP:
                                 champion2_hp = CHAMPION_2_HP
                         elif counter == 3:
-                            champion3_hp = champion3_hp + math.ceil(ability_data[3] * 1.5)
+                            champion3_hp = champion3_hp + math.ceil(math.ceil(ability_data[3] * self.check_brittle(2)) * 1.5)
                             if champion3_hp > CHAMPION_3_HP:
                                 champion3_hp = CHAMPION_3_HP
                         elif counter == 4:
-                            champion4_hp = champion4_hp + math.ceil(ability_data[3] * 1.5)
+                            champion4_hp = champion4_hp + math.ceil(math.ceil(ability_data[3] * self.check_brittle(2)) * 1.5)
                             if champion4_hp > CHAMPION_4_HP:
                                 champion4_hp = CHAMPION_4_HP
                         elif counter == 5:
-                            champion5_hp = champion5_hp + math.ceil(ability_data[3] * 1.5)
+                            champion5_hp = champion5_hp + math.ceil(math.ceil(ability_data[3] * self.check_brittle(2)) * 1.5)
                             if champion5_hp > CHAMPION_5_HP:
                                 champion5_hp = CHAMPION_5_HP
             if 3 in target_list:
-                ai3_hp = ai3_hp - ability_data[3]
+                ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3))
                 for champions in CHAMPION_LIST:
                     counter += 1
                     if champions == BLOODMANCER.title:
                         if counter == 1:
-                            champion1_hp = champion1_hp + math.ceil(ability_data[3] * 1.5)
+                            champion1_hp = champion1_hp + math.ceil(math.ceil(ability_data[3] * self.check_brittle(3)) * 1.5)
                             if champion1_hp > CHAMPION_1_HP:
                                 champion1_hp = CHAMPION_1_HP
                         elif counter == 2:
-                            champion2_hp = champion2_hp + math.ceil(ability_data[3] * 1.5)
+                            champion2_hp = champion2_hp + math.ceil(math.ceil(ability_data[3] * self.check_brittle(3)) * 1.5)
                             if champion2_hp > CHAMPION_2_HP:
                                 champion2_hp = CHAMPION_2_HP
                         elif counter == 3:
-                            champion3_hp = champion3_hp + math.ceil(ability_data[3] * 1.5)
+                            champion3_hp = champion3_hp + math.ceil(math.ceil(ability_data[3] * self.check_brittle(3)) * 1.5)
                             if champion3_hp > CHAMPION_3_HP:
                                 champion3_hp = CHAMPION_3_HP
                         elif counter == 4:
-                            champion4_hp = champion4_hp + math.ceil(ability_data[3] * 1.5)
+                            champion4_hp = champion4_hp + math.ceil(math.ceil(ability_data[3] * self.check_brittle(3)) * 1.5)
                             if champion4_hp > CHAMPION_4_HP:
                                 champion4_hp = CHAMPION_4_HP
                         elif counter == 5:
-                            champion5_hp = champion5_hp + math.ceil(ability_data[3] * 1.5)
+                            champion5_hp = champion5_hp + math.ceil(math.ceil(ability_data[3] * self.check_brittle(3)) * 1.5)
                             if champion5_hp > CHAMPION_5_HP:
                                 champion5_hp = CHAMPION_5_HP
             if 4 in target_list:
-                ai4_hp = ai4_hp - ability_data[3]
+                ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4))
                 for champions in CHAMPION_LIST:
                     counter += 1
                     if champions == BLOODMANCER.title:
                         if counter == 1:
-                            champion1_hp = champion1_hp + math.ceil(ability_data[3] * 1.5)
+                            champion1_hp = champion1_hp + math.ceil(math.ceil(ability_data[3] * self.check_brittle(4)) * 1.5)
                             if champion1_hp > CHAMPION_1_HP:
                                 champion1_hp = CHAMPION_1_HP
                         elif counter == 2:
-                            champion2_hp = champion2_hp + math.ceil(ability_data[3] * 1.5)
+                            champion2_hp = champion2_hp + math.ceil(math.ceil(ability_data[3] * self.check_brittle(4)) * 1.5)
                             if champion2_hp > CHAMPION_2_HP:
                                 champion2_hp = CHAMPION_2_HP
                         elif counter == 3:
-                            champion3_hp = champion3_hp + math.ceil(ability_data[3] * 1.5)
+                            champion3_hp = champion3_hp + math.ceil(math.ceil(ability_data[3] * self.check_brittle(4)) * 1.5)
                             if champion3_hp > CHAMPION_3_HP:
                                 champion3_hp = CHAMPION_3_HP
                         elif counter == 4:
-                            champion4_hp = champion4_hp + math.ceil(ability_data[3] * 1.5)
+                            champion4_hp = champion4_hp + math.ceil(math.ceil(ability_data[3] * self.check_brittle(4)) * 1.5)
                             if champion4_hp > CHAMPION_4_HP:
                                 champion4_hp = CHAMPION_4_HP
                         elif counter == 5:
-                            champion5_hp = champion5_hp + math.ceil(ability_data[3] * 1.5)
+                            champion5_hp = champion5_hp + math.ceil(math.ceil(ability_data[3] * self.check_brittle(4)) * 1.5)
                             if champion5_hp > CHAMPION_5_HP:
                                 champion5_hp = CHAMPION_5_HP
             if 5 in target_list:
-                ai5_hp = ai5_hp - ability_data[3]
+                ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5))
                 for champions in CHAMPION_LIST:
                     counter += 1
                     if champions == BLOODMANCER.title:
                         if counter == 1:
-                            champion1_hp = champion1_hp + math.ceil(ability_data[3] * 1.5)
+                            champion1_hp = champion1_hp + math.ceil(math.ceil(ability_data[3] * self.check_brittle(5)) * 1.5)
                             if champion1_hp > CHAMPION_1_HP:
                                 champion1_hp = CHAMPION_1_HP
                         elif counter == 2:
-                            champion2_hp = champion2_hp + math.ceil(ability_data[3] * 1.5)
+                            champion2_hp = champion2_hp + math.ceil(math.ceil(ability_data[3] * self.check_brittle(5)) * 1.5)
                             if champion2_hp > CHAMPION_2_HP:
                                 champion2_hp = CHAMPION_2_HP
                         elif counter == 3:
-                            champion3_hp = champion3_hp + math.ceil(ability_data[3] * 1.5)
+                            champion3_hp = champion3_hp + math.ceil(math.ceil(ability_data[3] * self.check_brittle(5)) * 1.5)
                             if champion3_hp > CHAMPION_3_HP:
                                 champion3_hp = CHAMPION_3_HP
                         elif counter == 4:
-                            champion4_hp = champion4_hp + math.ceil(ability_data[3] * 1.5)
+                            champion4_hp = champion4_hp + math.ceil(math.ceil(ability_data[3] * self.check_brittle(5)) * 1.5)
                             if champion4_hp > CHAMPION_4_HP:
                                 champion4_hp = CHAMPION_4_HP
                         elif counter == 5:
-                            champion5_hp = champion5_hp + math.ceil(ability_data[3] * 1.5)
+                            champion5_hp = champion5_hp + math.ceil(math.ceil(ability_data[3] * self.check_brittle(5)) * 1.5)
                             if champion5_hp > CHAMPION_5_HP:
                                 champion5_hp = CHAMPION_5_HP
         elif ability_data[0] == "Blood Spike":
             global blood_boil_buff
             if 1 in target_list:
-                ai1_hp = ai1_hp - (ability_data[3] + (blood_boil_buff * ability_data[3]))
+                ai1_hp = ai1_hp - (math.ceil(ability_data[3] * self.check_brittle(1)) + (blood_boil_buff * math.ceil(ability_data[3] * self.check_brittle(1))))
             if 2 in target_list:
-                ai2_hp = ai2_hp - (ability_data[3] + (blood_boil_buff * ability_data[3]))
+                ai2_hp = ai2_hp - (math.ceil(ability_data[3] * self.check_brittle(2)) + (blood_boil_buff * math.ceil(ability_data[3] * self.check_brittle(2))))
             if 3 in target_list:
-                ai3_hp = ai3_hp - (ability_data[3] + (blood_boil_buff * ability_data[3]))
+                ai3_hp = ai3_hp - (math.ceil(ability_data[3] * self.check_brittle(3)) + (blood_boil_buff * math.ceil(ability_data[3] * self.check_brittle(3))))
             if 4 in target_list:
-                ai4_hp = ai4_hp - (ability_data[3] + (blood_boil_buff * ability_data[3]))
+                ai4_hp = ai4_hp - (math.ceil(ability_data[3] * self.check_brittle(4)) + (blood_boil_buff * math.ceil(ability_data[3] * self.check_brittle(4))))
             if 5 in target_list:
-                ai5_hp = ai5_hp - (ability_data[3] + (blood_boil_buff * ability_data[3]))
+                ai5_hp = ai5_hp - (math.ceil(ability_data[3] * self.check_brittle(5)) + (blood_boil_buff * math.ceil(ability_data[3] * self.check_brittle(5))))
             for champions in CHAMPION_LIST:
                 counter += 1
                 if champions == BLOODMANCER.title:
@@ -17173,129 +16613,129 @@ class GameFrame(tk.Frame):
             blood_boil_buff = 0
         elif ability_data[0] == "Overhand Justice":
             if 1 in target_list:
-                ai1_hp = ai1_hp - ability_data[3]
+                ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1)) * 1.3
             if 2 in target_list:
-                ai2_hp = ai2_hp - ability_data[3]
+                ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2)) * 1.3
             if 3 in target_list:
-                ai3_hp = ai3_hp - ability_data[3]
+                ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3)) * 1.3
             if 4 in target_list:
-                ai4_hp = ai4_hp - ability_data[3]
+                ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4)) * 1.3
             if 5 in target_list:
-                ai5_hp = ai5_hp - ability_data[3]
+                ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5)) * 1.3
         elif ability_data[0] == "Righteous Blow":
             if 1 in target_list:
-                ai1_hp = ai1_hp - ability_data[3]
+                ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1))
                 self.apply_stun(1, 2)
             if 2 in target_list:
-                ai2_hp = ai2_hp - ability_data[3]
+                ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2))
                 self.apply_stun(2, 2)
             if 3 in target_list:
-                ai3_hp = ai3_hp - ability_data[3]
+                ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3))
                 self.apply_stun(3, 2)
             if 4 in target_list:
-                ai4_hp = ai4_hp - ability_data[3]
+                ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4))
                 self.apply_stun(4, 2)
             if 5 in target_list:
-                ai5_hp = ai5_hp - ability_data[3]
+                ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5))
                 self.apply_stun(5, 2)
         elif ability_data[0] == "Steady Shot":
             if current_arrow_type == "Iron-cast":
                 if 1 in target_list:
-                    ai1_hp = ai1_hp - ability_data[3]
+                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1))
                 if 2 in target_list:
-                    ai2_hp = ai2_hp - ability_data[3]
+                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2))
                 if 3 in target_list:
-                    ai3_hp = ai3_hp - ability_data[3]
+                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3))
                 if 4 in target_list:
-                    ai4_hp = ai4_hp - ability_data[3]
+                    ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4))
                 if 5 in target_list:
-                    ai5_hp = ai5_hp - ability_data[3]
+                    ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5))
             if current_arrow_type == "Tracker-tipped":
                 if AI_SPAWNED == 1:
-                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * 0.65)
+                    ai1_hp = ai1_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(1)) * 0.65)
                 if AI_SPAWNED == 3:
-                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * 0.65)
-                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * 0.65)
+                    ai1_hp = ai1_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(1)) * 0.65)
+                    ai2_hp = ai2_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(2)) * 0.65)
                 if AI_SPAWNED == 3:
-                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * 0.65)
-                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * 0.65)
-                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * 0.65)
+                    ai1_hp = ai1_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(1)) * 0.65)
+                    ai2_hp = ai2_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(2)) * 0.65)
+                    ai3_hp = ai3_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(3)) * 0.65)
                 if AI_SPAWNED == 4:
-                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * 0.65)
-                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * 0.65)
-                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * 0.65)
-                    ai4_hp = ai4_hp - math.ceil(ability_data[3] * 0.65)
+                    ai1_hp = ai1_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(1)) * 0.65)
+                    ai2_hp = ai2_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(2)) * 0.65)
+                    ai3_hp = ai3_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(3)) * 0.65)
+                    ai4_hp = ai4_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(4)) * 0.65)
                 if AI_SPAWNED == 5:
-                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * 0.65)
-                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * 0.65)
-                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * 0.65)
-                    ai4_hp = ai4_hp - math.ceil(ability_data[3] * 0.65)
-                    ai5_hp = ai5_hp - math.ceil(ability_data[3] * 0.65)
+                    ai1_hp = ai1_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(1)) * 0.65)
+                    ai2_hp = ai2_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(2)) * 0.65)
+                    ai3_hp = ai3_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(3)) * 0.65)
+                    ai4_hp = ai4_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(4)) * 0.65)
+                    ai5_hp = ai5_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(5)) * 0.65)
         elif ability_data[0] == "Power Opt":
             if current_arrow_type == "Iron-cast":
                 if 1 in target_list:
-                    ai1_hp = ai1_hp - ability_data[3] * 2
+                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1)) * 2
                 if 2 in target_list:
-                    ai2_hp = ai2_hp - ability_data[3] * 2
+                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2)) * 2
                 if 3 in target_list:
-                    ai3_hp = ai3_hp - ability_data[3] * 2
+                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3)) * 2
                 if 4 in target_list:
-                    ai4_hp = ai4_hp - ability_data[3] * 2
+                    ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4)) * 2
                 if 5 in target_list:
-                    ai5_hp = ai5_hp - ability_data[3] * 2
+                    ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5)) * 2
             if current_arrow_type == "Tracker-tipped":
                 if AI_SPAWNED == 1:
-                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * 1.25)
+                    ai1_hp = ai1_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(1)) * 1.25)
                 if AI_SPAWNED == 3:
-                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * 1.25)
-                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * 1.25)
+                    ai1_hp = ai1_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(1)) * 1.25)
+                    ai2_hp = ai2_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(2)) * 1.25)
                 if AI_SPAWNED == 3:
-                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * 1.25)
-                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * 1.25)
-                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * 1.25)
+                    ai1_hp = ai1_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(1)) * 1.25)
+                    ai2_hp = ai2_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(2)) * 1.25)
+                    ai3_hp = ai3_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(3)) * 1.25)
                 if AI_SPAWNED == 4:
-                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * 1.25)
-                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * 1.25)
-                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * 1.25)
-                    ai4_hp = ai4_hp - math.ceil(ability_data[3] * 1.25)
+                    ai1_hp = ai1_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(1)) * 1.25)
+                    ai2_hp = ai2_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(2)) * 1.25)
+                    ai3_hp = ai3_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(3)) * 1.25)
+                    ai4_hp = ai4_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(4)) * 1.25)
                 if AI_SPAWNED == 5:
-                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * 1.25)
-                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * 1.25)
-                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * 1.25)
-                    ai4_hp = ai4_hp - math.ceil(ability_data[3] * 1.25)
-                    ai5_hp = ai5_hp - math.ceil(ability_data[3] * 1.25)
+                    ai1_hp = ai1_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(1)) * 1.25)
+                    ai2_hp = ai2_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(2)) * 1.25)
+                    ai3_hp = ai3_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(3)) * 1.25)
+                    ai4_hp = ai4_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(4)) * 1.25)
+                    ai5_hp = ai5_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(5)) * 1.25)
         elif ability_data[0] == "Lightning Bolt":
             if 1 in target_list:
-                ai1_hp = ai1_hp - ability_data[3]
+                ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1)) * 1.2
             if 2 in target_list:
-                ai2_hp = ai2_hp - ability_data[3]
+                ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2)) * 1.2
             if 3 in target_list:
-                ai3_hp = ai3_hp - ability_data[3]
+                ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3)) * 1.2
             if 4 in target_list:
-                ai4_hp = ai4_hp - ability_data[3]
+                ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4)) * 1.2
             if 5 in target_list:
-                ai5_hp = ai5_hp - ability_data[3]
+                ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5)) * 1.2
         elif ability_data[0] == "Chain Lightning":
             if AI_SPAWNED == 1:
-                ai1_hp = ai1_hp - math.ceil(ability_data[3] * 0.75)
+                ai1_hp = ai1_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(1)) * 0.75)
             if AI_SPAWNED == 3:
-                ai1_hp = ai1_hp - math.ceil(ability_data[3] * 0.75)
-                ai2_hp = ai2_hp - math.ceil(ability_data[3] * 0.75)
+                ai1_hp = ai1_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(1)) * 0.75)
+                ai2_hp = ai2_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(2)) * 0.75)
             if AI_SPAWNED == 3:
-                ai1_hp = ai1_hp - math.ceil(ability_data[3] * 0.75)
-                ai2_hp = ai2_hp - math.ceil(ability_data[3] * 0.75)
-                ai3_hp = ai3_hp - math.ceil(ability_data[3] * 0.75)
+                ai1_hp = ai1_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(1)) * 0.75)
+                ai2_hp = ai2_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(2)) * 0.75)
+                ai3_hp = ai3_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(3)) * 0.75)
             if AI_SPAWNED == 4:
-                ai1_hp = ai1_hp - math.ceil(ability_data[3] * 0.75)
-                ai2_hp = ai2_hp - math.ceil(ability_data[3] * 0.75)
-                ai3_hp = ai3_hp - math.ceil(ability_data[3] * 0.75)
-                ai4_hp = ai4_hp - math.ceil(ability_data[3] * 0.75)
+                ai1_hp = ai1_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(1)) * 0.75)
+                ai2_hp = ai2_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(2)) * 0.75)
+                ai3_hp = ai3_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(3)) * 0.75)
+                ai4_hp = ai4_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(4)) * 0.75)
             if AI_SPAWNED == 5:
-                ai1_hp = ai1_hp - math.ceil(ability_data[3] * 0.75)
-                ai2_hp = ai2_hp - math.ceil(ability_data[3] * 0.75)
-                ai3_hp = ai3_hp - math.ceil(ability_data[3] * 0.75)
-                ai4_hp = ai4_hp - math.ceil(ability_data[3] * 0.75)
-                ai5_hp = ai5_hp - math.ceil(ability_data[3] * 0.75)
+                ai1_hp = ai1_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(1)) * 0.75)
+                ai2_hp = ai2_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(2)) * 0.75)
+                ai3_hp = ai3_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(3)) * 0.75)
+                ai4_hp = ai4_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(4)) * 0.75)
+                ai5_hp = ai5_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(5)) * 0.75)
         elif ability_data[0] == "Crashing Boom":
             if AI_SPAWNED == 1:
                 self.apply_stun(1, 1)
@@ -17319,35 +16759,35 @@ class GameFrame(tk.Frame):
                 self.apply_stun(5, 1)
         elif ability_data[0] == "Power Surge":
             if AI_SPAWNED == 1:
-                ai1_hp = ai1_hp - math.ceil(ability_data[3])
+                ai1_hp = ai1_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(1))) * 1.4
                 self.apply_weakness(1, 2)
             if AI_SPAWNED == 3:
-                ai1_hp = ai1_hp - math.ceil(ability_data[3])
-                ai2_hp = ai2_hp - math.ceil(ability_data[3])
+                ai1_hp = ai1_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(1))) * 1.4
+                ai2_hp = ai2_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(2))) * 1.4
                 self.apply_weakness(1, 2)
                 self.apply_weakness(2, 2)
             if AI_SPAWNED == 3:
-                ai1_hp = ai1_hp - math.ceil(ability_data[3])
-                ai2_hp = ai2_hp - math.ceil(ability_data[3])
-                ai3_hp = ai3_hp - math.ceil(ability_data[3])
+                ai1_hp = ai1_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(1))) * 1.4
+                ai2_hp = ai2_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(2))) * 1.4
+                ai3_hp = ai3_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(3))) * 1.4
                 self.apply_weakness(1, 2)
                 self.apply_weakness(2, 2)
                 self.apply_weakness(3, 2)
             if AI_SPAWNED == 4:
-                ai1_hp = ai1_hp - math.ceil(ability_data[3])
-                ai2_hp = ai2_hp - math.ceil(ability_data[3])
-                ai3_hp = ai3_hp - math.ceil(ability_data[3])
-                ai4_hp = ai4_hp - math.ceil(ability_data[3])
+                ai1_hp = ai1_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(1))) * 1.4
+                ai2_hp = ai2_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(2))) * 1.4
+                ai3_hp = ai3_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(3))) * 1.4
+                ai4_hp = ai4_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(4))) * 1.4
                 self.apply_weakness(1, 2)
                 self.apply_weakness(2, 2)
                 self.apply_weakness(3, 2)
                 self.apply_weakness(4, 2)
             if AI_SPAWNED == 5:
-                ai1_hp = ai1_hp - math.ceil(ability_data[3])
-                ai2_hp = ai2_hp - math.ceil(ability_data[3])
-                ai3_hp = ai3_hp - math.ceil(ability_data[3])
-                ai4_hp = ai4_hp - math.ceil(ability_data[3])
-                ai5_hp = ai5_hp - math.ceil(ability_data[3])
+                ai1_hp = ai1_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(1))) * 1.4
+                ai2_hp = ai2_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(2))) * 1.4
+                ai3_hp = ai3_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(3))) * 1.4
+                ai4_hp = ai4_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(4))) * 1.4
+                ai5_hp = ai5_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(5))) * 1.4
                 self.apply_weakness(1, 2)
                 self.apply_weakness(2, 2)
                 self.apply_weakness(3, 2)
@@ -17355,18 +16795,18 @@ class GameFrame(tk.Frame):
                 self.apply_weakness(5, 2)
         elif ability_data[0] == "Rock Barrage":
             if 1 in target_list:
-                ai1_hp = ai1_hp - ability_data[3]
+                ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1)) * 1.6
             if 2 in target_list:
-                ai2_hp = ai2_hp - ability_data[3]
+                ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2)) * 1.6
             if 3 in target_list:
-                ai3_hp = ai3_hp - ability_data[3]
+                ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3)) * 1.6
             if 4 in target_list:
-                ai4_hp = ai4_hp - ability_data[3]
+                ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4)) * 1.6
             if 5 in target_list:
-                ai5_hp = ai5_hp - ability_data[3]
+                ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5)) * 1.6
         elif ability_data[0] == "Shimmering Bolt":
             if 1 in target_list:
-                ai1_hp = ai1_hp - ability_data[3]
+                ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1)) * 1.8
                 if champion1_hp != 0:
                     self.check_champion_blessing(1)
                 if champion2_hp != 0:
@@ -17378,7 +16818,7 @@ class GameFrame(tk.Frame):
                 if champion5_hp != 0:
                     self.check_champion_blessing(5)
             if 2 in target_list:
-                ai2_hp = ai2_hp - ability_data[3]
+                ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2)) * 1.8
                 if champion1_hp != 0:
                     self.check_champion_blessing(1)
                 if champion2_hp != 0:
@@ -17390,7 +16830,7 @@ class GameFrame(tk.Frame):
                 if champion5_hp != 0:
                     self.check_champion_blessing(5)
             if 3 in target_list:
-                ai3_hp = ai3_hp - ability_data[3]
+                ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3)) * 1.8
                 if champion1_hp != 0:
                     self.check_champion_blessing(1)
                 if champion2_hp != 0:
@@ -17402,7 +16842,7 @@ class GameFrame(tk.Frame):
                 if champion5_hp != 0:
                     self.check_champion_blessing(5)
             if 4 in target_list:
-                ai4_hp = ai4_hp - ability_data[3]
+                ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4)) * 1.8
                 if champion1_hp != 0:
                     self.check_champion_blessing(1)
                 if champion2_hp != 0:
@@ -17414,7 +16854,7 @@ class GameFrame(tk.Frame):
                 if champion5_hp != 0:
                     self.check_champion_blessing(5)
             if 5 in target_list:
-                ai5_hp = ai5_hp - ability_data[3]
+                ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5)) * 1.8
                 if champion1_hp != 0:
                     self.check_champion_blessing(1)
                 if champion2_hp != 0:
@@ -17427,7 +16867,7 @@ class GameFrame(tk.Frame):
                     self.check_champion_blessing(5)
         elif ability_data[0] == "Divine Smite":
             if 1 in target_list:
-                ai1_hp = ai1_hp - ability_data[3]
+                ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1)) * 2.8
                 if champion1_hp != 0:
                     self.check_champion_blessing(1)
                 if champion2_hp != 0:
@@ -17439,7 +16879,7 @@ class GameFrame(tk.Frame):
                 if champion5_hp != 0:
                     self.check_champion_blessing(5)
             if 2 in target_list:
-                ai2_hp = ai2_hp - ability_data[3]
+                ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2)) * 2.8
                 if champion1_hp != 0:
                     self.check_champion_blessing(1)
                 if champion2_hp != 0:
@@ -17451,7 +16891,7 @@ class GameFrame(tk.Frame):
                 if champion5_hp != 0:
                     self.check_champion_blessing(5)
             if 3 in target_list:
-                ai3_hp = ai3_hp - ability_data[3]
+                ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3)) * 2.8
                 if champion1_hp != 0:
                     self.check_champion_blessing(1)
                 if champion2_hp != 0:
@@ -17463,7 +16903,7 @@ class GameFrame(tk.Frame):
                 if champion5_hp != 0:
                     self.check_champion_blessing(5)
             if 4 in target_list:
-                ai4_hp = ai4_hp - ability_data[3]
+                ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4)) * 2.8
                 if champion1_hp != 0:
                     self.check_champion_blessing(1)
                 if champion2_hp != 0:
@@ -17475,7 +16915,7 @@ class GameFrame(tk.Frame):
                 if champion5_hp != 0:
                     self.check_champion_blessing(5)
             if 5 in target_list:
-                ai5_hp = ai5_hp - ability_data[3]
+                ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5)) * 2.8
                 if champion1_hp != 0:
                     self.check_champion_blessing(1)
                 if champion2_hp != 0:
@@ -17498,7 +16938,7 @@ class GameFrame(tk.Frame):
             if champion5_hp != 0:
                 self.grant_champion_blessing(5)
             if AI_SPAWNED == 1:
-                ai1_hp = ai1_hp - ability_data[3]
+                ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1)) * 0.6
                 if champion1_hp != 0:
                     self.check_champion_blessing(1)
                 if champion2_hp != 0:
@@ -17510,8 +16950,8 @@ class GameFrame(tk.Frame):
                 if champion5_hp != 0:
                     self.check_champion_blessing(5)
             if AI_SPAWNED == 2:
-                ai1_hp = ai1_hp - ability_data[3]
-                ai2_hp = ai2_hp - ability_data[3]
+                ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1)) * 0.6
+                ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2)) * 0.6
                 if champion1_hp != 0:
                     self.check_champion_blessing(1)
                 if champion2_hp != 0:
@@ -17523,9 +16963,9 @@ class GameFrame(tk.Frame):
                 if champion5_hp != 0:
                     self.check_champion_blessing(5)
             if AI_SPAWNED == 3:
-                ai1_hp = ai1_hp - ability_data[3]
-                ai2_hp = ai2_hp - ability_data[3]
-                ai3_hp = ai3_hp - ability_data[3]
+                ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1)) * 0.6
+                ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2)) * 0.6
+                ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3)) * 0.6
                 if champion1_hp != 0:
                     self.check_champion_blessing(1)
                 if champion2_hp != 0:
@@ -17537,10 +16977,10 @@ class GameFrame(tk.Frame):
                 if champion5_hp != 0:
                     self.check_champion_blessing(5)
             if AI_SPAWNED == 4:
-                ai1_hp = ai1_hp - ability_data[3]
-                ai2_hp = ai2_hp - ability_data[3]
-                ai3_hp = ai3_hp - ability_data[3]
-                ai4_hp = ai4_hp - ability_data[3]
+                ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1)) * 0.6
+                ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2)) * 0.6
+                ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3)) * 0.6
+                ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4)) * 0.6
                 if champion1_hp != 0:
                     self.check_champion_blessing(1)
                 if champion2_hp != 0:
@@ -17552,11 +16992,11 @@ class GameFrame(tk.Frame):
                 if champion5_hp != 0:
                     self.check_champion_blessing(5)
             if AI_SPAWNED == 5:
-                ai1_hp = ai1_hp - ability_data[3]
-                ai2_hp = ai2_hp - ability_data[3]
-                ai3_hp = ai3_hp - ability_data[3]
-                ai4_hp = ai4_hp - ability_data[3]
-                ai5_hp = ai5_hp - ability_data[3]
+                ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1)) * 0.6
+                ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2)) * 0.6
+                ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3)) * 0.6
+                ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4)) * 0.6
+                ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5)) * 0.6
                 if champion1_hp != 0:
                     self.check_champion_blessing(1)
                 if champion2_hp != 0:
@@ -17569,26 +17009,31 @@ class GameFrame(tk.Frame):
                     self.check_champion_blessing(5)
         elif ability_data[0] == "Cybernetic Blast":
             if 1 in target_list:
-                ai1_hp = ai1_hp - ability_data[3]
+                ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1)) * 1.4
             if 2 in target_list:
-                ai2_hp = ai2_hp - ability_data[3]
+                ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2)) * 1.4
             if 3 in target_list:
-                ai3_hp = ai3_hp - ability_data[3]
+                ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3)) * 1.4
             if 4 in target_list:
-                ai4_hp = ai4_hp - ability_data[3]
+                ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4)) * 1.4
             if 5 in target_list:
-                ai5_hp = ai5_hp - ability_data[3]
+                ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5)) * 1.4
         elif ability_data[0] == "Throw Scissors":
             if 1 in target_list:
-                ai1_hp = ai1_hp - ability_data[3]
+                ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1)) * 2.2
             if 2 in target_list:
-                ai2_hp = ai2_hp - ability_data[3]
+                ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2)) * 2.2
             if 3 in target_list:
-                ai3_hp = ai3_hp - ability_data[3]
+                ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3)) * 2.2
             if 4 in target_list:
-                ai4_hp = ai4_hp - ability_data[3]
+                ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4)) * 2.2
             if 5 in target_list:
-                ai5_hp = ai5_hp - ability_data[3]
+                ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5)) * 2.2
+        ai1_hp = math.ceil(ai1_hp)
+        ai2_hp = math.ceil(ai2_hp)
+        ai3_hp = math.ceil(ai3_hp)
+        ai4_hp = math.ceil(ai4_hp)
+        ai5_hp = math.ceil(ai5_hp)
 
     def finalise_healing_done(self):
         global champion1_hp, champion2_hp, champion3_hp, champion4_hp, champion5_hp
@@ -17598,15 +17043,15 @@ class GameFrame(tk.Frame):
             global champion1_fortification, champion2_fortification, champion3_fortification, \
                 champion4_fortification, champion5_fortification
             if champion1_hp != 0:
-                champion1_fortification = [1, 2]
+                champion1_fortification = 2
             if champion2_hp != 0:
-                champion2_fortification = [1, 2]
+                champion2_fortification = 2
             if champion3_hp != 0:
-                champion3_fortification = [1, 2]
+                champion3_fortification = 2
             if champion4_hp != 0:
-                champion4_fortification = [1, 2]
+                champion4_fortification = 2
             if champion5_hp != 0:
-                champion5_fortification = [1, 2]
+                champion5_fortification = 2
         elif ability_data[0] == "Block":
             if 1 in target_list:
                 champion1_guarded.append("Block")
@@ -17632,28 +17077,28 @@ class GameFrame(tk.Frame):
         elif ability_data[0] == "Thorns":
             global champion1_thorns, champion2_thorns, champion3_thorns, champion4_thorns, champion5_thorns
             if 1 in target_list:
-                champion1_thorns = [1, 5]
+                champion1_thorns = 5
             if 2 in target_list:
-                champion2_thorns = [1, 5]
+                champion2_thorns = 5
             if 3 in target_list:
-                champion3_thorns = [1, 5]
+                champion3_thorns = 5
             if 4 in target_list:
-                champion4_thorns = [1, 5]
+                champion4_thorns = 5
             if 5 in target_list:
-                champion5_thorns = [1, 5]
+                champion5_thorns = 5
         elif ability_data[0] == "Aura of Power":
             global champion1_aura, champion2_aura, champion3_aura, champion4_aura, champion5_aura
-            champion1_aura = [1]
-            champion2_aura = [1]
-            champion3_aura = [1]
-            champion4_aura = [1]
-            champion5_aura = [1]
+            champion1_aura = 1
+            champion2_aura = 1
+            champion3_aura = 1
+            champion4_aura = 1
+            champion5_aura = 1
         elif ability_data[0] == "Aura of Protection":
-            champion1_aura = [2]
-            champion2_aura = [2]
-            champion3_aura = [2]
-            champion4_aura = [2]
-            champion5_aura = [2]
+            champion1_aura = 2
+            champion2_aura = 2
+            champion3_aura = 2
+            champion4_aura = 2
+            champion5_aura = 2
         elif ability_data[0] == "Muscle Enlarger":
             global champion1_enlarged_muscles, champion2_enlarged_muscles, champion3_enlarged_muscles, \
                 champion4_enlarged_muscles, champion5_enlarged_muscles
@@ -17689,18 +17134,18 @@ class GameFrame(tk.Frame):
                 if champion5_hp > CHAMPION_5_HP:
                     champion5_hp = CHAMPION_5_HP
         elif ability_data[0] == "Full Potential":
-            global champion1_full_potential, champion2_full_potential, champion3_full_potential, \
-                champion4_full_potential, champion5_full_potential
+            global champion1_fullPotential, champion2_fullPotential, champion3_fullPotential, \
+                champion4_fullPotential, champion5_fullPotential
             if 1 in target_list:
-                champion1_full_potential = [1, 2]
+                champion1_fullPotential = 3
             if 2 in target_list:
-                champion2_full_potential = [1, 2]
+                champion2_fullPotential = 3
             if 3 in target_list:
-                champion3_full_potential = [1, 2]
+                champion3_fullPotential = 3
             if 4 in target_list:
-                champion4_full_potential = [1, 2]
+                champion4_fullPotential = 3
             if 5 in target_list:
-                champion5_full_potential = [1, 2]
+                champion5_fullPotential = 3
         elif ability_data[0] == "Healing Surge":
             if 1 in target_list:
                 champion1_hp = champion1_hp + ability_data[3]
@@ -17875,20 +17320,21 @@ class GameFrame(tk.Frame):
             global champion1_JAXD, champion2_JAXD, champion3_JAXD, \
                 champion4_JAXD, champion5_JAXD
             if 1 in target_list:
-                champion1_JAXD = [1, 2]
+                champion1_JAXD = 3
             if 2 in target_list:
-                champion2_JAXD = [1, 2]
+                champion2_JAXD = 3
             if 3 in target_list:
-                champion3_JAXD = [1, 2]
+                champion3_JAXD = 3
             if 4 in target_list:
-                champion4_JAXD = [1, 2]
+                champion4_JAXD = 3
             if 5 in target_list:
-                champion5_JAXD = [1, 2]
+                champion5_JAXD = 3
 
     def finalise_self_buff(self):
-        global ai1_hp, ai2_hp,ai3_hp,ai4_hp,ai5_hp, champion1_hp, champion2_hp, champion3_hp, champion4_hp, champion5_hp
-        global champion1_guarded, champion2_guarded, champion3_guarded, champion4_guarded, \
-            champion5_guarded, current_arrow_type
+        global ai1_hp, ai2_hp,ai3_hp,ai4_hp,ai5_hp, champion1_hp, champion2_hp, champion3_hp, champion4_hp, champion5_hp, \
+            champion1_guarded, champion2_guarded, champion3_guarded, champion4_guarded, champion5_guarded, \
+            champion1_defensive, champion2_defensive, champion3_defensive, champion4_defensive, champion5_defensive, \
+            current_arrow_type
         counter = 0
         if ability_data[0] == "Harmonize":
             global monk_staggered_damage_list1, monk_staggered_damage_list2, monk_staggered_damage_list3
@@ -17939,16 +17385,41 @@ class GameFrame(tk.Frame):
                     self.apply_taunt(5, BARBARIAN.title, 2)
         elif ability_data[0] == "Impactful Boast":
             point = 0
-            if ai1_taunt[0] == BARBARIAN.title:
-                point += 1
-            if ai2_taunt[0] == BARBARIAN.title:
-                point += 1
-            if ai3_taunt[0] == BARBARIAN.title:
-                point += 1
-            if ai4_taunt[0] == BARBARIAN.title:
-                point += 1
-            if ai5_taunt[0] == BARBARIAN.title:
-                point += 1
+            if AI_SPAWNED == 1:
+                if BARBARIAN.title in ai1_attack_intention:
+                    point += 1
+            if AI_SPAWNED == 2:
+                if BARBARIAN.title in ai1_attack_intention:
+                    point += 1
+                if BARBARIAN.title in ai2_attack_intention:
+                    point += 1
+            if AI_SPAWNED == 3:
+                if BARBARIAN.title in ai1_attack_intention:
+                    point += 1
+                if BARBARIAN.title in ai2_attack_intention:
+                    point += 1
+                if BARBARIAN.title in ai3_attack_intention:
+                    point += 1
+            if AI_SPAWNED == 4:
+                if BARBARIAN.title in ai1_attack_intention:
+                    point += 1
+                if BARBARIAN.title in ai2_attack_intention:
+                    point += 1
+                if BARBARIAN.title in ai3_attack_intention:
+                    point += 1
+                if BARBARIAN.title in ai4_attack_intention:
+                    point += 1
+            if AI_SPAWNED == 5:
+                if BARBARIAN.title in ai1_attack_intention:
+                    point += 1
+                if BARBARIAN.title in ai2_attack_intention:
+                    point += 1
+                if BARBARIAN.title in ai3_attack_intention:
+                    point += 1
+                if BARBARIAN.title in ai4_attack_intention:
+                    point += 1
+                if BARBARIAN.title in ai5_attack_intention:
+                    point += 1
             for character in CHAMPION_LIST:
                 counter += 1
                 if character == BARBARIAN.title:
@@ -17992,19 +17463,19 @@ class GameFrame(tk.Frame):
                 counter += 1
                 if character == BERSERKER.title:
                     if counter == 1:
-                        champion1_enrage = [3]
+                        champion1_enrage = 3
                         break
                     if counter == 2:
-                        champion2_enrage = [3]
+                        champion2_enrage = 3
                         break
                     if counter == 3:
-                        champion3_enrage = [3]
+                        champion3_enrage = 3
                         break
                     if counter == 4:
-                        champion4_enrage = [3]
+                        champion4_enrage = 3
                         break
                     if counter == 5:
-                        champion5_enrage = [3]
+                        champion5_enrage = 3
                         break
         elif ability_data[0] == "Reckless Flurry":
             global reckless_flurry_buff
@@ -18016,19 +17487,19 @@ class GameFrame(tk.Frame):
                 counter += 1
                 if character == SURVIVALIST.title:
                     if counter == 1:
-                        champion1_play_dead = [1]
+                        champion1_play_dead = 1
                         break
                     if counter == 2:
-                        champion2_play_dead = [1]
+                        champion2_play_dead = 1
                         break
                     if counter == 3:
-                        champion3_play_dead = [1]
+                        champion3_play_dead = 1
                         break
                     if counter == 4:
-                        champion4_play_dead = [1]
+                        champion4_play_dead = 1
                         break
                     if counter == 5:
-                        champion5_play_dead = [1]
+                        champion5_play_dead = 1
                         break
         elif ability_data[0] == "Rushed Rest":
             global rushed_rest_used
@@ -18066,38 +17537,38 @@ class GameFrame(tk.Frame):
                 counter += 1
                 if character == BRAWLIST.title:
                     if counter == 1:
-                        champion1_guarded.append("Defensive Stance")
+                        champion1_defensive.append("Defensive Stance")
                         break
                     if counter == 2:
-                        champion2_guarded.append("Defensive Stance")
+                        champion2_defensive.append("Defensive Stance")
                         break
                     if counter == 3:
-                        champion3_guarded.append("Defensive Stance")
+                        champion3_defensive.append("Defensive Stance")
                         break
                     if counter == 4:
-                        champion4_guarded.append("Defensive Stance")
+                        champion4_defensive.append("Defensive Stance")
                         break
                     if counter == 5:
-                        champion5_guarded.append("Defensive Stance")
+                        champion5_defensive.append("Defensive Stance")
                         break
         elif ability_data[0] == "Magical Barrier":
             for character in CHAMPION_LIST:
                 counter += 1
                 if character == ACADEMIC_MAGE.title:
                     if counter == 1:
-                        champion1_guarded.append("Magical Barrier")
+                        champion1_defensive.append("Magical Barrier")
                         break
                     if counter == 2:
-                        champion2_guarded.append("Magical Barrier")
+                        champion2_defensive.append("Magical Barrier")
                         break
                     if counter == 3:
-                        champion3_guarded.append("Magical Barrier")
+                        champion3_defensive.append("Magical Barrier")
                         break
                     if counter == 4:
-                        champion4_guarded.append("Magical Barrier")
+                        champion4_defensive.append("Magical Barrier")
                         break
                     if counter == 5:
-                        champion5_guarded.append("Magical Barrier")
+                        champion5_defensive.append("Magical Barrier")
                         break
         elif ability_data[0] == "Void Infusion":
             global void_infusion_stacks
@@ -18145,19 +17616,19 @@ class GameFrame(tk.Frame):
                 counter += 1
                 if character == BLOODMANCER.title:
                     if counter == 1:
-                        champion1_guarded.append("Enharden Nerves")
+                        champion1_defensive.append("Enharden Nerves")
                         break
                     if counter == 2:
-                        champion2_guarded.append("Enharden Nerves")
+                        champion2_defensive.append("Enharden Nerves")
                         break
                     if counter == 3:
-                        champion3_guarded.append("Enharden Nerves")
+                        champion3_defensive.append("Enharden Nerves")
                         break
                     if counter == 4:
-                        champion4_guarded.append("Enharden Nerves")
+                        champion4_defensive.append("Enharden Nerves")
                         break
                     if counter == 5:
-                        champion5_guarded.append("Enharden Nerves")
+                        champion5_defensive.append("Enharden Nerves")
                         break
         elif ability_data[0] == "Equip Iron-cast Arrows":
             current_arrow_type = "Iron-cast"
@@ -18170,40 +17641,40 @@ class GameFrame(tk.Frame):
     def grant_champion_blessing(self, champion_position):
         global champion1_blessing, champion2_blessing, champion3_blessing, champion4_blessing, champion5_blessing
         if champion_position == 1:
-            champion1_blessing = [1, 5]
+            champion1_blessing = 5
         if champion_position == 2:
-            champion2_blessing = [1, 5]
+            champion2_blessing = 5
         if champion_position == 3:
-            champion3_blessing = [1, 5]
+            champion3_blessing = 5
         if champion_position == 4:
-            champion4_blessing = [1, 5]
+            champion4_blessing = 5
         if champion_position == 5:
-            champion5_blessing = [1, 5]
+            champion5_blessing = 5
 
     def check_champion_blessing(self, champion_position):
         global champion1_hp, champion2_hp, champion3_hp, champion4_hp, champion5_hp
         if champion_position == 1:
-            if champion1_blessing[0] != 0:
+            if champion1_blessing != 0:
                 champion1_hp = champion1_hp + ability_data[3]
                 if champion1_hp > CHAMPION_1_HP:
                     champion1_hp = CHAMPION_1_HP
         if champion_position == 2:
-            if champion2_blessing[0] != 0:
+            if champion2_blessing != 0:
                 champion2_hp = champion2_hp + ability_data[3]
                 if champion2_hp > CHAMPION_2_HP:
                     champion2_hp = CHAMPION_2_HP
         if champion_position == 3:
-            if champion3_blessing[0] != 0:
+            if champion3_blessing != 0:
                 champion3_hp = champion3_hp + ability_data[3]
                 if champion3_hp > CHAMPION_3_HP:
                     champion3_hp = CHAMPION_3_HP
         if champion_position == 4:
-            if champion4_blessing[0] != 0:
+            if champion4_blessing != 0:
                 champion4_hp = champion4_hp + ability_data[3]
                 if champion4_hp > CHAMPION_4_HP:
                     champion4_hp = CHAMPION_4_HP
         if champion_position == 5:
-            if champion5_blessing[0] != 0:
+            if champion5_blessing != 0:
                 champion5_hp = champion5_hp + ability_data[3]
                 if champion5_hp > CHAMPION_5_HP:
                     champion5_hp = CHAMPION_5_HP
@@ -18266,27 +17737,27 @@ class GameFrame(tk.Frame):
     def apply_taunt(self, ai_target, tauntie, length):
         global ai1_taunt, ai2_taunt, ai3_taunt, ai4_taunt, ai5_taunt
         if ai_target == 1:
-            if length > ai1_taunt[1]:
+            if length >= ai1_taunt[1]:
                 ai1_taunt = [tauntie, length]
             else:
                 return
         if ai_target == 2:
-            if length > ai2_taunt[1]:
+            if length >= ai2_taunt[1]:
                 ai2_taunt = [tauntie, length]
             else:
                 return
         if ai_target == 3:
-            if length > ai3_taunt[1]:
+            if length >= ai3_taunt[1]:
                 ai3_taunt = [tauntie, length]
             else:
                 return
         if ai_target == 4:
-            if length > ai4_taunt[1]:
+            if length >= ai4_taunt[1]:
                 ai4_taunt = [tauntie, length]
             else:
                 return
         if ai_target == 5:
-            if length > ai5_taunt[1]:
+            if length >= ai5_taunt[1]:
                 ai5_taunt = [tauntie, length]
             else:
                 return
@@ -18345,6 +17816,24 @@ class GameFrame(tk.Frame):
                 ai5_brittle = length
             else:
                 return
+    def check_brittle(self, ai_target):
+        brittle_damage_modifier = 1
+        if ai_target == 1:
+            if ai1_brittle != 0:
+                brittle_damage_modifier = 1.3
+        if ai_target == 2:
+            if ai2_brittle != 0:
+                brittle_damage_modifier = 1.3
+        if ai_target == 3:
+            if ai3_brittle != 0:
+                brittle_damage_modifier = 1.3
+        if ai_target == 4:
+            if ai4_brittle != 0:
+                brittle_damage_modifier = 1.3
+        if ai_target == 5:
+            if ai5_brittle != 0:
+                brittle_damage_modifier = 1.3
+        return brittle_damage_modifier
     def apply_burn(self, ai_target, length):
         global ai1_burnDot, ai2_burnDot, ai3_burnDot, ai4_burnDot, ai5_burnDot
         burnDot = math.ceil(ability_data[3] * 0.5)
@@ -18473,7 +17962,8 @@ class GameFrame(tk.Frame):
     def clean_up(self):
         if ability_data[1] == "ally":
             if ability_data[2] == "AOE":
-                i = 0
+                #Nothing Happens
+                nothing = 0
             else:
                 champion1_supporttarget_frame.destroy()
                 champion2_supporttarget_frame.destroy()
@@ -18591,7 +18081,64 @@ class GameFrame(tk.Frame):
                 else:
                     status_text = "{}#5\nHealth Points: {}/{}".format(AI_NAME, ai5_hp, ai5_max_hp)
                     return status_text
-
+    def calculate_champion_damage(self, champion_position):
+        damage_done_multipler = 1
+        if champion_position == 1:
+            if champion1_enrage != 0:
+                damage_done_multipler = damage_done_multipler * 1.5
+            if champion1_muscleEnlarger != 0:
+                damage_done_multipler = damage_done_multipler * 1.6
+            if champion1_JAXD != 0:
+                damage_done_multipler = damage_done_multipler * 2
+            if champion1_fullPotential != 0:
+                damage_done_multipler = damage_done_multipler * 3
+            if champion1_aura == 1:
+                damage_done_multipler = damage_done_multipler * 1.2
+        if champion_position == 2:
+            if champion2_enrage != 0:
+                damage_done_multipler = damage_done_multipler * 1.5
+            if champion2_muscleEnlarger != 0:
+                damage_done_multipler = damage_done_multipler * 1.6
+            if champion2_JAXD != 0:
+                damage_done_multipler = damage_done_multipler * 2
+            if champion2_fullPotential != 0:
+                damage_done_multipler = damage_done_multipler * 3
+            if champion2_aura == 1:
+                damage_done_multipler = damage_done_multipler * 1.2
+        if champion_position == 3:
+            if champion3_enrage != 0:
+                damage_done_multipler = damage_done_multipler * 1.5
+            if champion3_muscleEnlarger != 0:
+                damage_done_multipler = damage_done_multipler * 1.6
+            if champion3_JAXD != 0:
+                damage_done_multipler = damage_done_multipler * 2
+            if champion3_fullPotential != 0:
+                damage_done_multipler = damage_done_multipler * 3
+            if champion3_aura == 1:
+                damage_done_multipler = damage_done_multipler * 1.2
+        if champion_position == 4:
+            if champion4_enrage != 0:
+                damage_done_multipler = damage_done_multipler * 1.5
+            if champion4_muscleEnlarger != 0:
+                damage_done_multipler = damage_done_multipler * 1.6
+            if champion4_JAXD != 0:
+                damage_done_multipler = damage_done_multipler * 2
+            if champion4_fullPotential != 0:
+                damage_done_multipler = damage_done_multipler * 3
+            if champion4_aura == 1:
+                damage_done_multipler = damage_done_multipler * 1.2
+        if champion_position == 5:
+            if champion5_enrage != 0:
+                damage_done_multipler = damage_done_multipler * 1.5
+            if champion5_muscleEnlarger != 0:
+                damage_done_multipler = damage_done_multipler * 1.6
+            if champion5_JAXD != 0:
+                damage_done_multipler = damage_done_multipler * 2
+            if champion5_fullPotential != 0:
+                damage_done_multipler = damage_done_multipler * 3
+            if champion5_aura == 1:
+                damage_done_multipler = damage_done_multipler * 1.2
+        return damage_done_multipler
     def get_champions_abiltity_button_data(self, champion_position):
         global attack_button_text_list_temp, special_button_text_list_temp
         attack_button_text_list_temp = []
@@ -18860,19 +18407,19 @@ class GameFrame(tk.Frame):
                 else:
                     attack_text = "Blood Spike\n{} {}".format(BLOODMANCER.rp_name, BLOODMANCER.ap)
                     attack_button_text_list.append(attack_text)
-            elif attack_name == "Rightous Blow":
+            elif attack_name == "Righteous Blow":
                 if righteous_blow_requirements[0] > 0:
                     if righteous_blow_requirements[1] > 0:
-                        attack_text = "Rightous Blow ({})\n{} {}".format(righteous_blow_requirements[1], PALADIN.rp_name,
+                        attack_text = "Righteous Blow ({})\n{} {}".format(righteous_blow_requirements[1], PALADIN.rp_name,
                                                                          righteous_blow_requirements[
                                                                              0])
                         attack_button_text_list.append(attack_text)
                     else:
-                        attack_text = "Rightous Blow\n{} {}".format(PALADIN.rp_name, righteous_blow_requirements[0])
+                        attack_text = "Righteous Blow\n{} {}".format(PALADIN.rp_name, righteous_blow_requirements[0])
                         attack_button_text_list.append(attack_text)
                 elif righteous_blow_requirements[1] > 0:
 
-                    attack_text = "Rightous Blow ({})".format(righteous_blow_requirements[1])
+                    attack_text = "Righteous Blow ({})".format(righteous_blow_requirements[1])
                     attack_button_text_list.append(attack_text)
                 else:
                     attack_button_text_list.append(attack_name)
@@ -19540,7 +19087,69 @@ class GameFrame(tk.Frame):
                     special_button_text_list.append(special_name)
             else:
                 special_button_text_list.append(special_name)
-
+    def EndGameSaving(self):
+        global endgame_window
+        endgame_window = tk.Tk()
+        invis_label1 = tk.Label(endgame_window)
+        title_label = tk.Label(endgame_window, text="You've Lost!", font=self.small_title_font)
+        progress_label = tk.Label(endgame_window, text="But you've made it to Floor {} Room {}!".format(floorLevel, roomLevel))
+        save_game_stats_confirmation_label = tk.Label(endgame_window,
+                                                      text="Do you want to apply your game to the Leaderboard?\nIf you've done well enough, your game will appear in the top ten for the difficulty category!")
+        yes_button = tk.Button(endgame_window, text="Yes", font=self.medium_text_font_bold, command=self.add_score_to_leaderboard)
+        no_button = tk.Button(endgame_window, text="No", command=self.confirm_decline_add_score, font=self.medium_text_font_bold)
+        title_label.grid(row=1, column=3)
+        progress_label.grid(row=2, column=3)
+        invis_label1.grid(row=3, column=2, pady=10)
+        save_game_stats_confirmation_label.grid(row=4, column=3)
+        yes_button.grid(row=5, column=3, sticky="w", padx=25)
+        no_button.grid(row=5, column=3, sticky="e", padx=25)
+    def add_score_to_leaderboard(self):
+        global roomLevel, floorLevel
+        user = ParentClass.get_user_encoded(self)
+        read_difficulty_file = open(
+            "C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/game_data_dungeon_difficulty.txt".format(computer_username),
+            "r")
+        dungeon_settings = read_difficulty_file.readline()
+        if dungeon_settings == "easy":
+            leaderboard_easy_file = open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/game_data_easy_leaderboard.txt".format(computer_username), "a")
+            leaderboard_easy_file.write("\n")
+            leaderboard_easy_file.write("{} {} {} {}".format(user, floorLevel, roomLevel, CHAMPION_LIST))
+            leaderboard_easy_file.close()
+        if dungeon_settings == "normal":
+            leaderboard_normal_file = open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/game_data_normal_leaderboard.txt".format(computer_username), "a")
+            leaderboard_normal_file.write("\n")
+            leaderboard_normal_file.write("{} {} {} {}".format(user, floorLevel, roomLevel, CHAMPION_LIST))
+            leaderboard_normal_file.close()
+        if dungeon_settings == "hard":
+            leaderboard_hard_file = open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/game_data_hard_leaderboard.txt".format(computer_username), "a")
+            leaderboard_hard_file.write("\n")
+            leaderboard_hard_file.write("{} {} {} {}".format(user, floorLevel, roomLevel, CHAMPION_LIST))
+            leaderboard_hard_file.close()
+        read_difficulty_file.close()
+        endgame_window.destroy()
+        for widget in dungeon_game_frame.winfo_children():
+            widget.destroy()
+        floorLevel = 1
+        roomLevel = 1
+        self.set_dungeon_properties()
+    def confirm_decline_add_score(self):
+        global confirmation_window
+        confirmation_window = tk.Tk()
+        warning_label = tk.Label(confirmation_window, text="Are you sure you don't want to add your score to the leaderboard?")
+        yes_button = tk.Button(confirmation_window, text="Yes", command=self.endgame_to_startgame)
+        no_button = tk.Button(confirmation_window, text="No", command=confirmation_window.destroy)
+        warning_label.grid(row=1, column=1)
+        yes_button.grid(row=2, column=1)
+        no_button.grid(row=3, column=1)
+    def endgame_to_startgame(self):
+        global floorLevel, roomLevel
+        confirmation_window.destroy()
+        endgame_window.destroy()
+        for widget in dungeon_game_frame.winfo_children():
+            widget.destroy()
+        floorLevel = 1
+        roomLevel = 1
+        self.set_dungeon_properties()
 
 class CreateTeamPage(tk.Frame):
     def __init__(self, parent, controller):
@@ -19551,10 +19160,8 @@ class CreateTeamPage(tk.Frame):
         label = tk.Label(self, text="Champion Camp", font=controller.title_font)
         team_1_button = tk.Button(self, text=team_1_button_text,
                                   command=lambda: controller.show_frame("Team1SelectionPage"))
-        team_2_button = tk.Button(self, text=team_2_button_text,
-                                  command=lambda: controller.show_frame("Team2SelectionPage"))
-        team_3_button = tk.Button(self, text=team_3_button_text,
-                                  command=lambda: controller.show_frame("Team3SelectionPage"))
+        team_2_button = tk.Button(self, text="TBI")
+        team_3_button = tk.Button(self, text="TBI")
         update_page_button_2 = tk.Button(self, text="Refresh Team Page", command=self.update_variables)
         update_page_button_2.grid(row=8, column=2)
         buttonReturn = tk.Button(self, text="Return to Menu",
@@ -20099,19 +19706,19 @@ class Team1SelectionPage(tk.Frame):
             MONK_label = tk.Label(self, text=MONK.name, font=self.menu_button_font)
             MONK_button_add = tk.Button(self, text="Add to Team",
                                         command=lambda: self.check_temp_party1(MONK.title, "tank"))
-            MONK_button_details = tk.Button(self, text="View Details")
+            MONK_button_details = tk.Button(self, text="View Details (TBI)")
             BARBARIAN_label = tk.Label(self, text=BARBARIAN.name, font=self.menu_button_font)
             BARBARIAN_button_add = tk.Button(self, text="Add to Team",
                                              command=lambda: self.check_temp_party1(BARBARIAN.title, "tank"))
-            BARBARIAN_button_details = tk.Button(self, text="View Details")
+            BARBARIAN_button_details = tk.Button(self, text="View Details (TBI)")
             bodyguard_label = tk.Label(self, text=VETERAN_BODYGUARD.name, font=self.menu_button_font)
             bodyguard_button_add = tk.Button(self, text="Add to Team",
                                              command=lambda: self.check_temp_party1(VETERAN_BODYGUARD.title, "tank"))
-            bodyguard_button_details = tk.Button(self, text="View Details")
+            bodyguard_button_details = tk.Button(self, text="View Details (TBI)")
             fencer_label = tk.Label(self, text=MASTER_FENCER.name, font=self.menu_button_font)
             fencer_button_add = tk.Button(self, text="Add to Team",
                                           command=lambda: self.check_temp_party1(MASTER_FENCER.title, "tank"))
-            fencer_button_details = tk.Button(self, text="View Details")
+            fencer_button_details = tk.Button(self, text="View Details (TBI)")
             MONK_label.grid(row=4, column=1, sticky="e")
             MONK_button_add.grid(row=5, column=1, sticky="e", padx=75)
             MONK_button_details.grid(row=5, column=1, sticky="e")
@@ -20181,52 +19788,52 @@ class Team1SelectionPage(tk.Frame):
             BERSERKER_label = tk.Label(self, text=BERSERKER.name)
             BERSERKER_button_add = tk.Button(self, text="Add to Team",
                                              command=lambda: self.check_temp_party1(BERSERKER.title, "melee"))
-            BERSERKER_button_details = tk.Button(self, text="View Details")
+            BERSERKER_button_details = tk.Button(self, text="View Details (TBI)")
             ROGUE_label = tk.Label(self, text=ROGUE.name)
             ROGUE_button_add = tk.Button(self, text="Add to Team",
                                          command=lambda: self.check_temp_party1(ROGUE.title, "melee"))
-            ROGUE_button_details = tk.Button(self, text="View Details")
+            ROGUE_button_details = tk.Button(self, text="View Details (TBI)")
             SURVIVALIST_label = tk.Label(self, text=SURVIVALIST.name)
             SURVIVALIST_button_add = tk.Button(self, text="Add to Team",
                                                command=lambda: self.check_temp_party1(SURVIVALIST.title, "melee"))
-            SURVIVALIST_button_details = tk.Button(self, text="View Details")
+            SURVIVALIST_button_details = tk.Button(self, text="View Details (TBI)")
             BRAWLIST_label = tk.Label(self, text=BRAWLIST.name)
             BRAWLIST_button_add = tk.Button(self, text="Add to Team",
                                             command=lambda: self.check_temp_party1(BRAWLIST.title, "melee"))
-            BRAWLIST_button_details = tk.Button(self, text="View Details")
+            BRAWLIST_button_details = tk.Button(self, text="View Details (TBI)")
             ACADEMIC_MAGE_label = tk.Label(self, text=ACADEMIC_MAGE.name)
             ACADEMIC_MAGE_button_add = tk.Button(self, text="Add to Team",
                                                  command=lambda: self.check_temp_party1(ACADEMIC_MAGE.title, "magic"))
-            ACADEMIC_MAGE_button_details = tk.Button(self, text="View Details")
+            ACADEMIC_MAGE_button_details = tk.Button(self, text="View Details (TBI)")
             jungle_DRUID_label = tk.Label(self, text=DRUID.name)
             jungle_DRUID_button_add = tk.Button(self, text="Add to Team",
                                                 command=lambda: self.check_temp_party1(DRUID.title, "magic"))
-            jungle_DRUID_button_details = tk.Button(self, text="View Details")
+            jungle_DRUID_button_details = tk.Button(self, text="View Details (TBI)")
             WARLOCK_label = tk.Label(self, text=WARLOCK.name)
             WARLOCK_button_add = tk.Button(self, text="Add to Team",
                                            command=lambda: self.check_temp_party1(WARLOCK.title, "magic"))
-            WARLOCK_button_details = tk.Button(self, text="View Details")
+            WARLOCK_button_details = tk.Button(self, text="View Details (TBI)")
             BLOODMANCER_label = tk.Label(self, text=BLOODMANCER.name)
             BLOODMANCER_button_add = tk.Button(self, text="Add to Team",
                                                command=lambda: self.check_temp_party1(BLOODMANCER.title, "magic"))
-            BLOODMANCER_button_details = tk.Button(self, text="View Details")
+            BLOODMANCER_button_details = tk.Button(self, text="View Details (TBI)")
             PALADIN_label = tk.Label(self, text=PALADIN.name)
             PALADIN_button_add = tk.Button(self, text="Add to Team",
                                            command=lambda: self.check_temp_party1(PALADIN.title, "mixed"))
-            PALADIN_button_details = tk.Button(self, text="View Details")
+            PALADIN_button_details = tk.Button(self, text="View Details (TBI)")
             CASTLE_RANGER_label = tk.Label(self, text=CASTLE_RANGER.name)
             CASTLE_RANGER_button_add = tk.Button(self, text="Add to Team",
                                                  command=lambda: self.check_temp_party1(CASTLE_RANGER.title, "mixed"))
-            CASTLE_RANGER_button_details = tk.Button(self, text="View Details")
+            CASTLE_RANGER_button_details = tk.Button(self, text="View Details (TBI)")
             THUNDER_APPRENTICE_label = tk.Label(self, text=THUNDER_APPRENTICE.name)
             THUNDER_APPRENTICE_button_add = tk.Button(self, text="Add to Team",
                                                       command=lambda: self.check_temp_party1(THUNDER_APPRENTICE.title,
                                                                                              "mixed"))
-            THUNDER_APPRENTICE_button_details = tk.Button(self, text="View Details")
+            THUNDER_APPRENTICE_button_details = tk.Button(self, text="View Details (TBI)")
             POWER_CONDUIT_label = tk.Label(self, text=POWER_CONDUIT.name)
             POWER_CONDUIT_button_add = tk.Button(self, text="Add to Team",
                                                  command=lambda: self.check_temp_party1(POWER_CONDUIT.title, "mixed"))
-            POWER_CONDUIT_button_details = tk.Button(self, text="View Details")
+            POWER_CONDUIT_button_details = tk.Button(self, text="View Details (TBI)")
             melee_label.grid(row=3, column=1)
             magic_label.grid(row=3, column=2)
             mix_label.grid(row=3, column=3)
@@ -20341,21 +19948,21 @@ class Team1SelectionPage(tk.Frame):
             EARTH_SPEAKER_label = tk.Label(self, text=EARTH_SPEAKER.name, font=self.menu_button_font)
             EARTH_SPEAKER_button_add = tk.Button(self, text="Add to Team",
                                                  command=lambda: self.check_temp_party1(EARTH_SPEAKER.title, "healer"))
-            EARTH_SPEAKER_button_details = tk.Button(self, text="View Details")
+            EARTH_SPEAKER_button_details = tk.Button(self, text="View Details (TBI)")
             PRIEST_OF_THE_DEVOTED_label = tk.Label(self, text=PRIEST_OF_THE_DEVOTED.name, font=self.menu_button_font)
             PRIEST_OF_THE_DEVOTED_button_add = tk.Button(self, text="Add to Team",
                                                          command=lambda: self.check_temp_party1(
                                                              PRIEST_OF_THE_DEVOTED.title, "healer"))
-            PRIEST_OF_THE_DEVOTED_button_details = tk.Button(self, text="View Details")
+            PRIEST_OF_THE_DEVOTED_button_details = tk.Button(self, text="View Details (TBI)")
             TIME_WALKER_label = tk.Label(self, text=TIME_WALKER.name, font=self.menu_button_font)
             TIME_WALKER_button_add = tk.Button(self, text="Add to Team",
                                                command=lambda: self.check_temp_party1(TIME_WALKER.title, "healer"))
-            TIME_WALKER_button_details = tk.Button(self, text="View Details")
+            TIME_WALKER_button_details = tk.Button(self, text="View Details (TBI)")
             CHILD_OF_MEDICINE_label = tk.Label(self, text=CHILD_OF_MEDICINE.name, font=self.menu_button_font)
             CHILD_OF_MEDICINE_button_add = tk.Button(self, text="Add to Team",
                                                      command=lambda: self.check_temp_party1(CHILD_OF_MEDICINE.title,
                                                                                             "healer"))
-            CHILD_OF_MEDICINE_button_details = tk.Button(self, text="View Details")
+            CHILD_OF_MEDICINE_button_details = tk.Button(self, text="View Details (TBI)")
             EARTH_SPEAKER_label.grid(row=4, column=1, sticky="e")
             EARTH_SPEAKER_button_add.grid(row=5, column=1, sticky="e", padx=75)
             EARTH_SPEAKER_button_details.grid(row=5, column=1, sticky="e")
