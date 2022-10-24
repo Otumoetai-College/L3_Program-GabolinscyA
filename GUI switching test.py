@@ -9396,46 +9396,141 @@ class GameFrame(tk.Frame):
                                             ai5_hp = ai5_hp - 200
                                         if ai5_hp < 0:
                                             ai5_hp = 0
+            ai1_statuses = []
+            ai2_statuses = []
+            ai3_statuses = []
+            ai4_statuses = []
+            ai5_statuses = []
+            if ai1_pricked != 0:
+                ai1_statuses.append("Pricked")
+            if ai2_pricked != 0:
+                ai2_statuses.append("Pricked")
+            if ai3_pricked != 0:
+                ai3_statuses.append("Pricked")
+            if ai4_pricked != 0:
+                ai4_statuses.append("Pricked")
+            if ai5_pricked != 0:
+                ai5_statuses.append("Pricked")
+            if ai1_burnDot[1] != 0:
+                ai1_statuses.append("Burn")
+            if ai2_burnDot[1] != 0:
+                ai2_statuses.append("Burn")
+            if ai3_burnDot[1] != 0:
+                ai3_statuses.append("Burn")
+            if ai4_burnDot[1] != 0:
+                ai4_statuses.append("Burn")
+            if ai5_burnDot[1] != 0:
+                ai5_statuses.append("Burn")
+            if ai1_garroteDot[1] != 0:
+                ai1_statuses.append("Garrote")
+            if ai2_garroteDot[1] != 0:
+                ai2_statuses.append("Garrote")
+            if ai3_garroteDot[1] != 0:
+                ai3_statuses.append("Garrote")
+            if ai4_garroteDot[1] != 0:
+                ai4_statuses.append("Garrote")
+            if ai5_garroteDot[1] != 0:
+                ai5_statuses.append("Garrote")
+            if ai1_EviscerDot[1] != 0:
+                ai1_statuses.append("Eviscerate")
+            if ai2_EviscerDot[1] != 0:
+                ai2_statuses.append("Eviscerate")
+            if ai3_EviscerDot[1] != 0:
+                ai3_statuses.append("Eviscerate")
+            if ai4_EviscerDot[1] != 0:
+                ai4_statuses.append("Eviscerate")
+            if ai5_EviscerDot[1] != 0:
+                ai5_statuses.append("Eviscerate")
+            if ai1_SerraSlashDot[1] != 0:
+                ai1_statuses.append("Serrated")
+            if ai2_SerraSlashDot[1] != 0:
+                ai2_statuses.append("Serrated")
+            if ai3_SerraSlashDot[1] != 0:
+                ai3_statuses.append("Serrated")
+            if ai4_SerraSlashDot[1] != 0:
+                ai4_statuses.append("Serrated")
+            if ai5_SerraSlashDot[1] != 0:
+                ai5_statuses.append("Serrated")
             if ai1_brittle != 0:
                 ai1_brittle = ai1_brittle - 1
+                if ai1_brittle != 0:
+                    ai1_statuses.append("Brittle")
             if ai2_brittle != 0:
                 ai2_brittle = ai2_brittle - 1
+                if ai2_brittle != 0:
+                    ai2_statuses.append("Brittle")
             if ai3_brittle != 0:
                 ai3_brittle = ai3_brittle - 1
+                if ai3_brittle != 0:
+                    ai3_statuses.append("Brittle")
             if ai4_brittle != 0:
                 ai4_brittle = ai4_brittle - 1
+                if ai4_brittle != 0:
+                    ai4_statuses.append("Brittle")
             if ai5_brittle != 0:
                 ai5_brittle = ai5_brittle - 1
+                if ai5_brittle != 0:
+                    ai5_statuses.append("Brittle")
             if ai1_weakness != 0:
                 ai1_weakness = ai1_weakness - 1
+                if ai1_weakness != 0:
+                    ai1_statuses.append("Weakness")
             if ai2_weakness != 0:
                 ai2_weakness = ai2_weakness - 1
+                if ai2_weakness != 0:
+                    ai2_statuses.append("Weakness")
             if ai3_weakness != 0:
                 ai3_weakness = ai3_weakness - 1
+                if ai3_weakness != 0:
+                    ai3_statuses.append("Weakness")
             if ai4_weakness != 0:
                 ai4_weakness = ai4_weakness - 1
+                if ai4_weakness != 0:
+                    ai4_statuses.append("Weakness")
             if ai5_weakness != 0:
                 ai5_weakness = ai5_weakness - 1
+                if ai5_weakness != 0:
+                    ai5_statuses.append("Weakness")
             if ai1_stun != 0:
                 ai1_stun = ai1_stun - 1
+                if ai1_stun != 0:
+                    ai1_statuses.append("Stun")
             if ai2_stun != 0:
                 ai2_stun = ai2_stun - 1
+                if ai2_stun != 0:
+                    ai2_statuses.append("Stun")
             if ai3_stun != 0:
                 ai3_stun = ai3_stun - 1
+                if ai3_stun != 0:
+                    ai3_statuses.append("Stun")
             if ai4_stun != 0:
                 ai4_stun = ai4_stun - 1
+                if ai4_stun != 0:
+                    ai4_statuses.append("Stun")
             if ai5_stun != 0:
                 ai5_stun = ai5_stun - 1
+                if ai5_stun != 0:
+                    ai5_statuses.append("Stun")
             if ai1_taunt[1] != 0:
                 ai1_taunt[1] = ai1_taunt[1] - 1
+                if ai1_taunt[1] != 0:
+                    ai1_statuses.append("Taunt")
             if ai2_taunt[1] != 0:
                 ai2_taunt[1] = ai2_taunt[1] - 1
+                if ai2_taunt[1] != 0:
+                    ai2_statuses.append("Taunt")
             if ai3_taunt[1] != 0:
                 ai3_taunt[1] = ai3_taunt[1] - 1
+                if ai3_taunt[1] != 0:
+                    ai3_statuses.append("Taunt")
             if ai4_taunt[1] != 0:
                 ai4_taunt[1] = ai4_taunt[1] - 1
+                if ai4_taunt[1] != 0:
+                    ai4_statuses.append("Taunt")
             if ai5_taunt[1] != 0:
                 ai5_taunt[1] = ai5_taunt[1] - 1
+                if ai5_taunt[1] != 0:
+                    ai5_statuses.append("Taunt")
             champion1_guarded = []
             champion2_guarded = []
             champion3_guarded = []
