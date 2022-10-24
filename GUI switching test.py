@@ -753,8 +753,8 @@ class GameFrame(tk.Frame):
             counter += 1
 
     def set_champions_stats(self):
-        global CHAMPION_1_HP, CHAMPION_1_RP, CHAMPION_1_AP, CHAMPION_1_RPNAME, CHAMPION_2_HP, CHAMPION_2_RP, CHAMPION_2_AP, CHAMPION_2_RPNAME, CHAMPION_3_HP, CHAMPION_3_RP, CHAMPION_3_AP, \
-            CHAMPION_3_RPNAME, CHAMPION_4_HP, CHAMPION_4_RP, CHAMPION_4_AP, CHAMPION_4_RPNAME, CHAMPION_5_HP, CHAMPION_5_RP, CHAMPION_5_AP, CHAMPION_5_RPNAME, CHAMPION_1_ATTACKLIST, CHAMPION_1_SPECIALLIST \
+        global CHAMPION1_HP, CHAMPION_1_RP, CHAMPION_1_AP, CHAMPION_1_RPNAME, CHAMPION2_HP, CHAMPION_2_RP, CHAMPION_2_AP, CHAMPION_2_RPNAME, CHAMPION3_HP, CHAMPION_3_RP, CHAMPION_3_AP, \
+            CHAMPION_3_RPNAME, CHAMPION4_HP, CHAMPION_4_RP, CHAMPION_4_AP, CHAMPION_4_RPNAME, CHAMPION5_HP, CHAMPION_5_RP, CHAMPION_5_AP, CHAMPION_5_RPNAME, CHAMPION_1_ATTACKLIST, CHAMPION_1_SPECIALLIST \
             , CHAMPION_2_ATTACKLIST, CHAMPION_2_SPECIALLIST, CHAMPION_3_ATTACKLIST, CHAMPION_3_SPECIALLIST, CHAMPION_4_ATTACKLIST, CHAMPION_4_SPECIALLIST, CHAMPION_5_ATTACKLIST, CHAMPION_5_SPECIALLIST
         counter = 1
         champion_hp_list = []
@@ -905,7 +905,7 @@ class GameFrame(tk.Frame):
                 champion_attack_list = CHILD_OF_MEDICINE.attack_list
                 champion_specials_list = CHILD_OF_MEDICINE.specials_list
             if counter == 1:
-                CHAMPION_1_HP = champion_hp_list[0]
+                CHAMPION1_HP = champion_hp_list[0]
                 CHAMPION_1_RP = champion_rp_list[0]
                 CHAMPION_1_AP = champion_ap_list[0]
                 CHAMPION_1_RPNAME = champion_rpName_list[0]
@@ -918,7 +918,7 @@ class GameFrame(tk.Frame):
                 champion_attack_list = ""
                 champion_specials_list = ""
             elif counter == 2:
-                CHAMPION_2_HP = champion_hp_list[0]
+                CHAMPION2_HP = champion_hp_list[0]
                 CHAMPION_2_RP = champion_rp_list[0]
                 CHAMPION_2_AP = champion_ap_list[0]
                 CHAMPION_2_RPNAME = champion_rpName_list[0]
@@ -931,7 +931,7 @@ class GameFrame(tk.Frame):
                 champion_attack_list = ""
                 champion_specials_list = ""
             elif counter == 3:
-                CHAMPION_3_HP = champion_hp_list[0]
+                CHAMPION3_HP = champion_hp_list[0]
                 CHAMPION_3_RP = champion_rp_list[0]
                 CHAMPION_3_AP = champion_ap_list[0]
                 CHAMPION_3_RPNAME = champion_rpName_list[0]
@@ -944,7 +944,7 @@ class GameFrame(tk.Frame):
                 champion_attack_list = ""
                 champion_specials_list = ""
             elif counter == 4:
-                CHAMPION_4_HP = champion_hp_list[0]
+                CHAMPION4_HP = champion_hp_list[0]
                 CHAMPION_4_RP = champion_rp_list[0]
                 CHAMPION_4_AP = champion_ap_list[0]
                 CHAMPION_4_RPNAME = champion_rpName_list[0]
@@ -957,7 +957,7 @@ class GameFrame(tk.Frame):
                 champion_attack_list = ""
                 champion_specials_list = ""
             elif counter == 5:
-                CHAMPION_5_HP = champion_hp_list[0]
+                CHAMPION5_HP = champion_hp_list[0]
                 CHAMPION_5_RP = champion_rp_list[0]
                 CHAMPION_5_AP = champion_ap_list[0]
                 CHAMPION_5_RPNAME = champion_rpName_list[0]
@@ -1107,7 +1107,7 @@ class GameFrame(tk.Frame):
             champion2_small_external_buffs, champion2_big_external_buffs, champion3_small_external_buffs, champion3_big_external_buffs, \
             champion4_small_external_buffs, champion4_big_external_buffs, champion5_small_external_buffs, champion5_big_external_buffs, \
         void_infusion_stacks, champion1_blessing, champion2_blessing, champion3_blessing, champion4_blessing, champion5_blessing
-        champion1_hp = CHAMPION_1_HP
+        champion1_hp = CHAMPION1_HP
         champion1_ap = CHAMPION_1_AP
         void_infusion_stacks = 0
         champion1_blessing = 0
@@ -1120,7 +1120,7 @@ class GameFrame(tk.Frame):
         else:
             champion1_rp = 0
         champion1_rpName = CHAMPION_1_RPNAME
-        champion2_hp = CHAMPION_2_HP
+        champion2_hp = CHAMPION2_HP
         champion2_ap = CHAMPION_2_AP
         if CHAMPION_2_RPNAME == "Mana":
             champion2_rp = CHAMPION_2_RP
@@ -1129,7 +1129,7 @@ class GameFrame(tk.Frame):
         champion2_rpName = CHAMPION_2_RPNAME
         champion2_small_external_buffs = [0]
         champion2_big_external_buffs = [0]
-        champion3_hp = CHAMPION_3_HP
+        champion3_hp = CHAMPION3_HP
         champion3_ap = CHAMPION_3_AP
         if CHAMPION_3_RPNAME == "Mana":
             champion3_rp = CHAMPION_3_RP
@@ -1138,7 +1138,7 @@ class GameFrame(tk.Frame):
         champion3_rpName = CHAMPION_3_RPNAME
         champion3_small_external_buffs = [0]
         champion3_big_external_buffs = [0]
-        champion4_hp = CHAMPION_4_HP
+        champion4_hp = CHAMPION4_HP
         champion4_ap = CHAMPION_4_AP
         if CHAMPION_4_RPNAME == "Mana":
             champion4_rp = CHAMPION_4_RP
@@ -1147,7 +1147,7 @@ class GameFrame(tk.Frame):
         champion4_rpName = CHAMPION_4_RPNAME
         champion4_small_external_buffs = [0]
         champion4_big_external_buffs = [0]
-        champion5_hp = CHAMPION_5_HP
+        champion5_hp = CHAMPION5_HP
         champion5_ap = CHAMPION_5_AP
         if CHAMPION_5_RPNAME == "Mana":
             champion5_rp = CHAMPION_5_RP
@@ -1426,95 +1426,95 @@ class GameFrame(tk.Frame):
         if champion_position == 1:
             if CHAMPION_1_RPNAME == "null":
                 if champion1_hp == 0:
-                    status_text = "*DEAD*\nHealth Points: {}/{}\n".format(champion1_hp, CHAMPION_1_HP)
+                    status_text = "*DEAD*\nHealth Points: {}/{}\n".format(champion1_hp, CHAMPION1_HP)
                     return status_text
                 else:
-                    status_text = "\nHealth Points: {}/{}\n".format(champion1_hp, CHAMPION_1_HP)
+                    status_text = "\nHealth Points: {}/{}\n".format(champion1_hp, CHAMPION1_HP)
                     return status_text
             else:
                 if champion1_hp == 0:
-                    status_text = "*DEAD*\nHealth Points: {}/{}\n{}: {}/{}".format(champion1_hp, CHAMPION_1_HP,
+                    status_text = "*DEAD*\nHealth Points: {}/{}\n{}: {}/{}".format(champion1_hp, CHAMPION1_HP,
                                                                                    CHAMPION_1_RPNAME, champion1_rp,
                                                                                    CHAMPION_1_RP)
                     return status_text
                 else:
-                    status_text = "\nHealth Points: {}/{}\n{}: {}/{}".format(champion1_hp, CHAMPION_1_HP,
+                    status_text = "\nHealth Points: {}/{}\n{}: {}/{}".format(champion1_hp, CHAMPION1_HP,
                                                                              CHAMPION_1_RPNAME, champion1_rp,
                                                                              CHAMPION_1_RP)
                     return status_text
         if champion_position == 2:
             if CHAMPION_2_RPNAME == "null":
                 if champion2_hp == 0:
-                    status_text = "*DEAD*\nHealth Points: {}/{}\n".format(champion2_hp, CHAMPION_2_HP)
+                    status_text = "*DEAD*\nHealth Points: {}/{}\n".format(champion2_hp, CHAMPION2_HP)
                     return status_text
                 else:
-                    status_text = "\nHealth Points: {}/{}\n".format(champion2_hp, CHAMPION_2_HP)
+                    status_text = "\nHealth Points: {}/{}\n".format(champion2_hp, CHAMPION2_HP)
                     return status_text
             else:
                 if champion2_hp == 0:
-                    status_text = "*DEAD*\nHealth Points: {}/{}\n{}: {}/{}".format(champion2_hp, CHAMPION_2_HP,
+                    status_text = "*DEAD*\nHealth Points: {}/{}\n{}: {}/{}".format(champion2_hp, CHAMPION2_HP,
                                                                                    CHAMPION_2_RPNAME, champion2_rp,
                                                                                    CHAMPION_2_RP)
                     return status_text
                 else:
-                    status_text = "\nHealth Points: {}/{}\n{}: {}/{}".format(champion2_hp, CHAMPION_2_HP,
+                    status_text = "\nHealth Points: {}/{}\n{}: {}/{}".format(champion2_hp, CHAMPION2_HP,
                                                                              CHAMPION_2_RPNAME, champion2_rp,
                                                                              CHAMPION_2_RP)
                     return status_text
         if champion_position == 3:
             if CHAMPION_3_RPNAME == "null":
                 if champion3_hp == 0:
-                    status_text = "*DEAD*\nHealth Points: {}/{}\n".format(champion3_hp, CHAMPION_3_HP)
+                    status_text = "*DEAD*\nHealth Points: {}/{}\n".format(champion3_hp, CHAMPION3_HP)
                     return status_text
                 else:
-                    status_text = "\nHealth Points: {}/{}\n".format(champion3_hp, CHAMPION_3_HP)
+                    status_text = "\nHealth Points: {}/{}\n".format(champion3_hp, CHAMPION3_HP)
                     return status_text
             else:
                 if champion3_hp == 0:
-                    status_text = "*DEAD*\nHealth Points: {}/{}\n{}: {}/{}".format(champion3_hp, CHAMPION_3_HP,
+                    status_text = "*DEAD*\nHealth Points: {}/{}\n{}: {}/{}".format(champion3_hp, CHAMPION3_HP,
                                                                                    CHAMPION_3_RPNAME, champion3_rp,
                                                                                    CHAMPION_3_RP)
                     return status_text
                 else:
-                    status_text = "\nHealth Points: {}/{}\n{}: {}/{}".format(champion3_hp, CHAMPION_3_HP,
+                    status_text = "\nHealth Points: {}/{}\n{}: {}/{}".format(champion3_hp, CHAMPION3_HP,
                                                                              CHAMPION_3_RPNAME, champion3_rp,
                                                                              CHAMPION_3_RP)
                     return status_text
         if champion_position == 4:
             if CHAMPION_4_RPNAME == "null":
                 if champion4_hp == 0:
-                    status_text = "*DEAD*\nHealth Points: {}/{}\n".format(champion4_hp, CHAMPION_4_HP)
+                    status_text = "*DEAD*\nHealth Points: {}/{}\n".format(champion4_hp, CHAMPION4_HP)
                     return status_text
                 else:
-                    status_text = "\nHealth Points: {}/{}\n".format(champion4_hp, CHAMPION_4_HP)
+                    status_text = "\nHealth Points: {}/{}\n".format(champion4_hp, CHAMPION4_HP)
                     return status_text
             else:
                 if champion4_hp == 0:
-                    status_text = "*DEAD*\nHealth Points: {}/{}\n{}: {}/{}".format(champion4_hp, CHAMPION_4_HP,
+                    status_text = "*DEAD*\nHealth Points: {}/{}\n{}: {}/{}".format(champion4_hp, CHAMPION4_HP,
                                                                                    CHAMPION_4_RPNAME, champion4_rp,
                                                                                    CHAMPION_4_RP)
                     return status_text
                 else:
-                    status_text = "\nHealth Points: {}/{}\n{}: {}/{}".format(champion4_hp, CHAMPION_4_HP,
+                    status_text = "\nHealth Points: {}/{}\n{}: {}/{}".format(champion4_hp, CHAMPION4_HP,
                                                                              CHAMPION_4_RPNAME, champion4_rp,
                                                                              CHAMPION_4_RP)
                     return status_text
         if champion_position == 5:
             if CHAMPION_5_RPNAME == "null":
                 if champion5_hp == 0:
-                    status_text = "*DEAD*\nHealth Points: {}/{}\n".format(champion5_hp, CHAMPION_5_HP)
+                    status_text = "*DEAD*\nHealth Points: {}/{}\n".format(champion5_hp, CHAMPION5_HP)
                     return status_text
                 else:
-                    status_text = "\nHealth Points: {}/{}\n".format(champion5_hp, CHAMPION_5_HP)
+                    status_text = "\nHealth Points: {}/{}\n".format(champion5_hp, CHAMPION5_HP)
                     return status_text
             else:
                 if champion5_hp == 0:
-                    status_text = "*DEAD*\nHealth Points: {}/{}\n{}: {}/{}".format(champion5_hp, CHAMPION_5_HP,
+                    status_text = "*DEAD*\nHealth Points: {}/{}\n{}: {}/{}".format(champion5_hp, CHAMPION5_HP,
                                                                                    CHAMPION_5_RPNAME, champion5_rp,
                                                                                    CHAMPION_5_RP)
                     return status_text
                 else:
-                    status_text = "\nHealth Points: {}/{}\n{}: {}/{}".format(champion5_hp, CHAMPION_5_HP,
+                    status_text = "\nHealth Points: {}/{}\n{}: {}/{}".format(champion5_hp, CHAMPION5_HP,
                                                                              CHAMPION_5_RPNAME, champion5_rp,
                                                                              CHAMPION_5_RP)
                     return status_text
@@ -2417,52 +2417,52 @@ class GameFrame(tk.Frame):
         global champion1_rp, champion2_rp, champion3_rp, champion4_rp, champion5_rp
         if champion_position == 1:
             if CHAMPION_1_RPNAME == "null":
-                status_text = "Health Points: {}/{}".format(champion1_hp, CHAMPION_1_HP)
+                status_text = "Health Points: {}/{}".format(champion1_hp, CHAMPION1_HP)
                 return status_text
             else:
                 if champion1_rp > CHAMPION_1_RP:
                     champion1_rp = CHAMPION_1_RP
-                status_text = "Health Points: {}/{}\n{}: {}/{}".format(champion1_hp, CHAMPION_1_HP, CHAMPION_1_RPNAME,
+                status_text = "Health Points: {}/{}\n{}: {}/{}".format(champion1_hp, CHAMPION1_HP, CHAMPION_1_RPNAME,
                                                                        champion1_rp, CHAMPION_1_RP)
                 return status_text
         if champion_position == 2:
             if CHAMPION_2_RPNAME == "null":
-                status_text = "Health Points: {}/{}".format(champion2_hp, CHAMPION_2_HP)
+                status_text = "Health Points: {}/{}".format(champion2_hp, CHAMPION2_HP)
                 return status_text
             else:
                 if champion2_rp > CHAMPION_2_RP:
                     champion2_rp = CHAMPION_2_RP
-                status_text = "Health Points: {}/{}\n{}: {}/{}".format(champion2_hp, CHAMPION_2_HP, CHAMPION_2_RPNAME,
+                status_text = "Health Points: {}/{}\n{}: {}/{}".format(champion2_hp, CHAMPION2_HP, CHAMPION_2_RPNAME,
                                                                        champion2_rp, CHAMPION_2_RP)
                 return status_text
         if champion_position == 3:
             if CHAMPION_3_RPNAME == "null":
-                status_text = "Health Points: {}/{}".format(champion3_hp, CHAMPION_3_HP)
+                status_text = "Health Points: {}/{}".format(champion3_hp, CHAMPION3_HP)
                 return status_text
             else:
                 if champion3_rp > CHAMPION_3_RP:
                     champion3_rp = CHAMPION_3_RP
-                status_text = "Health Points: {}/{}\n{}: {}/{}".format(champion3_hp, CHAMPION_3_HP, CHAMPION_3_RPNAME,
+                status_text = "Health Points: {}/{}\n{}: {}/{}".format(champion3_hp, CHAMPION3_HP, CHAMPION_3_RPNAME,
                                                                        champion3_rp, CHAMPION_3_RP)
                 return status_text
         if champion_position == 4:
             if CHAMPION_4_RPNAME == "null":
-                status_text = "Health Points: {}/{}".format(champion4_hp, CHAMPION_4_HP)
+                status_text = "Health Points: {}/{}".format(champion4_hp, CHAMPION4_HP)
                 return status_text
             else:
                 if champion4_rp > CHAMPION_4_RP:
                     champion4_rp = CHAMPION_4_RP
-                status_text = "Health Points: {}/{}\n{}: {}/{}".format(champion4_hp, CHAMPION_4_HP, CHAMPION_4_RPNAME,
+                status_text = "Health Points: {}/{}\n{}: {}/{}".format(champion4_hp, CHAMPION4_HP, CHAMPION_4_RPNAME,
                                                                        champion4_rp, CHAMPION_4_RP)
                 return status_text
         if champion_position == 5:
             if CHAMPION_5_RPNAME == "null":
-                status_text = "Health Points: {}/{}".format(champion5_hp, CHAMPION_5_HP)
+                status_text = "Health Points: {}/{}".format(champion5_hp, CHAMPION5_HP)
                 return status_text
             else:
                 if champion5_rp > CHAMPION_5_RP:
                     champion5_rp = CHAMPION_5_RP
-                status_text = "Health Points: {}/{}\n{}: {}/{}".format(champion5_hp, CHAMPION_5_HP, CHAMPION_5_RPNAME,
+                status_text = "Health Points: {}/{}\n{}: {}/{}".format(champion5_hp, CHAMPION5_HP, CHAMPION_5_RPNAME,
                                                                        champion5_rp, CHAMPION_5_RP)
                 return status_text
 
@@ -2943,53 +2943,53 @@ class GameFrame(tk.Frame):
             if champion1_nanobot[1] != 0:
                 champion1_nanobot[1] = champion1_nanobot[1] - 1
                 champion1_hp = champion1_hp + champion1_nanobot[0]
-                if champion1_hp > CHAMPION_1_HP:
-                    champion1_hp = CHAMPION_1_HP
+                if champion1_hp > CHAMPION1_HP:
+                    champion1_hp = CHAMPION1_HP
             if champion2_nanobot[1] != 0:
                 champion2_nanobot[1] = champion2_nanobot[1] - 1
                 champion2_hp = champion2_hp + champion2_nanobot[0]
-                if champion2_hp > CHAMPION_2_HP:
-                    champion2_hp = CHAMPION_2_HP
+                if champion2_hp > CHAMPION2_HP:
+                    champion2_hp = CHAMPION2_HP
             if champion3_nanobot[1] != 0:
                 champion3_nanobot[1] = champion3_nanobot[1] - 1
                 champion3_hp = champion3_hp + champion3_nanobot[0]
-                if champion3_hp > CHAMPION_3_HP:
-                    champion3_hp = CHAMPION_3_HP
+                if champion3_hp > CHAMPION3_HP:
+                    champion3_hp = CHAMPION3_HP
             if champion4_nanobot[1] != 0:
                 champion4_nanobot[1] = champion4_nanobot[1] - 1
                 champion4_hp = champion4_hp + champion4_nanobot[0]
-                if champion4_hp > CHAMPION_4_HP:
-                    champion4_hp = CHAMPION_4_HP
+                if champion4_hp > CHAMPION4_HP:
+                    champion4_hp = CHAMPION4_HP
             if champion5_nanobot[1] != 0:
                 champion5_nanobot[1] = champion5_nanobot[1] - 1
                 champion5_hp = champion5_hp + champion5_nanobot[0]
-                if champion5_hp > CHAMPION_5_HP:
-                    champion5_hp = CHAMPION_5_HP
+                if champion5_hp > CHAMPION5_HP:
+                    champion5_hp = CHAMPION5_HP
             if champion1_herb_tea[1] != 0:
                 champion1_herb_tea[1] = champion1_herb_tea[1] - 1
                 champion1_hp = champion1_hp + champion1_herb_tea[0]
-                if champion1_hp > CHAMPION_1_HP:
-                    champion1_hp = CHAMPION_1_HP
+                if champion1_hp > CHAMPION1_HP:
+                    champion1_hp = CHAMPION1_HP
             if champion2_herb_tea[1] != 0:
                 champion2_herb_tea[1] = champion2_herb_tea[1] - 1
                 champion2_hp = champion2_hp + champion2_herb_tea[0]
-                if champion2_hp > CHAMPION_2_HP:
-                    champion2_hp = CHAMPION_2_HP
+                if champion2_hp > CHAMPION2_HP:
+                    champion2_hp = CHAMPION2_HP
             if champion3_herb_tea[1] != 0:
                 champion3_herb_tea[1] = champion3_herb_tea[1] - 1
                 champion3_hp = champion3_hp + champion3_herb_tea[0]
-                if champion3_hp > CHAMPION_3_HP:
-                    champion3_hp = CHAMPION_3_HP
+                if champion3_hp > CHAMPION3_HP:
+                    champion3_hp = CHAMPION3_HP
             if champion4_herb_tea[1] != 0:
                 champion4_herb_tea[1] = champion4_herb_tea[1] - 1
                 champion4_hp = champion4_hp + champion4_herb_tea[0]
-                if champion4_hp > CHAMPION_4_HP:
-                    champion4_hp = CHAMPION_4_HP
+                if champion4_hp > CHAMPION4_HP:
+                    champion4_hp = CHAMPION4_HP
             if champion5_herb_tea[1] != 0:
                 champion5_herb_tea[1] = champion5_herb_tea[1] - 1
                 champion5_hp = champion5_hp + champion5_herb_tea[0]
-                if champion5_hp > CHAMPION_5_HP:
-                    champion5_hp = CHAMPION_5_HP
+                if champion5_hp > CHAMPION5_HP:
+                    champion5_hp = CHAMPION5_HP
             for monster_var in monster_list:
                 if monster_var == 1:
                     if ai1_hp == 0:
@@ -15175,40 +15175,40 @@ class GameFrame(tk.Frame):
                 if champion1_rp > CHAMPION_1_RP:
                     champion1_rp = CHAMPION_1_RP
             champion1_hp += 400
-            if champion1_hp > CHAMPION_1_HP:
-                champion1_hp = CHAMPION_1_HP
+            if champion1_hp > CHAMPION1_HP:
+                champion1_hp = CHAMPION1_HP
         if champion_position == 2:
             if CHAMPION_2_RPNAME == "Mana":
                 champion2_rp += math.ceil(CHAMPION_2_RP * 0.5)
                 if champion2_rp > CHAMPION_2_RP:
                     champion2_rp = CHAMPION_2_RP
             champion2_hp += 400
-            if champion2_hp > CHAMPION_2_HP:
-                champion2_hp = CHAMPION_2_HP
+            if champion2_hp > CHAMPION2_HP:
+                champion2_hp = CHAMPION2_HP
         if champion_position == 3:
             if CHAMPION_3_RPNAME == "Mana":
                 champion3_rp += math.ceil(CHAMPION_3_RP * 0.5)
                 if champion3_rp > CHAMPION_3_RP:
                     champion3_rp = CHAMPION_3_RP
             champion3_hp += 400
-            if champion3_hp > CHAMPION_3_HP:
-                champion3_hp = CHAMPION_3_HP
+            if champion3_hp > CHAMPION3_HP:
+                champion3_hp = CHAMPION3_HP
         if champion_position == 4:
             if CHAMPION_4_RPNAME == "Mana":
                 champion4_rp += math.ceil(CHAMPION_4_RP * 0.5)
                 if champion4_rp > CHAMPION_4_RP:
                     champion4_rp = CHAMPION_4_RP
             champion4_hp += 400
-            if champion4_hp > CHAMPION_4_HP:
-                champion4_hp = CHAMPION_4_HP
+            if champion4_hp > CHAMPION4_HP:
+                champion4_hp = CHAMPION4_HP
         if champion_position == 5:
             if CHAMPION_5_RPNAME == "Mana":
                 champion5_rp += math.ceil(CHAMPION_5_RP * 0.5)
                 if champion5_rp > CHAMPION_5_RP:
                     champion5_rp = CHAMPION_5_RP
             champion5_hp += 400
-            if champion5_hp > CHAMPION_5_HP:
-                champion5_hp = CHAMPION_5_HP
+            if champion5_hp > CHAMPION5_HP:
+                champion5_hp = CHAMPION5_HP
         rest_confirmation_label.destroy()
         rest_confirmation_button.destroy()
         back_button.destroy()
@@ -15524,24 +15524,24 @@ class GameFrame(tk.Frame):
                     if champions == BARBARIAN.title:
                         if counter == 1:
                             champion1_hp = champion1_hp + math.ceil(ability_data[3] * self.check_brittle(1) / 2)
-                            if champion1_hp > CHAMPION_1_HP:
-                                 champion1_hp = CHAMPION_1_HP
+                            if champion1_hp > CHAMPION1_HP:
+                                 champion1_hp = CHAMPION1_HP
                         elif counter == 2:
                             champion2_hp = champion2_hp + math.ceil(ability_data[3] * self.check_brittle(1) / 2)
-                            if champion2_hp > CHAMPION_2_HP:
-                                 champion2_hp = CHAMPION_2_HP
+                            if champion2_hp > CHAMPION2_HP:
+                                 champion2_hp = CHAMPION2_HP
                         elif counter == 3:
                             champion3_hp = champion3_hp + math.ceil(ability_data[3] * self.check_brittle(1) / 2)
-                            if champion3_hp > CHAMPION_3_HP:
-                                 champion3_hp = CHAMPION_3_HP
+                            if champion3_hp > CHAMPION3_HP:
+                                 champion3_hp = CHAMPION3_HP
                         elif counter == 4:
                             champion4_hp = champion4_hp + math.ceil(ability_data[3] * self.check_brittle(1) / 2)
-                            if champion4_hp > CHAMPION_4_HP:
-                                 champion4_hp = CHAMPION_4_HP
+                            if champion4_hp > CHAMPION4_HP:
+                                 champion4_hp = CHAMPION4_HP
                         elif counter == 5:
                             champion5_hp = champion5_hp + math.ceil(ability_data[3] * self.check_brittle(1) / 2)
-                            if champion5_hp > CHAMPION_5_HP:
-                                champion5_hp = CHAMPION_5_HP
+                            if champion5_hp > CHAMPION5_HP:
+                                champion5_hp = CHAMPION5_HP
             if 2 in target_list:
                 ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2))
                 for champions in CHAMPION_LIST:
@@ -15549,24 +15549,24 @@ class GameFrame(tk.Frame):
                     if champions == BARBARIAN.title:
                         if counter == 1:
                             champion1_hp = champion1_hp + math.ceil(math.ceil(ability_data[3] * self.check_brittle(2)) / 2)
-                            if champion1_hp > CHAMPION_1_HP:
-                                champion1_hp = CHAMPION_1_HP
+                            if champion1_hp > CHAMPION1_HP:
+                                champion1_hp = CHAMPION1_HP
                         elif counter == 2:
                             champion2_hp = champion2_hp + math.ceil(math.ceil(ability_data[3] * self.check_brittle(2)) / 2)
-                            if champion2_hp > CHAMPION_2_HP:
-                                champion2_hp = CHAMPION_2_HP
+                            if champion2_hp > CHAMPION2_HP:
+                                champion2_hp = CHAMPION2_HP
                         elif counter == 3:
                             champion3_hp = champion3_hp + math.ceil(math.ceil(ability_data[3] * self.check_brittle(2)) / 2)
-                            if champion3_hp > CHAMPION_3_HP:
-                                champion3_hp = CHAMPION_3_HP
+                            if champion3_hp > CHAMPION3_HP:
+                                champion3_hp = CHAMPION3_HP
                         elif counter == 4:
                             champion4_hp = champion4_hp + math.ceil(math.ceil(ability_data[3] * self.check_brittle(2)) / 2)
-                            if champion4_hp > CHAMPION_4_HP:
-                                champion4_hp = CHAMPION_4_HP
+                            if champion4_hp > CHAMPION4_HP:
+                                champion4_hp = CHAMPION4_HP
                         elif counter == 5:
                             champion5_hp = champion5_hp + math.ceil(math.ceil(ability_data[3] * self.check_brittle(2)) / 2)
-                            if champion5_hp > CHAMPION_5_HP:
-                                champion5_hp = CHAMPION_5_HP
+                            if champion5_hp > CHAMPION5_HP:
+                                champion5_hp = CHAMPION5_HP
             if 3 in target_list:
                 ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3))
                 for champions in CHAMPION_LIST:
@@ -15574,24 +15574,24 @@ class GameFrame(tk.Frame):
                     if champions == BARBARIAN.title:
                         if counter == 1:
                             champion1_hp = champion1_hp + math.ceil(math.ceil(ability_data[3] * self.check_brittle(3)) / 2)
-                            if champion1_hp > CHAMPION_1_HP:
-                                champion1_hp = CHAMPION_1_HP
+                            if champion1_hp > CHAMPION1_HP:
+                                champion1_hp = CHAMPION1_HP
                         elif counter == 2:
                             champion2_hp = champion2_hp + math.ceil(math.ceil(ability_data[3] * self.check_brittle(3)) / 2)
-                            if champion2_hp > CHAMPION_2_HP:
-                                champion2_hp = CHAMPION_2_HP
+                            if champion2_hp > CHAMPION2_HP:
+                                champion2_hp = CHAMPION2_HP
                         elif counter == 3:
                             champion3_hp = champion3_hp + math.ceil(math.ceil(ability_data[3] * self.check_brittle(3)) / 2)
-                            if champion3_hp > CHAMPION_3_HP:
-                                champion3_hp = CHAMPION_3_HP
+                            if champion3_hp > CHAMPION3_HP:
+                                champion3_hp = CHAMPION3_HP
                         elif counter == 4:
                             champion4_hp = champion4_hp + math.ceil(math.ceil(ability_data[3] * self.check_brittle(3)) / 2)
-                            if champion4_hp > CHAMPION_4_HP:
-                                champion4_hp = CHAMPION_4_HP
+                            if champion4_hp > CHAMPION4_HP:
+                                champion4_hp = CHAMPION4_HP
                         elif counter == 5:
                             champion5_hp = champion5_hp + math.ceil(math.ceil(ability_data[3] * self.check_brittle(3)) / 2)
-                            if champion5_hp > CHAMPION_5_HP:
-                                champion5_hp = CHAMPION_5_HP
+                            if champion5_hp > CHAMPION5_HP:
+                                champion5_hp = CHAMPION5_HP
             if 4 in target_list:
                 ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4))
                 for champions in CHAMPION_LIST:
@@ -15599,24 +15599,24 @@ class GameFrame(tk.Frame):
                     if champions == BARBARIAN.title:
                         if counter == 1:
                             champion1_hp = champion1_hp + math.ceil(math.ceil(ability_data[3] * self.check_brittle(4)) / 2)
-                            if champion1_hp > CHAMPION_1_HP:
-                                champion1_hp = CHAMPION_1_HP
+                            if champion1_hp > CHAMPION1_HP:
+                                champion1_hp = CHAMPION1_HP
                         elif counter == 2:
                             champion2_hp = champion2_hp + math.ceil(math.ceil(ability_data[3] * self.check_brittle(4)) / 2)
-                            if champion2_hp > CHAMPION_2_HP:
-                                champion2_hp = CHAMPION_2_HP
+                            if champion2_hp > CHAMPION2_HP:
+                                champion2_hp = CHAMPION2_HP
                         elif counter == 3:
                             champion3_hp = champion3_hp + math.ceil(math.ceil(ability_data[3] * self.check_brittle(4)) / 2)
-                            if champion3_hp > CHAMPION_3_HP:
-                                champion3_hp = CHAMPION_3_HP
+                            if champion3_hp > CHAMPION3_HP:
+                                champion3_hp = CHAMPION3_HP
                         elif counter == 4:
                             champion4_hp = champion4_hp + math.ceil(math.ceil(ability_data[3] * self.check_brittle(4)) / 2)
-                            if champion4_hp > CHAMPION_4_HP:
-                                champion4_hp = CHAMPION_4_HP
+                            if champion4_hp > CHAMPION4_HP:
+                                champion4_hp = CHAMPION4_HP
                         elif counter == 5:
                             champion5_hp = champion5_hp + math.ceil(math.ceil(ability_data[3] * self.check_brittle(4)) / 2)
-                            if champion5_hp > CHAMPION_5_HP:
-                                champion5_hp = CHAMPION_5_HP
+                            if champion5_hp > CHAMPION5_HP:
+                                champion5_hp = CHAMPION5_HP
             if 5 in target_list:
                 ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5))
                 for champions in CHAMPION_LIST:
@@ -15624,24 +15624,24 @@ class GameFrame(tk.Frame):
                     if champions == BARBARIAN.title:
                         if counter == 1:
                             champion1_hp = champion1_hp + math.ceil(math.ceil(ability_data[3] * self.check_brittle(5)) / 2)
-                            if champion1_hp > CHAMPION_1_HP:
-                                champion1_hp = CHAMPION_1_HP
+                            if champion1_hp > CHAMPION1_HP:
+                                champion1_hp = CHAMPION1_HP
                         elif counter == 2:
                             champion2_hp = champion2_hp + math.ceil(math.ceil(ability_data[3] * self.check_brittle(5)) / 2)
-                            if champion2_hp > CHAMPION_2_HP:
-                                champion2_hp = CHAMPION_2_HP
+                            if champion2_hp > CHAMPION2_HP:
+                                champion2_hp = CHAMPION2_HP
                         elif counter == 3:
                             champion3_hp = champion3_hp + math.ceil(math.ceil(ability_data[3] * self.check_brittle(5)) / 2)
-                            if champion3_hp > CHAMPION_3_HP:
-                                champion3_hp = CHAMPION_3_HP
+                            if champion3_hp > CHAMPION3_HP:
+                                champion3_hp = CHAMPION3_HP
                         elif counter == 4:
                             champion4_hp = champion4_hp + math.ceil(math.ceil(ability_data[3] * self.check_brittle(5)) / 2)
-                            if champion4_hp > CHAMPION_4_HP:
-                                champion4_hp = CHAMPION_4_HP
+                            if champion4_hp > CHAMPION4_HP:
+                                champion4_hp = CHAMPION4_HP
                         elif counter == 5:
                             champion5_hp = champion5_hp + math.ceil(math.ceil(ability_data[3] * self.check_brittle(5)) / 2)
-                            if champion5_hp > CHAMPION_5_HP:
-                                champion5_hp = CHAMPION_5_HP
+                            if champion5_hp > CHAMPION5_HP:
+                                champion5_hp = CHAMPION5_HP
         elif ability_data[0] == "Pulverize":
             if 1 in target_list:
                 ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1))
@@ -16457,24 +16457,24 @@ class GameFrame(tk.Frame):
                     if champions == BLOODMANCER.title:
                         if counter == 1:
                             champion1_hp = champion1_hp + math.ceil(math.ceil(ability_data[3] * self.check_brittle(1)) * 1.5)
-                            if champion1_hp > CHAMPION_1_HP:
-                                 champion1_hp = CHAMPION_1_HP
+                            if champion1_hp > CHAMPION1_HP:
+                                 champion1_hp = CHAMPION1_HP
                         elif counter == 2:
                             champion2_hp = champion2_hp + math.ceil(math.ceil(ability_data[3] * self.check_brittle(1)) * 1.5)
-                            if champion2_hp > CHAMPION_2_HP:
-                                 champion2_hp = CHAMPION_2_HP
+                            if champion2_hp > CHAMPION2_HP:
+                                 champion2_hp = CHAMPION2_HP
                         elif counter == 3:
                             champion3_hp = champion3_hp + math.ceil(math.ceil(ability_data[3] * self.check_brittle(1)) * 1.5)
-                            if champion3_hp > CHAMPION_3_HP:
-                                 champion3_hp = CHAMPION_3_HP
+                            if champion3_hp > CHAMPION3_HP:
+                                 champion3_hp = CHAMPION3_HP
                         elif counter == 4:
                             champion4_hp = champion4_hp + math.ceil(math.ceil(ability_data[3] * self.check_brittle(1)) * 1.5)
-                            if champion4_hp > CHAMPION_4_HP:
-                                 champion4_hp = CHAMPION_4_HP
+                            if champion4_hp > CHAMPION4_HP:
+                                 champion4_hp = CHAMPION4_HP
                         elif counter == 5:
                             champion5_hp = champion5_hp + math.ceil(math.ceil(ability_data[3] * self.check_brittle(1)) * 1.5)
-                            if champion5_hp > CHAMPION_5_HP:
-                                champion5_hp = CHAMPION_5_HP
+                            if champion5_hp > CHAMPION5_HP:
+                                champion5_hp = CHAMPION5_HP
             if 2 in target_list:
                 ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2))
                 for champions in CHAMPION_LIST:
@@ -16482,24 +16482,24 @@ class GameFrame(tk.Frame):
                     if champions == BLOODMANCER.title:
                         if counter == 1:
                             champion1_hp = champion1_hp + math.ceil(math.ceil(ability_data[3] * self.check_brittle(2)) * 1.5)
-                            if champion1_hp > CHAMPION_1_HP:
-                                champion1_hp = CHAMPION_1_HP
+                            if champion1_hp > CHAMPION1_HP:
+                                champion1_hp = CHAMPION1_HP
                         elif counter == 2:
                             champion2_hp = champion2_hp + math.ceil(math.ceil(ability_data[3] * self.check_brittle(2)) * 1.5)
-                            if champion2_hp > CHAMPION_2_HP:
-                                champion2_hp = CHAMPION_2_HP
+                            if champion2_hp > CHAMPION2_HP:
+                                champion2_hp = CHAMPION2_HP
                         elif counter == 3:
                             champion3_hp = champion3_hp + math.ceil(math.ceil(ability_data[3] * self.check_brittle(2)) * 1.5)
-                            if champion3_hp > CHAMPION_3_HP:
-                                champion3_hp = CHAMPION_3_HP
+                            if champion3_hp > CHAMPION3_HP:
+                                champion3_hp = CHAMPION3_HP
                         elif counter == 4:
                             champion4_hp = champion4_hp + math.ceil(math.ceil(ability_data[3] * self.check_brittle(2)) * 1.5)
-                            if champion4_hp > CHAMPION_4_HP:
-                                champion4_hp = CHAMPION_4_HP
+                            if champion4_hp > CHAMPION4_HP:
+                                champion4_hp = CHAMPION4_HP
                         elif counter == 5:
                             champion5_hp = champion5_hp + math.ceil(math.ceil(ability_data[3] * self.check_brittle(2)) * 1.5)
-                            if champion5_hp > CHAMPION_5_HP:
-                                champion5_hp = CHAMPION_5_HP
+                            if champion5_hp > CHAMPION5_HP:
+                                champion5_hp = CHAMPION5_HP
             if 3 in target_list:
                 ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3))
                 for champions in CHAMPION_LIST:
@@ -16507,24 +16507,24 @@ class GameFrame(tk.Frame):
                     if champions == BLOODMANCER.title:
                         if counter == 1:
                             champion1_hp = champion1_hp + math.ceil(math.ceil(ability_data[3] * self.check_brittle(3)) * 1.5)
-                            if champion1_hp > CHAMPION_1_HP:
-                                champion1_hp = CHAMPION_1_HP
+                            if champion1_hp > CHAMPION1_HP:
+                                champion1_hp = CHAMPION1_HP
                         elif counter == 2:
                             champion2_hp = champion2_hp + math.ceil(math.ceil(ability_data[3] * self.check_brittle(3)) * 1.5)
-                            if champion2_hp > CHAMPION_2_HP:
-                                champion2_hp = CHAMPION_2_HP
+                            if champion2_hp > CHAMPION2_HP:
+                                champion2_hp = CHAMPION2_HP
                         elif counter == 3:
                             champion3_hp = champion3_hp + math.ceil(math.ceil(ability_data[3] * self.check_brittle(3)) * 1.5)
-                            if champion3_hp > CHAMPION_3_HP:
-                                champion3_hp = CHAMPION_3_HP
+                            if champion3_hp > CHAMPION3_HP:
+                                champion3_hp = CHAMPION3_HP
                         elif counter == 4:
                             champion4_hp = champion4_hp + math.ceil(math.ceil(ability_data[3] * self.check_brittle(3)) * 1.5)
-                            if champion4_hp > CHAMPION_4_HP:
-                                champion4_hp = CHAMPION_4_HP
+                            if champion4_hp > CHAMPION4_HP:
+                                champion4_hp = CHAMPION4_HP
                         elif counter == 5:
                             champion5_hp = champion5_hp + math.ceil(math.ceil(ability_data[3] * self.check_brittle(3)) * 1.5)
-                            if champion5_hp > CHAMPION_5_HP:
-                                champion5_hp = CHAMPION_5_HP
+                            if champion5_hp > CHAMPION5_HP:
+                                champion5_hp = CHAMPION5_HP
             if 4 in target_list:
                 ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4))
                 for champions in CHAMPION_LIST:
@@ -16532,24 +16532,24 @@ class GameFrame(tk.Frame):
                     if champions == BLOODMANCER.title:
                         if counter == 1:
                             champion1_hp = champion1_hp + math.ceil(math.ceil(ability_data[3] * self.check_brittle(4)) * 1.5)
-                            if champion1_hp > CHAMPION_1_HP:
-                                champion1_hp = CHAMPION_1_HP
+                            if champion1_hp > CHAMPION1_HP:
+                                champion1_hp = CHAMPION1_HP
                         elif counter == 2:
                             champion2_hp = champion2_hp + math.ceil(math.ceil(ability_data[3] * self.check_brittle(4)) * 1.5)
-                            if champion2_hp > CHAMPION_2_HP:
-                                champion2_hp = CHAMPION_2_HP
+                            if champion2_hp > CHAMPION2_HP:
+                                champion2_hp = CHAMPION2_HP
                         elif counter == 3:
                             champion3_hp = champion3_hp + math.ceil(math.ceil(ability_data[3] * self.check_brittle(4)) * 1.5)
-                            if champion3_hp > CHAMPION_3_HP:
-                                champion3_hp = CHAMPION_3_HP
+                            if champion3_hp > CHAMPION3_HP:
+                                champion3_hp = CHAMPION3_HP
                         elif counter == 4:
                             champion4_hp = champion4_hp + math.ceil(math.ceil(ability_data[3] * self.check_brittle(4)) * 1.5)
-                            if champion4_hp > CHAMPION_4_HP:
-                                champion4_hp = CHAMPION_4_HP
+                            if champion4_hp > CHAMPION4_HP:
+                                champion4_hp = CHAMPION4_HP
                         elif counter == 5:
                             champion5_hp = champion5_hp + math.ceil(math.ceil(ability_data[3] * self.check_brittle(4)) * 1.5)
-                            if champion5_hp > CHAMPION_5_HP:
-                                champion5_hp = CHAMPION_5_HP
+                            if champion5_hp > CHAMPION5_HP:
+                                champion5_hp = CHAMPION5_HP
             if 5 in target_list:
                 ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5))
                 for champions in CHAMPION_LIST:
@@ -16557,24 +16557,24 @@ class GameFrame(tk.Frame):
                     if champions == BLOODMANCER.title:
                         if counter == 1:
                             champion1_hp = champion1_hp + math.ceil(math.ceil(ability_data[3] * self.check_brittle(5)) * 1.5)
-                            if champion1_hp > CHAMPION_1_HP:
-                                champion1_hp = CHAMPION_1_HP
+                            if champion1_hp > CHAMPION1_HP:
+                                champion1_hp = CHAMPION1_HP
                         elif counter == 2:
                             champion2_hp = champion2_hp + math.ceil(math.ceil(ability_data[3] * self.check_brittle(5)) * 1.5)
-                            if champion2_hp > CHAMPION_2_HP:
-                                champion2_hp = CHAMPION_2_HP
+                            if champion2_hp > CHAMPION2_HP:
+                                champion2_hp = CHAMPION2_HP
                         elif counter == 3:
                             champion3_hp = champion3_hp + math.ceil(math.ceil(ability_data[3] * self.check_brittle(5)) * 1.5)
-                            if champion3_hp > CHAMPION_3_HP:
-                                champion3_hp = CHAMPION_3_HP
+                            if champion3_hp > CHAMPION3_HP:
+                                champion3_hp = CHAMPION3_HP
                         elif counter == 4:
                             champion4_hp = champion4_hp + math.ceil(math.ceil(ability_data[3] * self.check_brittle(5)) * 1.5)
-                            if champion4_hp > CHAMPION_4_HP:
-                                champion4_hp = CHAMPION_4_HP
+                            if champion4_hp > CHAMPION4_HP:
+                                champion4_hp = CHAMPION4_HP
                         elif counter == 5:
                             champion5_hp = champion5_hp + math.ceil(math.ceil(ability_data[3] * self.check_brittle(5)) * 1.5)
-                            if champion5_hp > CHAMPION_5_HP:
-                                champion5_hp = CHAMPION_5_HP
+                            if champion5_hp > CHAMPION5_HP:
+                                champion5_hp = CHAMPION5_HP
         elif ability_data[0] == "Blood Spike":
             global blood_boil_buff
             if 1 in target_list:
@@ -16592,24 +16592,24 @@ class GameFrame(tk.Frame):
                 if champions == BLOODMANCER.title:
                     if counter == 1:
                         champion1_hp = champion1_hp - BLOODMANCER.ap
-                        if champion1_hp > CHAMPION_1_HP:
-                            champion1_hp = CHAMPION_1_HP
+                        if champion1_hp > CHAMPION1_HP:
+                            champion1_hp = CHAMPION1_HP
                     elif counter == 2:
                         champion2_hp = champion2_hp - BLOODMANCER.ap
-                        if champion2_hp > CHAMPION_2_HP:
-                            champion2_hp = CHAMPION_2_HP
+                        if champion2_hp > CHAMPION2_HP:
+                            champion2_hp = CHAMPION2_HP
                     elif counter == 3:
                         champion3_hp = champion3_hp - BLOODMANCER.ap
-                        if champion3_hp > CHAMPION_3_HP:
-                            champion3_hp = CHAMPION_3_HP
+                        if champion3_hp > CHAMPION3_HP:
+                            champion3_hp = CHAMPION3_HP
                     elif counter == 4:
                         champion4_hp = champion4_hp - BLOODMANCER.ap
-                        if champion4_hp > CHAMPION_4_HP:
-                            champion4_hp = CHAMPION_4_HP
+                        if champion4_hp > CHAMPION4_HP:
+                            champion4_hp = CHAMPION4_HP
                     elif counter == 5:
                         champion5_hp = champion5_hp - BLOODMANCER.ap
-                        if champion5_hp > CHAMPION_5_HP:
-                            champion5_hp = CHAMPION_5_HP
+                        if champion5_hp > CHAMPION5_HP:
+                            champion5_hp = CHAMPION5_HP
             blood_boil_buff = 0
         elif ability_data[0] == "Overhand Justice":
             if 1 in target_list:
@@ -17115,24 +17115,24 @@ class GameFrame(tk.Frame):
         elif ability_data[0] == "Mistic Bloom":
             if 1 in target_list:
                 champion1_hp = champion1_hp + ability_data[3]
-                if champion1_hp > CHAMPION_1_HP:
-                    champion1_hp = CHAMPION_1_HP
+                if champion1_hp > CHAMPION1_HP:
+                    champion1_hp = CHAMPION1_HP
             if 2 in target_list:
                 champion2_hp = champion2_hp + ability_data[3]
-                if champion2_hp > CHAMPION_2_HP:
-                    champion2_hp = CHAMPION_2_HP
+                if champion2_hp > CHAMPION2_HP:
+                    champion2_hp = CHAMPION2_HP
             if 3 in target_list:
                 champion3_hp = champion3_hp + ability_data[3]
-                if champion3_hp > CHAMPION_3_HP:
-                    champion3_hp = CHAMPION_3_HP
+                if champion3_hp > CHAMPION3_HP:
+                    champion3_hp = CHAMPION3_HP
             if 4 in target_list:
                 champion4_hp = champion4_hp + ability_data[3]
-                if champion4_hp > CHAMPION_4_HP:
-                    champion4_hp = CHAMPION_4_HP
+                if champion4_hp > CHAMPION4_HP:
+                    champion4_hp = CHAMPION4_HP
             if 5 in target_list:
                 champion5_hp = champion5_hp + ability_data[3]
-                if champion5_hp > CHAMPION_5_HP:
-                    champion5_hp = CHAMPION_5_HP
+                if champion5_hp > CHAMPION5_HP:
+                    champion5_hp = CHAMPION5_HP
         elif ability_data[0] == "Full Potential":
             global champion1_fullPotential, champion2_fullPotential, champion3_fullPotential, \
                 champion4_fullPotential, champion5_fullPotential
@@ -17149,45 +17149,45 @@ class GameFrame(tk.Frame):
         elif ability_data[0] == "Healing Surge":
             if 1 in target_list:
                 champion1_hp = champion1_hp + ability_data[3]
-                if champion1_hp > CHAMPION_1_HP:
-                    champion1_hp = CHAMPION_1_HP
+                if champion1_hp > CHAMPION1_HP:
+                    champion1_hp = CHAMPION1_HP
             if 2 in target_list:
                 champion2_hp = champion2_hp + ability_data[3]
-                if champion2_hp > CHAMPION_2_HP:
-                    champion2_hp = CHAMPION_2_HP
+                if champion2_hp > CHAMPION2_HP:
+                    champion2_hp = CHAMPION2_HP
             if 3 in target_list:
                 champion3_hp = champion3_hp + ability_data[3]
-                if champion3_hp > CHAMPION_3_HP:
-                    champion3_hp = CHAMPION_3_HP
+                if champion3_hp > CHAMPION3_HP:
+                    champion3_hp = CHAMPION3_HP
             if 4 in target_list:
                 champion4_hp = champion4_hp + ability_data[3]
-                if champion4_hp > CHAMPION_4_HP:
-                    champion4_hp = CHAMPION_4_HP
+                if champion4_hp > CHAMPION4_HP:
+                    champion4_hp = CHAMPION4_HP
             if 5 in target_list:
                 champion5_hp = champion5_hp + ability_data[3]
-                if champion5_hp > CHAMPION_5_HP:
-                    champion5_hp = CHAMPION_5_HP
+                if champion5_hp > CHAMPION5_HP:
+                    champion5_hp = CHAMPION5_HP
         elif ability_data[0] == "Rejuvenating Whirlpool":
             if champion1_hp != 0:
                 champion1_hp = champion1_hp + ability_data[3]
-                if champion1_hp > CHAMPION_1_HP:
-                    champion1_hp = CHAMPION_1_HP
+                if champion1_hp > CHAMPION1_HP:
+                    champion1_hp = CHAMPION1_HP
             if champion2_hp != 0:
                 champion2_hp = champion2_hp + ability_data[3]
-                if champion2_hp > CHAMPION_2_HP:
-                    champion2_hp = CHAMPION_2_HP
+                if champion2_hp > CHAMPION2_HP:
+                    champion2_hp = CHAMPION2_HP
             if champion3_hp != 0:
                 champion3_hp = champion3_hp + ability_data[3]
-                if champion3_hp > CHAMPION_3_HP:
-                    champion3_hp = CHAMPION_3_HP
+                if champion3_hp > CHAMPION3_HP:
+                    champion3_hp = CHAMPION3_HP
             if champion4_hp != 0:
                 champion4_hp = champion4_hp + ability_data[3]
-                if champion4_hp > CHAMPION_4_HP:
-                    champion4_hp = CHAMPION_4_HP
+                if champion4_hp > CHAMPION4_HP:
+                    champion4_hp = CHAMPION4_HP
             if champion5_hp != 0:
                 champion5_hp = champion5_hp + ability_data[3]
-                if champion5_hp > CHAMPION_5_HP:
-                    champion5_hp = CHAMPION_5_HP
+                if champion5_hp > CHAMPION5_HP:
+                    champion5_hp = CHAMPION5_HP
         elif ability_data[0] == "Boulder Cocoon":
             if 1 in target_list:
                 champion1_guarded.append("Boulder")
@@ -17202,50 +17202,50 @@ class GameFrame(tk.Frame):
         elif ability_data[0] == "Healing Light":
             if 1 in target_list:
                 champion1_hp = champion1_hp + ability_data[3]
-                if champion1_hp > CHAMPION_1_HP:
-                    champion1_hp = CHAMPION_1_HP
+                if champion1_hp > CHAMPION1_HP:
+                    champion1_hp = CHAMPION1_HP
                 self.grant_champion_blessing(1)
             if 2 in target_list:
                 champion2_hp = champion2_hp + ability_data[3]
-                if champion2_hp > CHAMPION_2_HP:
-                    champion2_hp = CHAMPION_2_HP
+                if champion2_hp > CHAMPION2_HP:
+                    champion2_hp = CHAMPION2_HP
                 self.grant_champion_blessing(2)
             if 3 in target_list:
                 champion3_hp = champion3_hp + ability_data[3]
-                if champion3_hp > CHAMPION_3_HP:
-                    champion3_hp = CHAMPION_3_HP
+                if champion3_hp > CHAMPION3_HP:
+                    champion3_hp = CHAMPION3_HP
                 self.grant_champion_blessing(3)
             if 4 in target_list:
                 champion4_hp = champion4_hp + ability_data[3]
-                if champion4_hp > CHAMPION_4_HP:
-                    champion4_hp = CHAMPION_4_HP
+                if champion4_hp > CHAMPION4_HP:
+                    champion4_hp = CHAMPION4_HP
                 self.grant_champion_blessing(4)
             if 5 in target_list:
                 champion5_hp = champion5_hp + ability_data[3]
-                if champion5_hp > CHAMPION_5_HP:
-                    champion5_hp = CHAMPION_5_HP
+                if champion5_hp > CHAMPION5_HP:
+                    champion5_hp = CHAMPION5_HP
                 self.grant_champion_blessing(5)
         elif ability_data[0] == "Nanoheal Bots":
             if 1 in target_list:
                 champion1_hp = champion1_hp + ability_data[3]
-                if champion1_hp > CHAMPION_1_HP:
-                    champion1_hp = CHAMPION_1_HP
+                if champion1_hp > CHAMPION1_HP:
+                    champion1_hp = CHAMPION1_HP
             if 2 in target_list:
                 champion2_hp = champion2_hp + ability_data[3]
-                if champion2_hp > CHAMPION_2_HP:
-                    champion2_hp = CHAMPION_2_HP
+                if champion2_hp > CHAMPION2_HP:
+                    champion2_hp = CHAMPION2_HP
             if 3 in target_list:
                 champion3_hp = champion3_hp + ability_data[3]
-                if champion3_hp > CHAMPION_3_HP:
-                    champion3_hp = CHAMPION_3_HP
+                if champion3_hp > CHAMPION3_HP:
+                    champion3_hp = CHAMPION3_HP
             if 4 in target_list:
                 champion4_hp = champion4_hp + ability_data[3]
-                if champion4_hp > CHAMPION_4_HP:
-                    champion4_hp = CHAMPION_4_HP
+                if champion4_hp > CHAMPION4_HP:
+                    champion4_hp = CHAMPION4_HP
             if 5 in target_list:
                 champion5_hp = champion5_hp + ability_data[3]
-                if champion5_hp > CHAMPION_5_HP:
-                    champion5_hp = CHAMPION_5_HP
+                if champion5_hp > CHAMPION5_HP:
+                    champion5_hp = CHAMPION5_HP
             self.apply_nanoheal_bots(3)
         elif ability_data[0] == "Reverse Wounds":
             if 1 in target_list:
@@ -17260,61 +17260,61 @@ class GameFrame(tk.Frame):
                 champion5_hp = champion5_hp + champion5_lastRound_damageTaken
         elif ability_data[0] == "Alter Time":
             if champion1_hp != 0:
-                champion1_hp = CHAMPION_1_HP
+                champion1_hp = CHAMPION1_HP
             if champion2_hp != 0:
-                champion2_hp = CHAMPION_2_HP
+                champion2_hp = CHAMPION2_HP
             if champion3_hp != 0:
-                champion3_hp = CHAMPION_3_HP
+                champion3_hp = CHAMPION3_HP
             if champion4_hp != 0:
-                champion4_hp = CHAMPION_4_HP
+                champion4_hp = CHAMPION4_HP
             if champion5_hp != 0:
-                champion5_hp = CHAMPION_5_HP
+                champion5_hp = CHAMPION5_HP
         elif ability_data[0] == "Bandage Wound":
             if 1 in target_list:
                 champion1_hp = champion1_hp + ability_data[3]
-                if champion1_hp > CHAMPION_1_HP:
-                    champion1_hp = CHAMPION_1_HP
+                if champion1_hp > CHAMPION1_HP:
+                    champion1_hp = CHAMPION1_HP
             if 2 in target_list:
                 champion2_hp = champion2_hp + ability_data[3]
-                if champion2_hp > CHAMPION_2_HP:
-                    champion2_hp = CHAMPION_2_HP
+                if champion2_hp > CHAMPION2_HP:
+                    champion2_hp = CHAMPION2_HP
             if 3 in target_list:
                 champion3_hp = champion3_hp + ability_data[3]
-                if champion3_hp > CHAMPION_3_HP:
-                    champion3_hp = CHAMPION_3_HP
+                if champion3_hp > CHAMPION3_HP:
+                    champion3_hp = CHAMPION3_HP
             if 4 in target_list:
                 champion4_hp = champion4_hp + ability_data[3]
-                if champion4_hp > CHAMPION_4_HP:
-                    champion4_hp = CHAMPION_4_HP
+                if champion4_hp > CHAMPION4_HP:
+                    champion4_hp = CHAMPION4_HP
             if 5 in target_list:
                 champion5_hp = champion5_hp + ability_data[3]
-                if champion5_hp > CHAMPION_5_HP:
-                    champion5_hp = CHAMPION_5_HP
+                if champion5_hp > CHAMPION5_HP:
+                    champion5_hp = CHAMPION5_HP
         elif ability_data[0] == "Perfected Herbal Tea":
             if 1 in target_list:
                 champion1_hp = champion1_hp + ability_data[3]
-                if champion1_hp > CHAMPION_1_HP:
-                    champion1_hp = CHAMPION_1_HP
+                if champion1_hp > CHAMPION1_HP:
+                    champion1_hp = CHAMPION1_HP
                 self.apply_herbal_tea(1, 2)
             if 2 in target_list:
                 champion2_hp = champion2_hp + ability_data[3]
-                if champion2_hp > CHAMPION_2_HP:
-                    champion2_hp = CHAMPION_2_HP
+                if champion2_hp > CHAMPION2_HP:
+                    champion2_hp = CHAMPION2_HP
                 self.apply_herbal_tea(2, 2)
             if 3 in target_list:
                 champion3_hp = champion3_hp + ability_data[3]
-                if champion3_hp > CHAMPION_3_HP:
-                    champion3_hp = CHAMPION_3_HP
+                if champion3_hp > CHAMPION3_HP:
+                    champion3_hp = CHAMPION3_HP
                 self.apply_herbal_tea(3, 2)
             if 4 in target_list:
                 champion4_hp = champion4_hp + ability_data[3]
-                if champion4_hp > CHAMPION_4_HP:
-                    champion4_hp = CHAMPION_4_HP
+                if champion4_hp > CHAMPION4_HP:
+                    champion4_hp = CHAMPION4_HP
                 self.apply_herbal_tea(4, 2)
             if 5 in target_list:
                 champion5_hp = champion5_hp + ability_data[3]
-                if champion5_hp > CHAMPION_5_HP:
-                    champion5_hp = CHAMPION_5_HP
+                if champion5_hp > CHAMPION5_HP:
+                    champion5_hp = CHAMPION5_HP
                 self.apply_herbal_tea(5, 2)
         elif ability_data[0] == "G.3.T J.A.X.D":
             global champion1_JAXD, champion2_JAXD, champion3_JAXD, \
@@ -17508,29 +17508,29 @@ class GameFrame(tk.Frame):
                 counter += 1
                 if character == SURVIVALIST.title:
                     if counter == 1:
-                        champion1_hp = champion1_hp + (CHAMPION_1_HP * 0.6)
-                        if champion1_hp > CHAMPION_1_HP:
-                            champion1_hp = CHAMPION_1_HP
+                        champion1_hp = champion1_hp + (CHAMPION1_HP * 0.6)
+                        if champion1_hp > CHAMPION1_HP:
+                            champion1_hp = CHAMPION1_HP
                         break
                     if counter == 2:
-                        champion2_hp = champion2_hp + (CHAMPION_2_HP * 0.6)
-                        if champion2_hp > CHAMPION_2_HP:
-                            champion2_hp = CHAMPION_2_HP
+                        champion2_hp = champion2_hp + (CHAMPION2_HP * 0.6)
+                        if champion2_hp > CHAMPION2_HP:
+                            champion2_hp = CHAMPION2_HP
                         break
                     if counter == 3:
-                        champion3_hp = champion3_hp + (CHAMPION_3_HP * 0.6)
-                        if champion3_hp > CHAMPION_3_HP:
-                            champion3_hp = CHAMPION_3_HP
+                        champion3_hp = champion3_hp + (CHAMPION3_HP * 0.6)
+                        if champion3_hp > CHAMPION3_HP:
+                            champion3_hp = CHAMPION3_HP
                         break
                     if counter == 4:
-                        champion4_hp = champion4_hp + (CHAMPION_4_HP * 0.6)
-                        if champion4_hp > CHAMPION_4_HP:
-                            champion4_hp = CHAMPION_4_HP
+                        champion4_hp = champion4_hp + (CHAMPION4_HP * 0.6)
+                        if champion4_hp > CHAMPION4_HP:
+                            champion4_hp = CHAMPION4_HP
                         break
                     if counter == 5:
-                        champion5_hp = champion5_hp + (CHAMPION_5_HP * 0.6)
-                        if champion5_hp > CHAMPION_5_HP:
-                            champion5_hp = CHAMPION_5_HP
+                        champion5_hp = champion5_hp + (CHAMPION5_HP * 0.6)
+                        if champion5_hp > CHAMPION5_HP:
+                            champion5_hp = CHAMPION5_HP
                         break
         elif ability_data[0] == "Defensive Stance":
             for character in CHAMPION_LIST:
@@ -17656,28 +17656,28 @@ class GameFrame(tk.Frame):
         if champion_position == 1:
             if champion1_blessing != 0:
                 champion1_hp = champion1_hp + ability_data[3]
-                if champion1_hp > CHAMPION_1_HP:
-                    champion1_hp = CHAMPION_1_HP
+                if champion1_hp > CHAMPION1_HP:
+                    champion1_hp = CHAMPION1_HP
         if champion_position == 2:
             if champion2_blessing != 0:
                 champion2_hp = champion2_hp + ability_data[3]
-                if champion2_hp > CHAMPION_2_HP:
-                    champion2_hp = CHAMPION_2_HP
+                if champion2_hp > CHAMPION2_HP:
+                    champion2_hp = CHAMPION2_HP
         if champion_position == 3:
             if champion3_blessing != 0:
                 champion3_hp = champion3_hp + ability_data[3]
-                if champion3_hp > CHAMPION_3_HP:
-                    champion3_hp = CHAMPION_3_HP
+                if champion3_hp > CHAMPION3_HP:
+                    champion3_hp = CHAMPION3_HP
         if champion_position == 4:
             if champion4_blessing != 0:
                 champion4_hp = champion4_hp + ability_data[3]
-                if champion4_hp > CHAMPION_4_HP:
-                    champion4_hp = CHAMPION_4_HP
+                if champion4_hp > CHAMPION4_HP:
+                    champion4_hp = CHAMPION4_HP
         if champion_position == 5:
             if champion5_blessing != 0:
                 champion5_hp = champion5_hp + ability_data[3]
-                if champion5_hp > CHAMPION_5_HP:
-                    champion5_hp = CHAMPION_5_HP
+                if champion5_hp > CHAMPION5_HP:
+                    champion5_hp = CHAMPION5_HP
 
     def apply_nanoheal_bots(self, length):
         global champion1_nanobot, champion2_nanobot, champion3_nanobot, champion4_nanobot, champion5_nanobot
@@ -18000,42 +18000,42 @@ class GameFrame(tk.Frame):
             if character_position == 1:
                 if champion1_hp == 0:
                     status_text = "{}\n*DEAD*\nHealth Points: {}/{}".format(CHAMPION_LIST[0], champion1_hp,
-                                                                            CHAMPION_1_HP)
+                                                                            CHAMPION1_HP)
                     return status_text
                 else:
-                    status_text = "{}\nHealth Points: {}/{}".format(CHAMPION_LIST[0], champion1_hp, CHAMPION_1_HP)
+                    status_text = "{}\nHealth Points: {}/{}".format(CHAMPION_LIST[0], champion1_hp, CHAMPION1_HP)
                     return status_text
             if character_position == 2:
                 if champion2_hp == 0:
                     status_text = "{}\n*DEAD*\nHealth Points: {}/{}".format(CHAMPION_LIST[1], champion2_hp,
-                                                                            CHAMPION_2_HP)
+                                                                            CHAMPION2_HP)
                     return status_text
                 else:
-                    status_text = "{}\nHealth Points: {}/{}".format(CHAMPION_LIST[1], champion2_hp, CHAMPION_2_HP)
+                    status_text = "{}\nHealth Points: {}/{}".format(CHAMPION_LIST[1], champion2_hp, CHAMPION2_HP)
                     return status_text
             if character_position == 3:
                 if champion3_hp == 0:
                     status_text = "{}\n*DEAD*\nHealth Points: {}/{}".format(CHAMPION_LIST[2], champion3_hp,
-                                                                            CHAMPION_3_HP)
+                                                                            CHAMPION3_HP)
                     return status_text
                 else:
-                    status_text = "{}\nHealth Points: {}/{}".format(CHAMPION_LIST[2], champion3_hp, CHAMPION_3_HP)
+                    status_text = "{}\nHealth Points: {}/{}".format(CHAMPION_LIST[2], champion3_hp, CHAMPION3_HP)
                     return status_text
             if character_position == 4:
                 if champion4_hp == 0:
                     status_text = "{}\n*DEAD*\nHealth Points: {}/{}".format(CHAMPION_LIST[3], champion4_hp,
-                                                                            CHAMPION_4_HP)
+                                                                            CHAMPION4_HP)
                     return status_text
                 else:
-                    status_text = "{}\nHealth Points: {}/{}".format(CHAMPION_LIST[3], champion4_hp, CHAMPION_4_HP)
+                    status_text = "{}\nHealth Points: {}/{}".format(CHAMPION_LIST[3], champion4_hp, CHAMPION4_HP)
                     return status_text
             if character_position == 5:
                 if champion5_hp == 0:
                     status_text = "{}\n*DEAD*\nHealth Points: {}/{}".format(CHAMPION_LIST[4], champion5_hp,
-                                                                            CHAMPION_5_HP)
+                                                                            CHAMPION5_HP)
                     return status_text
                 else:
-                    status_text = "{}\nHealth Points: {}/{}".format(CHAMPION_LIST[4], champion5_hp, CHAMPION_5_HP)
+                    status_text = "{}\nHealth Points: {}/{}".format(CHAMPION_LIST[4], champion5_hp, CHAMPION5_HP)
                     return status_text
         if ai_or_champion == "ai":
             if character_position == 1:
