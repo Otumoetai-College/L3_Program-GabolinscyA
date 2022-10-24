@@ -1413,7 +1413,7 @@ class GameFrame(tk.Frame):
         global root
         root = tk.Tk()
         warning_label = tk.Label(root,
-                                 text="Are you sure you want to leave this game\n(You can return is you want to)")
+                                 text="Are you sure you want to leave this game\n(You can only return if you don't exit the program)")
         yes_button = tk.Button(root, text="Yes", command=self.dungeonfloor_to_mainmenu)
         no_button = tk.Button(root, text="No", command=root.destroy)
         warning_label.grid(row=1, column=1)
@@ -10502,22 +10502,22 @@ class GameFrame(tk.Frame):
             attack1_button = tk.Button(dungeon_game_frame, text=attack_button_text_list[0], width=50, height=4,
                                        command=lambda: self.champion_attacks(attack_button_text_list_temp[0]))
             attack1_button_details = tk.Button(dungeon_game_frame,
-                                               text="{} Details (TBI)".format(attack_button_text_list_temp[0]), width=38,
+                                               text="{} Details (NYI)".format(attack_button_text_list_temp[0]), width=38,
                                                height=1)
             attack2_button = tk.Button(dungeon_game_frame, text=attack_button_text_list[1], width=50, height=4,
                                        command=lambda: self.champion_attacks(attack_button_text_list_temp[1]))
             attack2_button_details = tk.Button(dungeon_game_frame,
-                                               text="{} Details (TBI)".format(attack_button_text_list_temp[1]), width=38,
+                                               text="{} Details (NYI)".format(attack_button_text_list_temp[1]), width=38,
                                                height=1)
             attack3_button = tk.Button(dungeon_game_frame, text=attack_button_text_list[2], width=50, height=4,
                                        command=lambda: self.champion_attacks(attack_button_text_list_temp[2]))
             attack3_button_details = tk.Button(dungeon_game_frame,
-                                               text="{} Details (TBI)".format(attack_button_text_list_temp[2]), width=38,
+                                               text="{} Details (NYI)".format(attack_button_text_list_temp[2]), width=38,
                                                height=1)
             attack4_button = tk.Button(dungeon_game_frame, text=attack_button_text_list[3], width=50, height=4,
                                        command=lambda: self.champion_attacks(attack_button_text_list_temp[3]))
             attack4_button_details = tk.Button(dungeon_game_frame,
-                                               text="{} Details (TBI)".format(attack_button_text_list_temp[3]), width=38,
+                                               text="{} Details (NYI)".format(attack_button_text_list_temp[3]), width=38,
                                                height=1)
             back_button = tk.Button(dungeon_game_frame, text="Back", command=self.player_combat_champion1)
             back_button.grid(row=20, column=2, pady=20)
@@ -10537,22 +10537,22 @@ class GameFrame(tk.Frame):
             attack1_button = tk.Button(dungeon_game_frame, text=attack_button_text_list[0], width=50, height=4,
                                        command=lambda: self.champion_attacks(attack_button_text_list_temp[0]))
             attack1_button_details = tk.Button(dungeon_game_frame,
-                                               text="{} Details (TBI)".format(attack_button_text_list_temp[0]), width=38,
+                                               text="{} Details (NYI)".format(attack_button_text_list_temp[0]), width=38,
                                                height=1)
             attack2_button = tk.Button(dungeon_game_frame, text=attack_button_text_list[1], width=50, height=4,
                                        command=lambda: self.champion_attacks(attack_button_text_list_temp[1]))
             attack2_button_details = tk.Button(dungeon_game_frame,
-                                               text="{} Details (TBI)".format(attack_button_text_list_temp[1]), width=38,
+                                               text="{} Details (NYI)".format(attack_button_text_list_temp[1]), width=38,
                                                height=1)
             attack3_button = tk.Button(dungeon_game_frame, text=attack_button_text_list[2], width=50, height=4,
                                        command=lambda: self.champion_attacks(attack_button_text_list_temp[2]))
             attack3_button_details = tk.Button(dungeon_game_frame,
-                                               text="{} Details (TBI)".format(attack_button_text_list_temp[2]), width=38,
+                                               text="{} Details (NYI)".format(attack_button_text_list_temp[2]), width=38,
                                                height=1)
             attack4_button = tk.Button(dungeon_game_frame, text=attack_button_text_list[3], width=50, height=4,
                                        command=lambda: self.champion_attacks(attack_button_text_list_temp[3]))
             attack4_button_details = tk.Button(dungeon_game_frame,
-                                               text="{} Details (TBI)".format(attack_button_text_list_temp[3]), width=38,
+                                               text="{} Details (NYI)".format(attack_button_text_list_temp[3]), width=38,
                                                height=1)
             back_button = tk.Button(dungeon_game_frame, text="Back", command=self.player_combat_champion2)
             back_button.grid(row=20, column=2, pady=20)
@@ -10572,22 +10572,22 @@ class GameFrame(tk.Frame):
             attack1_button = tk.Button(dungeon_game_frame, text=attack_button_text_list[0], width=50, height=4,
                                        command=lambda: self.champion_attacks(attack_button_text_list_temp[0]))
             attack1_button_details = tk.Button(dungeon_game_frame,
-                                               text="{} Details (TBI)".format(attack_button_text_list_temp[0]), width=38,
+                                               text="{} Details (NYI)".format(attack_button_text_list_temp[0]), width=38,
                                                height=1)
             attack2_button = tk.Button(dungeon_game_frame, text=attack_button_text_list[1], width=50, height=4,
                                        command=lambda: self.champion_attacks(attack_button_text_list_temp[1]))
             attack2_button_details = tk.Button(dungeon_game_frame,
-                                               text="{} Details (TBI)".format(attack_button_text_list_temp[1]), width=38,
+                                               text="{} Details (NYI)".format(attack_button_text_list_temp[1]), width=38,
                                                height=1)
             attack3_button = tk.Button(dungeon_game_frame, text=attack_button_text_list[2], width=50, height=4,
                                        command=lambda: self.champion_attacks(attack_button_text_list_temp[2]))
             attack3_button_details = tk.Button(dungeon_game_frame,
-                                               text="{} Details (TBI)".format(attack_button_text_list_temp[2]), width=38,
+                                               text="{} Details (NYI)".format(attack_button_text_list_temp[2]), width=38,
                                                height=1)
             attack4_button = tk.Button(dungeon_game_frame, text=attack_button_text_list[3], width=50, height=4,
                                        command=lambda: self.champion_attacks(attack_button_text_list_temp[3]))
             attack4_button_details = tk.Button(dungeon_game_frame,
-                                               text="{} Details (TBI)".format(attack_button_text_list_temp[3]), width=38,
+                                               text="{} Details (NYI)".format(attack_button_text_list_temp[3]), width=38,
                                                height=1)
             back_button = tk.Button(dungeon_game_frame, text="Back", command=self.player_combat_champion3)
             back_button.grid(row=20, column=2, pady=20)
@@ -10607,22 +10607,22 @@ class GameFrame(tk.Frame):
             attack1_button = tk.Button(dungeon_game_frame, text=attack_button_text_list[0], width=50, height=4,
                                        command=lambda: self.champion_attacks(attack_button_text_list_temp[0]))
             attack1_button_details = tk.Button(dungeon_game_frame,
-                                               text="{} Details (TBI)".format(attack_button_text_list_temp[0]), width=38,
+                                               text="{} Details (NYI)".format(attack_button_text_list_temp[0]), width=38,
                                                height=1)
             attack2_button = tk.Button(dungeon_game_frame, text=attack_button_text_list[1], width=50, height=4,
                                        command=lambda: self.champion_attacks(attack_button_text_list_temp[1]))
             attack2_button_details = tk.Button(dungeon_game_frame,
-                                               text="{} Details (TBI)".format(attack_button_text_list_temp[1]), width=38,
+                                               text="{} Details (NYI)".format(attack_button_text_list_temp[1]), width=38,
                                                height=1)
             attack3_button = tk.Button(dungeon_game_frame, text=attack_button_text_list[2], width=50, height=4,
                                        command=lambda: self.champion_attacks(attack_button_text_list_temp[2]))
             attack3_button_details = tk.Button(dungeon_game_frame,
-                                               text="{} Details (TBI)".format(attack_button_text_list_temp[2]), width=38,
+                                               text="{} Details (NYI)".format(attack_button_text_list_temp[2]), width=38,
                                                height=1)
             attack4_button = tk.Button(dungeon_game_frame, text=attack_button_text_list[3], width=50, height=4,
                                        command=lambda: self.champion_attacks(attack_button_text_list_temp[3]))
             attack4_button_details = tk.Button(dungeon_game_frame,
-                                               text="{} Details (TBI)".format(attack_button_text_list_temp[3]), width=38,
+                                               text="{} Details (NYI)".format(attack_button_text_list_temp[3]), width=38,
                                                height=1)
             back_button = tk.Button(dungeon_game_frame, text="Back", command=self.player_combat_champion4)
             back_button.grid(row=20, column=2, pady=20)
@@ -10642,22 +10642,22 @@ class GameFrame(tk.Frame):
             attack1_button = tk.Button(dungeon_game_frame, text=attack_button_text_list[0], width=50, height=4,
                                        command=lambda: self.champion_attacks(attack_button_text_list_temp[0]))
             attack1_button_details = tk.Button(dungeon_game_frame,
-                                               text="{} Details (TBI)".format(attack_button_text_list_temp[0]), width=38,
+                                               text="{} Details (NYI)".format(attack_button_text_list_temp[0]), width=38,
                                                height=1)
             attack2_button = tk.Button(dungeon_game_frame, text=attack_button_text_list[1], width=50, height=4,
                                        command=lambda: self.champion_attacks(attack_button_text_list_temp[1]))
             attack2_button_details = tk.Button(dungeon_game_frame,
-                                               text="{} Details (TBI)".format(attack_button_text_list_temp[1]), width=38,
+                                               text="{} Details (NYI)".format(attack_button_text_list_temp[1]), width=38,
                                                height=1)
             attack3_button = tk.Button(dungeon_game_frame, text=attack_button_text_list[2], width=50, height=4,
                                        command=lambda: self.champion_attacks(attack_button_text_list_temp[2]))
             attack3_button_details = tk.Button(dungeon_game_frame,
-                                               text="{} Details (TBI)".format(attack_button_text_list_temp[2]), width=38,
+                                               text="{} Details (NYI)".format(attack_button_text_list_temp[2]), width=38,
                                                height=1)
             attack4_button = tk.Button(dungeon_game_frame, text=attack_button_text_list[3], width=50, height=4,
                                        command=lambda: self.champion_attacks(attack_button_text_list_temp[3]))
             attack4_button_details = tk.Button(dungeon_game_frame,
-                                               text="{} Details (TBI)".format(attack_button_text_list_temp[3]), width=38,
+                                               text="{} Details (NYI)".format(attack_button_text_list_temp[3]), width=38,
                                                height=1)
             back_button = tk.Button(dungeon_game_frame, text="Back", command=self.player_combat_champion5)
             back_button.grid(row=20, column=2, pady=20)
@@ -12702,22 +12702,22 @@ class GameFrame(tk.Frame):
             special1_button = tk.Button(dungeon_game_frame, text=special_button_text_list[0], width=50, height=4,
                                        command=lambda: self.champion_specials(special_button_text_list_temp[0]))
             special1_button_details = tk.Button(dungeon_game_frame,
-                                                text="{} Details (TBI)".format(special_button_text_list_temp[0]), width=38,
+                                                text="{} Details (NYI)".format(special_button_text_list_temp[0]), width=38,
                                                 height=1)
             special2_button = tk.Button(dungeon_game_frame, text=special_button_text_list[1], width=50, height=4,
                                        command=lambda: self.champion_specials(special_button_text_list_temp[1]))
             special2_button_details = tk.Button(dungeon_game_frame,
-                                                text="{} Details (TBI)".format(special_button_text_list_temp[1]), width=38,
+                                                text="{} Details (NYI)".format(special_button_text_list_temp[1]), width=38,
                                                 height=1)
             special3_button = tk.Button(dungeon_game_frame, text=special_button_text_list[2], width=50, height=4,
                                        command=lambda: self.champion_specials(special_button_text_list_temp[2]))
             special3_button_details = tk.Button(dungeon_game_frame,
-                                                text="{} Details (TBI)".format(special_button_text_list_temp[2]), width=38,
+                                                text="{} Details (NYI)".format(special_button_text_list_temp[2]), width=38,
                                                 height=1)
             special4_button = tk.Button(dungeon_game_frame, text=special_button_text_list[3], width=50, height=4,
                                        command=lambda: self.champion_specials(special_button_text_list_temp[3]))
             special4_button_details = tk.Button(dungeon_game_frame,
-                                                text="{} Details (TBI)".format(special_button_text_list_temp[3]), width=38,
+                                                text="{} Details (NYI)".format(special_button_text_list_temp[3]), width=38,
                                                 height=1)
             back_button = tk.Button(dungeon_game_frame, text="Back", command=self.player_combat_champion1)
             back_button.grid(row=20, column=2, pady=20)
@@ -12737,22 +12737,22 @@ class GameFrame(tk.Frame):
             special1_button = tk.Button(dungeon_game_frame, text=special_button_text_list[0], width=50, height=4,
                                        command=lambda: self.champion_specials(special_button_text_list_temp[0]))
             special1_button_details = tk.Button(dungeon_game_frame,
-                                                text="{} Details (TBI)".format(special_button_text_list_temp[0]), width=38,
+                                                text="{} Details (NYI)".format(special_button_text_list_temp[0]), width=38,
                                                 height=1)
             special2_button = tk.Button(dungeon_game_frame, text=special_button_text_list[1], width=50, height=4,
                                        command=lambda: self.champion_specials(special_button_text_list_temp[1]))
             special2_button_details = tk.Button(dungeon_game_frame,
-                                                text="{} Details (TBI)".format(special_button_text_list_temp[1]), width=38,
+                                                text="{} Details (NYI)".format(special_button_text_list_temp[1]), width=38,
                                                 height=1)
             special3_button = tk.Button(dungeon_game_frame, text=special_button_text_list[2], width=50, height=4,
                                        command=lambda: self.champion_specials(special_button_text_list_temp[2]))
             special3_button_details = tk.Button(dungeon_game_frame,
-                                                text="{} Details (TBI)".format(special_button_text_list_temp[2]), width=38,
+                                                text="{} Details (NYI)".format(special_button_text_list_temp[2]), width=38,
                                                 height=1)
             special4_button = tk.Button(dungeon_game_frame, text=special_button_text_list[3], width=50, height=4,
                                        command=lambda: self.champion_specials(special_button_text_list_temp[3]))
             special4_button_details = tk.Button(dungeon_game_frame,
-                                                text="{} Details (TBI)".format(special_button_text_list_temp[3]), width=38,
+                                                text="{} Details (NYI)".format(special_button_text_list_temp[3]), width=38,
                                                 height=1)
             back_button = tk.Button(dungeon_game_frame, text="Back", command=self.player_combat_champion2)
             back_button.grid(row=20, column=2, pady=20)
@@ -12772,22 +12772,22 @@ class GameFrame(tk.Frame):
             special1_button = tk.Button(dungeon_game_frame, text=special_button_text_list[0], width=50, height=4,
                                        command=lambda: self.champion_specials(special_button_text_list_temp[0]))
             special1_button_details = tk.Button(dungeon_game_frame,
-                                                text="{} Details (TBI)".format(special_button_text_list_temp[0]), width=38,
+                                                text="{} Details (NYI)".format(special_button_text_list_temp[0]), width=38,
                                                 height=1)
             special2_button = tk.Button(dungeon_game_frame, text=special_button_text_list[1], width=50, height=4,
                                        command=lambda: self.champion_specials(special_button_text_list_temp[1]))
             special2_button_details = tk.Button(dungeon_game_frame,
-                                                text="{} Details (TBI)".format(special_button_text_list_temp[1]), width=38,
+                                                text="{} Details (NYI)".format(special_button_text_list_temp[1]), width=38,
                                                 height=1)
             special3_button = tk.Button(dungeon_game_frame, text=special_button_text_list[2], width=50, height=4,
                                        command=lambda: self.champion_specials(special_button_text_list_temp[2]))
             special3_button_details = tk.Button(dungeon_game_frame,
-                                                text="{} Details (TBI)".format(special_button_text_list_temp[2]), width=38,
+                                                text="{} Details (NYI)".format(special_button_text_list_temp[2]), width=38,
                                                 height=1)
             special4_button = tk.Button(dungeon_game_frame, text=special_button_text_list[3], width=50, height=4,
                                        command=lambda: self.champion_specials(special_button_text_list_temp[3]))
             special4_button_details = tk.Button(dungeon_game_frame,
-                                                text="{} Details (TBI)".format(special_button_text_list_temp[3]), width=38,
+                                                text="{} Details (NYI)".format(special_button_text_list_temp[3]), width=38,
                                                 height=1)
             back_button = tk.Button(dungeon_game_frame, text="Back", command=self.player_combat_champion3)
             back_button.grid(row=20, column=2, pady=20)
@@ -12807,22 +12807,22 @@ class GameFrame(tk.Frame):
             special1_button = tk.Button(dungeon_game_frame, text=special_button_text_list[0], width=50, height=4,
                                        command=lambda: self.champion_specials(special_button_text_list_temp[0]))
             special1_button_details = tk.Button(dungeon_game_frame,
-                                                text="{} Details (TBI)".format(special_button_text_list_temp[0]), width=38,
+                                                text="{} Details (NYI)".format(special_button_text_list_temp[0]), width=38,
                                                 height=1)
             special2_button = tk.Button(dungeon_game_frame, text=special_button_text_list[1], width=50, height=4,
                                        command=lambda: self.champion_specials(special_button_text_list_temp[1]))
             special2_button_details = tk.Button(dungeon_game_frame,
-                                                text="{} Details (TBI)".format(special_button_text_list_temp[1]), width=38,
+                                                text="{} Details (NYI)".format(special_button_text_list_temp[1]), width=38,
                                                 height=1)
             special3_button = tk.Button(dungeon_game_frame, text=special_button_text_list[2], width=50, height=4,
                                        command=lambda: self.champion_specials(special_button_text_list_temp[2]))
             special3_button_details = tk.Button(dungeon_game_frame,
-                                                text="{} Details (TBI)".format(special_button_text_list_temp[2]), width=38,
+                                                text="{} Details (NYI)".format(special_button_text_list_temp[2]), width=38,
                                                 height=1)
             special4_button = tk.Button(dungeon_game_frame, text=special_button_text_list[3], width=50, height=4,
                                        command=lambda: self.champion_specials(special_button_text_list_temp[3]))
             special4_button_details = tk.Button(dungeon_game_frame,
-                                                text="{} Details (TBI)".format(special_button_text_list_temp[3]), width=38,
+                                                text="{} Details (NYI)".format(special_button_text_list_temp[3]), width=38,
                                                 height=1)
             back_button = tk.Button(dungeon_game_frame, text="Back", command=self.player_combat_champion4)
             back_button.grid(row=20, column=2, pady=20)
@@ -12842,22 +12842,22 @@ class GameFrame(tk.Frame):
             special1_button = tk.Button(dungeon_game_frame, text=special_button_text_list[0], width=50, height=4,
                                        command=lambda: self.champion_specials(special_button_text_list_temp[0]))
             special1_button_details = tk.Button(dungeon_game_frame,
-                                                text="{} Details (TBI)".format(special_button_text_list_temp[0]), width=38,
+                                                text="{} Details (NYI)".format(special_button_text_list_temp[0]), width=38,
                                                 height=1)
             special2_button = tk.Button(dungeon_game_frame, text=special_button_text_list[1], width=50, height=4,
                                        command=lambda: self.champion_specials(special_button_text_list_temp[1]))
             special2_button_details = tk.Button(dungeon_game_frame,
-                                                text="{} Details (TBI)".format(special_button_text_list_temp[1]), width=38,
+                                                text="{} Details (NYI)".format(special_button_text_list_temp[1]), width=38,
                                                 height=1)
             special3_button = tk.Button(dungeon_game_frame, text=special_button_text_list[2], width=50, height=4,
                                        command=lambda: self.champion_specials(special_button_text_list_temp[2]))
             special3_button_details = tk.Button(dungeon_game_frame,
-                                                text="{} Details (TBI)".format(special_button_text_list_temp[2]), width=38,
+                                                text="{} Details (NYI)".format(special_button_text_list_temp[2]), width=38,
                                                 height=1)
             special4_button = tk.Button(dungeon_game_frame, text=special_button_text_list[3], width=50, height=4,
                                        command=lambda: self.champion_specials(special_button_text_list_temp[3]))
             special4_button_details = tk.Button(dungeon_game_frame,
-                                                text="{} Details (TBI)".format(special_button_text_list_temp[3]), width=38,
+                                                text="{} Details (NYI)".format(special_button_text_list_temp[3]), width=38,
                                                 height=1)
             back_button = tk.Button(dungeon_game_frame, text="Back", command=self.player_combat_champion5)
             back_button.grid(row=20, column=2, pady=20)
@@ -19255,8 +19255,8 @@ class CreateTeamPage(tk.Frame):
         label = tk.Label(self, text="Champion Camp", font=controller.title_font)
         team_1_button = tk.Button(self, text=team_1_button_text,
                                   command=lambda: controller.show_frame("Team1SelectionPage"))
-        team_2_button = tk.Button(self, text="TBI")
-        team_3_button = tk.Button(self, text="TBI")
+        team_2_button = tk.Button(self, text="NYI")
+        team_3_button = tk.Button(self, text="NYI")
         update_page_button_2 = tk.Button(self, text="Refresh Team Page", command=self.update_variables)
         update_page_button_2.grid(row=8, column=2)
         buttonReturn = tk.Button(self, text="Return to Menu",
@@ -19801,27 +19801,27 @@ class Team1SelectionPage(tk.Frame):
             MONK_label = tk.Label(self, text=MONK.name, font=self.menu_button_font)
             MONK_button_add = tk.Button(self, text="Add to Team",
                                         command=lambda: self.check_temp_party1(MONK.title, "tank"))
-            MONK_button_details = tk.Button(self, text="View Details (TBI)")
+            MONK_button_details = tk.Button(self, text="View Details (NYI)")
             BARBARIAN_label = tk.Label(self, text=BARBARIAN.name, font=self.menu_button_font)
             BARBARIAN_button_add = tk.Button(self, text="Add to Team",
                                              command=lambda: self.check_temp_party1(BARBARIAN.title, "tank"))
-            BARBARIAN_button_details = tk.Button(self, text="View Details (TBI)")
+            BARBARIAN_button_details = tk.Button(self, text="View Details (NYI)")
             bodyguard_label = tk.Label(self, text=VETERAN_BODYGUARD.name, font=self.menu_button_font)
             bodyguard_button_add = tk.Button(self, text="Add to Team",
                                              command=lambda: self.check_temp_party1(VETERAN_BODYGUARD.title, "tank"))
-            bodyguard_button_details = tk.Button(self, text="View Details (TBI)")
+            bodyguard_button_details = tk.Button(self, text="View Details (NYI)")
             fencer_label = tk.Label(self, text=MASTER_FENCER.name, font=self.menu_button_font)
             fencer_button_add = tk.Button(self, text="Add to Team",
                                           command=lambda: self.check_temp_party1(MASTER_FENCER.title, "tank"))
-            fencer_button_details = tk.Button(self, text="View Details (TBI)")
+            fencer_button_details = tk.Button(self, text="View Details (NYI)")
             MONK_label.grid(row=4, column=1, sticky="e")
-            MONK_button_add.grid(row=5, column=1, sticky="e", padx=75)
+            MONK_button_add.grid(row=5, column=1, sticky="e", padx=105)
             MONK_button_details.grid(row=5, column=1, sticky="e")
             BARBARIAN_label.grid(row=4, column=3, sticky="w")
             BARBARIAN_button_add.grid(row=5, column=3, sticky="w")
             BARBARIAN_button_details.grid(row=5, column=3, sticky="w", padx=80)
             bodyguard_label.grid(row=7, column=1, sticky="e")
-            bodyguard_button_add.grid(row=8, column=1, sticky="e", padx=75)
+            bodyguard_button_add.grid(row=8, column=1, sticky="e", padx=105)
             bodyguard_button_details.grid(row=8, column=1, sticky="e")
             fencer_label.grid(row=7, column=3, sticky="w")
             fencer_button_add.grid(row=8, column=3, sticky="w")
@@ -19883,52 +19883,52 @@ class Team1SelectionPage(tk.Frame):
             BERSERKER_label = tk.Label(self, text=BERSERKER.name)
             BERSERKER_button_add = tk.Button(self, text="Add to Team",
                                              command=lambda: self.check_temp_party1(BERSERKER.title, "melee"))
-            BERSERKER_button_details = tk.Button(self, text="View Details (TBI)")
+            BERSERKER_button_details = tk.Button(self, text="View Details (NYI)")
             ROGUE_label = tk.Label(self, text=ROGUE.name)
             ROGUE_button_add = tk.Button(self, text="Add to Team",
                                          command=lambda: self.check_temp_party1(ROGUE.title, "melee"))
-            ROGUE_button_details = tk.Button(self, text="View Details (TBI)")
+            ROGUE_button_details = tk.Button(self, text="View Details (NYI)")
             SURVIVALIST_label = tk.Label(self, text=SURVIVALIST.name)
             SURVIVALIST_button_add = tk.Button(self, text="Add to Team",
                                                command=lambda: self.check_temp_party1(SURVIVALIST.title, "melee"))
-            SURVIVALIST_button_details = tk.Button(self, text="View Details (TBI)")
+            SURVIVALIST_button_details = tk.Button(self, text="View Details (NYI)")
             BRAWLIST_label = tk.Label(self, text=BRAWLIST.name)
             BRAWLIST_button_add = tk.Button(self, text="Add to Team",
                                             command=lambda: self.check_temp_party1(BRAWLIST.title, "melee"))
-            BRAWLIST_button_details = tk.Button(self, text="View Details (TBI)")
+            BRAWLIST_button_details = tk.Button(self, text="View Details (NYI)")
             ACADEMIC_MAGE_label = tk.Label(self, text=ACADEMIC_MAGE.name)
             ACADEMIC_MAGE_button_add = tk.Button(self, text="Add to Team",
                                                  command=lambda: self.check_temp_party1(ACADEMIC_MAGE.title, "magic"))
-            ACADEMIC_MAGE_button_details = tk.Button(self, text="View Details (TBI)")
+            ACADEMIC_MAGE_button_details = tk.Button(self, text="View Details (NYI)")
             jungle_DRUID_label = tk.Label(self, text=DRUID.name)
             jungle_DRUID_button_add = tk.Button(self, text="Add to Team",
                                                 command=lambda: self.check_temp_party1(DRUID.title, "magic"))
-            jungle_DRUID_button_details = tk.Button(self, text="View Details (TBI)")
+            jungle_DRUID_button_details = tk.Button(self, text="View Details (NYI)")
             WARLOCK_label = tk.Label(self, text=WARLOCK.name)
             WARLOCK_button_add = tk.Button(self, text="Add to Team",
                                            command=lambda: self.check_temp_party1(WARLOCK.title, "magic"))
-            WARLOCK_button_details = tk.Button(self, text="View Details (TBI)")
+            WARLOCK_button_details = tk.Button(self, text="View Details (NYI)")
             BLOODMANCER_label = tk.Label(self, text=BLOODMANCER.name)
             BLOODMANCER_button_add = tk.Button(self, text="Add to Team",
                                                command=lambda: self.check_temp_party1(BLOODMANCER.title, "magic"))
-            BLOODMANCER_button_details = tk.Button(self, text="View Details (TBI)")
+            BLOODMANCER_button_details = tk.Button(self, text="View Details (NYI)")
             PALADIN_label = tk.Label(self, text=PALADIN.name)
             PALADIN_button_add = tk.Button(self, text="Add to Team",
                                            command=lambda: self.check_temp_party1(PALADIN.title, "mixed"))
-            PALADIN_button_details = tk.Button(self, text="View Details (TBI)")
+            PALADIN_button_details = tk.Button(self, text="View Details (NYI)")
             CASTLE_RANGER_label = tk.Label(self, text=CASTLE_RANGER.name)
             CASTLE_RANGER_button_add = tk.Button(self, text="Add to Team",
                                                  command=lambda: self.check_temp_party1(CASTLE_RANGER.title, "mixed"))
-            CASTLE_RANGER_button_details = tk.Button(self, text="View Details (TBI)")
+            CASTLE_RANGER_button_details = tk.Button(self, text="View Details (NYI)")
             THUNDER_APPRENTICE_label = tk.Label(self, text=THUNDER_APPRENTICE.name)
             THUNDER_APPRENTICE_button_add = tk.Button(self, text="Add to Team",
                                                       command=lambda: self.check_temp_party1(THUNDER_APPRENTICE.title,
                                                                                              "mixed"))
-            THUNDER_APPRENTICE_button_details = tk.Button(self, text="View Details (TBI)")
+            THUNDER_APPRENTICE_button_details = tk.Button(self, text="View Details (NYI)")
             POWER_CONDUIT_label = tk.Label(self, text=POWER_CONDUIT.name)
             POWER_CONDUIT_button_add = tk.Button(self, text="Add to Team",
                                                  command=lambda: self.check_temp_party1(POWER_CONDUIT.title, "mixed"))
-            POWER_CONDUIT_button_details = tk.Button(self, text="View Details (TBI)")
+            POWER_CONDUIT_button_details = tk.Button(self, text="View Details (NYI)")
             melee_label.grid(row=3, column=1)
             magic_label.grid(row=3, column=2)
             mix_label.grid(row=3, column=3)
@@ -19939,10 +19939,10 @@ class Team1SelectionPage(tk.Frame):
             ROGUE_button_add.grid(row=9, column=1, sticky="w")
             ROGUE_button_details.grid(row=9, column=1, sticky="w", padx=80)
             SURVIVALIST_label.grid(row=5, column=1, sticky="e", padx=10)
-            SURVIVALIST_button_add.grid(row=6, column=1, sticky="e", padx=85)
+            SURVIVALIST_button_add.grid(row=6, column=1, sticky="e", padx=115)
             SURVIVALIST_button_details.grid(row=6, column=1, sticky="e", padx=10)
             BRAWLIST_label.grid(row=8, column=1, sticky="e", padx=10)
-            BRAWLIST_button_add.grid(row=9, column=1, sticky="e", padx=85)
+            BRAWLIST_button_add.grid(row=9, column=1, sticky="e", padx=115)
             BRAWLIST_button_details.grid(row=9, column=1, sticky="e", padx=10)
             ACADEMIC_MAGE_label.grid(row=5, column=2, sticky="w", padx=10)
             ACADEMIC_MAGE_button_add.grid(row=6, column=2, sticky="w", padx=10)
@@ -19951,10 +19951,10 @@ class Team1SelectionPage(tk.Frame):
             jungle_DRUID_button_add.grid(row=9, column=2, sticky="w", padx=10)
             jungle_DRUID_button_details.grid(row=9, column=2, sticky="w", padx=90)
             WARLOCK_label.grid(row=5, column=2, sticky="e", padx=10)
-            WARLOCK_button_add.grid(row=6, column=2, sticky="e", padx=85)
+            WARLOCK_button_add.grid(row=6, column=2, sticky="e", padx=115)
             WARLOCK_button_details.grid(row=6, column=2, sticky="e", padx=10)
             BLOODMANCER_label.grid(row=8, column=2, sticky="e", padx=10)
-            BLOODMANCER_button_add.grid(row=9, column=2, sticky="e", padx=85)
+            BLOODMANCER_button_add.grid(row=9, column=2, sticky="e", padx=115)
             BLOODMANCER_button_details.grid(row=9, column=2, sticky="e", padx=10)
             PALADIN_label.grid(row=5, column=3, sticky="w", padx=10)
             PALADIN_button_add.grid(row=6, column=3, sticky="w", padx=10)
@@ -19963,10 +19963,10 @@ class Team1SelectionPage(tk.Frame):
             CASTLE_RANGER_button_add.grid(row=9, column=3, sticky="w", padx=10)
             CASTLE_RANGER_button_details.grid(row=9, column=3, sticky="w", padx=90)
             THUNDER_APPRENTICE_label.grid(row=5, column=3, sticky="e")
-            THUNDER_APPRENTICE_button_add.grid(row=6, column=3, sticky="e", padx=75)
+            THUNDER_APPRENTICE_button_add.grid(row=6, column=3, sticky="e", padx=105)
             THUNDER_APPRENTICE_button_details.grid(row=6, column=3, sticky="e")
             POWER_CONDUIT_label.grid(row=8, column=3, sticky="e")
-            POWER_CONDUIT_button_add.grid(row=9, column=3, sticky="e", padx=75)
+            POWER_CONDUIT_button_add.grid(row=9, column=3, sticky="e", padx=105)
             POWER_CONDUIT_button_details.grid(row=9, column=3, sticky="e")
 
     def view_healer1(self):
@@ -20043,29 +20043,29 @@ class Team1SelectionPage(tk.Frame):
             EARTH_SPEAKER_label = tk.Label(self, text=EARTH_SPEAKER.name, font=self.menu_button_font)
             EARTH_SPEAKER_button_add = tk.Button(self, text="Add to Team",
                                                  command=lambda: self.check_temp_party1(EARTH_SPEAKER.title, "healer"))
-            EARTH_SPEAKER_button_details = tk.Button(self, text="View Details (TBI)")
+            EARTH_SPEAKER_button_details = tk.Button(self, text="View Details (NYI)")
             PRIEST_OF_THE_DEVOTED_label = tk.Label(self, text=PRIEST_OF_THE_DEVOTED.name, font=self.menu_button_font)
             PRIEST_OF_THE_DEVOTED_button_add = tk.Button(self, text="Add to Team",
                                                          command=lambda: self.check_temp_party1(
                                                              PRIEST_OF_THE_DEVOTED.title, "healer"))
-            PRIEST_OF_THE_DEVOTED_button_details = tk.Button(self, text="View Details (TBI)")
+            PRIEST_OF_THE_DEVOTED_button_details = tk.Button(self, text="View Details (NYI)")
             TIME_WALKER_label = tk.Label(self, text=TIME_WALKER.name, font=self.menu_button_font)
             TIME_WALKER_button_add = tk.Button(self, text="Add to Team",
                                                command=lambda: self.check_temp_party1(TIME_WALKER.title, "healer"))
-            TIME_WALKER_button_details = tk.Button(self, text="View Details (TBI)")
+            TIME_WALKER_button_details = tk.Button(self, text="View Details (NYI)")
             CHILD_OF_MEDICINE_label = tk.Label(self, text=CHILD_OF_MEDICINE.name, font=self.menu_button_font)
             CHILD_OF_MEDICINE_button_add = tk.Button(self, text="Add to Team",
                                                      command=lambda: self.check_temp_party1(CHILD_OF_MEDICINE.title,
                                                                                             "healer"))
-            CHILD_OF_MEDICINE_button_details = tk.Button(self, text="View Details (TBI)")
+            CHILD_OF_MEDICINE_button_details = tk.Button(self, text="View Details (NYI)")
             EARTH_SPEAKER_label.grid(row=4, column=1, sticky="e")
-            EARTH_SPEAKER_button_add.grid(row=5, column=1, sticky="e", padx=75)
+            EARTH_SPEAKER_button_add.grid(row=5, column=1, sticky="e", padx=105)
             EARTH_SPEAKER_button_details.grid(row=5, column=1, sticky="e")
             PRIEST_OF_THE_DEVOTED_label.grid(row=4, column=3, sticky="w")
             PRIEST_OF_THE_DEVOTED_button_add.grid(row=5, column=3, sticky="w")
             PRIEST_OF_THE_DEVOTED_button_details.grid(row=5, column=3, sticky="w", padx=80)
             TIME_WALKER_label.grid(row=7, column=1, sticky="e")
-            TIME_WALKER_button_add.grid(row=8, column=1, sticky="e", padx=75)
+            TIME_WALKER_button_add.grid(row=8, column=1, sticky="e", padx=105)
             TIME_WALKER_button_details.grid(row=8, column=1, sticky="e")
             CHILD_OF_MEDICINE_label.grid(row=7, column=3, sticky="w")
             CHILD_OF_MEDICINE_button_add.grid(row=8, column=3, sticky="w")
