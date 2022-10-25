@@ -20406,7 +20406,7 @@ class CreditPage(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
         self.controller = controller
-        label = tk.Label(self, text="Credits", font=controller.title_font)
+        label = tk.Label(self, text="Credits", font=controller.small_title_font)
         label.grid(row=0, sticky="nsew", pady=10)
         button = tk.Button(self, text="Return to Menu",
                            command=lambda: controller.show_frame("MainMenu"))
@@ -20415,14 +20415,45 @@ class CreditPage(tk.Frame):
 
 class How2PlayPage(tk.Frame):
     def __init__(self, parent, controller):
+        global tutorial_frame
         tk.Frame.__init__(self, parent)
         self.controller = controller
-        label = tk.Label(self, text="How To Play", font=controller.title_font)
-        label.grid(row=0, sticky="nsew", pady=10)
-        button = tk.Button(self, text="Return to Menu",
-                           command=lambda: controller.show_frame("MainMenu"))
-        button.grid()
-
+        tutorial_frame = ttk.Frame(self)
+        tutorial_frame.grid(row=0, column=0)
+        self.title_font = tkfont.Font(family='Times New Roman Baltic', size=120, weight="bold")
+        self.small_title_font = tkfont.Font(family='Times New Roman Baltic', size=80, weight="bold")
+        self.medium_text_font_bold = tkfont.Font(family='Times New ROman Baltic', size=50, weight="bold")
+        self.menu_button_font = tkfont.Font(family='Helvetica', size=18, weight="bold")
+        self.opening_tutorial_page()
+    def opening_tutorial_page(self):
+        for widget in tutorial_frame.winfo_children():
+            widget.destroy()
+        title_label = tk.Label(tutorial_frame, text="How To Play", font=self.small_title_font)
+        choosing_team_tutorial_button = tk.Button(tutorial_frame, text=":Choosing your team:", font=self.menu_button_font, width=20, command=self.choosing_team_tutorial_page1)
+        entering_dungeon_tutorial_button = tk.Button(tutorial_frame, text=":Entering the Dungeon:", font=self.menu_button_font, width=20)
+        other_features_tutorial_button = tk.Button(tutorial_frame, text=":Other Features:", font=self.menu_button_font, width=16)
+        title_label.grid(row=1, column=1, sticky="nsew", pady=10)
+        choosing_team_tutorial_button.grid(row=2, column=1, pady=10)
+        entering_dungeon_tutorial_button.grid(row=3, column=1, pady=10)
+        other_features_tutorial_button.grid(row=4, column=1, pady=10)
+        button = tk.Button(tutorial_frame, text="Return to Menu",
+                           command=lambda: ParentClass.show_frame(app, "MainMenu"))
+        button.grid(row=5, column=1)
+    def choosing_team_tutorial_page1(self):
+        for widget in tutorial_frame.winfo_children():
+            widget.destroy()
+        title_label = tk.Label(tutorial_frame, text="Choosing your team", font=self.small_title_font)
+        slide_progress = tk.Label(tutorial_frame, text="1/8", font=self.medium_text_font_bold)
+        choosing_team_tutorial_text_label = tk.Label(tutorial_frame, text="Before you can enter the Dungeon, you must select five champions"
+                                                                          " to accompany you into the depths.\n"
+                                                                          "To begin assembling your team, select 'Champion Camp' in the Main Menu.")
+        next_button = tk.Button(tutorial_frame, text="Next Slide", font=self.menu_button_font)
+        exit_button = tk.Button(tutorial_frame, text="Exit", font=self.menu_button_font)
+        title_label.grid(row=1, column=1, sticky="nsew", pady=10)
+        slide_progress.grid(row=2 ,column=1,pady=10)
+        choosing_team_tutorial_text_label.grid(row=3, column=1, pady=10)
+        next_button.grid(row=5, column=1, pady=10)
+        exit_button.grid(row=6, column=1)
 
 class LeaderboardPage(tk.Frame):
     def __init__(self, parent, controller):
