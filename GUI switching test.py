@@ -1157,7 +1157,8 @@ class GameFrame(tk.Frame):
         champion5_small_external_buffs = [0]
         champion5_big_external_buffs = [0]
         global champion1_guarded, champion2_guarded, champion3_guarded, champion4_guarded, champion5_guarded, \
-            champion1_defensive, champion2_defensive, champion3_defensive, champion4_defensive, champion5_defensive
+            champion1_defensive, champion2_defensive, champion3_defensive, champion4_defensive, champion5_defensive, \
+            champion1_statuses, champion2_statuses, champion3_statuses, champion4_statuses, champion5_statuses
         champion1_guarded = []
         champion2_guarded = []
         champion3_guarded = []
@@ -1168,6 +1169,18 @@ class GameFrame(tk.Frame):
         champion3_defensive = []
         champion4_defensive = []
         champion5_defensive = []
+        if PALADIN.title in CHAMPION_LIST:
+            champion1_statuses = ["Aura of Power"]
+            champion2_statuses = ["Aura of Power"]
+            champion3_statuses = ["Aura of Power"]
+            champion4_statuses = ["Aura of Power"]
+            champion5_statuses = ["Aura of Power"]
+        else:
+            champion1_statuses = []
+            champion2_statuses = []
+            champion3_statuses = []
+            champion4_statuses = []
+            champion5_statuses = []
         global palm_strike_requirements, leg_sweep_requirements, harmonize_requirements, pressure_points_requirements, \
             monk_staggered_damage_list1, monk_staggered_damage_list2, monk_staggered_damage_list3, \
             bloodthirst_requirements, pulverize_requirements, challenging_shout_requirements, impactful_boast_requirements, \
@@ -1527,7 +1540,8 @@ class GameFrame(tk.Frame):
             ai4_SerraSlashDot, ai5_SerraSlashDot, ai1_garroteDot, ai2_garroteDot, ai3_garroteDot, ai4_garroteDot, ai5_garroteDot, \
             ai1_EviscerDot, ai2_EviscerDot, ai3_EviscerDot, ai4_EviscerDot, ai5_EviscerDot, \
             ai1_statuses, ai2_statuses, ai3_statuses, ai4_statuses, ai5_statuses, \
-            ai1_pricked, ai2_pricked, ai3_pricked, ai4_pricked, ai5_pricked
+            ai1_pricked, ai2_pricked, ai3_pricked, ai4_pricked, ai5_pricked, \
+            ai1_statuses, ai2_statuses, ai3_statuses, ai4_statuses, ai5_statuses
         new_round = 1
         damage_modifier = MODIFERS[1] * floorLevel
         health_modifier = MODIFERS[0] * (roomLevel + (permaHealthMod * 2))
@@ -1550,6 +1564,11 @@ class GameFrame(tk.Frame):
         ai3_stun = 0
         ai4_stun = 0
         ai5_stun = 0
+        ai1_statuses = []
+        ai2_statuses = []
+        ai3_statuses = []
+        ai4_statuses = []
+        ai5_statuses = []
         ai1_pricked = []
         ai2_pricked = []
         ai3_pricked = []
@@ -1727,19 +1746,19 @@ class GameFrame(tk.Frame):
         floor_information_dottedLine3.grid(row=0, column=3, sticky="WE")
         champion1_combatFrame_name = tk.Label(dungeon_game_frame, text=self.champion_combat_name(1))
         champion1_combatFrame_stats = tk.Label(dungeon_game_frame, text=self.champion_combat_status_text(1))
-        champion1_combatFrame_statusEffects = tk.Button(dungeon_game_frame, text="Status Effects (NYI)")
+        champion1_combatFrame_statusEffects = tk.Button(dungeon_game_frame, text="Staus Effects", command=lambda:self.display_status_effects("ally", 1))
         champion2_combatFrame_name = tk.Label(dungeon_game_frame, text=self.champion_combat_name(2))
         champion2_combatFrame_stats = tk.Label(dungeon_game_frame, text=self.champion_combat_status_text(2))
-        champion2_combatFrame_statusEffects = tk.Button(dungeon_game_frame, text="Status Effects (NYI)")
+        champion2_combatFrame_statusEffects = tk.Button(dungeon_game_frame, text="Staus Effects", command=lambda:self.display_status_effects("ally", 2))
         champion3_combatFrame_name = tk.Label(dungeon_game_frame, text=self.champion_combat_name(3))
         champion3_combatFrame_stats = tk.Label(dungeon_game_frame, text=self.champion_combat_status_text(3))
-        champion3_combatFrame_statusEffects = tk.Button(dungeon_game_frame, text="Status Effects (NYI)")
+        champion3_combatFrame_statusEffects = tk.Button(dungeon_game_frame, text="Staus Effects", command=lambda:self.display_status_effects("ally", 3))
         champion4_combatFrame_name = tk.Label(dungeon_game_frame, text=self.champion_combat_name(4))
         champion4_combatFrame_stats = tk.Label(dungeon_game_frame, text=self.champion_combat_status_text(4))
-        champion4_combatFrame_statusEffects = tk.Button(dungeon_game_frame, text="Status Effects (NYI)")
+        champion4_combatFrame_statusEffects = tk.Button(dungeon_game_frame, text="Staus Effects", command=lambda:self.display_status_effects("ally", 4))
         champion5_combatFrame_name = tk.Label(dungeon_game_frame, text=self.champion_combat_name(5))
         champion5_combatFrame_stats = tk.Label(dungeon_game_frame, text=self.champion_combat_status_text(5))
-        champion5_combatFrame_statusEffects = tk.Button(dungeon_game_frame, text="Status Effects (NYI)")
+        champion5_combatFrame_statusEffects = tk.Button(dungeon_game_frame, text="Staus Effects", command=lambda:self.display_status_effects("ally", 5))
         champion_CLF_dottedLine_label2 = tk.Label(dungeon_game_frame, text="----------------")
         champion_CLF_dottedLine_label3 = tk.Label(dungeon_game_frame, text="----------------")
         champion_CLF_dottedLine_label4 = tk.Label(dungeon_game_frame, text="----------------")
@@ -1777,144 +1796,144 @@ class GameFrame(tk.Frame):
         if AI_SPAWNED == 1:
             ai1_combatFrame_stats = tk.Label(dungeon_game_frame, text=self.ai_combat_status_text(1))
             ai1_combatFrame_name = tk.Label(dungeon_game_frame, text=self.ai_combat_name(1))
-            ai1_combatFrame_statusEffects = tk.Button(dungeon_game_frame, text="Status Effects (NYI)")
             AI_CLF_dottedLine_label2 = tk.Label(dungeon_game_frame, text="----------------")
             if ai1_hp != 0:
                 ai1_intended_attack_label = tk.Label(dungeon_game_frame, text=ai1_attack_intention)
                 ai1_intended_attack_label.grid(row=7, column=2, sticky="e")
+                ai1_combatFrame_statusEffects = tk.Button(dungeon_game_frame, text="Staus Effects",
+                                                          command=lambda: self.display_status_effects("enemy", 1))
+                ai1_combatFrame_statusEffects.grid(row=7, column=3, sticky="w")
             ai1_combatFrame_name.grid(row=7, column=3, sticky="e")
             ai1_combatFrame_stats.grid(row=8, column=3, sticky="e")
-            ai1_combatFrame_statusEffects.grid(row=7, column=3, sticky="w")
             AI_CLF_dottedLine_label2.grid(row=9, column=3, sticky="e")
         elif AI_SPAWNED == 2:
             ai1_combatFrame_stats = tk.Label(dungeon_game_frame, text=self.ai_combat_status_text(1))
             ai1_combatFrame_name = tk.Label(dungeon_game_frame, text=self.ai_combat_name(1))
-            ai1_combatFrame_statusEffects = tk.Button(dungeon_game_frame, text="Status Effects (NYI)")
             ai1_combatFrame_name.grid(row=4, column=3, sticky="e")
             ai1_combatFrame_stats.grid(row=5, column=3, sticky="e")
-            ai1_combatFrame_statusEffects.grid(row=4, column=3, sticky="w")
             ai2_combatFrame_stats = tk.Label(dungeon_game_frame, text=self.ai_combat_status_text(2))
             ai2_combatFrame_name = tk.Label(dungeon_game_frame, text=self.ai_combat_name(2))
-            ai2_combatFrame_statusEffects = tk.Button(dungeon_game_frame, text="Status Effects (NYI)")
             ai2_combatFrame_name.grid(row=7, column=3, sticky="e")
             ai2_combatFrame_stats.grid(row=8, column=3, sticky="e")
-            ai2_combatFrame_statusEffects.grid(row=7, column=3, sticky="w")
             AI_CLF_dottedLine_label2 = tk.Label(dungeon_game_frame, text="----------------")
             AI_CLF_dottedLine_label3 = tk.Label(dungeon_game_frame, text="----------------")
             if ai1_hp != 0:
                 ai1_intended_attack_label = tk.Label(dungeon_game_frame, text=ai1_attack_intention)
                 ai1_intended_attack_label.grid(row=4, column=2, sticky="e")
+                ai1_combatFrame_statusEffects = tk.Button(dungeon_game_frame, text="Staus Effects",
+                                                          command=lambda: self.display_status_effects("enemy", 1))
+                ai1_combatFrame_statusEffects.grid(row=4, column=3, sticky="w")
             if ai2_hp != 0:
                 ai2_intended_attack_label = tk.Label(dungeon_game_frame, text=ai2_attack_intention)
                 ai2_intended_attack_label.grid(row=7, column=2, sticky="e")
+                ai2_combatFrame_statusEffects = tk.Button(dungeon_game_frame, text="Staus Effects",
+                                                          command=lambda: self.display_status_effects("enemy", 2))
+                ai2_combatFrame_statusEffects.grid(row=7, column=3, sticky="w")
             AI_CLF_dottedLine_label2.grid(row=6, column=3, sticky="e")
             AI_CLF_dottedLine_label3.grid(row=9, column=3, sticky="e")
         elif AI_SPAWNED == 3:
             ai1_combatFrame_stats = tk.Label(dungeon_game_frame, text=self.ai_combat_status_text(1))
             ai1_combatFrame_name = tk.Label(dungeon_game_frame, text=self.ai_combat_name(1))
-            ai1_combatFrame_statusEffects = tk.Button(dungeon_game_frame, text="Status Effects (NYI)")
             ai1_combatFrame_name.grid(row=4, column=3, sticky="e")
             ai1_combatFrame_stats.grid(row=5, column=3, sticky="e")
-            ai1_combatFrame_statusEffects.grid(row=4, column=3, sticky="w")
             ai2_combatFrame_stats = tk.Label(dungeon_game_frame, text=self.ai_combat_status_text(2))
             ai2_combatFrame_name = tk.Label(dungeon_game_frame, text=self.ai_combat_name(2))
-            ai2_combatFrame_statusEffects = tk.Button(dungeon_game_frame, text="Status Effects (NYI)")
             ai2_combatFrame_name.grid(row=7, column=3, sticky="e")
             ai2_combatFrame_stats.grid(row=8, column=3, sticky="e")
-            ai2_combatFrame_statusEffects.grid(row=7, column=3, sticky="w")
             ai3_combatFrame_stats = tk.Label(dungeon_game_frame, text=self.ai_combat_status_text(3))
             ai3_combatFrame_name = tk.Label(dungeon_game_frame, text=self.ai_combat_name(3))
-            ai3_combatFrame_statusEffects = tk.Button(dungeon_game_frame, text="Status Effects (NYI)")
             ai3_combatFrame_name.grid(row=10, column=3, sticky="e")
             ai3_combatFrame_stats.grid(row=11, column=3, sticky="e")
-            ai3_combatFrame_statusEffects.grid(row=10, column=3, sticky="w")
             AI_CLF_dottedLine_label2 = tk.Label(dungeon_game_frame, text="----------------")
             AI_CLF_dottedLine_label3 = tk.Label(dungeon_game_frame, text="----------------")
             if ai1_hp != 0:
                 ai1_intended_attack_label = tk.Label(dungeon_game_frame, text=ai1_attack_intention)
                 ai1_intended_attack_label.grid(row=4, column=2, sticky="e")
+                ai1_combatFrame_statusEffects = tk.Button(dungeon_game_frame, text="Staus Effects",
+                                                          command=lambda: self.display_status_effects("enemy", 1))
+                ai1_combatFrame_statusEffects.grid(row=4, column=3, sticky="w")
             if ai2_hp != 0:
                 ai2_intended_attack_label = tk.Label(dungeon_game_frame, text=ai2_attack_intention)
                 ai2_intended_attack_label.grid(row=7, column=2, sticky="e")
+                ai2_combatFrame_statusEffects = tk.Button(dungeon_game_frame, text="Staus Effects",
+                                                          command=lambda: self.display_status_effects("enemy", 2))
+                ai2_combatFrame_statusEffects.grid(row=7, column=3, sticky="w")
             if ai3_hp != 0:
                 ai3_intended_attack_label = tk.Label(dungeon_game_frame, text=ai3_attack_intention)
                 ai3_intended_attack_label.grid(row=10, column=2, sticky="e")
+                ai3_combatFrame_statusEffects = tk.Button(dungeon_game_frame, text="Staus Effects",
+                                                          command=lambda: self.display_status_effects("enemy", 3))
+                ai3_combatFrame_statusEffects.grid(row=10, column=3, sticky="w")
             AI_CLF_dottedLine_label2.grid(row=6, column=3, sticky="e")
             AI_CLF_dottedLine_label3.grid(row=9, column=3, sticky="e")
         elif AI_SPAWNED == 4:
             ai1_combatFrame_stats = tk.Label(dungeon_game_frame, text=self.ai_combat_status_text(1))
             ai1_combatFrame_name = tk.Label(dungeon_game_frame, text=self.ai_combat_name(1))
-            ai1_combatFrame_statusEffects = tk.Button(dungeon_game_frame, text="Status Effects (NYI)")
             ai1_combatFrame_name.grid(row=1, column=3, sticky="e")
             ai1_combatFrame_stats.grid(row=2, column=3, sticky="e")
-            ai1_combatFrame_statusEffects.grid(row=1, column=3, sticky="w")
             ai2_combatFrame_stats = tk.Label(dungeon_game_frame, text=self.ai_combat_status_text(2))
             ai2_combatFrame_name = tk.Label(dungeon_game_frame, text=self.ai_combat_name(2))
-            ai2_combatFrame_statusEffects = tk.Button(dungeon_game_frame, text="Status Effects (NYI)")
             ai2_combatFrame_name.grid(row=4, column=3, sticky="e")
             ai2_combatFrame_stats.grid(row=5, column=3, sticky="e")
-            ai2_combatFrame_statusEffects.grid(row=4, column=3, sticky="w")
             ai3_combatFrame_stats = tk.Label(dungeon_game_frame, text=self.ai_combat_status_text(3))
             ai3_combatFrame_name = tk.Label(dungeon_game_frame, text=self.ai_combat_name(3))
-            ai3_combatFrame_statusEffects = tk.Button(dungeon_game_frame, text="Status Effects (NYI)")
             ai3_combatFrame_name.grid(row=7, column=3, sticky="e")
             ai3_combatFrame_stats.grid(row=8, column=3, sticky="e")
-            ai3_combatFrame_statusEffects.grid(row=7, column=3, sticky="w")
             ai4_combatFrame_stats = tk.Label(dungeon_game_frame, text=self.ai_combat_status_text(4))
             ai4_combatFrame_name = tk.Label(dungeon_game_frame, text=self.ai_combat_name(4))
-            ai4_combatFrame_statusEffects = tk.Button(dungeon_game_frame, text="Status Effects (NYI)")
             ai4_combatFrame_name.grid(row=10, column=3, sticky="e")
             ai4_combatFrame_stats.grid(row=11, column=3, sticky="e")
-            ai4_combatFrame_statusEffects.grid(row=10, column=3, sticky="w")
             AI_CLF_dottedLine_label2 = tk.Label(dungeon_game_frame, text="----------------")
             AI_CLF_dottedLine_label3 = tk.Label(dungeon_game_frame, text="----------------")
             AI_CLF_dottedLine_label4 = tk.Label(dungeon_game_frame, text="----------------")
             if ai1_hp != 0:
                 ai1_intended_attack_label = tk.Label(dungeon_game_frame, text=ai1_attack_intention)
                 ai1_intended_attack_label.grid(row=1, column=2, sticky="e")
+                ai1_combatFrame_statusEffects = tk.Button(dungeon_game_frame, text="Staus Effects",
+                                                          command=lambda: self.display_status_effects("enemy", 1))
+                ai1_combatFrame_statusEffects.grid(row=1, column=3, sticky="w")
             if ai2_hp != 0:
                 ai2_intended_attack_label = tk.Label(dungeon_game_frame, text=ai2_attack_intention)
                 ai2_intended_attack_label.grid(row=4, column=2, sticky="e")
+                ai2_combatFrame_statusEffects = tk.Button(dungeon_game_frame, text="Staus Effects",
+                                                          command=lambda: self.display_status_effects("enemy", 2))
+                ai2_combatFrame_statusEffects.grid(row=4, column=3, sticky="w")
             if ai3_hp != 0:
                 ai3_intended_attack_label = tk.Label(dungeon_game_frame, text=ai3_attack_intention)
                 ai3_intended_attack_label.grid(row=7, column=2, sticky="e")
+                ai3_combatFrame_statusEffects = tk.Button(dungeon_game_frame, text="Staus Effects",
+                                                          command=lambda: self.display_status_effects("enemy", 3))
+                ai3_combatFrame_statusEffects.grid(row=7, column=3, sticky="w")
             if ai4_hp != 0:
                 ai4_intended_attack_label = tk.Label(dungeon_game_frame, text=ai4_attack_intention)
                 ai4_intended_attack_label.grid(row=10, column=2, sticky="e")
+                ai4_combatFrame_statusEffects = tk.Button(dungeon_game_frame, text="Staus Effects",
+                                                          command=lambda: self.display_status_effects("enemy", 4))
+                ai4_combatFrame_statusEffects.grid(row=10, column=3, sticky="w")
             AI_CLF_dottedLine_label2.grid(row=3, column=3, sticky="e")
             AI_CLF_dottedLine_label3.grid(row=6, column=3, sticky="e")
             AI_CLF_dottedLine_label4.grid(row=9, column=3, sticky="e")
         elif AI_SPAWNED == 5:
             ai1_combatFrame_stats = tk.Label(dungeon_game_frame, text=self.ai_combat_status_text(1))
             ai1_combatFrame_name = tk.Label(dungeon_game_frame, text=self.ai_combat_name(1))
-            ai1_combatFrame_statusEffects = tk.Button(dungeon_game_frame, text="Status Effects (NYI)")
             ai1_combatFrame_name.grid(row=1, column=3, sticky="e")
             ai1_combatFrame_stats.grid(row=2, column=3, sticky="e")
-            ai1_combatFrame_statusEffects.grid(row=1, column=3, sticky="w")
             ai2_combatFrame_stats = tk.Label(dungeon_game_frame, text=self.ai_combat_status_text(2))
             ai2_combatFrame_name = tk.Label(dungeon_game_frame, text=self.ai_combat_name(2))
-            ai2_combatFrame_statusEffects = tk.Button(dungeon_game_frame, text="Status Effects (NYI)")
             ai2_combatFrame_name.grid(row=4, column=3, sticky="e")
             ai2_combatFrame_stats.grid(row=5, column=3, sticky="e")
-            ai2_combatFrame_statusEffects.grid(row=4, column=3, sticky="w")
             ai3_combatFrame_stats = tk.Label(dungeon_game_frame, text=self.ai_combat_status_text(3))
             ai3_combatFrame_name = tk.Label(dungeon_game_frame, text=self.ai_combat_name(3))
-            ai3_combatFrame_statusEffects = tk.Button(dungeon_game_frame, text="Status Effects (NYI)")
             ai3_combatFrame_name.grid(row=7, column=3, sticky="e")
             ai3_combatFrame_stats.grid(row=8, column=3, sticky="e")
-            ai3_combatFrame_statusEffects.grid(row=7, column=3, sticky="w")
             ai4_combatFrame_stats = tk.Label(dungeon_game_frame, text=self.ai_combat_status_text(4))
             ai4_combatFrame_name = tk.Label(dungeon_game_frame, text=self.ai_combat_name(4))
-            ai4_combatFrame_statusEffects = tk.Button(dungeon_game_frame, text="Status Effects (NYI)")
             ai4_combatFrame_name.grid(row=10, column=3, sticky="e")
             ai4_combatFrame_stats.grid(row=11, column=3, sticky="e")
-            ai4_combatFrame_statusEffects.grid(row=10, column=3, sticky="w")
             ai5_combatFrame_stats = tk.Label(dungeon_game_frame, text=self.ai_combat_status_text(5))
             ai5_combatFrame_name = tk.Label(dungeon_game_frame, text=self.ai_combat_name(5))
-            ai5_combatFrame_statusEffects = tk.Button(dungeon_game_frame, text="Status Effects (NYI)")
             ai5_combatFrame_name.grid(row=13, column=3, sticky="e")
             ai5_combatFrame_stats.grid(row=14, column=3, sticky="e")
-            ai5_combatFrame_statusEffects.grid(row=13, column=3, sticky="w")
             AI_CLF_dottedLine_label2 = tk.Label(dungeon_game_frame, text="----------------")
             AI_CLF_dottedLine_label3 = tk.Label(dungeon_game_frame, text="----------------")
             AI_CLF_dottedLine_label4 = tk.Label(dungeon_game_frame, text="----------------")
@@ -1922,18 +1941,33 @@ class GameFrame(tk.Frame):
             if ai1_hp != 0:
                 ai1_intended_attack_label = tk.Label(dungeon_game_frame, text=ai1_attack_intention)
                 ai1_intended_attack_label.grid(row=1, column=2, sticky="e")
+                ai1_combatFrame_statusEffects = tk.Button(dungeon_game_frame, text="Staus Effects",
+                                                          command=lambda: self.display_status_effects("enemy", 1))
+                ai1_combatFrame_statusEffects.grid(row=1, column=3, sticky="w")
             if ai2_hp != 0:
                 ai2_intended_attack_label = tk.Label(dungeon_game_frame, text=ai2_attack_intention)
                 ai2_intended_attack_label.grid(row=4, column=2, sticky="e")
+                ai2_combatFrame_statusEffects = tk.Button(dungeon_game_frame, text="Staus Effects",
+                                                          command=lambda: self.display_status_effects("enemy", 2))
+                ai2_combatFrame_statusEffects.grid(row=4, column=3, sticky="w")
             if ai3_hp != 0:
                 ai3_intended_attack_label = tk.Label(dungeon_game_frame, text=ai3_attack_intention)
                 ai3_intended_attack_label.grid(row=7, column=2, sticky="e")
+                ai3_combatFrame_statusEffects = tk.Button(dungeon_game_frame, text="Staus Effects",
+                                                          command=lambda: self.display_status_effects("enemy", 3))
+                ai3_combatFrame_statusEffects.grid(row=7, column=3, sticky="w")
             if ai4_hp != 0:
                 ai4_intended_attack_label = tk.Label(dungeon_game_frame, text=ai4_attack_intention)
                 ai4_intended_attack_label.grid(row=10, column=2, sticky="e")
+                ai4_combatFrame_statusEffects = tk.Button(dungeon_game_frame, text="Staus Effects",
+                                                          command=lambda: self.display_status_effects("enemy", 4))
+                ai4_combatFrame_statusEffects.grid(row=10, column=3, sticky="w")
             if ai5_hp != 0:
                 ai5_intended_attack_label = tk.Label(dungeon_game_frame, text=ai5_attack_intention)
                 ai5_intended_attack_label.grid(row=13, column=2, sticky="e")
+                ai5_combatFrame_statusEffects = tk.Button(dungeon_game_frame, text="Staus Effects",
+                                                          command=lambda: self.display_status_effects("enemy", 5))
+                ai5_combatFrame_statusEffects.grid(row=13, column=3, sticky="w")
             AI_CLF_dottedLine_label2.grid(row=3, column=3, sticky="e")
             AI_CLF_dottedLine_label3.grid(row=6, column=3, sticky="e")
             AI_CLF_dottedLine_label4.grid(row=9, column=3, sticky="e")
@@ -1955,8 +1989,303 @@ class GameFrame(tk.Frame):
         elif current_turn == "C5":
             text = "<{}'s Turn>".format(CHAMPION_LIST[4])
             return text
+    def display_status_effects(self, AllyOrEnemy, position):
+        root = tk.Tk()
+        effects_list = []
+        character_name = ""
+        if AllyOrEnemy == "ally":
+            character_name = "Champion"
+        elif AllyOrEnemy == "enemy":
+            character_name = "Enemy"
+        characters_status_effect_label = tk.Label(root, text="{} {}'s Current Status Effects".format(character_name, position))
+        characters_status_effect_label.grid(row=1,column=1)
+        if AllyOrEnemy == "ally":
+            if position == 1:
+                if CHAMPION_LIST[0] == BERSERKER.title:
+                    if reckless_flurry_buff != 0:
+                        effects_list.append("Reckless Flurry ({})".format(reckless_flurry_buff))
+                if CHAMPION_LIST[0] == WARLOCK.title:
+                    if void_infusion_stacks != 0:
+                        effects_list.append("Void Infused ({})".format(void_infusion_stacks))
+                if CHAMPION_LIST[0] == BLOODMANCER.title:
+                    if blood_boil_buff != 0:
+                        effects_list.append("Blood Boil ({})".format(blood_boil_buff))
+                if CHAMPION_LIST[0] == CASTLE_RANGER.title:
+                    effects_list.append("{}".format(current_arrow_type))
+                for status_effect in champion1_statuses:
+                    if status_effect == "J.A.X.D":
+                        effects_list.append("J.A.X.D ({})".format(champion1_JAXD))
+                    if status_effect == "Enlarged Muscles":
+                        effects_list.append("Enlarged Muscles ({})".format(champion1_muscleEnlarger))
+                    if status_effect == "Fullest Potential":
+                        effects_list.append("Fullest Potential ({})".format(champion1_fullPotential))
+                    if status_effect == "Blessing":
+                        effects_list.append("Blessing ({})".format(champion1_blessing))
+                    if status_effect == "Fortified":
+                        effects_list.append("Fortified ({})".format(champion1_fortification))
+                    if status_effect == "Enraged":
+                        effects_list.append("Enraged ({})".format(champion1_enrage))
+                    if status_effect == "Thorned":
+                        effects_list.append("Thorned ({})".format(champion1_thorns))
+                    if status_effect == "Herbal Tea Remnants":
+                        effects_list.append("Herbal Tea Remnants ({})".format(champion1_herb_tea[1]))
+                    if status_effect == "Nanobot Support":
+                        effects_list.append("Nanobot Support ({})".format(champion1_nanobot[1]))
+                    if "Guarded:" in status_effect:
+                        effects_list.append("{}".format(status_effect))
+                    if "Defensive:" in status_effect:
+                        effects_list.append("{}".format(status_effect))
+            if position == 2:
+                if CHAMPION_LIST[1] == BERSERKER.title:
+                    if reckless_flurry_buff != 0:
+                        effects_list.append("Reckless Flurry ({})".format(reckless_flurry_buff))
+                if CHAMPION_LIST[1] == WARLOCK.title:
+                    if void_infusion_stacks != 0:
+                        effects_list.append("Void Infused ({})".format(void_infusion_stacks))
+                if CHAMPION_LIST[1] == BLOODMANCER.title:
+                    if blood_boil_buff != 0:
+                        effects_list.append("Blood Boil ({})".format(blood_boil_buff))
+                if CHAMPION_LIST[1] == CASTLE_RANGER.title:
+                    effects_list.append("{}".format(current_arrow_type))
+                for status_effect in champion2_statuses:
+                    if status_effect == "J.A.X.D":
+                        effects_list.append("J.A.X.D ({})".format(champion2_JAXD))
+                    if status_effect == "Enlarged Muscles":
+                        effects_list.append("Enlarged Muscles ({})".format(champion2_muscleEnlarger))
+                    if status_effect == "Fullest Potential":
+                        effects_list.append("Fullest Potential ({})".format(champion2_fullPotential))
+                    if status_effect == "Blessing":
+                        effects_list.append("Blessing ({})".format(champion2_blessing))
+                    if status_effect == "Fortified":
+                        effects_list.append("Fortified ({})".format(champion2_fortification))
+                    if status_effect == "Enraged":
+                        effects_list.append("Enraged ({})".format(champion2_enrage))
+                    if status_effect == "Thorned":
+                        effects_list.append("Thorned ({})".format(champion2_thorns))
+                    if status_effect == "Herbal Tea Remnants":
+                        effects_list.append("Herbal Tea Remnants ({})".format(champion2_herb_tea[1]))
+                    if status_effect == "Nanobot Support":
+                        effects_list.append("Nanobot Support ({})".format(champion2_nanobot[1]))
+                    if "Guarded:" in status_effect:
+                        effects_list.append("{}".format(status_effect))
+                    if "Defensive:" in status_effect:
+                        effects_list.append("{}".format(status_effect))
+            if position == 3:
+                if CHAMPION_LIST[2] == BERSERKER.title:
+                    if reckless_flurry_buff != 0:
+                        effects_list.append("Reckless Flurry ({})".format(reckless_flurry_buff))
+                if CHAMPION_LIST[2] == WARLOCK.title:
+                    if void_infusion_stacks != 0:
+                        effects_list.append("Void Infused ({})".format(void_infusion_stacks))
+                if CHAMPION_LIST[2] == BLOODMANCER.title:
+                    if blood_boil_buff != 0:
+                        effects_list.append("Blood Boil ({})".format(blood_boil_buff))
+                if CHAMPION_LIST[2] == CASTLE_RANGER.title:
+                    effects_list.append("{}".format(current_arrow_type))
+                for status_effect in champion3_statuses:
+                    if status_effect == "J.A.X.D":
+                        effects_list.append("J.A.X.D ({})".format(champion3_JAXD))
+                    if status_effect == "Enlarged Muscles":
+                        effects_list.append("Enlarged Muscles ({})".format(champion3_muscleEnlarger))
+                    if status_effect == "Fullest Potential":
+                        effects_list.append("Fullest Potential ({})".format(champion3_fullPotential))
+                    if status_effect == "Blessing":
+                        effects_list.append("Blessing ({})".format(champion3_blessing))
+                    if status_effect == "Fortified":
+                        effects_list.append("Fortified ({})".format(champion3_fortification))
+                    if status_effect == "Enraged":
+                        effects_list.append("Enraged ({})".format(champion3_enrage))
+                    if status_effect == "Thorned":
+                        effects_list.append("Thorned ({})".format(champion3_thorns))
+                    if status_effect == "Herbal Tea Remnants":
+                        effects_list.append("Herbal Tea Remnants ({})".format(champion3_herb_tea[1]))
+                    if status_effect == "Nanobot Support":
+                        effects_list.append("Nanobot Support ({})".format(champion3_nanobot[1]))
+                    if "Guarded:" in status_effect:
+                        effects_list.append("{}".format(status_effect))
+                    if "Defensive:" in status_effect:
+                        effects_list.append("{}".format(status_effect))
+            if position == 4:
+                if CHAMPION_LIST[3] == BERSERKER.title:
+                    if reckless_flurry_buff != 0:
+                        effects_list.append("Reckless Flurry ({})".format(reckless_flurry_buff))
+                if CHAMPION_LIST[3] == WARLOCK.title:
+                    if void_infusion_stacks != 0:
+                        effects_list.append("Void Infused ({})".format(void_infusion_stacks))
+                if CHAMPION_LIST[3] == BLOODMANCER.title:
+                    if blood_boil_buff != 0:
+                        effects_list.append("Blood Boil ({})".format(blood_boil_buff))
+                if CHAMPION_LIST[3] == CASTLE_RANGER.title:
+                    effects_list.append("{}".format(current_arrow_type))
+                for status_effect in champion4_statuses:
+                    if status_effect == "J.A.X.D":
+                        effects_list.append("J.A.X.D ({})".format(champion4_JAXD))
+                    if status_effect == "Enlarged Muscles":
+                        effects_list.append("Enlarged Muscles ({})".format(champion4_muscleEnlarger))
+                    if status_effect == "Fullest Potential":
+                        effects_list.append("Fullest Potential ({})".format(champion4_fullPotential))
+                    if status_effect == "Blessing":
+                        effects_list.append("Blessing ({})".format(champion4_blessing))
+                    if status_effect == "Fortified":
+                        effects_list.append("Fortified ({})".format(champion4_fortification))
+                    if status_effect == "Enraged":
+                        effects_list.append("Enraged ({})".format(champion4_enrage))
+                    if status_effect == "Thorned":
+                        effects_list.append("Thorned ({})".format(champion4_thorns))
+                    if status_effect == "Herbal Tea Remnants":
+                        effects_list.append("Herbal Tea Remnants ({})".format(champion4_herb_tea[1]))
+                    if status_effect == "Nanobot Support":
+                        effects_list.append("Nanobot Support ({})".format(champion4_nanobot[1]))
+                    if "Guarded:" in status_effect:
+                        effects_list.append("{}".format(status_effect))
+                    if "Defensive:" in status_effect:
+                        effects_list.append("{}".format(status_effect))
+            if position == 5:
+                if CHAMPION_LIST[4] == BERSERKER.title:
+                    if reckless_flurry_buff != 0:
+                        effects_list.append("Reckless Flurry ({})".format(reckless_flurry_buff))
+                if CHAMPION_LIST[4] == WARLOCK.title:
+                    if void_infusion_stacks != 0:
+                        effects_list.append("Void Infused ({})".format(void_infusion_stacks))
+                if CHAMPION_LIST[4] == BLOODMANCER.title:
+                    if blood_boil_buff != 0:
+                        effects_list.append("Blood Boil ({})".format(blood_boil_buff))
+                if CHAMPION_LIST[4] == CASTLE_RANGER.title:
+                    effects_list.append("{}".format(current_arrow_type))
+                for status_effect in champion5_statuses:
+                    if status_effect == "Enraged":
+                        effects_list.append("Enraged ({})".format(champion5_enrage))
+                    if "Guarded:" in status_effect:
+                        effects_list.append("{}".format(status_effect))
+                    if "Defensive:" in status_effect:
+                        effects_list.append("{}".format(status_effect))
+                    if status_effect == "J.A.X.D":
+                        effects_list.append("J.A.X.D ({})".format(champion5_JAXD))
+                    if status_effect == "Enlarged Muscles":
+                        effects_list.append("Enlarged Muscles ({})".format(champion5_muscleEnlarger))
+                    if status_effect == "Fullest Potential":
+                        effects_list.append("Fullest Potential ({})".format(champion5_fullPotential))
+                    if status_effect == "Fortified":
+                        effects_list.append("Fortified ({})".format(champion5_fortification))
+                    if status_effect == "Thorned":
+                        effects_list.append("Thorned ({})".format(champion5_thorns))
+                    if status_effect == "Blessing":
+                        effects_list.append("Blessing ({})".format(champion5_blessing))
+                    if status_effect == "Nanobot Support":
+                        effects_list.append("Nanobot Support ({})".format(champion5_nanobot[1]))
+                    if status_effect == "Herbal Tea Remnants":
+                        effects_list.append("Herbal Tea Remnants ({})".format(champion5_herb_tea[1]))
+        if AllyOrEnemy == "enemy":
+            if position == 1:
+                for status_effect in ai1_statuses:
+                    if status_effect == "Stunned":
+                        effects_list.append("Stunned ({})".format(ai1_stun))
+                    if status_effect == "Taunted":
+                        effects_list.append("Taunted: {} ({})".format(ai1_taunt[0], ai1_taunt[1]))
+                    if status_effect == "Weakened":
+                        effects_list.append("Weakened ({})".format(ai1_weakness))
+                    if status_effect == "Brittle":
+                        effects_list.append("Brittle ({})".format(ai1_brittle))
+                    if status_effect == "Serrated":
+                        effects_list.append("Serrated[{}] ({})".format(ai1_SerraSlashDot[0], ai1_SerraSlashDot[1]))
+                    if status_effect == "Garroted":
+                        effects_list.append("Garroted[{}] ({})".format(ai1_garroteDot[0], ai1_garroteDot[1]))
+                    if status_effect == "Eviscerated":
+                        effects_list.append("Eviscerated[{}] ({})".format(ai1_EviscerDot[0], ai1_EviscerDot[1]))
+                    if status_effect == "Burning":
+                        effects_list.append("Burning[{}] ({})".format(ai1_burnDot[0], ai1_burnDot[1]))
+                    if status_effect == "Pricked}":
+                        effects_list.append("Pricked[{}]".format(ai1_pricked[0]))
+            if position == 2:
+                for status_effect in ai2_statuses:
+                    if status_effect == "Stunned":
+                        effects_list.append("Stunned ({})".format(ai2_stun))
+                    if status_effect == "Taunted":
+                        effects_list.append("Taunted: {} ({})".format(ai2_taunt[0], ai2_taunt[1]))
+                    if status_effect == "Weakened":
+                        effects_list.append("Weakened ({})".format(ai2_weakness))
+                    if status_effect == "Brittle":
+                        effects_list.append("Brittle ({})".format(ai2_brittle))
+                    if status_effect == "Serrated":
+                        effects_list.append("Serrated[{}] ({})".format(ai2_SerraSlashDot[0], ai2_SerraSlashDot[1]))
+                    if status_effect == "Garroted":
+                        effects_list.append("Garroted[{}] ({})".format(ai2_garroteDot[0], ai2_garroteDot[1]))
+                    if status_effect == "Eviscerated":
+                        effects_list.append("Eviscerated[{}] ({})".format(ai2_EviscerDot[0], ai2_EviscerDot[1]))
+                    if status_effect == "Burning":
+                        effects_list.append("Burning[{}] ({})".format(ai2_burnDot[0], ai2_burnDot[1]))
+                    if status_effect == "Pricked}":
+                        effects_list.append("Pricked[{}]".format(ai2_pricked[0]))
+            if position == 3:
+                for status_effect in ai3_statuses:
+                    if status_effect == "Stunned":
+                        effects_list.append("Stunned ({})".format(ai3_stun))
+                    if status_effect == "Taunted":
+                        effects_list.append("Taunted: {} ({})".format(ai3_taunt[0], ai3_taunt[1]))
+                    if status_effect == "Weakened":
+                        effects_list.append("Weakened ({})".format(ai3_weakness))
+                    if status_effect == "Brittle":
+                        effects_list.append("Brittle ({})".format(ai3_brittle))
+                    if status_effect == "Serrated":
+                        effects_list.append("Serrated[{}] ({})".format(ai3_SerraSlashDot[0], ai3_SerraSlashDot[1]))
+                    if status_effect == "Garroted":
+                        effects_list.append("Garroted[{}] ({})".format(ai3_garroteDot[0], ai3_garroteDot[1]))
+                    if status_effect == "Eviscerated":
+                        effects_list.append("Eviscerated[{}] ({})".format(ai3_EviscerDot[0], ai3_EviscerDot[1]))
+                    if status_effect == "Burning":
+                        effects_list.append("Burning[{}] ({})".format(ai3_burnDot[0], ai3_burnDot[1]))
+                    if status_effect == "Pricked}":
+                        effects_list.append("Pricked[{}]".format(ai3_pricked[0]))
+            if position == 4:
+                for status_effect in ai4_statuses:
+                    if status_effect == "Stunned":
+                        effects_list.append("Stunned ({})".format(ai4_stun))
+                    if status_effect == "Taunted":
+                        effects_list.append("Taunted: {} ({})".format(ai4_taunt[0], ai4_taunt[1]))
+                    if status_effect == "Weakened":
+                        effects_list.append("Weakened ({})".format(ai4_weakness))
+                    if status_effect == "Brittle":
+                        effects_list.append("Brittle ({})".format(ai4_brittle))
+                    if status_effect == "Serrated":
+                        effects_list.append("Serrated[{}] ({})".format(ai4_SerraSlashDot[0], ai4_SerraSlashDot[1]))
+                    if status_effect == "Garroted":
+                        effects_list.append("Garroted[{}] ({})".format(ai4_garroteDot[0], ai4_garroteDot[1]))
+                    if status_effect == "Eviscerated":
+                        effects_list.append("Eviscerated[{}] ({})".format(ai4_EviscerDot[0], ai4_EviscerDot[1]))
+                    if status_effect == "Burning":
+                        effects_list.append("Burning[{}] ({})".format(ai4_burnDot[0], ai4_burnDot[1]))
+                    if status_effect == "Pricked}":
+                        effects_list.append("Pricked[{}]".format(ai4_pricked[0]))
+            if position == 5:
+                for status_effect in ai5_statuses:
+                    if status_effect == "Stunned":
+                        effects_list.append("Stunned ({})".format(ai5_stun))
+                    if status_effect == "Taunted":
+                        effects_list.append("Taunted: {} ({})".format(ai5_taunt[0], ai5_taunt[1]))
+                    if status_effect == "Weakened":
+                        effects_list.append("Weakened ({})".format(ai5_weakness))
+                    if status_effect == "Brittle":
+                        effects_list.append("Brittle ({})".format(ai5_brittle))
+                    if status_effect == "Serrated":
+                        effects_list.append("Serrated[{}] ({})".format(ai5_SerraSlashDot[0], ai5_SerraSlashDot[1]))
+                    if status_effect == "Garroted":
+                        effects_list.append("Garroted[{}] ({})".format(ai5_garroteDot[0], ai5_garroteDot[1]))
+                    if status_effect == "Eviscerated":
+                        effects_list.append("Eviscerated[{}] ({})".format(ai5_EviscerDot[0], ai5_EviscerDot[1]))
+                    if status_effect == "Burning":
+                        effects_list.append("Burning[{}] ({})".format(ai5_burnDot[0], ai5_burnDot[1]))
+                    if status_effect == "Pricked}":
+                        effects_list.append("Pricked[{}]".format(ai5_pricked[0]))
+        status_effect_text = ""
+        for effect in effects_list:
+            status_effect_text += effect
+            status_effect_text += "\n"
+        status_effects_label = tk.Label(root, text=status_effect_text)
+        status_effects_label.grid(row=2, column=1)
+        close_button = tk.Button(root, text="Close", command=root.destroy)
+        close_button.grid(row=3, column=1)
 
-    def ai_choose_attack_targets(self, ):
+    def ai_choose_attack_targets(self):
         global ai1_attack_intention, ai2_attack_intention, ai3_attack_intention, ai4_attack_intention, ai5_attack_intention
         ai_attack_options = []
         counter = 0
@@ -2909,6 +3238,7 @@ class GameFrame(tk.Frame):
             ai4_SerraSlashDot, ai5_SerraSlashDot, ai1_garroteDot, ai2_garroteDot, ai3_garroteDot, ai4_garroteDot, ai5_garroteDot, \
             ai1_EviscerDot, ai2_EviscerDot, ai3_EviscerDot, ai4_EviscerDot, ai5_EviscerDot, \
             ai1_statuses, ai2_statuses, ai3_statuses, ai4_statuses, ai5_statuses, \
+            champion1_statuses, champion2_statuses, champion3_statuses, champion4_statuses, champion5_statuses, \
             ai1_hp, ai2_hp, ai3_hp, ai4_hp, ai5_hp, monk_staggered_damage_list1, monk_staggered_damage_list2, monk_staggered_damage_list3, \
             champion1_hp, champion2_hp, champion3_hp,champion4_hp, champion5_hp, \
             champion1_lastRound_damageTaken, champion2_lastRound_damageTaken, champion3_lastRound_damageTaken, champion4_lastRound_damageTaken, champion5_lastRound_damageTaken, \
@@ -2945,51 +3275,71 @@ class GameFrame(tk.Frame):
                 champion1_hp = champion1_hp + champion1_nanobot[0]
                 if champion1_hp > CHAMPION1_HP:
                     champion1_hp = CHAMPION1_HP
+                if champion1_nanobot[1] == 0:
+                    champion1_statuses.remove("Nanobot Support")
             if champion2_nanobot[1] != 0:
                 champion2_nanobot[1] = champion2_nanobot[1] - 1
                 champion2_hp = champion2_hp + champion2_nanobot[0]
                 if champion2_hp > CHAMPION2_HP:
                     champion2_hp = CHAMPION2_HP
+                if champion2_nanobot[1] == 0:
+                    champion2_statuses.remove("Nanobot Support")
             if champion3_nanobot[1] != 0:
                 champion3_nanobot[1] = champion3_nanobot[1] - 1
                 champion3_hp = champion3_hp + champion3_nanobot[0]
                 if champion3_hp > CHAMPION3_HP:
                     champion3_hp = CHAMPION3_HP
+                if champion3_nanobot[1] == 0:
+                    champion3_statuses.remove("Nanobot Support")
             if champion4_nanobot[1] != 0:
                 champion4_nanobot[1] = champion4_nanobot[1] - 1
                 champion4_hp = champion4_hp + champion4_nanobot[0]
                 if champion4_hp > CHAMPION4_HP:
                     champion4_hp = CHAMPION4_HP
+                if champion4_nanobot[1] == 0:
+                    champion4_statuses.remove("Nanobot Support")
             if champion5_nanobot[1] != 0:
                 champion5_nanobot[1] = champion5_nanobot[1] - 1
                 champion5_hp = champion5_hp + champion5_nanobot[0]
                 if champion5_hp > CHAMPION5_HP:
                     champion5_hp = CHAMPION5_HP
+                if champion5_nanobot[1] == 0:
+                    champion5_statuses.remove("Nanobot Support")
             if champion1_herb_tea[1] != 0:
                 champion1_herb_tea[1] = champion1_herb_tea[1] - 1
                 champion1_hp = champion1_hp + champion1_herb_tea[0]
                 if champion1_hp > CHAMPION1_HP:
                     champion1_hp = CHAMPION1_HP
+                if champion1_herb_tea[1] == 0:
+                    champion1_statuses.remove("Herbal Tea Remnants")
             if champion2_herb_tea[1] != 0:
                 champion2_herb_tea[1] = champion2_herb_tea[1] - 1
                 champion2_hp = champion2_hp + champion2_herb_tea[0]
                 if champion2_hp > CHAMPION2_HP:
                     champion2_hp = CHAMPION2_HP
+                if champion2_herb_tea[1] == 0:
+                    champion2_statuses.remove("Herbal Tea Remnants")
             if champion3_herb_tea[1] != 0:
                 champion3_herb_tea[1] = champion3_herb_tea[1] - 1
                 champion3_hp = champion3_hp + champion3_herb_tea[0]
                 if champion3_hp > CHAMPION3_HP:
                     champion3_hp = CHAMPION3_HP
+                if champion3_herb_tea[1] == 0:
+                    champion3_statuses.remove("Herbal Tea Remnants")
             if champion4_herb_tea[1] != 0:
                 champion4_herb_tea[1] = champion4_herb_tea[1] - 1
                 champion4_hp = champion4_hp + champion4_herb_tea[0]
                 if champion4_hp > CHAMPION4_HP:
                     champion4_hp = CHAMPION4_HP
+                if champion4_herb_tea[1] == 0:
+                    champion4_statuses.remove("Herbal Tea Remnants")
             if champion5_herb_tea[1] != 0:
                 champion5_herb_tea[1] = champion5_herb_tea[1] - 1
                 champion5_hp = champion5_hp + champion5_herb_tea[0]
                 if champion5_hp > CHAMPION5_HP:
                     champion5_hp = CHAMPION5_HP
+                if champion5_herb_tea[1] == 0:
+                    champion5_statuses.remove("Herbal Tea Remnants")
             for monster_var in monster_list:
                 if monster_var == 1:
                     if ai1_hp == 0:
@@ -3039,7 +3389,7 @@ class GameFrame(tk.Frame):
                                         guard_list.append(99)
                                     if guards == "Parry":
                                         guard_list.append(101)
-                                    if guards == "Boulder":
+                                    if guards == "Cocoon":
                                         guard_list.append(100)
                                     if guards == "Elusive Measures":
                                         guard_list.append(100)
@@ -3120,7 +3470,7 @@ class GameFrame(tk.Frame):
                                         guard_list.append(99)
                                     if guards == "Parry":
                                         guard_list.append(101)
-                                    if guards == "Boulder":
+                                    if guards == "Cocoon":
                                         guard_list.append(100)
                                     if guards == "Elusive Measures":
                                         guard_list.append(100)
@@ -3205,7 +3555,7 @@ class GameFrame(tk.Frame):
                                         guard_list.append(99)
                                     if guards == "Parry":
                                         guard_list.append(101)
-                                    if guards == "Boulder":
+                                    if guards == "Cocoon":
                                         guard_list.append(100)
                                     if guards == "Elusive Measures":
                                         guard_list.append(100)
@@ -3290,7 +3640,7 @@ class GameFrame(tk.Frame):
                                         guard_list.append(99)
                                     if guards == "Parry":
                                         guard_list.append(101)
-                                    if guards == "Boulder":
+                                    if guards == "Cocoon":
                                         guard_list.append(100)
                                     if guards == "Elusive Measures":
                                         guard_list.append(100)
@@ -3375,7 +3725,7 @@ class GameFrame(tk.Frame):
                                         guard_list.append(99)
                                     if guards == "Parry":
                                         guard_list.append(101)
-                                    if guards == "Boulder":
+                                    if guards == "Cocoon":
                                         guard_list.append(100)
                                     if guards == "Elusive Measures":
                                         guard_list.append(100)
@@ -3458,7 +3808,7 @@ class GameFrame(tk.Frame):
                                             guard_list.append(99)
                                         if guards == "Parry":
                                             guard_list.append(101)
-                                        if guards == "Boulder":
+                                        if guards == "Cocoon":
                                             guard_list.append(100)
                                         if guards == "Elusive Measures":
                                             guard_list.append(100)
@@ -3539,7 +3889,7 @@ class GameFrame(tk.Frame):
                                             guard_list.append(99)
                                         if guards == "Parry":
                                             guard_list.append(101)
-                                        if guards == "Boulder":
+                                        if guards == "Cocoon":
                                             guard_list.append(100)
                                         if guards == "Elusive Measures":
                                             guard_list.append(100)
@@ -3620,7 +3970,7 @@ class GameFrame(tk.Frame):
                                             guard_list.append(99)
                                         if guards == "Parry":
                                             guard_list.append(101)
-                                        if guards == "Boulder":
+                                        if guards == "Cocoon":
                                             guard_list.append(100)
                                         if guards == "Elusive Measures":
                                             guard_list.append(100)
@@ -3701,7 +4051,7 @@ class GameFrame(tk.Frame):
                                             guard_list.append(99)
                                         if guards == "Parry":
                                             guard_list.append(101)
-                                        if guards == "Boulder":
+                                        if guards == "Cocoon":
                                             guard_list.append(100)
                                         if guards == "Elusive Measures":
                                             guard_list.append(100)
@@ -3786,7 +4136,7 @@ class GameFrame(tk.Frame):
                                             guard_list.append(99)
                                         if guards == "Parry":
                                             guard_list.append(101)
-                                        if guards == "Boulder":
+                                        if guards == "Cocoon":
                                             guard_list.append(100)
                                         if guards == "Elusive Measures":
                                             guard_list.append(100)
@@ -3875,7 +4225,7 @@ class GameFrame(tk.Frame):
                                                     guard_list.append(99)
                                                 if guards == "Parry":
                                                     guard_list.append(101)
-                                                if guards == "Boulder":
+                                                if guards == "Cocoon":
                                                     guard_list.append(100)
                                                 if guards == "Elusive Measures":
                                                     guard_list.append(100)
@@ -3956,7 +4306,7 @@ class GameFrame(tk.Frame):
                                                     guard_list.append(99)
                                                 if guards == "Parry":
                                                     guard_list.append(101)
-                                                if guards == "Boulder":
+                                                if guards == "Cocoon":
                                                     guard_list.append(100)
                                                 if guards == "Elusive Measures":
                                                     guard_list.append(100)
@@ -4037,7 +4387,7 @@ class GameFrame(tk.Frame):
                                                     guard_list.append(99)
                                                 if guards == "Parry":
                                                     guard_list.append(101)
-                                                if guards == "Boulder":
+                                                if guards == "Cocoon":
                                                     guard_list.append(100)
                                                 if guards == "Elusive Measures":
                                                     guard_list.append(100)
@@ -4118,7 +4468,7 @@ class GameFrame(tk.Frame):
                                                     guard_list.append(99)
                                                 if guards == "Parry":
                                                     guard_list.append(101)
-                                                if guards == "Boulder":
+                                                if guards == "Cocoon":
                                                     guard_list.append(100)
                                                 if guards == "Elusive Measures":
                                                     guard_list.append(100)
@@ -4199,7 +4549,7 @@ class GameFrame(tk.Frame):
                                                     guard_list.append(99)
                                                 if guards == "Parry":
                                                     guard_list.append(101)
-                                                if guards == "Boulder":
+                                                if guards == "Cocoon":
                                                     guard_list.append(100)
                                                 if guards == "Elusive Measures":
                                                     guard_list.append(100)
@@ -4320,7 +4670,7 @@ class GameFrame(tk.Frame):
                                         guard_list.append(99)
                                     if guards == "Parry":
                                         guard_list.append(101)
-                                    if guards == "Boulder":
+                                    if guards == "Cocoon":
                                         guard_list.append(100)
                                     if guards == "Elusive Measures":
                                         guard_list.append(100)
@@ -4401,7 +4751,7 @@ class GameFrame(tk.Frame):
                                         guard_list.append(99)
                                     if guards == "Parry":
                                         guard_list.append(101)
-                                    if guards == "Boulder":
+                                    if guards == "Cocoon":
                                         guard_list.append(100)
                                     if guards == "Elusive Measures":
                                         guard_list.append(100)
@@ -4486,7 +4836,7 @@ class GameFrame(tk.Frame):
                                         guard_list.append(99)
                                     if guards == "Parry":
                                         guard_list.append(101)
-                                    if guards == "Boulder":
+                                    if guards == "Cocoon":
                                         guard_list.append(100)
                                     if guards == "Elusive Measures":
                                         guard_list.append(100)
@@ -4571,7 +4921,7 @@ class GameFrame(tk.Frame):
                                         guard_list.append(99)
                                     if guards == "Parry":
                                         guard_list.append(101)
-                                    if guards == "Boulder":
+                                    if guards == "Cocoon":
                                         guard_list.append(100)
                                     if guards == "Elusive Measures":
                                         guard_list.append(100)
@@ -4656,7 +5006,7 @@ class GameFrame(tk.Frame):
                                         guard_list.append(99)
                                     if guards == "Parry":
                                         guard_list.append(101)
-                                    if guards == "Boulder":
+                                    if guards == "Cocoon":
                                         guard_list.append(100)
                                     if guards == "Elusive Measures":
                                         guard_list.append(100)
@@ -4739,7 +5089,7 @@ class GameFrame(tk.Frame):
                                             guard_list.append(99)
                                         if guards == "Parry":
                                             guard_list.append(101)
-                                        if guards == "Boulder":
+                                        if guards == "Cocoon":
                                             guard_list.append(100)
                                         if guards == "Elusive Measures":
                                             guard_list.append(100)
@@ -4820,7 +5170,7 @@ class GameFrame(tk.Frame):
                                             guard_list.append(99)
                                         if guards == "Parry":
                                             guard_list.append(101)
-                                        if guards == "Boulder":
+                                        if guards == "Cocoon":
                                             guard_list.append(100)
                                         if guards == "Elusive Measures":
                                             guard_list.append(100)
@@ -4901,7 +5251,7 @@ class GameFrame(tk.Frame):
                                             guard_list.append(99)
                                         if guards == "Parry":
                                             guard_list.append(101)
-                                        if guards == "Boulder":
+                                        if guards == "Cocoon":
                                             guard_list.append(100)
                                         if guards == "Elusive Measures":
                                             guard_list.append(100)
@@ -4982,7 +5332,7 @@ class GameFrame(tk.Frame):
                                             guard_list.append(99)
                                         if guards == "Parry":
                                             guard_list.append(101)
-                                        if guards == "Boulder":
+                                        if guards == "Cocoon":
                                             guard_list.append(100)
                                         if guards == "Elusive Measures":
                                             guard_list.append(100)
@@ -5067,7 +5417,7 @@ class GameFrame(tk.Frame):
                                             guard_list.append(99)
                                         if guards == "Parry":
                                             guard_list.append(101)
-                                        if guards == "Boulder":
+                                        if guards == "Cocoon":
                                             guard_list.append(100)
                                         if guards == "Elusive Measures":
                                             guard_list.append(100)
@@ -5156,7 +5506,7 @@ class GameFrame(tk.Frame):
                                                     guard_list.append(99)
                                                 if guards == "Parry":
                                                     guard_list.append(101)
-                                                if guards == "Boulder":
+                                                if guards == "Cocoon":
                                                     guard_list.append(100)
                                                 if guards == "Elusive Measures":
                                                     guard_list.append(100)
@@ -5237,7 +5587,7 @@ class GameFrame(tk.Frame):
                                                     guard_list.append(99)
                                                 if guards == "Parry":
                                                     guard_list.append(101)
-                                                if guards == "Boulder":
+                                                if guards == "Cocoon":
                                                     guard_list.append(100)
                                                 if guards == "Elusive Measures":
                                                     guard_list.append(100)
@@ -5318,7 +5668,7 @@ class GameFrame(tk.Frame):
                                                     guard_list.append(99)
                                                 if guards == "Parry":
                                                     guard_list.append(101)
-                                                if guards == "Boulder":
+                                                if guards == "Cocoon":
                                                     guard_list.append(100)
                                                 if guards == "Elusive Measures":
                                                     guard_list.append(100)
@@ -5399,7 +5749,7 @@ class GameFrame(tk.Frame):
                                                     guard_list.append(99)
                                                 if guards == "Parry":
                                                     guard_list.append(101)
-                                                if guards == "Boulder":
+                                                if guards == "Cocoon":
                                                     guard_list.append(100)
                                                 if guards == "Elusive Measures":
                                                     guard_list.append(100)
@@ -5480,7 +5830,7 @@ class GameFrame(tk.Frame):
                                                     guard_list.append(99)
                                                 if guards == "Parry":
                                                     guard_list.append(101)
-                                                if guards == "Boulder":
+                                                if guards == "Cocoon":
                                                     guard_list.append(100)
                                                 if guards == "Elusive Measures":
                                                     guard_list.append(100)
@@ -5601,7 +5951,7 @@ class GameFrame(tk.Frame):
                                         guard_list.append(99)
                                     if guards == "Parry":
                                         guard_list.append(101)
-                                    if guards == "Boulder":
+                                    if guards == "Cocoon":
                                         guard_list.append(100)
                                     if guards == "Elusive Measures":
                                         guard_list.append(100)
@@ -5682,7 +6032,7 @@ class GameFrame(tk.Frame):
                                         guard_list.append(99)
                                     if guards == "Parry":
                                         guard_list.append(101)
-                                    if guards == "Boulder":
+                                    if guards == "Cocoon":
                                         guard_list.append(100)
                                     if guards == "Elusive Measures":
                                         guard_list.append(100)
@@ -5767,7 +6117,7 @@ class GameFrame(tk.Frame):
                                         guard_list.append(99)
                                     if guards == "Parry":
                                         guard_list.append(101)
-                                    if guards == "Boulder":
+                                    if guards == "Cocoon":
                                         guard_list.append(100)
                                     if guards == "Elusive Measures":
                                         guard_list.append(100)
@@ -5852,7 +6202,7 @@ class GameFrame(tk.Frame):
                                         guard_list.append(99)
                                     if guards == "Parry":
                                         guard_list.append(101)
-                                    if guards == "Boulder":
+                                    if guards == "Cocoon":
                                         guard_list.append(100)
                                     if guards == "Elusive Measures":
                                         guard_list.append(100)
@@ -5937,7 +6287,7 @@ class GameFrame(tk.Frame):
                                         guard_list.append(99)
                                     if guards == "Parry":
                                         guard_list.append(101)
-                                    if guards == "Boulder":
+                                    if guards == "Cocoon":
                                         guard_list.append(100)
                                     if guards == "Elusive Measures":
                                         guard_list.append(100)
@@ -6020,7 +6370,7 @@ class GameFrame(tk.Frame):
                                             guard_list.append(99)
                                         if guards == "Parry":
                                             guard_list.append(101)
-                                        if guards == "Boulder":
+                                        if guards == "Cocoon":
                                             guard_list.append(100)
                                         if guards == "Elusive Measures":
                                             guard_list.append(100)
@@ -6101,7 +6451,7 @@ class GameFrame(tk.Frame):
                                             guard_list.append(99)
                                         if guards == "Parry":
                                             guard_list.append(101)
-                                        if guards == "Boulder":
+                                        if guards == "Cocoon":
                                             guard_list.append(100)
                                         if guards == "Elusive Measures":
                                             guard_list.append(100)
@@ -6182,7 +6532,7 @@ class GameFrame(tk.Frame):
                                             guard_list.append(99)
                                         if guards == "Parry":
                                             guard_list.append(101)
-                                        if guards == "Boulder":
+                                        if guards == "Cocoon":
                                             guard_list.append(100)
                                         if guards == "Elusive Measures":
                                             guard_list.append(100)
@@ -6263,7 +6613,7 @@ class GameFrame(tk.Frame):
                                             guard_list.append(99)
                                         if guards == "Parry":
                                             guard_list.append(101)
-                                        if guards == "Boulder":
+                                        if guards == "Cocoon":
                                             guard_list.append(100)
                                         if guards == "Elusive Measures":
                                             guard_list.append(100)
@@ -6348,7 +6698,7 @@ class GameFrame(tk.Frame):
                                             guard_list.append(99)
                                         if guards == "Parry":
                                             guard_list.append(101)
-                                        if guards == "Boulder":
+                                        if guards == "Cocoon":
                                             guard_list.append(100)
                                         if guards == "Elusive Measures":
                                             guard_list.append(100)
@@ -6437,7 +6787,7 @@ class GameFrame(tk.Frame):
                                                     guard_list.append(99)
                                                 if guards == "Parry":
                                                     guard_list.append(101)
-                                                if guards == "Boulder":
+                                                if guards == "Cocoon":
                                                     guard_list.append(100)
                                                 if guards == "Elusive Measures":
                                                     guard_list.append(100)
@@ -6518,7 +6868,7 @@ class GameFrame(tk.Frame):
                                                     guard_list.append(99)
                                                 if guards == "Parry":
                                                     guard_list.append(101)
-                                                if guards == "Boulder":
+                                                if guards == "Cocoon":
                                                     guard_list.append(100)
                                                 if guards == "Elusive Measures":
                                                     guard_list.append(100)
@@ -6599,7 +6949,7 @@ class GameFrame(tk.Frame):
                                                     guard_list.append(99)
                                                 if guards == "Parry":
                                                     guard_list.append(101)
-                                                if guards == "Boulder":
+                                                if guards == "Cocoon":
                                                     guard_list.append(100)
                                                 if guards == "Elusive Measures":
                                                     guard_list.append(100)
@@ -6680,7 +7030,7 @@ class GameFrame(tk.Frame):
                                                     guard_list.append(99)
                                                 if guards == "Parry":
                                                     guard_list.append(101)
-                                                if guards == "Boulder":
+                                                if guards == "Cocoon":
                                                     guard_list.append(100)
                                                 if guards == "Elusive Measures":
                                                     guard_list.append(100)
@@ -6761,7 +7111,7 @@ class GameFrame(tk.Frame):
                                                     guard_list.append(99)
                                                 if guards == "Parry":
                                                     guard_list.append(101)
-                                                if guards == "Boulder":
+                                                if guards == "Cocoon":
                                                     guard_list.append(100)
                                                 if guards == "Elusive Measures":
                                                     guard_list.append(100)
@@ -6882,7 +7232,7 @@ class GameFrame(tk.Frame):
                                         guard_list.append(99)
                                     if guards == "Parry":
                                         guard_list.append(101)
-                                    if guards == "Boulder":
+                                    if guards == "Cocoon":
                                         guard_list.append(100)
                                     if guards == "Elusive Measures":
                                         guard_list.append(100)
@@ -6963,7 +7313,7 @@ class GameFrame(tk.Frame):
                                         guard_list.append(99)
                                     if guards == "Parry":
                                         guard_list.append(101)
-                                    if guards == "Boulder":
+                                    if guards == "Cocoon":
                                         guard_list.append(100)
                                     if guards == "Elusive Measures":
                                         guard_list.append(100)
@@ -7048,7 +7398,7 @@ class GameFrame(tk.Frame):
                                         guard_list.append(99)
                                     if guards == "Parry":
                                         guard_list.append(101)
-                                    if guards == "Boulder":
+                                    if guards == "Cocoon":
                                         guard_list.append(100)
                                     if guards == "Elusive Measures":
                                         guard_list.append(100)
@@ -7133,7 +7483,7 @@ class GameFrame(tk.Frame):
                                         guard_list.append(99)
                                     if guards == "Parry":
                                         guard_list.append(101)
-                                    if guards == "Boulder":
+                                    if guards == "Cocoon":
                                         guard_list.append(100)
                                     if guards == "Elusive Measures":
                                         guard_list.append(100)
@@ -7218,7 +7568,7 @@ class GameFrame(tk.Frame):
                                         guard_list.append(99)
                                     if guards == "Parry":
                                         guard_list.append(101)
-                                    if guards == "Boulder":
+                                    if guards == "Cocoon":
                                         guard_list.append(100)
                                     if guards == "Elusive Measures":
                                         guard_list.append(100)
@@ -7301,7 +7651,7 @@ class GameFrame(tk.Frame):
                                             guard_list.append(99)
                                         if guards == "Parry":
                                             guard_list.append(101)
-                                        if guards == "Boulder":
+                                        if guards == "Cocoon":
                                             guard_list.append(100)
                                         if guards == "Elusive Measures":
                                             guard_list.append(100)
@@ -7382,7 +7732,7 @@ class GameFrame(tk.Frame):
                                             guard_list.append(99)
                                         if guards == "Parry":
                                             guard_list.append(101)
-                                        if guards == "Boulder":
+                                        if guards == "Cocoon":
                                             guard_list.append(100)
                                         if guards == "Elusive Measures":
                                             guard_list.append(100)
@@ -7463,7 +7813,7 @@ class GameFrame(tk.Frame):
                                             guard_list.append(99)
                                         if guards == "Parry":
                                             guard_list.append(101)
-                                        if guards == "Boulder":
+                                        if guards == "Cocoon":
                                             guard_list.append(100)
                                         if guards == "Elusive Measures":
                                             guard_list.append(100)
@@ -7544,7 +7894,7 @@ class GameFrame(tk.Frame):
                                             guard_list.append(99)
                                         if guards == "Parry":
                                             guard_list.append(101)
-                                        if guards == "Boulder":
+                                        if guards == "Cocoon":
                                             guard_list.append(100)
                                         if guards == "Elusive Measures":
                                             guard_list.append(100)
@@ -7629,7 +7979,7 @@ class GameFrame(tk.Frame):
                                             guard_list.append(99)
                                         if guards == "Parry":
                                             guard_list.append(101)
-                                        if guards == "Boulder":
+                                        if guards == "Cocoon":
                                             guard_list.append(100)
                                         if guards == "Elusive Measures":
                                             guard_list.append(100)
@@ -7718,7 +8068,7 @@ class GameFrame(tk.Frame):
                                                     guard_list.append(99)
                                                 if guards == "Parry":
                                                     guard_list.append(101)
-                                                if guards == "Boulder":
+                                                if guards == "Cocoon":
                                                     guard_list.append(100)
                                                 if guards == "Elusive Measures":
                                                     guard_list.append(100)
@@ -7799,7 +8149,7 @@ class GameFrame(tk.Frame):
                                                     guard_list.append(99)
                                                 if guards == "Parry":
                                                     guard_list.append(101)
-                                                if guards == "Boulder":
+                                                if guards == "Cocoon":
                                                     guard_list.append(100)
                                                 if guards == "Elusive Measures":
                                                     guard_list.append(100)
@@ -7880,7 +8230,7 @@ class GameFrame(tk.Frame):
                                                     guard_list.append(99)
                                                 if guards == "Parry":
                                                     guard_list.append(101)
-                                                if guards == "Boulder":
+                                                if guards == "Cocoon":
                                                     guard_list.append(100)
                                                 if guards == "Elusive Measures":
                                                     guard_list.append(100)
@@ -7961,7 +8311,7 @@ class GameFrame(tk.Frame):
                                                     guard_list.append(99)
                                                 if guards == "Parry":
                                                     guard_list.append(101)
-                                                if guards == "Boulder":
+                                                if guards == "Cocoon":
                                                     guard_list.append(100)
                                                 if guards == "Elusive Measures":
                                                     guard_list.append(100)
@@ -8042,7 +8392,7 @@ class GameFrame(tk.Frame):
                                                     guard_list.append(99)
                                                 if guards == "Parry":
                                                     guard_list.append(101)
-                                                if guards == "Boulder":
+                                                if guards == "Cocoon":
                                                     guard_list.append(100)
                                                 if guards == "Elusive Measures":
                                                     guard_list.append(100)
@@ -8163,7 +8513,7 @@ class GameFrame(tk.Frame):
                                         guard_list.append(99)
                                     if guards == "Parry":
                                         guard_list.append(101)
-                                    if guards == "Boulder":
+                                    if guards == "Cocoon":
                                         guard_list.append(100)
                                     if guards == "Elusive Measures":
                                         guard_list.append(100)
@@ -8244,7 +8594,7 @@ class GameFrame(tk.Frame):
                                         guard_list.append(99)
                                     if guards == "Parry":
                                         guard_list.append(101)
-                                    if guards == "Boulder":
+                                    if guards == "Cocoon":
                                         guard_list.append(100)
                                     if guards == "Elusive Measures":
                                         guard_list.append(100)
@@ -8329,7 +8679,7 @@ class GameFrame(tk.Frame):
                                         guard_list.append(99)
                                     if guards == "Parry":
                                         guard_list.append(101)
-                                    if guards == "Boulder":
+                                    if guards == "Cocoon":
                                         guard_list.append(100)
                                     if guards == "Elusive Measures":
                                         guard_list.append(100)
@@ -8414,7 +8764,7 @@ class GameFrame(tk.Frame):
                                         guard_list.append(99)
                                     if guards == "Parry":
                                         guard_list.append(101)
-                                    if guards == "Boulder":
+                                    if guards == "Cocoon":
                                         guard_list.append(100)
                                     if guards == "Elusive Measures":
                                         guard_list.append(100)
@@ -8499,7 +8849,7 @@ class GameFrame(tk.Frame):
                                         guard_list.append(99)
                                     if guards == "Parry":
                                         guard_list.append(101)
-                                    if guards == "Boulder":
+                                    if guards == "Cocoon":
                                         guard_list.append(100)
                                     if guards == "Elusive Measures":
                                         guard_list.append(100)
@@ -8582,7 +8932,7 @@ class GameFrame(tk.Frame):
                                             guard_list.append(99)
                                         if guards == "Parry":
                                             guard_list.append(101)
-                                        if guards == "Boulder":
+                                        if guards == "Cocoon":
                                             guard_list.append(100)
                                         if guards == "Elusive Measures":
                                             guard_list.append(100)
@@ -8663,7 +9013,7 @@ class GameFrame(tk.Frame):
                                             guard_list.append(99)
                                         if guards == "Parry":
                                             guard_list.append(101)
-                                        if guards == "Boulder":
+                                        if guards == "Cocoon":
                                             guard_list.append(100)
                                         if guards == "Elusive Measures":
                                             guard_list.append(100)
@@ -8744,7 +9094,7 @@ class GameFrame(tk.Frame):
                                             guard_list.append(99)
                                         if guards == "Parry":
                                             guard_list.append(101)
-                                        if guards == "Boulder":
+                                        if guards == "Cocoon":
                                             guard_list.append(100)
                                         if guards == "Elusive Measures":
                                             guard_list.append(100)
@@ -8825,7 +9175,7 @@ class GameFrame(tk.Frame):
                                             guard_list.append(99)
                                         if guards == "Parry":
                                             guard_list.append(101)
-                                        if guards == "Boulder":
+                                        if guards == "Cocoon":
                                             guard_list.append(100)
                                         if guards == "Elusive Measures":
                                             guard_list.append(100)
@@ -8910,7 +9260,7 @@ class GameFrame(tk.Frame):
                                             guard_list.append(99)
                                         if guards == "Parry":
                                             guard_list.append(101)
-                                        if guards == "Boulder":
+                                        if guards == "Cocoon":
                                             guard_list.append(100)
                                         if guards == "Elusive Measures":
                                             guard_list.append(100)
@@ -8999,7 +9349,7 @@ class GameFrame(tk.Frame):
                                                     guard_list.append(99)
                                                 if guards == "Parry":
                                                     guard_list.append(101)
-                                                if guards == "Boulder":
+                                                if guards == "Cocoon":
                                                     guard_list.append(100)
                                                 if guards == "Elusive Measures":
                                                     guard_list.append(100)
@@ -9080,7 +9430,7 @@ class GameFrame(tk.Frame):
                                                     guard_list.append(99)
                                                 if guards == "Parry":
                                                     guard_list.append(101)
-                                                if guards == "Boulder":
+                                                if guards == "Cocoon":
                                                     guard_list.append(100)
                                                 if guards == "Elusive Measures":
                                                     guard_list.append(100)
@@ -9161,7 +9511,7 @@ class GameFrame(tk.Frame):
                                                     guard_list.append(99)
                                                 if guards == "Parry":
                                                     guard_list.append(101)
-                                                if guards == "Boulder":
+                                                if guards == "Cocoon":
                                                     guard_list.append(100)
                                                 if guards == "Elusive Measures":
                                                     guard_list.append(100)
@@ -9242,7 +9592,7 @@ class GameFrame(tk.Frame):
                                                     guard_list.append(99)
                                                 if guards == "Parry":
                                                     guard_list.append(101)
-                                                if guards == "Boulder":
+                                                if guards == "Cocoon":
                                                     guard_list.append(100)
                                                 if guards == "Elusive Measures":
                                                     guard_list.append(100)
@@ -9323,7 +9673,7 @@ class GameFrame(tk.Frame):
                                                     guard_list.append(99)
                                                 if guards == "Parry":
                                                     guard_list.append(101)
-                                                if guards == "Boulder":
+                                                if guards == "Cocoon":
                                                     guard_list.append(100)
                                                 if guards == "Elusive Measures":
                                                     guard_list.append(100)
@@ -9396,141 +9746,161 @@ class GameFrame(tk.Frame):
                                             ai5_hp = ai5_hp - 200
                                         if ai5_hp < 0:
                                             ai5_hp = 0
-            ai1_statuses = []
-            ai2_statuses = []
-            ai3_statuses = []
-            ai4_statuses = []
-            ai5_statuses = []
-            if ai1_pricked != 0:
-                ai1_statuses.append("Pricked")
-            if ai2_pricked != 0:
-                ai2_statuses.append("Pricked")
-            if ai3_pricked != 0:
-                ai3_statuses.append("Pricked")
-            if ai4_pricked != 0:
-                ai4_statuses.append("Pricked")
-            if ai5_pricked != 0:
-                ai5_statuses.append("Pricked")
-            if ai1_burnDot[1] != 0:
-                ai1_statuses.append("Burn")
-            if ai2_burnDot[1] != 0:
-                ai2_statuses.append("Burn")
-            if ai3_burnDot[1] != 0:
-                ai3_statuses.append("Burn")
-            if ai4_burnDot[1] != 0:
-                ai4_statuses.append("Burn")
-            if ai5_burnDot[1] != 0:
-                ai5_statuses.append("Burn")
-            if ai1_garroteDot[1] != 0:
-                ai1_statuses.append("Garrote")
-            if ai2_garroteDot[1] != 0:
-                ai2_statuses.append("Garrote")
-            if ai3_garroteDot[1] != 0:
-                ai3_statuses.append("Garrote")
-            if ai4_garroteDot[1] != 0:
-                ai4_statuses.append("Garrote")
-            if ai5_garroteDot[1] != 0:
-                ai5_statuses.append("Garrote")
-            if ai1_EviscerDot[1] != 0:
-                ai1_statuses.append("Eviscerate")
-            if ai2_EviscerDot[1] != 0:
-                ai2_statuses.append("Eviscerate")
-            if ai3_EviscerDot[1] != 0:
-                ai3_statuses.append("Eviscerate")
-            if ai4_EviscerDot[1] != 0:
-                ai4_statuses.append("Eviscerate")
-            if ai5_EviscerDot[1] != 0:
-                ai5_statuses.append("Eviscerate")
-            if ai1_SerraSlashDot[1] != 0:
-                ai1_statuses.append("Serrated")
-            if ai2_SerraSlashDot[1] != 0:
-                ai2_statuses.append("Serrated")
-            if ai3_SerraSlashDot[1] != 0:
-                ai3_statuses.append("Serrated")
-            if ai4_SerraSlashDot[1] != 0:
-                ai4_statuses.append("Serrated")
-            if ai5_SerraSlashDot[1] != 0:
-                ai5_statuses.append("Serrated")
+            if ai1_pricked == 0:
+                if "Pricked" in ai1_statuses:
+                    ai1_statuses.remove("Pricked")
+            if ai2_pricked == 0:
+                if "Pricked" in ai2_statuses:
+                    ai2_statuses.remove("Pricked")
+            if ai3_pricked == 0:
+                if "Pricked" in ai3_statuses:
+                    ai3_statuses.remove("Pricked")
+            if ai4_pricked == 0:
+                if "Pricked" in ai4_statuses:
+                    ai4_statuses.remove("Pricked")
+            if ai5_pricked == 0:
+                if "Pricked" in ai5_statuses:
+                    ai5_statuses.remove("Pricked")
+            if ai1_burnDot[1] == 0:
+                if "Burning" in ai1_statuses:
+                    ai1_statuses.remove("Burning")
+            if ai2_burnDot[1] == 0:
+                if "Burning" in ai2_statuses:
+                    ai2_statuses.remove("Burning")
+            if ai3_burnDot[1] == 0:
+                if "Burning" in ai3_statuses:
+                    ai3_statuses.remove("Burning")
+            if ai4_burnDot[1] == 0:
+                if "Burning" in ai4_statuses:
+                    ai4_statuses.remove("Burning")
+            if ai5_burnDot[1] == 0:
+                if "Burning" in ai5_statuses:
+                    ai5_statuses.remove("Burning")
+            if ai1_garroteDot[1] == 0:
+                if "Garroted" in ai1_statuses:
+                    ai1_statuses.remove("Garroted")
+            if ai2_garroteDot[1] == 0:
+                if "Garroted" in ai2_statuses:
+                    ai2_statuses.remove("Garroted")
+            if ai3_garroteDot[1] == 0:
+                if "Garroted" in ai3_statuses:
+                    ai3_statuses.remove("Garroted")
+            if ai4_garroteDot[1] == 0:
+                if "Garroted" in ai4_statuses:
+                    ai4_statuses.remove("Garroted")
+            if ai5_garroteDot[1] == 0:
+                if "Garroted" in ai5_statuses:
+                    ai5_statuses.remove("Garroted")
+            if ai1_EviscerDot[1] == 0:
+                if "Eviscerated" in ai1_statuses:
+                    ai1_statuses.remove("Eviscerated")
+            if ai2_EviscerDot[1] == 0:
+                if "Eviscerated" in ai2_statuses:
+                    ai2_statuses.remove("Eviscerated")
+            if ai3_EviscerDot[1] == 0:
+                if "Eviscerated" in ai3_statuses:
+                    ai3_statuses.remove("Eviscerated")
+            if ai4_EviscerDot[1] == 0:
+                if "Eviscerated" in ai4_statuses:
+                    ai4_statuses.remove("Eviscerated")
+            if ai5_EviscerDot[1] == 0:
+                if "Eviscerated" in ai5_statuses:
+                    ai5_statuses.remove("Eviscerated")
+            if ai1_SerraSlashDot[1] == 0:
+                if "Serrated" in ai1_statuses:
+                    ai1_statuses.remove("Serrated")
+            if ai2_SerraSlashDot[1] == 0:
+                if "Serrated" in ai2_statuses:
+                    ai2_statuses.remove("Serrated")
+            if ai3_SerraSlashDot[1] == 0:
+                if "Serrated" in ai3_statuses:
+                    ai3_statuses.remove("Serrated")
+            if ai4_SerraSlashDot[1] == 0:
+                if "Serrated" in ai4_statuses:
+                    ai4_statuses.remove("Serrated")
+            if ai5_SerraSlashDot[1] == 0:
+                if "Serrated" in ai5_statuses:
+                    ai5_statuses.remove("Serrated")
             if ai1_brittle != 0:
                 ai1_brittle = ai1_brittle - 1
-                if ai1_brittle != 0:
-                    ai1_statuses.append("Brittle")
+                if ai1_brittle == 0:
+                    ai1_statuses.remove("Brittle")
             if ai2_brittle != 0:
                 ai2_brittle = ai2_brittle - 1
-                if ai2_brittle != 0:
-                    ai2_statuses.append("Brittle")
+                if ai2_brittle == 0:
+                    ai2_statuses.remove("Brittle")
             if ai3_brittle != 0:
                 ai3_brittle = ai3_brittle - 1
-                if ai3_brittle != 0:
-                    ai3_statuses.append("Brittle")
+                if ai3_brittle == 0:
+                    ai3_statuses.remove("Brittle")
             if ai4_brittle != 0:
                 ai4_brittle = ai4_brittle - 1
-                if ai4_brittle != 0:
-                    ai4_statuses.append("Brittle")
+                if ai4_brittle == 0:
+                    ai4_statuses.remove("Brittle")
             if ai5_brittle != 0:
                 ai5_brittle = ai5_brittle - 1
-                if ai5_brittle != 0:
-                    ai5_statuses.append("Brittle")
+                if ai5_brittle == 0:
+                    ai5_statuses.remove("Brittle")
             if ai1_weakness != 0:
                 ai1_weakness = ai1_weakness - 1
-                if ai1_weakness != 0:
-                    ai1_statuses.append("Weakness")
+                if ai1_weakness == 0:
+                    ai1_statuses.remove("Weakened")
             if ai2_weakness != 0:
                 ai2_weakness = ai2_weakness - 1
-                if ai2_weakness != 0:
-                    ai2_statuses.append("Weakness")
+                if ai2_weakness == 0:
+                    ai2_statuses.remove("Weakened")
             if ai3_weakness != 0:
                 ai3_weakness = ai3_weakness - 1
-                if ai3_weakness != 0:
-                    ai3_statuses.append("Weakness")
+                if ai3_weakness == 0:
+                    ai3_statuses.remove("Weakened")
             if ai4_weakness != 0:
                 ai4_weakness = ai4_weakness - 1
-                if ai4_weakness != 0:
-                    ai4_statuses.append("Weakness")
+                if ai4_weakness == 0:
+                    ai4_statuses.remove("Weakened")
             if ai5_weakness != 0:
                 ai5_weakness = ai5_weakness - 1
-                if ai5_weakness != 0:
-                    ai5_statuses.append("Weakness")
+                if ai5_weakness == 0:
+                    ai5_statuses.remove("Weakened")
             if ai1_stun != 0:
                 ai1_stun = ai1_stun - 1
-                if ai1_stun != 0:
-                    ai1_statuses.append("Stun")
+                if ai1_stun == 0:
+                    ai1_statuses.remove("Stunned")
             if ai2_stun != 0:
                 ai2_stun = ai2_stun - 1
-                if ai2_stun != 0:
-                    ai2_statuses.append("Stun")
+                if ai2_stun == 0:
+                    ai2_statuses.remove("Stunned")
             if ai3_stun != 0:
                 ai3_stun = ai3_stun - 1
-                if ai3_stun != 0:
-                    ai3_statuses.append("Stun")
+                if ai3_stun == 0:
+                    ai3_statuses.remove("Stunned")
             if ai4_stun != 0:
                 ai4_stun = ai4_stun - 1
-                if ai4_stun != 0:
-                    ai4_statuses.append("Stun")
+                if ai4_stun == 0:
+                    ai4_statuses.remove("Stunned")
             if ai5_stun != 0:
                 ai5_stun = ai5_stun - 1
-                if ai5_stun != 0:
-                    ai5_statuses.append("Stun")
+                if ai5_stun == 0:
+                    ai5_statuses.remove("Stunned")
             if ai1_taunt[1] != 0:
                 ai1_taunt[1] = ai1_taunt[1] - 1
-                if ai1_taunt[1] != 0:
-                    ai1_statuses.append("Taunt")
+                if ai1_taunt[1] == 0:
+                    ai1_statuses.remove("Taunted")
             if ai2_taunt[1] != 0:
                 ai2_taunt[1] = ai2_taunt[1] - 1
-                if ai2_taunt[1] != 0:
-                    ai2_statuses.append("Taunt")
+                if ai2_taunt[1] == 0:
+                    ai2_statuses.remove("Taunted")
             if ai3_taunt[1] != 0:
                 ai3_taunt[1] = ai3_taunt[1] - 1
-                if ai3_taunt[1] != 0:
-                    ai3_statuses.append("Taunt")
+                if ai3_taunt[1] == 0:
+                    ai3_statuses.remove("Taunted")
             if ai4_taunt[1] != 0:
                 ai4_taunt[1] = ai4_taunt[1] - 1
-                if ai4_taunt[1] != 0:
-                    ai4_statuses.append("Taunt")
+                if ai4_taunt[1] == 0:
+                    ai4_statuses.remove("Taunted")
             if ai5_taunt[1] != 0:
                 ai5_taunt[1] = ai5_taunt[1] - 1
-                if ai5_taunt[1] != 0:
-                    ai5_statuses.append("Taunt")
+                if ai5_taunt[1] == 0:
+                    ai5_statuses.remove("Taunted")
             champion1_guarded = []
             champion2_guarded = []
             champion3_guarded = []
@@ -9541,46 +9911,156 @@ class GameFrame(tk.Frame):
             champion3_defensive = []
             champion4_defensive = []
             champion5_defensive = []
+            if "Guarded: Block" in champion1_statuses:
+                champion1_statuses.remove("Guarded: Block")
+            if "Guarded: Parry" in champion1_statuses:
+                champion1_statuses.remove("Guarded: Parry")
+            if "Guarded: Cocoon" in champion1_statuses:
+                champion1_statuses.remove("Guarded: Cocoon")
+            if "Guarded: Evasion" in champion1_statuses:
+                champion1_statuses.remove("Guarded: Evasion")
+            if "Defensive: Magical Barrier" in champion1_statuses:
+                champion1_statuses.remove("Defensive: Magical Barrier")
+            if "Defensive: Defensive Stance" in champion1_statuses:
+                champion1_statuses.remove("Defensive: Defensive Stance")
+            if "Defensive: Enharden Nerves" in champion1_statuses:
+                champion1_statuses.remove("Defensive: Enharden Nerves")
+            if "Guarded: Block" in champion2_statuses:
+                champion2_statuses.remove("Guarded: Block")
+            if "Guarded: Parry" in champion2_statuses:
+                champion2_statuses.remove("Guarded: Parry")
+            if "Guarded: Cocoon" in champion2_statuses:
+                champion2_statuses.remove("Guarded: Cocoon")
+            if "Guarded: Evasion" in champion2_statuses:
+                champion2_statuses.remove("Guarded: Evasion")
+            if "Defensive: Magical Barrier" in champion2_statuses:
+                champion2_statuses.remove("Defensive: Magical Barrier")
+            if "Defensive: Defensive Stance" in champion2_statuses:
+                champion2_statuses.remove("Defensive: Defensive Stance")
+            if "Defensive: Enharden Nerves" in champion2_statuses:
+                champion2_statuses.remove("Defensive: Enharden Nerves")
+            if "Guarded: Block" in champion3_statuses:
+                champion3_statuses.remove("Guarded: Block")
+            if "Guarded: Parry" in champion3_statuses:
+                champion3_statuses.remove("Guarded: Parry")
+            if "Guarded: Cocoon" in champion3_statuses:
+                champion3_statuses.remove("Guarded: Cocoon")
+            if "Guarded: Evasion" in champion3_statuses:
+                champion3_statuses.remove("Guarded: Evasion")
+            if "Defensive: Magical Barrier" in champion3_statuses:
+                champion3_statuses.remove("Defensive: Magical Barrier")
+            if "Defensive: Defensive Stance" in champion3_statuses:
+                champion3_statuses.remove("Defensive: Defensive Stance")
+            if "Defensive: Enharden Nerves" in champion3_statuses:
+                champion3_statuses.remove("Defensive: Enharden Nerves")
+            if "Guarded: Block" in champion4_statuses:
+                champion4_statuses.remove("Guarded: Block")
+            if "Guarded: Parry" in champion4_statuses:
+                champion4_statuses.remove("Guarded: Parry")
+            if "Guarded: Cocoon" in champion4_statuses:
+                champion4_statuses.remove("Guarded: Cocoon")
+            if "Guarded: Evasion" in champion4_statuses:
+                champion4_statuses.remove("Guarded: Evasion")
+            if "Defensive: Magical Barrier" in champion4_statuses:
+                champion4_statuses.remove("Defensive: Magical Barrier")
+            if "Defensive: Defensive Stance" in champion4_statuses:
+                champion4_statuses.remove("Defensive: Defensive Stance")
+            if "Defensive: Enharden Nerves" in champion4_statuses:
+                champion4_statuses.remove("Defensive: Enharden Nerves")
+            if "Guarded: Block" in champion5_statuses:
+                champion5_statuses.remove("Guarded: Block")
+            if "Guarded: Parry" in champion5_statuses:
+                champion5_statuses.remove("Guarded: Parry")
+            if "Guarded: Cocoon" in champion5_statuses:
+                champion5_statuses.remove("Guarded: Cocoon")
+            if "Guarded: Evasion" in champion5_statuses:
+                champion5_statuses.remove("Guarded: Evasion")
+            if "Defensive: Magical Barrier" in champion5_statuses:
+                champion5_statuses.remove("Defensive: Magical Barrier")
+            if "Defensive: Defensive Stance" in champion5_statuses:
+                champion5_statuses.remove("Defensive: Defensive Stance")
+            if "Defensive: Enharden Nerves" in champion5_statuses:
+                champion5_statuses.remove("Defensive: Enharden Nerves")
             if champion1_fullPotential != 0:
                 champion1_fullPotential = champion1_fullPotential - 1
+                if champion1_fullPotential == 0:
+                    champion1_statuses.remove("Fullest Potential")
             if champion2_fullPotential != 0:
                 champion2_fullPotential = champion2_fullPotential - 1
+                if champion2_fullPotential == 0:
+                    champion2_statuses.remove("Fullest Potential")
             if champion3_fullPotential != 0:
                 champion3_fullPotential = champion3_fullPotential - 1
+                if champion3_fullPotential == 0:
+                    champion3_statuses.remove("Fullest Potential")
             if champion4_fullPotential != 0:
                 champion4_fullPotential = champion4_fullPotential - 1
+                if champion4_fullPotential == 0:
+                    champion4_statuses.remove("Fullest Potential")
             if champion5_fullPotential != 0:
                 champion5_fullPotential = champion5_fullPotential - 1
+                if champion5_fullPotential == 0:
+                    champion5_statuses.remove("Fullest Potential")
             if champion1_muscleEnlarger != 0:
                 champion1_muscleEnlarger = champion1_muscleEnlarger - 1
+                if champion1_muscleEnlarger == 0:
+                    champion1_statuses.remove("Enlarged Muscles")
             if champion2_muscleEnlarger != 0:
                 champion2_muscleEnlarger = champion2_muscleEnlarger - 1
+                if champion2_muscleEnlarger == 0:
+                    champion2_statuses.remove("Enlarged Muscles")
             if champion3_muscleEnlarger != 0:
                 champion3_muscleEnlarger = champion3_muscleEnlarger - 1
+                if champion3_muscleEnlarger == 0:
+                    champion3_statuses.remove("Enlarged Muscles")
             if champion4_muscleEnlarger != 0:
                 champion4_muscleEnlarger = champion4_muscleEnlarger - 1
+                if champion4_muscleEnlarger == 0:
+                    champion4_statuses.remove("Enlarged Muscles")
             if champion5_muscleEnlarger != 0:
                 champion5_muscleEnlarger = champion5_muscleEnlarger - 1
+                if champion5_muscleEnlarger == 0:
+                    champion5_statuses.remove("Enlarged Muscles")
             if champion1_JAXD != 0:
                 champion1_JAXD = champion1_JAXD - 1
+                if champion1_JAXD == 0:
+                    champion1_statuses.remove("J.A.X.D")
             if champion2_JAXD != 0:
                 champion2_JAXD = champion2_JAXD - 1
+                if champion2_JAXD == 0:
+                    champion2_statuses.remove("J.A.X.D")
             if champion3_JAXD != 0:
                 champion3_JAXD = champion3_JAXD - 1
+                if champion3_JAXD == 0:
+                    champion3_statuses.remove("J.A.X.D")
             if champion4_JAXD != 0:
                 champion4_JAXD = champion4_JAXD - 1
+                if champion4_JAXD == 0:
+                    champion4_statuses.remove("J.A.X.D")
             if champion5_JAXD != 0:
                 champion5_JAXD = champion5_JAXD - 1
+                if champion4_JAXD == 0:
+                    champion5_statuses.remove("J.A.X.D")
             if champion1_blessing != 0:
                 champion1_blessing = champion1_blessing - 1
+                if champion1_blessing == 0:
+                    champion1_statuses.remove("Blessing")
             if champion2_blessing != 0:
                 champion2_blessing = champion2_blessing - 1
+                if champion2_blessing == 0:
+                    champion2_statuses.remove("Blessing")
             if champion3_blessing != 0:
                 champion3_blessing = champion3_blessing - 1
+                if champion3_blessing == 0:
+                    champion3_statuses.remove("Blessing")
             if champion4_blessing != 0:
                 champion4_blessing = champion4_blessing - 1
+                if champion4_blessing == 0:
+                    champion4_statuses.remove("Blessing")
             if champion5_blessing != 0:
                 champion5_blessing = champion5_blessing - 1
+                if champion5_blessing == 0:
+                    champion5_statuses.remove("Blessing")
             if monk_staggered_damage_list1[1] != 0:
                 monk_staggered_damage_list1[1] = monk_staggered_damage_list1[1] - 1
             if monk_staggered_damage_list2[1] != 0:
@@ -9589,24 +10069,44 @@ class GameFrame(tk.Frame):
                 monk_staggered_damage_list3[1] = monk_staggered_damage_list3[1] - 1
             if champion1_fortification != 0:
                 champion1_fortification = champion1_fortification - 1
+                if champion1_fortification == 0:
+                    champion1_statuses.remove("Fortified")
             if champion2_fortification != 0:
                 champion2_fortification = champion2_fortification - 1
+                if champion2_fortification == 0:
+                    champion2_statuses.remove("Fortified")
             if champion3_fortification != 0:
                 champion3_fortification = champion3_fortification - 1
+                if champion3_fortification == 0:
+                    champion3_statuses.remove("Fortified")
             if champion4_fortification != 0:
                 champion4_fortification = champion4_fortification - 1
+                if champion4_fortification == 0:
+                    champion4_statuses.remove("Fortified")
             if champion5_fortification != 0:
                 champion5_fortification = champion5_fortification - 1
+                if champion5_fortification == 0:
+                    champion5_statuses.remove("Fortified")
             if champion1_enrage != 0:
                 champion1_enrage = champion1_enrage - 1
+                if champion1_enrage == 0:
+                    champion1_statuses.remove("Enraged")
             if champion2_enrage != 0:
                 champion2_enrage = champion2_enrage - 1
+                if champion2_enrage == 0:
+                    champion2_statuses.remove("Enraged")
             if champion3_enrage != 0:
                 champion3_enrage = champion3_enrage - 1
+                if champion3_enrage == 0:
+                    champion3_statuses.remove("Enraged")
             if champion4_enrage != 0:
                 champion4_enrage = champion4_enrage - 1
+                if champion4_enrage == 0:
+                    champion4_statuses.remove("Enraged")
             if champion5_enrage != 0:
                 champion5_enrage = champion5_enrage - 1
+                if champion5_enrage == 0:
+                    champion5_statuses.remove("Enraged")
             if champion1_play_dead != 0:
                 champion1_play_dead = champion1_play_dead - 1
             if champion2_play_dead != 0:
@@ -9619,14 +10119,24 @@ class GameFrame(tk.Frame):
                 champion5_play_dead = champion5_play_dead - 1
             if champion1_thorns != 0:
                 champion1_thorns = champion1_thorns - 1
+                if champion1_thorns == 0:
+                    champion1_statuses.remove("Thorned")
             if champion2_thorns != 0:
                 champion2_thorns = champion2_thorns - 1
+                if champion2_thorns == 0:
+                    champion2_statuses.remove("Thorned")
             if champion3_thorns != 0:
                 champion3_thorns = champion3_thorns - 1
+                if champion3_thorns == 0:
+                    champion3_statuses.remove("Thorned")
             if champion4_thorns != 0:
                 champion4_thorns = champion4_thorns - 1
+                if champion4_thorns == 0:
+                    champion4_statuses.remove("Thorned")
             if champion5_thorns != 0:
                 champion5_thorns = champion5_thorns - 1
+                if champion5_thorns == 0:
+                    champion5_statuses.remove("Thorned")
             current_turn = "MN"
             self.next_turn()
     def calculate_ai_damage(self, champion_position, ai_position):
@@ -15551,7 +16061,7 @@ class GameFrame(tk.Frame):
 
     def finalise_damage_dealt(self):
         global ai1_hp, ai2_hp, ai3_hp, ai4_hp, ai5_hp, champion1_hp, champion2_hp, champion3_hp, champion4_hp, champion5_hp, \
-        reckless_flurry_buff
+        reckless_flurry_buff, ai1_statuses, ai2_statuses, ai3_statuses, ai4_statuses, ai5_statuses
         counter = 0
         if ability_data[0] == "Palm Strike":
             if 1 in target_list:
@@ -15881,16 +16391,16 @@ class GameFrame(tk.Frame):
                 self.serrated_slash_dot(1, 1)
             if 2 in target_list:
                 ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2))
-                self.serrated_slash_dot(1, 1)
+                self.serrated_slash_dot(2, 1)
             if 3 in target_list:
                 ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3))
-                self.serrated_slash_dot(1, 1)
+                self.serrated_slash_dot(3, 1)
             if 4 in target_list:
                 ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4))
-                self.serrated_slash_dot(1, 1)
+                self.serrated_slash_dot(4, 1)
             if 5 in target_list:
                 ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5))
-                self.serrated_slash_dot(1, 1)
+                self.serrated_slash_dot(5, 1)
         elif ability_data[0] == "Eviscerate":
             if 1 in target_list:
                 ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1)) * 1.5
@@ -16543,7 +17053,87 @@ class GameFrame(tk.Frame):
                         ai5_hp = ai1_hp - ai5_garroteDot[0]
                         ai5_garroteDot[1] = ai5_garroteDot[1] - 1
                         counter += 1
-                    counter = 0
+                    counter = 0 
+            if ai1_burnDot[1] <= 0:
+                ai1_burnDot[1] = 0
+                if "Burning" in ai1_statuses:
+                    ai1_statuses.remove("Burning")
+            if ai2_burnDot[1] <= 0:
+                ai2_burnDot[1] = 0
+                if "Burning" in ai2_statuses:
+                    ai2_statuses.remove("Burning")
+            if ai3_burnDot[1] <= 0:
+                ai3_burnDot[1] = 0
+                if "Burning" in ai3_statuses:
+                    ai3_statuses.remove("Burning")
+            if ai4_burnDot[1] <= 0:
+                ai4_burnDot[1] = 0
+                if "Burning" in ai4_statuses:
+                    ai4_statuses.remove("Burning")
+            if ai5_burnDot[1] <= 0:
+                ai5_burnDot[1] = 0
+                if "Burning" in ai5_statuses:
+                    ai5_statuses.remove("Burning")
+            if ai1_garroteDot[1] <= 0:
+                ai1_garroteDot[1] = 0
+                if "Garroted" in ai1_statuses:
+                    ai1_statuses.remove("Garroted")
+            if ai2_garroteDot[1] <= 0:
+                ai2_garroteDot[1] = 0
+                if "Garroted" in ai2_statuses:
+                    ai2_statuses.remove("Garroted")
+            if ai3_garroteDot[1] <= 0:
+                ai3_garroteDot[1] = 0
+                if "Garroted" in ai3_statuses:
+                    ai3_statuses.remove("Garroted")
+            if ai4_garroteDot[1] <= 0:
+                ai4_garroteDot[1] = 0
+                if "Garroted" in ai4_statuses:
+                    ai4_statuses.remove("Garroted")
+            if ai5_garroteDot[1] <= 0:
+                ai5_garroteDot[1] = 0
+                if "Garroted" in ai5_statuses:
+                    ai5_statuses.remove("Garroted")
+            if ai1_SerraSlashDot[1] <= 0:
+                ai1_SerraSlashDot[1] = 0
+                if "Serrated" in ai1_statuses:
+                    ai1_statuses.remove("Serrated")
+            if ai2_SerraSlashDot[1] <= 0:
+                ai2_SerraSlashDot[1] = 0
+                if "Serrated" in ai2_statuses:
+                    ai2_statuses.remove("Serrated")
+            if ai3_SerraSlashDot[1] <= 0:
+                ai3_SerraSlashDot[1] = 0
+                if "Serrated" in ai3_statuses:
+                    ai3_statuses.remove("Serrated")
+            if ai4_SerraSlashDot[1] <= 0:
+                ai4_SerraSlashDot[1] = 0
+                if "Serrated" in ai4_statuses:
+                    ai4_statuses.remove("Serrated")
+            if ai5_SerraSlashDot[1] <= 0:
+                ai5_SerraSlashDot[1] = 0
+                if "Serrated" in ai5_statuses:
+                    ai5_statuses.remove("Serrated")
+            if ai1_EviscerDot[1] <= 0:
+                ai1_EviscerDot[1] = 0
+                if "Eviscerated" in ai1_statuses:
+                    ai1_statuses.remove("Eviscerated")
+            if ai2_EviscerDot[1] <= 0:
+                ai2_EviscerDot[1] = 0
+                if "Eviscerated" in ai2_statuses:
+                    ai2_statuses.remove("Eviscerated")
+            if ai3_EviscerDot[1] <= 0:
+                ai3_EviscerDot[1] = 0
+                if "Eviscerated" in ai3_statuses:
+                    ai3_statuses.remove("Eviscerated")
+            if ai4_EviscerDot[1] <= 0:
+                ai4_EviscerDot[1] = 0
+                if "Eviscerated" in ai4_statuses:
+                    ai4_statuses.remove("Eviscerated")
+            if ai5_EviscerDot[1] <= 0:
+                ai5_EviscerDot[1] = 0
+                if "Eviscerated" in ai5_statuses:
+                    ai5_statuses.remove("Eviscerated")
         elif ability_data[0] == "Drain Life":
             if 1 in target_list:
                 ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1))
@@ -17132,81 +17722,147 @@ class GameFrame(tk.Frame):
 
     def finalise_healing_done(self):
         global champion1_hp, champion2_hp, champion3_hp, champion4_hp, champion5_hp
-        global champion1_guarded, champion2_guarded, champion3_guarded, champion4_guarded, champion5_guarded
+        global champion1_guarded, champion2_guarded, champion3_guarded, champion4_guarded, champion5_guarded, \
+            champion1_statuses, champion2_statuses, champion3_statuses, champion4_statuses, champion5_statuses
         counter = 0
         if ability_data[0] == "Fortification":
             global champion1_fortification, champion2_fortification, champion3_fortification, \
                 champion4_fortification, champion5_fortification
             if champion1_hp != 0:
                 champion1_fortification = 2
+                champion1_statuses.append("Fortified")
             if champion2_hp != 0:
                 champion2_fortification = 2
+                champion2_statuses.append("Fortified")
             if champion3_hp != 0:
                 champion3_fortification = 2
+                champion3_statuses.append("Fortified")
             if champion4_hp != 0:
                 champion4_fortification = 2
+                champion4_statuses.append("Fortified")
             if champion5_hp != 0:
                 champion5_fortification = 2
+                champion5_statuses.append("Fortified")
         elif ability_data[0] == "Block":
             if 1 in target_list:
                 champion1_guarded.append("Block")
+                champion1_statuses.append("Guarded: Block")
             if 2 in target_list:
                 champion2_guarded.append("Block")
+                champion2_statuses.append("Guarded: Block")
             if 3 in target_list:
                 champion3_guarded.append("Block")
+                champion3_statuses.append("Guarded: Block")
             if 4 in target_list:
                 champion4_guarded.append("Block")
+                champion4_statuses.append("Guarded: Block")
             if 5 in target_list:
                 champion5_guarded.append("Block")
+                champion5_statuses.append("Guarded: Block")
         elif ability_data[0] == "Parry":
             if 1 in target_list:
                 champion1_guarded.append("Parry")
+                champion1_statuses.append("Guarded: Parry")
             if 2 in target_list:
                 champion2_guarded.append("Parry")
+                champion2_statuses.append("Guarded: Parry")
             if 3 in target_list:
                 champion3_guarded.append("Parry")
+                champion3_statuses.append("Guarded: Parry")
             if 4 in target_list:
                 champion4_guarded.append("Parry")
+                champion4_statuses.append("Guarded: Parry")
             if 5 in target_list:
                 champion5_guarded.append("Parry")
+                champion5_statuses.append("Guarded: Parry")
         elif ability_data[0] == "Thorns":
             global champion1_thorns, champion2_thorns, champion3_thorns, champion4_thorns, champion5_thorns
             if 1 in target_list:
                 champion1_thorns = 5
+                if "Thorned" not in champion1_statuses:
+                    champion1_statuses.append("Thorned")
             if 2 in target_list:
                 champion2_thorns = 5
+                if "Thorned" not in champion2_statuses:
+                    champion2_statuses.append("Thorned")
             if 3 in target_list:
                 champion3_thorns = 5
+                if "Thorned" not in champion3_statuses:
+                    champion3_statuses.append("Thorned")
             if 4 in target_list:
                 champion4_thorns = 5
+                if "Thorned" not in champion4_statuses:
+                    champion4_statuses.append("Thorned")
             if 5 in target_list:
                 champion5_thorns = 5
+                if "Thorned" not in champion5_statuses:
+                    champion5_statuses.append("Thorned")
         elif ability_data[0] == "Aura of Power":
             global champion1_aura, champion2_aura, champion3_aura, champion4_aura, champion5_aura
             champion1_aura = 1
+            if "Aura of Protection" in champion1_statuses:
+                champion1_statuses.remove("Aura of Protection")
+                champion1_statuses.append("Aura of Power")
             champion2_aura = 1
+            if "Aura of Protection" in champion2_statuses:
+                champion2_statuses.remove("Aura of Protection")
+                champion2_statuses.append("Aura of Power")
             champion3_aura = 1
+            if "Aura of Protection" in champion3_statuses:
+                champion3_statuses.remove("Aura of Protection")
+                champion3_statuses.append("Aura of Power")
             champion4_aura = 1
+            if "Aura of Protection" in champion4_statuses:
+                champion4_statuses.remove("Aura of Protection")
+                champion4_statuses.append("Aura of Power")
             champion5_aura = 1
+            if "Aura of Protection" in champion5_statuses:
+                champion5_statuses.remove("Aura of Protection")
+                champion5_statuses.append("Aura of Power")
         elif ability_data[0] == "Aura of Protection":
             champion1_aura = 2
+            if "Aura of Power" in champion1_statuses:
+                champion1_statuses.remove("Aura of Power")
+                champion1_statuses.append("Aura of Protection")
             champion2_aura = 2
+            if "Aura of Power" in champion2_statuses:
+                champion2_statuses.remove("Aura of Power")
+                champion2_statuses.append("Aura of Protection")
             champion3_aura = 2
+            if "Aura of Power" in champion3_statuses:
+                champion3_statuses.remove("Aura of Power")
+                champion3_statuses.append("Aura of Protection")
             champion4_aura = 2
+            if "Aura of Power" in champion4_statuses:
+                champion4_statuses.remove("Aura of Power")
+                champion4_statuses.append("Aura of Protection")
             champion5_aura = 2
+            if "Aura of Power" in champion5_statuses:
+                champion5_statuses.remove("Aura of Power")
+                champion5_statuses.append("Aura of Protection")
         elif ability_data[0] == "Muscle Enlarger":
-            global champion1_enlarged_muscles, champion2_enlarged_muscles, champion3_enlarged_muscles, \
-                champion4_enlarged_muscles, champion5_enlarged_muscles
+            global champion1_muscleEnlarger, champion2_muscleEnlarger, champion3_muscleEnlarger, \
+                champion4_muscleEnlarger, champion5_muscleEnlarger
             if 1 in target_list:
-                champion1_enlarged_muscles = [1, 3]
+                champion1_muscleEnlarger = 3
+                if "Enlarged Muscles" not in champion1_statuses:
+                    champion1_statuses.append("Enlarged Muscles")
             if 2 in target_list:
-                champion2_enlarged_muscles = [1, 3]
+                champion2_muscleEnlarger = 3
+                if "Enlarged Muscles" not in champion2_statuses:
+                    champion2_statuses.append("Enlarged Muscles")
             if 3 in target_list:
-                champion3_enlarged_muscles = [1, 3]
+                champion3_muscleEnlarger = 3
+                if "Enlarged Muscles" not in champion3_statuses:
+                    champion3_statuses.append("Enlarged Muscles")
             if 4 in target_list:
-                champion4_enlarged_muscles = [1, 3]
+                champion4_muscleEnlarger = 3
+                if "Enlarged Muscles" not in champion4_statuses:
+                    champion4_statuses.append("Enlarged Muscles")
             if 5 in target_list:
-                champion5_enlarged_muscles = [1, 3]
+                champion5_muscleEnlarger = 3
+                if "Enlarged Muscles" not in champion5_statuses:
+                    champion5_statuses.append("Enlarged Muscles")
         elif ability_data[0] == "Mistic Bloom":
             if 1 in target_list:
                 champion1_hp = champion1_hp + ability_data[3]
@@ -17233,14 +17889,19 @@ class GameFrame(tk.Frame):
                 champion4_fullPotential, champion5_fullPotential
             if 1 in target_list:
                 champion1_fullPotential = 3
+                champion1_statuses.append("Fullest Potential")
             if 2 in target_list:
                 champion2_fullPotential = 3
+                champion2_statuses.append("Fullest Potential")
             if 3 in target_list:
                 champion3_fullPotential = 3
+                champion3_statuses.append("Fullest Potential")
             if 4 in target_list:
                 champion4_fullPotential = 3
+                champion4_statuses.append("Fullest Potential")
             if 5 in target_list:
                 champion5_fullPotential = 3
+                champion5_statuses.append("Fullest Potential")
         elif ability_data[0] == "Healing Surge":
             if 1 in target_list:
                 champion1_hp = champion1_hp + ability_data[3]
@@ -17285,15 +17946,20 @@ class GameFrame(tk.Frame):
                     champion5_hp = CHAMPION5_HP
         elif ability_data[0] == "Boulder Cocoon":
             if 1 in target_list:
-                champion1_guarded.append("Boulder")
+                champion1_guarded.append("Cocoon")
+                champion1_statuses.append("Guarded: Cocoon")
             if 2 in target_list:
-                champion2_guarded.append("Boulder")
+                champion2_guarded.append("Cocoon")
+                champion2_statuses.append("Guarded: Cocoon")
             if 3 in target_list:
-                champion3_guarded.append("Boulder")
+                champion3_guarded.append("Cocoon")
+                champion3_statuses.append("Guarded: Cocoon")
             if 4 in target_list:
-                champion4_guarded.append("Boulder")
+                champion4_guarded.append("Cocoon")
+                champion4_statuses.append("Guarded: Cocoon")
             if 5 in target_list:
-                champion5_guarded.append("Boulder")
+                champion5_guarded.append("Cocoon")
+                champion5_statuses.append("Guarded: Cocoon")
         elif ability_data[0] == "Healing Light":
             if 1 in target_list:
                 champion1_hp = champion1_hp + ability_data[3]
@@ -17416,14 +18082,24 @@ class GameFrame(tk.Frame):
                 champion4_JAXD, champion5_JAXD
             if 1 in target_list:
                 champion1_JAXD = 3
+                if "J.A.X.D" not in champion1_statuses:
+                    champion1_statuses.append("J.A.X.D")
             if 2 in target_list:
                 champion2_JAXD = 3
+                if "J.A.X.D" not in champion2_statuses:
+                    champion2_statuses.append("J.A.X.D")
             if 3 in target_list:
                 champion3_JAXD = 3
+                if "J.A.X.D" not in champion3_statuses:
+                    champion3_statuses.append("J.A.X.D")
             if 4 in target_list:
                 champion4_JAXD = 3
+                if "J.A.X.D" not in champion4_statuses:
+                    champion4_statuses.append("J.A.X.D")
             if 5 in target_list:
                 champion5_JAXD = 3
+                if "J.A.X.D" not in champion5_statuses:
+                    champion5_statuses.append("J.A.X.D")
 
     def finalise_self_buff(self):
         global ai1_hp, ai2_hp,ai3_hp,ai4_hp,ai5_hp, champion1_hp, champion2_hp, champion3_hp, champion4_hp, champion5_hp, \
@@ -17520,18 +18196,28 @@ class GameFrame(tk.Frame):
                 if character == BARBARIAN.title:
                     if counter == 1:
                         champion1_hp = champion1_hp + (300 * point)
+                        if champion1_hp > CHAMPION1_HP:
+                            champion1_hp = CHAMPION1_HP
                         break
                     if counter == 2:
                         champion2_hp = champion2_hp + (300 * point)
+                        if champion2_hp > CHAMPION2_HP:
+                            champion2_hp = CHAMPION2_HP
                         break
                     if counter == 3:
                         champion3_hp = champion3_hp + (300 * point)
+                        if champion3_hp > CHAMPION3_HP:
+                            champion3_hp = CHAMPION3_HP
                         break
                     if counter == 4:
                         champion4_hp = champion4_hp + (300 * point)
+                        if champion4_hp > CHAMPION4_HP:
+                            champion4_hp = CHAMPION4_HP
                         break
                     if counter == 5:
                         champion5_hp = champion5_hp + (300 * point)
+                        if champion5_hp > CHAMPION5_HP:
+                            champion5_hp = CHAMPION5_HP
                         break
         elif ability_data[0] == "Elusive Measures":
             for character in CHAMPION_LIST:
@@ -17539,18 +18225,23 @@ class GameFrame(tk.Frame):
                 if character == MASTER_FENCER.title:
                     if counter == 1:
                         champion1_guarded.append("Elusive Measures")
+                        champion1_statuses.append("Guarded: Evasion")
                         break
                     if counter == 2:
                         champion2_guarded.append("Elusive Measures")
+                        champion2_statuses.append("Guarded: Evasion")
                         break
                     if counter == 3:
                         champion3_guarded.append("Elusive Measures")
+                        champion3_statuses.append("Guarded: Evasion")
                         break
                     if counter == 4:
                         champion4_guarded.append("Elusive Measures")
+                        champion4_statuses.append("Guarded: Evasion")
                         break
                     if counter == 5:
                         champion5_guarded.append("Elusive Measures")
+                        champion5_statuses.append("Guarded: Evasion")
                         break
         elif ability_data[0] == "Enrage":
             global champion1_enrage, champion2_enrage, champion3_enrage, champion4_enrage, champion5_enrage
@@ -17559,18 +18250,28 @@ class GameFrame(tk.Frame):
                 if character == BERSERKER.title:
                     if counter == 1:
                         champion1_enrage = 3
+                        if "Enraged" not in champion1_statuses:
+                            champion1_statuses.append("Enraged")
                         break
                     if counter == 2:
                         champion2_enrage = 3
+                        if "Enraged" not in champion2_statuses:
+                            champion2_statuses.append("Enraged")
                         break
                     if counter == 3:
                         champion3_enrage = 3
+                        if "Enraged" not in champion3_statuses:
+                            champion3_statuses.append("Enraged")
                         break
                     if counter == 4:
                         champion4_enrage = 3
+                        if "Enraged" not in champion4_statuses:
+                            champion4_statuses.append("Enraged")
                         break
                     if counter == 5:
                         champion5_enrage = 3
+                        if "Enraged" not in champion5_statuses:
+                            champion5_statuses.append("Enraged")
                         break
         elif ability_data[0] == "Reckless Flurry":
             global reckless_flurry_buff
@@ -17633,18 +18334,23 @@ class GameFrame(tk.Frame):
                 if character == BRAWLIST.title:
                     if counter == 1:
                         champion1_defensive.append("Defensive Stance")
+                        champion1_statuses.append("Defensive: Defensive Stance")
                         break
                     if counter == 2:
                         champion2_defensive.append("Defensive Stance")
+                        champion2_statuses.append("Defensive: Defensive Stance")
                         break
                     if counter == 3:
                         champion3_defensive.append("Defensive Stance")
+                        champion3_statuses.append("Defensive: Defensive Stance")
                         break
                     if counter == 4:
                         champion4_defensive.append("Defensive Stance")
+                        champion4_statuses.append("Defensive: Defensive Stance")
                         break
                     if counter == 5:
                         champion5_defensive.append("Defensive Stance")
+                        champion5_statuses.append("Defensive: Defensive Stance")
                         break
         elif ability_data[0] == "Magical Barrier":
             for character in CHAMPION_LIST:
@@ -17652,18 +18358,23 @@ class GameFrame(tk.Frame):
                 if character == ACADEMIC_MAGE.title:
                     if counter == 1:
                         champion1_defensive.append("Magical Barrier")
+                        champion1_statuses.append("Defensive: Magical Barrier")
                         break
                     if counter == 2:
                         champion2_defensive.append("Magical Barrier")
+                        champion2_statuses.append("Defensive: Magical Barrier")
                         break
                     if counter == 3:
                         champion3_defensive.append("Magical Barrier")
+                        champion3_statuses.append("Defensive: Magical Barrier")
                         break
                     if counter == 4:
                         champion4_defensive.append("Magical Barrier")
+                        champion4_statuses.append("Defensive: Magical Barrier")
                         break
                     if counter == 5:
                         champion5_defensive.append("Magical Barrier")
+                        champion5_statuses.append("Defensive: Magical Barrier")
                         break
         elif ability_data[0] == "Void Infusion":
             global void_infusion_stacks
@@ -17712,18 +18423,23 @@ class GameFrame(tk.Frame):
                 if character == BLOODMANCER.title:
                     if counter == 1:
                         champion1_defensive.append("Enharden Nerves")
+                        champion1_statuses.append("Defensive: Enharden Nerves")
                         break
                     if counter == 2:
                         champion2_defensive.append("Enharden Nerves")
+                        champion2_statuses.append("Defensive: Enharden Nerves")
                         break
                     if counter == 3:
                         champion3_defensive.append("Enharden Nerves")
+                        champion3_statuses.append("Defensive: Enharden Nerves")
                         break
                     if counter == 4:
                         champion4_defensive.append("Enharden Nerves")
+                        champion4_statuses.append("Defensive: Enharden Nerves")
                         break
                     if counter == 5:
                         champion5_defensive.append("Enharden Nerves")
+                        champion5_statuses.append("Defensive: Enharden Nerves")
                         break
         elif ability_data[0] == "Equip Iron-cast Arrows":
             current_arrow_type = "Iron-cast"
@@ -17734,17 +18450,28 @@ class GameFrame(tk.Frame):
             crashing_boom_requirements[1] = 0
 
     def grant_champion_blessing(self, champion_position):
-        global champion1_blessing, champion2_blessing, champion3_blessing, champion4_blessing, champion5_blessing
+        global champion1_blessing, champion2_blessing, champion3_blessing, champion4_blessing, champion5_blessing, \
+            champion1_statuses, champion2_statuses, champion3_statuses, champion4_statuses, champion5_statuses
         if champion_position == 1:
             champion1_blessing = 5
+            if "Blessed" not in champion1_statuses:
+                champion1_statuses.append("Blessed")
         if champion_position == 2:
             champion2_blessing = 5
+            if "Blessed" not in champion2_statuses:
+                champion2_statuses.append("Blessed")
         if champion_position == 3:
             champion3_blessing = 5
+            if "Blessed" not in champion3_statuses:
+                champion3_statuses.append("Blessed")
         if champion_position == 4:
             champion4_blessing = 5
+            if "Blessed" not in champion4_statuses:
+                champion4_statuses.append("Blessed")
         if champion_position == 5:
             champion5_blessing = 5
+            if "Blessed" not in champion5_statuses:
+                champion5_statuses.append("Blessed")
 
     def check_champion_blessing(self, champion_position):
         global champion1_hp, champion2_hp, champion3_hp, champion4_hp, champion5_hp
@@ -17775,140 +18502,206 @@ class GameFrame(tk.Frame):
                     champion5_hp = CHAMPION5_HP
 
     def apply_nanoheal_bots(self, length):
-        global champion1_nanobot, champion2_nanobot, champion3_nanobot, champion4_nanobot, champion5_nanobot
+        global champion1_nanobot, champion2_nanobot, champion3_nanobot, champion4_nanobot, champion5_nanobot, \
+            champion1_statuses, champion2_statuses, champion3_statuses, champion4_statuses, champion5_statuses
         nanobotHealHOT = math.ceil(ability_data[3] * 0.66)
         if champion1_hp != 0:
             champion1_nanobot = [nanobotHealHOT, length]
+            if "Nanobot Supported" not in champion1_statuses:
+                champion1_statuses.append("Nanobot Supported")
         if champion2_hp != 0:
             champion2_nanobot = [nanobotHealHOT, length]
+            if "Nanobot Supported" not in champion2_statuses:
+                champion2_statuses.append("Nanobot Supported")
         if champion3_hp != 0:
             champion3_nanobot = [nanobotHealHOT, length]
+            if "Nanobot Supported" not in champion3_statuses:
+                champion3_statuses.append("Nanobot Supported")
         if champion4_hp != 0:
             champion4_nanobot = [nanobotHealHOT, length]
+            if "Nanobot Supported" not in champion4_statuses:
+                champion4_statuses.append("Nanobot Supported")
         if champion5_hp != 0:
             champion5_nanobot = [nanobotHealHOT, length]
+            if "Nanobot Supported" not in champion5_statuses:
+                champion5_statuses.append("Nanobot Supported")
 
     def apply_herbal_tea(self, target, length):
-        global champion1_herb_tea, champion2_herb_tea, champion3_herb_tea, champion4_herb_tea, champion5_herb_tea
+        global champion1_herb_tea, champion2_herb_tea, champion3_herb_tea, champion4_herb_tea, champion5_herb_tea, \
+            champion1_statuses, champion2_statuses, champion3_statuses, champion4_statuses, champion5_statuses
         herbal_tea_HealHOT = ability_data[3]
         if target == 1:
             champion1_herb_tea = [herbal_tea_HealHOT, length]
+            if "Herbal Tea Remnants" not in champion1_statuses:
+                champion1_statuses.append("Herbal Tea Remnants")
         if target == 2:
             champion2_herb_tea = [herbal_tea_HealHOT, length]
+            if "Herbal Tea Remnants" not in champion2_statuses:
+                champion2_statuses.append("Herbal Tea Remnants")
         if target == 3:
             champion3_herb_tea = [herbal_tea_HealHOT, length]
+            if "Herbal Tea Remnants" not in champion3_statuses:
+                champion3_statuses.append("Herbal Tea Remnants")
         if target == 4:
             champion4_herb_tea = [herbal_tea_HealHOT, length]
+            if "Herbal Tea Remnants" not in champion4_statuses:
+                champion4_statuses.append("Herbal Tea Remnants")
         if target == 5:
             champion5_herb_tea = [herbal_tea_HealHOT, length]
+            if "Herbal Tea Remnants" not in champion5_statuses:
+                champion5_statuses.append("Herbal Tea Remnants")
 
     def apply_weakness(self, ai_target, length):
-        global ai1_weakness, ai2_weakness, ai3_weakness, ai4_weakness, ai5_weakness
+        global ai1_weakness, ai2_weakness, ai3_weakness, ai4_weakness, ai5_weakness, \
+            ai1_statuses, ai2_statuses, ai3_statuses, ai4_statuses, ai5_statuses
         if ai_target == 1:
             if length > ai1_weakness:
                 ai1_weakness = length
+                if "Weakened" not in ai1_statuses:
+                    ai1_statuses.append("Weakened")
             else:
                 return
         if ai_target == 2:
             if length > ai2_weakness:
                 ai2_weakness = length
+                if "Weakened" not in ai2_statuses:
+                    ai2_statuses.append("Weakened")
             else:
                 return
         if ai_target == 3:
             if length > ai3_weakness:
                 ai3_weakness = length
+                if "Weakened" not in ai3_statuses:
+                    ai3_statuses.append("Weakened")
             else:
                 return
         if ai_target == 4:
             if length > ai4_weakness:
                 ai4_weakness = length
+                if "Weakened" not in ai4_statuses:
+                    ai4_statuses.append("Weakened")
             else:
                 return
         if ai_target == 5:
             if length > ai5_weakness:
                 ai5_weakness = length
+                if "Weakened" not in ai5_statuses:
+                    ai5_statuses.append("Weakened")
             else:
                 return
     def apply_taunt(self, ai_target, tauntie, length):
-        global ai1_taunt, ai2_taunt, ai3_taunt, ai4_taunt, ai5_taunt
+        global ai1_taunt, ai2_taunt, ai3_taunt, ai4_taunt, ai5_taunt, \
+            ai1_statuses, ai2_statuses, ai3_statuses, ai4_statuses, ai5_statuses
         if ai_target == 1:
             if length >= ai1_taunt[1]:
                 ai1_taunt = [tauntie, length]
+                if "Taunted" not in ai1_statuses:
+                    ai1_statuses.append("Taunted")
             else:
                 return
         if ai_target == 2:
             if length >= ai2_taunt[1]:
                 ai2_taunt = [tauntie, length]
+                if "Taunted" not in ai2_statuses:
+                    ai2_statuses.append("Taunted")
             else:
                 return
         if ai_target == 3:
             if length >= ai3_taunt[1]:
                 ai3_taunt = [tauntie, length]
+                if "Taunted" not in ai3_statuses:
+                    ai3_statuses.append("Taunted")
             else:
                 return
         if ai_target == 4:
             if length >= ai4_taunt[1]:
                 ai4_taunt = [tauntie, length]
+                if "Taunted" not in ai4_statuses:
+                    ai4_statuses.append("Taunted")
             else:
                 return
         if ai_target == 5:
             if length >= ai5_taunt[1]:
                 ai5_taunt = [tauntie, length]
+                if "Taunted" not in ai5_statuses:
+                    ai5_statuses.append("Taunted")
             else:
                 return
     def apply_stun(self, ai_target, length):
-        global ai1_stun, ai2_stun, ai3_stun, ai4_stun, ai5_stun
+        global ai1_stun, ai2_stun, ai3_stun, ai4_stun, ai5_stun, \
+            ai1_statuses, ai2_statuses, ai3_statuses, ai4_statuses, ai5_statuses
         if ai_target == 1:
             if length > ai1_stun:
                 ai1_stun = length
+                if "Stunned" not in ai1_statuses:
+                    ai1_statuses.append("Stunned")
             else:
                 return
         if ai_target == 2:
             if length > ai2_stun:
                 ai2_stun = length
+                if "Stunned" not in ai2_statuses:
+                    ai2_statuses.append("Stunned")
             else:
                 return
         if ai_target == 3:
             if length > ai3_stun:
                 ai3_stun = length
+                if "Stunned" not in ai3_statuses:
+                    ai3_statuses.append("Stunned")
             else:
                 return
         if ai_target == 4:
             if length > ai4_stun:
                 ai4_stun = length
+                if "Stunned" not in ai4_statuses:
+                    ai4_statuses.append("Stunned")
             else:
                 return
         if ai_target == 5:
             if length > ai5_stun:
                 ai5_stun = length
+                if "Stunned" not in ai5_statuses:
+                    ai5_statuses.append("Stunned")
             else:
                 return
 
     def apply_brittle(self, ai_target, length):
-        global ai1_brittle, ai2_brittle, ai3_brittle, ai4_brittle, ai5_brittle
+        global ai1_brittle, ai2_brittle, ai3_brittle, ai4_brittle, ai5_brittle, \
+            ai1_statuses, ai2_statuses, ai3_statuses, ai4_statuses, ai5_statuses
         if ai_target == 1:
             if length > ai1_brittle:
                 ai1_brittle = length
+                if "Brittle" not in ai1_statuses:
+                    ai1_statuses.append("Brittle")
             else:
                 return
         if ai_target == 2:
             if length > ai2_brittle:
                 ai2_brittle = length
+                if "Brittle" not in ai2_statuses:
+                    ai2_statuses.append("Brittle")
             else:
                 return
         if ai_target == 3:
             if length > ai3_brittle:
                 ai3_brittle = length
+                if "Brittle" not in ai3_statuses:
+                    ai3_statuses.append("Brittle")
             else:
                 return
         if ai_target == 4:
             if length > ai4_brittle:
                 ai4_brittle = length
+                if "Brittle" not in ai4_statuses:
+                    ai4_statuses.append("Brittle")
             else:
                 return
         if ai_target == 5:
             if length > ai5_brittle:
                 ai5_brittle = length
+                if "Brittle" not in ai5_statuses:
+                    ai5_statuses.append("Brittle")
             else:
                 return
     def check_brittle(self, ai_target):
@@ -17930,128 +18723,183 @@ class GameFrame(tk.Frame):
                 brittle_damage_modifier = 1.3
         return brittle_damage_modifier
     def apply_burn(self, ai_target, length):
-        global ai1_burnDot, ai2_burnDot, ai3_burnDot, ai4_burnDot, ai5_burnDot
+        global ai1_burnDot, ai2_burnDot, ai3_burnDot, ai4_burnDot, ai5_burnDot, \
+            ai1_statuses, ai2_statuses, ai3_statuses, ai4_statuses, ai5_statuses
         burnDot = math.ceil(ability_data[3] * 0.5)
         if ai_target == 1:
             if length > ai1_burnDot[1]:
                 ai1_burnDot = [burnDot, length]
+                if "Burning" not in ai1_statuses:
+                    ai1_statuses.append("Burning")
             else:
                 return
         if ai_target == 2:
             if length > ai2_burnDot[1]:
                 ai2_burnDot = [burnDot, length]
+                if "Burning" not in ai2_statuses:
+                    ai2_statuses.append("Burning")
             else:
                 return
         if ai_target == 3:
             if length > ai3_burnDot[1]:
                 ai3_burnDot = [burnDot, length]
+                if "Burning" not in ai3_statuses:
+                    ai3_statuses.append("Burning")
             else:
                 return
         if ai_target == 4:
             if length > ai4_burnDot[1]:
                 ai4_burnDot = [burnDot, length]
+                if "Burning" not in ai4_statuses:
+                    ai4_statuses.append("Burning")
             else:
                 return
         if ai_target == 5:
             if length > ai5_burnDot[1]:
                 ai5_burnDot = [burnDot, length]
+                if "Burning" not in ai5_statuses:
+                    ai5_statuses.append("Burning")
             else:
                 return
     def apply_pricked(self, ai_target):
-        global ai1_pricked, ai2_pricked, ai3_pricked, ai4_pricked, ai5_pricked
+        global ai1_pricked, ai2_pricked, ai3_pricked, ai4_pricked, ai5_pricked, \
+            ai1_statuses, ai2_statuses, ai3_statuses, ai4_statuses, ai5_statuses
         prick_dot = math.ceil(ability_data[3] * 0.25)
         if ai_target == 1:
             ai1_pricked = [prick_dot]
+            if "Pricked" not in ai1_statuses:
+                ai1_statuses.append("Pricked")
         if ai_target == 2:
             ai2_pricked = [prick_dot]
+            if "Pricked" not in ai2_statuses:
+                ai2_statuses.append("Pricked")
         if ai_target == 3:
             ai3_pricked = [prick_dot]
+            if "Pricked" not in ai3_statuses:
+                ai3_statuses.append("Pricked")
         if ai_target == 4:
             ai4_pricked = [prick_dot]
+            if "Pricked" not in ai4_statuses:
+                ai4_statuses.append("Pricked")
         if ai_target == 5:
             ai5_pricked = [prick_dot]
+            if "Pricked" not in ai5_statuses:
+                ai5_statuses.append("Pricked")
     def serrated_slash_dot(self, ai_target, length):
-        global ai1_SerraSlashDot, ai2_SerraSlashDot, ai3_SerraSlashDot, ai4_SerraSlashDot, ai5_SerraSlashDot
+        global ai1_SerraSlashDot, ai2_SerraSlashDot, ai3_SerraSlashDot, ai4_SerraSlashDot, ai5_SerraSlashDot, \
+            ai1_statuses, ai2_statuses, ai3_statuses, ai4_statuses, ai5_statuses
         SerraSlashDotDamage = math.ceil(ability_data[3] * 0.5)
         if ai_target == 1:
             if length > ai1_SerraSlashDot[1]:
                 ai1_SerraSlashDot = [SerraSlashDotDamage, length]
+                if "Serrated" not in ai1_statuses:
+                    ai1_statuses.append("Serrated")
             else:
                 return
         if ai_target == 2:
             if length > ai2_SerraSlashDot[1]:
                 ai2_SerraSlashDot = [SerraSlashDotDamage, length]
+                if "Serrated" not in ai2_statuses:
+                    ai2_statuses.append("Serrated")
             else:
                 return
         if ai_target == 3:
             if length > ai3_SerraSlashDot[1]:
                 ai3_SerraSlashDot = [SerraSlashDotDamage, length]
+                if "Serrated" not in ai3_statuses:
+                    ai3_statuses.append("Serrated")
             else:
                 return
         if ai_target == 4:
             if length > ai4_SerraSlashDot[1]:
                 ai4_SerraSlashDot = [SerraSlashDotDamage, length]
+                if "Serrated" not in ai4_statuses:
+                    ai4_statuses.append("Serrated")
             else:
                 return
         if ai_target == 5:
             if length > ai5_SerraSlashDot[1]:
                 ai5_SerraSlashDot = [SerraSlashDotDamage, length]
+                if "Serrated" not in ai5_statuses:
+                    ai5_statuses.append("Serrated")
             else:
                 return
     def eviscerate_dot(self, ai_target, length):
-        global ai1_EviscerDot, ai2_EviscerDot, ai3_EviscerDot, ai4_EviscerDot, ai5_EviscerDot
+        global ai1_EviscerDot, ai2_EviscerDot, ai3_EviscerDot, ai4_EviscerDot, ai5_EviscerDot, \
+            ai1_statuses, ai2_statuses, ai3_statuses, ai4_statuses, ai5_statuses
         EviscerDotDamage = math.ceil(ability_data[3])
         if ai_target == 1:
             if length > ai1_EviscerDot[1]:
                 ai1_EviscerDot = [EviscerDotDamage, length]
+                if "Eviscerated" not in ai1_statuses:
+                    ai1_statuses.append("Eviscerated")
             else:
                 return
         if ai_target == 2:
             if length > ai2_EviscerDot[1]:
                 ai2_EviscerDot = [EviscerDotDamage, length]
+                if "Eviscerated" not in ai2_statuses:
+                    ai2_statuses.append("Eviscerated")
             else:
                 return
         if ai_target == 3:
             if length > ai3_EviscerDot[1]:
                 ai3_EviscerDot = [EviscerDotDamage, length]
+                if "Eviscerated" not in ai3_statuses:
+                    ai3_statuses.append("Eviscerated")
             else:
                 return
         if ai_target == 4:
             if length > ai4_EviscerDot[1]:
                 ai4_EviscerDot = [EviscerDotDamage, length]
+                if "Eviscerated" not in ai4_statuses:
+                    ai4_statuses.append("Eviscerated")
             else:
                 return
         if ai_target == 5:
             if length > ai5_EviscerDot[1]:
                 ai5_EviscerDot = [EviscerDotDamage, length]
+                if "Eviscerated" not in ai5_statuses:
+                    ai5_statuses.append("Eviscerated")
             else:
                 return
     def garrote_dot(self, ai_target, length):
-        global ai1_garroteDot, ai2_garroteDot, ai3_garroteDot, ai4_garroteDot, ai5_garroteDot
+        global ai1_garroteDot, ai2_garroteDot, ai3_garroteDot, ai4_garroteDot, ai5_garroteDot, \
+            ai1_statuses, ai2_statuses, ai3_statuses, ai4_statuses, ai5_statuses
         garroteDotDamage = math.ceil(ability_data[3] * 0.75)
         if ai_target == 1:
             if length > ai1_garroteDot[1]:
                 ai1_garroteDot = [garroteDotDamage, length]
+                if "Garroted" not in ai1_statuses:
+                    ai1_statuses.append("Garroted")
             else:
                 return
         if ai_target == 2:
             if length > ai2_garroteDot[1]:
                 ai2_garroteDot = [garroteDotDamage, length]
+                if "Garroted" not in ai2_statuses:
+                    ai2_statuses.append("Garroted")
             else:
                 return
         if ai_target == 3:
             if length > ai3_garroteDot[1]:
                 ai3_garroteDot = [garroteDotDamage, length]
+                if "Garroted" not in ai3_statuses:
+                    ai3_statuses.append("Garroted")
             else:
                 return
         if ai_target == 4:
             if length > ai4_garroteDot[1]:
                 ai4_garroteDot = [garroteDotDamage, length]
+                if "Garroted" not in ai4_statuses:
+                    ai4_statuses.append("Garroted")
             else:
                 return
         if ai_target == 5:
             if length > ai5_garroteDot[1]:
                 ai5_garroteDot = [garroteDotDamage, length]
+                if "Garroted" not in ai5_statuses:
+                    ai5_statuses.append("Garroted")
             else:
                 return
     def clean_up(self):
@@ -20450,7 +21298,7 @@ class How2PlayPage(tk.Frame):
         next_button = tk.Button(tutorial_frame, text="Next Slide", font=self.menu_button_font)
         exit_button = tk.Button(tutorial_frame, text="Exit", font=self.menu_button_font)
         title_label.grid(row=1, column=1, sticky="nsew", pady=10)
-        slide_progress.grid(row=2 ,column=1,pady=10)
+        slide_progress.grid(row=2, column=1, pady=10)
         choosing_team_tutorial_text_label.grid(row=3, column=1, pady=10)
         next_button.grid(row=5, column=1, pady=10)
         exit_button.grid(row=6, column=1)
