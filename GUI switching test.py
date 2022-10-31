@@ -16,6 +16,7 @@ try:
 except ImportError:
     import Tkinter as tk  # python 2
     import tkFont as tkfont  # python 2
+from PIL import ImageTk, Image
 from flask import Flask
 from flask_bcrypt import Bcrypt
 #Enables Bcrypt which is my password salting/hashing functions
@@ -70,9 +71,9 @@ class ParentClass(tk.Tk):
         inputted_password = password_entry.get()
         inputted_password.strip()
         username_file = open(
-            "C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/account_data_username.txt".format(computer_username), "r")
+            "C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Data (DO NOT EDIT)/account_data_username.txt".format(computer_username), "r")
         password_file = open(
-            "C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/account_data_password.txt".format(computer_username), "r")
+            "C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Data (DO NOT EDIT)/account_data_password.txt".format(computer_username), "r")
         no_us_and_pw_warning = "Please enter a username and password"
         no_pw_warning = "Password is missing"
         no_us_warning = "Username is missing"
@@ -127,13 +128,13 @@ class ParentClass(tk.Tk):
     #Writes the inputted_username into a text file for later use when finding accounts
     def set_current_user(self, inputted_username):
         current_user = open(
-            "C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/game_data_current_username.txt".format(computer_username), "w")
+            "C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Data (DO NOT EDIT)/game_data_current_username.txt".format(computer_username), "w")
         current_user.write("{}".format(inputted_username))
         current_user.close()
     #Reads the current_username file to return the plain name in the file
     def get_user(self):
         current_user = open(
-            "C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/game_data_current_username.txt".format(computer_username), "r")
+            "C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Data (DO NOT EDIT)/game_data_current_username.txt".format(computer_username), "r")
         current_user_r = current_user.readline()
         user = current_user_r
         current_user.close()
@@ -142,7 +143,7 @@ class ParentClass(tk.Tk):
     # Reads the current_username file to return the encoded version of the name in the file
     def get_user_encoded(self):
         current_user = open(
-            "C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/game_data_current_username.txt".format(computer_username), "r")
+            "C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Data (DO NOT EDIT)/game_data_current_username.txt".format(computer_username), "r")
         current_user_r = current_user.readline()
         user = current_user_r
         user = user.encode("utf-8")
@@ -162,9 +163,9 @@ class ParentClass(tk.Tk):
         inputted_confirm_password = confirm_password_entry.get()
         inputted_confirm_password.strip()
         username_file = open(
-            "C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/account_data_username.txt".format(computer_username), "r")
+            "C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Data (DO NOT EDIT)/account_data_username.txt".format(computer_username), "r")
         password_file = open(
-            "C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/account_data_password.txt".format(computer_username), "r")
+            "C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Data (DO NOT EDIT)/account_data_password.txt".format(computer_username), "r")
         no_us_and_pw_warning = "Username and Password cannot be empty"
         no_pw_warning = "Password cannot be empty"
         no_us_warning = "Username cannot be empty"
@@ -216,26 +217,26 @@ class ParentClass(tk.Tk):
             self.problem.grid(row=3, column=0, padx=10, pady=10)
     #Writes the newly created password and usename into their respective text files
     def user_account_set(self):
-        file = open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/account_data_username.txt".format(computer_username), "a")
+        file = open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Data (DO NOT EDIT)/account_data_username.txt".format(computer_username), "a")
         file.write("\n")
         file.write(str(encode_username))
         file.close()
-        file = open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/account_data_championTeam_1.txt".format(computer_username),
+        file = open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Data (DO NOT EDIT)/account_data_championTeam_1.txt".format(computer_username),
                     "a")
         file.write("\n")
         file.write(str(encode_username) + ", ")
         file.close()
-        file = open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/account_data_championTeam_2.txt".format(computer_username),
+        file = open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Data (DO NOT EDIT)/account_data_championTeam_2.txt".format(computer_username),
                     "a")
         file.write("\n")
         file.write(str(encode_username) + ", ")
         file.close()
-        file = open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/account_data_championTeam_3.txt".format(computer_username),
+        file = open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Data (DO NOT EDIT)/account_data_championTeam_3.txt".format(computer_username),
                     "a")
         file.write("\n")
         file.write(str(encode_username) + ", ")
         file.close()
-        file = open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/account_data_password.txt".format(computer_username), "a")
+        file = open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Data (DO NOT EDIT)/account_data_password.txt".format(computer_username), "a")
         file.write("\n")
         file.write(str(encode_password))
         file.close()
@@ -268,7 +269,7 @@ class ParentClass(tk.Tk):
     def return_users_champion_team1(self, user):
         team_line_1 = ""
         champion_file_1 = open(
-            "C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/account_data_championTeam_1.txt".format(computer_username), "r")
+            "C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Data (DO NOT EDIT)/account_data_championTeam_1.txt".format(computer_username), "r")
         for line in champion_file_1:
             try:
                 if str(user) in line:
@@ -282,7 +283,7 @@ class ParentClass(tk.Tk):
     def return_users_champion_team2(self, user):
         team_line_2 = ""
         champion_file_2 = open(
-            "C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/account_data_championTeam_2.txt".format(computer_username), "r")
+            "C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Data (DO NOT EDIT)/account_data_championTeam_2.txt".format(computer_username), "r")
         for line in champion_file_2:
             try:
                 if str(user) in line:
@@ -296,7 +297,7 @@ class ParentClass(tk.Tk):
     def return_users_champion_team3(self, user):
         team_line_3 = ""
         champion_file_3 = open(
-            "C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/account_data_championTeam_3.txt".format(computer_username), "r")
+            "C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Data (DO NOT EDIT)/account_data_championTeam_3.txt".format(computer_username), "r")
         for line in champion_file_3:
             try:
                 if str(user) in line:
@@ -326,7 +327,7 @@ class ParentClass(tk.Tk):
     #writes the users chosen team into a file for later use
     def set_dungeon_team(self, decoded_dungeoneer_team1, root):
         current_team = open(
-            "C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/game_data_dungeon_team.txt".format(computer_username), "w")
+            "C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Data (DO NOT EDIT)/game_data_dungeon_team.txt".format(computer_username), "w")
         current_team.write(str(decoded_dungeoneer_team1))
         current_team.close()
         root.destroy()
@@ -583,19 +584,19 @@ class DungeonManagement(tk.Frame):
         global dungeon_difficulty
         if difficulty == "easy":
             dungeon_difficulty_file = open(
-                "C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/game_data_dungeon_difficulty.txt".format(computer_username),
+                "C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Data (DO NOT EDIT)/game_data_dungeon_difficulty.txt".format(computer_username),
                 "w")
             dungeon_difficulty_file.write("easy")
             dungeon_difficulty_file.close()
         if difficulty == "normal":
             dungeon_difficulty_file = open(
-                "C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/game_data_dungeon_difficulty.txt".format(computer_username),
+                "C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Data (DO NOT EDIT)/game_data_dungeon_difficulty.txt".format(computer_username),
                 "w")
             dungeon_difficulty_file.write("normal")
             dungeon_difficulty_file.close()
         if difficulty == "hard":
             dungeon_difficulty_file = open(
-                "C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/game_data_dungeon_difficulty.txt".format(computer_username),
+                "C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Data (DO NOT EDIT)/game_data_dungeon_difficulty.txt".format(computer_username),
                 "w")
             dungeon_difficulty_file.write("hard")
             dungeon_difficulty_file.close()
@@ -655,7 +656,7 @@ class GameFrame(tk.Frame):
             start_invis_label1.destroy()
             beginning_check_interger = 0
         read_difficulty_file = open(
-            "C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/game_data_dungeon_difficulty.txt".format(computer_username),
+            "C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Data (DO NOT EDIT)/game_data_dungeon_difficulty.txt".format(computer_username),
             "r")
         dungeon_settings = read_difficulty_file.readline()
         if dungeon_settings == "easy":
@@ -700,7 +701,7 @@ class GameFrame(tk.Frame):
     def get_individual_champions(self):
         global CHAMPION_LIST
         current_team_file = open(
-            "C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/game_data_dungeon_team.txt".format(computer_username), "r")
+            "C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Data (DO NOT EDIT)/game_data_dungeon_team.txt".format(computer_username), "r")
         team = current_team_file.readline()
         team = team.replace("[", "")
         team = team.replace("]", "")
@@ -10044,23 +10045,23 @@ class GameFrame(tk.Frame):
             if champion1_blessing != 0:
                 champion1_blessing = champion1_blessing - 1
                 if champion1_blessing == 0:
-                    champion1_statuses.remove("Blessing")
+                    champion1_statuses.remove("Blessed")
             if champion2_blessing != 0:
                 champion2_blessing = champion2_blessing - 1
                 if champion2_blessing == 0:
-                    champion2_statuses.remove("Blessing")
+                    champion2_statuses.remove("Blessed")
             if champion3_blessing != 0:
                 champion3_blessing = champion3_blessing - 1
                 if champion3_blessing == 0:
-                    champion3_statuses.remove("Blessing")
+                    champion3_statuses.remove("Blessed")
             if champion4_blessing != 0:
                 champion4_blessing = champion4_blessing - 1
                 if champion4_blessing == 0:
-                    champion4_statuses.remove("Blessing")
+                    champion4_statuses.remove("Blessed")
             if champion5_blessing != 0:
                 champion5_blessing = champion5_blessing - 1
                 if champion5_blessing == 0:
-                    champion5_statuses.remove("Blessing")
+                    champion5_statuses.remove("Blessed")
             if monk_staggered_damage_list1[1] != 0:
                 monk_staggered_damage_list1[1] = monk_staggered_damage_list1[1] - 1
             if monk_staggered_damage_list2[1] != 0:
@@ -18507,24 +18508,24 @@ class GameFrame(tk.Frame):
         nanobotHealHOT = math.ceil(ability_data[3] * 0.66)
         if champion1_hp != 0:
             champion1_nanobot = [nanobotHealHOT, length]
-            if "Nanobot Supported" not in champion1_statuses:
-                champion1_statuses.append("Nanobot Supported")
+            if "Nanobot Support" not in champion1_statuses:
+                champion1_statuses.append("Nanobot Support")
         if champion2_hp != 0:
             champion2_nanobot = [nanobotHealHOT, length]
-            if "Nanobot Supported" not in champion2_statuses:
-                champion2_statuses.append("Nanobot Supported")
+            if "Nanobot Support" not in champion2_statuses:
+                champion2_statuses.append("Nanobot Support")
         if champion3_hp != 0:
             champion3_nanobot = [nanobotHealHOT, length]
-            if "Nanobot Supported" not in champion3_statuses:
-                champion3_statuses.append("Nanobot Supported")
+            if "Nanobot Support" not in champion3_statuses:
+                champion3_statuses.append("Nanobot Support")
         if champion4_hp != 0:
             champion4_nanobot = [nanobotHealHOT, length]
-            if "Nanobot Supported" not in champion4_statuses:
-                champion4_statuses.append("Nanobot Supported")
+            if "Nanobot Support" not in champion4_statuses:
+                champion4_statuses.append("Nanobot Support")
         if champion5_hp != 0:
             champion5_nanobot = [nanobotHealHOT, length]
-            if "Nanobot Supported" not in champion5_statuses:
-                champion5_statuses.append("Nanobot Supported")
+            if "Nanobot Support" not in champion5_statuses:
+                champion5_statuses.append("Nanobot Support")
 
     def apply_herbal_tea(self, target, length):
         global champion1_herb_tea, champion2_herb_tea, champion3_herb_tea, champion4_herb_tea, champion5_herb_tea, \
@@ -20050,21 +20051,21 @@ class GameFrame(tk.Frame):
         global roomLevel, floorLevel
         user = ParentClass.get_user_encoded(self)
         read_difficulty_file = open(
-            "C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/game_data_dungeon_difficulty.txt".format(computer_username),
+            "C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Data (DO NOT EDIT)/game_data_dungeon_difficulty.txt".format(computer_username),
             "r")
         dungeon_settings = read_difficulty_file.readline()
         if dungeon_settings == "easy":
-            leaderboard_easy_file = open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/game_data_easy_leaderboard.txt".format(computer_username), "a")
+            leaderboard_easy_file = open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Data (DO NOT EDIT)/game_data_easy_leaderboard.txt".format(computer_username), "a")
             leaderboard_easy_file.write("\n")
             leaderboard_easy_file.write("{} {} {} {}".format(user, floorLevel, roomLevel, CHAMPION_LIST))
             leaderboard_easy_file.close()
         if dungeon_settings == "normal":
-            leaderboard_normal_file = open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/game_data_normal_leaderboard.txt".format(computer_username), "a")
+            leaderboard_normal_file = open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Data (DO NOT EDIT)/game_data_normal_leaderboard.txt".format(computer_username), "a")
             leaderboard_normal_file.write("\n")
             leaderboard_normal_file.write("{} {} {} {}".format(user, floorLevel, roomLevel, CHAMPION_LIST))
             leaderboard_normal_file.close()
         if dungeon_settings == "hard":
-            leaderboard_hard_file = open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/game_data_hard_leaderboard.txt".format(computer_username), "a")
+            leaderboard_hard_file = open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Data (DO NOT EDIT)/game_data_hard_leaderboard.txt".format(computer_username), "a")
             leaderboard_hard_file.write("\n")
             leaderboard_hard_file.write("{} {} {} {}".format(user, floorLevel, roomLevel, CHAMPION_LIST))
             leaderboard_hard_file.close()
@@ -21174,7 +21175,7 @@ class Team1SelectionPage(tk.Frame):
 
     def save_new_team1(self, root):
         i = -1
-        file = open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/account_data_championTeam_1.txt".format(computer_username),
+        file = open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Data (DO NOT EDIT)/account_data_championTeam_1.txt".format(computer_username),
                     "r")
         file_allLines = file.readlines()
         user = ParentClass.get_user_encoded(self)
@@ -21186,7 +21187,7 @@ class Team1SelectionPage(tk.Frame):
                 new_line = "{}, {}\n".format(user, coded_temp_party)
                 file_allLines[i] = new_line
                 file_write = open(
-                    "C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/account_data_championTeam_1.txt".format(computer_username),
+                    "C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Data (DO NOT EDIT)/account_data_championTeam_1.txt".format(computer_username),
                     "w")
                 file_write.writelines(file_allLines)
                 file.close()
@@ -21290,19 +21291,136 @@ class How2PlayPage(tk.Frame):
     def choosing_team_tutorial_page1(self):
         for widget in tutorial_frame.winfo_children():
             widget.destroy()
+        CTTP1_img = ImageTk.PhotoImage(file="C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Images/choosingTeam_tutorial_picture1.PNG".format(computer_username))
+        CTTP1_img = CTTP1_img.resize((100, 100))
         title_label = tk.Label(tutorial_frame, text="Choosing your team", font=self.small_title_font)
         slide_progress = tk.Label(tutorial_frame, text="1/8", font=self.medium_text_font_bold)
         choosing_team_tutorial_text_label = tk.Label(tutorial_frame, text="Before you can enter the Dungeon, you must select five champions"
-                                                                          " to accompany you into the depths.\n"
-                                                                          "To begin assembling your team, select 'Champion Camp' in the Main Menu.")
-        next_button = tk.Button(tutorial_frame, text="Next Slide", font=self.menu_button_font)
-        exit_button = tk.Button(tutorial_frame, text="Exit", font=self.menu_button_font)
+                                                                          " to accompany you into the depths\n"
+                                                                          "To begin assembling your team, select 'Champion Camp' in the Main Menu")
+        image_label = tk.Label(tutorial_frame, image =CTTP1_img)
+        next_button = tk.Button(tutorial_frame, text="Next Slide", font=self.menu_button_font, command=self.choosing_team_tutorial_page2)
+        exit_button = tk.Button(tutorial_frame, text="Exit", font=self.menu_button_font, command=self.opening_tutorial_page)
+        title_label.grid(row=1, column=1, sticky="nsew", pady=10)
+        slide_progress.grid(row=2, column=1, pady=10)
+        choosing_team_tutorial_text_label.grid(row=3, column=1, pady=10)
+        image_label.grid(row=4, column=1)
+        next_button.grid(row=5, column=1, pady=10)
+        exit_button.grid(row=6, column=1)
+    def choosing_team_tutorial_page2(self):
+        for widget in tutorial_frame.winfo_children():
+            widget.destroy()
+        title_label = tk.Label(tutorial_frame, text="Choosing your team", font=self.small_title_font)
+        slide_progress = tk.Label(tutorial_frame, text="2/8", font=self.medium_text_font_bold)
+        choosing_team_tutorial_text_label = tk.Label(tutorial_frame, text="You have a total of three team slots\n "
+                                                                          "This lets you keep your favourite combinations while being able to try something new!\n"
+                                                                          "Press any of the 'Create' buttons to begin team assembly")
+        next_button = tk.Button(tutorial_frame, text="Next Slide", font=self.menu_button_font, command=self.choosing_team_tutorial_page3)
+        exit_button = tk.Button(tutorial_frame, text="Exit", font=self.menu_button_font, command=self.opening_tutorial_page)
         title_label.grid(row=1, column=1, sticky="nsew", pady=10)
         slide_progress.grid(row=2, column=1, pady=10)
         choosing_team_tutorial_text_label.grid(row=3, column=1, pady=10)
         next_button.grid(row=5, column=1, pady=10)
         exit_button.grid(row=6, column=1)
-
+    def choosing_team_tutorial_page3(self):
+        for widget in tutorial_frame.winfo_children():
+            widget.destroy()
+        title_label = tk.Label(tutorial_frame, text="Choosing your team", font=self.small_title_font)
+        slide_progress = tk.Label(tutorial_frame, text="3/8", font=self.medium_text_font_bold)
+        choosing_team_tutorial_text_label = tk.Label(tutorial_frame, text="There are three specializations of champions\n"
+                                                                          "Though each champion is solely unique in its own way, they all fall into one of the three specializations or 'specs'\n"
+                                                                          "Each specialization plays an important role inside the dungeon, and utilizing each one will get you further in your run\n"
+                                                                          "To view each specializations champion selection range, click on the specialization name button up on the top of your page\n"
+                                                                          "View Page 4-5-6 of this tutorial to see what each specialization does")
+        next_button = tk.Button(tutorial_frame, text="Next Slide", font=self.menu_button_font, command=self.choosing_team_tutorial_page4)
+        exit_button = tk.Button(tutorial_frame, text="Exit", font=self.menu_button_font, command=self.opening_tutorial_page)
+        title_label.grid(row=1, column=1, sticky="nsew", pady=10)
+        slide_progress.grid(row=2, column=1, pady=10)
+        choosing_team_tutorial_text_label.grid(row=3, column=1, pady=10)
+        next_button.grid(row=5, column=1, pady=10)
+        exit_button.grid(row=6, column=1)
+    def choosing_team_tutorial_page4(self):
+        for widget in tutorial_frame.winfo_children():
+            widget.destroy()
+        title_label = tk.Label(tutorial_frame, text="Choosing your team", font=self.small_title_font)
+        slide_progress = tk.Label(tutorial_frame, text="4/8", font=self.medium_text_font_bold)
+        choosing_team_tutorial_tank_label = tk.Label(tutorial_frame, text="Tanks", font=self.medium_text_font_bold)
+        choosing_team_tutorial_text_label = tk.Label(tutorial_frame, text="The Tank specialization maximizes its teams survival by reducing the enemies damage done,\n"
+                                                                          "by taunting enemies to force them to attack the tank instead of their teammates,\n"
+                                                                          "and by blocking enemies attacks and protecting allies")
+        next_button = tk.Button(tutorial_frame, text="Next Slide", font=self.menu_button_font, command=self.choosing_team_tutorial_page5)
+        exit_button = tk.Button(tutorial_frame, text="Exit", font=self.menu_button_font, command=self.opening_tutorial_page)
+        title_label.grid(row=1, column=1, sticky="nsew", pady=10)
+        slide_progress.grid(row=2, column=1, pady=10)
+        choosing_team_tutorial_tank_label.grid(row=3, column=1, pady=10)
+        choosing_team_tutorial_text_label.grid(row=4, column=1, pady=10)
+        next_button.grid(row=6, column=1, pady=10)
+        exit_button.grid(row=7, column=1)
+    def choosing_team_tutorial_page5(self):
+        for widget in tutorial_frame.winfo_children():
+            widget.destroy()
+        title_label = tk.Label(tutorial_frame, text="Choosing your team", font=self.small_title_font)
+        slide_progress = tk.Label(tutorial_frame, text="5/8", font=self.medium_text_font_bold)
+        choosing_team_tutorial_dps_label = tk.Label(tutorial_frame, text="Damage Dealers", font=self.medium_text_font_bold)
+        choosing_team_tutorial_text_label = tk.Label(tutorial_frame, text="The Damage Dealer specialization or 'DPS' maximizes its damage done to the monsters you'll encounter in the dungeon,\n"
+                                                                          "they can also cause nasty effects that hinder and damage enemies over multiple turns,\n"
+                                                                          "some DPS can also help other teammates by powering them to make them deal more damage")
+        next_button = tk.Button(tutorial_frame, text="Next Slide", font=self.menu_button_font, command=self.choosing_team_tutorial_page6)
+        exit_button = tk.Button(tutorial_frame, text="Exit", font=self.menu_button_font, command=self.opening_tutorial_page)
+        title_label.grid(row=1, column=1, sticky="nsew", pady=10)
+        slide_progress.grid(row=2, column=1, pady=10)
+        choosing_team_tutorial_dps_label.grid(row=3, column=1, pady=10)
+        choosing_team_tutorial_text_label.grid(row=4, column=1, pady=10)
+        next_button.grid(row=6, column=1, pady=10)
+        exit_button.grid(row=7, column=1)
+    def choosing_team_tutorial_page6(self):
+        for widget in tutorial_frame.winfo_children():
+            widget.destroy()
+        title_label = tk.Label(tutorial_frame, text="Choosing your team", font=self.small_title_font)
+        slide_progress = tk.Label(tutorial_frame, text="6/8", font=self.medium_text_font_bold)
+        choosing_team_tutorial_healer_label = tk.Label(tutorial_frame, text="Healers", font=self.medium_text_font_bold)
+        choosing_team_tutorial_text_label = tk.Label(tutorial_frame, text="The Healer specialization maximizes its support capabilities to other teammates,\n"
+                                                                          "Healers can heal back damage inflicted on teammates by monsters,\n"
+                                                                          "Healers can also support their team by providing power boosts or protection from attacks")
+        next_button = tk.Button(tutorial_frame, text="Next Slide", font=self.menu_button_font, command=self.choosing_team_tutorial_page7)
+        exit_button = tk.Button(tutorial_frame, text="Exit", font=self.menu_button_font, command=self.opening_tutorial_page)
+        title_label.grid(row=1, column=1, sticky="nsew", pady=10)
+        slide_progress.grid(row=2, column=1, pady=10)
+        choosing_team_tutorial_healer_label.grid(row=3, column=1, pady=10)
+        choosing_team_tutorial_text_label.grid(row=4, column=1, pady=10)
+        next_button.grid(row=6, column=1, pady=10)
+        exit_button.grid(row=7, column=1)
+    def choosing_team_tutorial_page7(self):
+        for widget in tutorial_frame.winfo_children():
+            widget.destroy()
+        title_label = tk.Label(tutorial_frame, text="Choosing your team", font=self.small_title_font)
+        slide_progress = tk.Label(tutorial_frame, text="7/8", font=self.medium_text_font_bold)
+        choosing_team_tutorial_text_label = tk.Label(tutorial_frame, text="To add a champion to your team, press the 'Add to team' button and they'll be added to the team bar on the bottom of the screen\n"
+                                                                          "You may select any combination of champions by you many only have one of the same champion\n"
+                                                                          "If you have all five team slots full and want to change a champion, don't fret!\n"
+                                                                          "Just add the champion you want like normal and you'll be able to swap around champions in your party\n"                                                         
+                                                                          "Its important to put together a team that can cover a wide array of scenarios so you can handle each challenge without being at a disadvantage\n"
+                                                                          "Once you have chosen all five of your preferred champions, make sure to press the 'Confirm Changes' button to save that team to the slot")
+        next_button = tk.Button(tutorial_frame, text="Next Slide", font=self.menu_button_font, command=self.choosing_team_tutorial_page8)
+        exit_button = tk.Button(tutorial_frame, text="Exit", font=self.menu_button_font, command=self.opening_tutorial_page)
+        title_label.grid(row=1, column=1, sticky="nsew", pady=10)
+        slide_progress.grid(row=2, column=1, pady=10)
+        choosing_team_tutorial_text_label.grid(row=4, column=1, pady=10)
+        next_button.grid(row=6, column=1, pady=10)
+        exit_button.grid(row=7, column=1)
+    def choosing_team_tutorial_page8(self):
+        for widget in tutorial_frame.winfo_children():
+            widget.destroy()
+        title_label = tk.Label(tutorial_frame, text="Choosing your team", font=self.small_title_font)
+        slide_progress = tk.Label(tutorial_frame, text="8/8", font=self.medium_text_font_bold)
+        choosing_team_tutorial_text_label = tk.Label(tutorial_frame, text="That's it!\n"
+                                                                          "You now know how to create Champion Teams and what each specialization does\n"
+                                                                          "If you need to, read the other sections of the 'How to Play' page to learn more on how to play!")
+        exit_button = tk.Button(tutorial_frame, text="Exit", font=self.menu_button_font, command=self.opening_tutorial_page)
+        title_label.grid(row=1, column=1, sticky="nsew", pady=10)
+        slide_progress.grid(row=2, column=1, pady=10)
+        choosing_team_tutorial_text_label.grid(row=4, column=1, pady=10)
+        exit_button.grid(row=7, column=1)
 class LeaderboardPage(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
