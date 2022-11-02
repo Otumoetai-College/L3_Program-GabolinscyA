@@ -559,24 +559,30 @@ class DungeonManagement(tk.Frame):
         invis_label1 = tk.Label(self)
         invis_label2 = tk.Label(self)
         easymode_label = tk.Label(self, text="The Catacombs", font=smallish_text_font)
-        easymode_button = tk.Button(self, text="Easy Dungeon", font=controller.menu_button_font,
+        easymode_button = tk.Button(self, text=":Easy Dungeon:\n"
+                                             "ATK Mod: 10% per Floor\n"
+                                             "HP Mod: 10% per Room", font=controller.menu_button_font,
                                     command=lambda: self.set_new_dungeon_difficulty("easy"))
         normalmode_label = tk.Label(self, text="The Deep Dark", font=smallish_text_font)
-        normalmode_button = tk.Button(self, text="Normal Dungeon", font=controller.menu_button_font,
+        normalmode_button = tk.Button(self, text=":Normal Dungeon:\n"
+                                             "ATK Mod: 25% per Floor\n"
+                                             "HP Mod: 20% per Room", font=controller.menu_button_font,
                                       command=lambda: self.set_new_dungeon_difficulty("normal"))
         hardmode_label = tk.Label(self, text="The Abyss", font=smallish_text_font)
-        hardmode_button = tk.Button(self, text="Hard Dungeon", font=controller.menu_button_font,
+        hardmode_button = tk.Button(self, text=":Hard Dungeon:\n"
+                                             "ATK Mod: 50% per Floor\n"
+                                             "HP Mod: 25% per Room", font=controller.menu_button_font,
                                     command=lambda: self.set_new_dungeon_difficulty("hard"))
         buttonReturn = tk.Button(self, text="Return to Dungeon", font=controller.menu_button_font,
                                  command=lambda: controller.show_frame("DungeonDelve"))
         title_label.grid(row=1, column=2)
         invis_label1.grid(row=0, column=0, padx=80, pady=45)
         invis_label2.grid(row=5, column=2, pady=60)
-        easymode_label.grid(row=3, column=2, sticky="w", padx=35)
+        easymode_label.grid(row=3, column=2, sticky="w", padx=95)
         easymode_button.grid(row=4, column=2, sticky="w")
         normalmode_label.grid(row=3, column=2)
         normalmode_button.grid(row=4, column=2)
-        hardmode_label.grid(row=3, column=2, sticky="e", padx=55)
+        hardmode_label.grid(row=3, column=2, sticky="e", padx=105)
         hardmode_button.grid(row=4, column=2, sticky="e")
         buttonReturn.grid(row=6, column=2)
 
@@ -16908,7 +16914,7 @@ class GameFrame(tk.Frame):
                             break
                         if counter == 2:
                             break
-                        ai2_hp = ai1_hp - ai2_SerraSlashDot[0]
+                        ai2_hp = ai2_hp - ai2_SerraSlashDot[0]
                         ai2_SerraSlashDot[1] = ai2_SerraSlashDot[1] - 1
                         counter += 1
                     counter = 0
@@ -16928,7 +16934,7 @@ class GameFrame(tk.Frame):
                             break
                         if counter == 2:
                             break
-                        ai2_hp = ai1_hp - ai2_garroteDot[0]
+                        ai2_hp = ai2_hp - ai2_garroteDot[0]
                         ai2_garroteDot[1] = ai2_garroteDot[1] - 1
                         counter += 1
                     counter = 0
@@ -16949,7 +16955,7 @@ class GameFrame(tk.Frame):
                             break
                         if counter == 2:
                             break
-                        ai3_hp = ai1_hp - ai3_SerraSlashDot[0]
+                        ai3_hp = ai3_hp - ai3_SerraSlashDot[0]
                         ai3_SerraSlashDot[1] = ai3_SerraSlashDot[1] - 1
                         counter += 1
                     counter = 0
@@ -16969,7 +16975,7 @@ class GameFrame(tk.Frame):
                             break
                         if counter == 2:
                             break
-                        ai3_hp = ai1_hp - ai3_garroteDot[0]
+                        ai3_hp = ai3_hp - ai3_garroteDot[0]
                         ai3_garroteDot[1] = ai3_garroteDot[1] - 1
                         counter += 1
                     counter = 0
@@ -16990,7 +16996,7 @@ class GameFrame(tk.Frame):
                             break
                         if counter == 2:
                             break
-                        ai4_hp = ai1_hp - ai4_SerraSlashDot[0]
+                        ai4_hp = ai4_hp - ai4_SerraSlashDot[0]
                         ai4_SerraSlashDot[1] = ai4_SerraSlashDot[1] - 1
                         counter += 1
                     counter = 0
@@ -17010,7 +17016,7 @@ class GameFrame(tk.Frame):
                             break
                         if counter == 2:
                             break
-                        ai4_hp = ai1_hp - ai4_garroteDot[0]
+                        ai4_hp = ai4_hp - ai4_garroteDot[0]
                         ai4_garroteDot[1] = ai4_garroteDot[1] - 1
                         counter += 1
                     counter = 0
@@ -17031,7 +17037,7 @@ class GameFrame(tk.Frame):
                             break
                         if counter == 2:
                             break
-                        ai5_hp = ai1_hp - ai5_SerraSlashDot[0]
+                        ai5_hp = ai5_hp - ai5_SerraSlashDot[0]
                         ai5_SerraSlashDot[1] = ai5_SerraSlashDot[1] - 1
                         counter += 1
                     counter = 0
@@ -17051,7 +17057,7 @@ class GameFrame(tk.Frame):
                             break
                         if counter == 2:
                             break
-                        ai5_hp = ai1_hp - ai5_garroteDot[0]
+                        ai5_hp = ai5_hp - ai5_garroteDot[0]
                         ai5_garroteDot[1] = ai5_garroteDot[1] - 1
                         counter += 1
                     counter = 0 
@@ -21279,7 +21285,7 @@ class How2PlayPage(tk.Frame):
             widget.destroy()
         title_label = tk.Label(tutorial_frame, text="How To Play", font=self.small_title_font)
         choosing_team_tutorial_button = tk.Button(tutorial_frame, text=":Choosing your team:", font=self.menu_button_font, width=20, command=self.choosing_team_tutorial_page1)
-        entering_dungeon_tutorial_button = tk.Button(tutorial_frame, text=":Entering the Dungeon:", font=self.menu_button_font, width=20, command=self.entering_the_dungeon_tutorial_page)
+        entering_dungeon_tutorial_button = tk.Button(tutorial_frame, text=":Entering the Dungeon:", font=self.menu_button_font, width=20, command=self.entering_the_dungeon_tutorial_menu)
         other_features_tutorial_button = tk.Button(tutorial_frame, text=":Leaderboard:", font=self.menu_button_font, width=16)
         invis_label = tk.Label(tutorial_frame)
         invis_label.grid(row=1,column=0, padx=160)
@@ -21298,7 +21304,7 @@ class How2PlayPage(tk.Frame):
         choosing_team_tutorial_text_label = tk.Label(tutorial_frame, text="Before you can enter the Dungeon, you must select five champions"
                                                                           " to accompany you into the depths\n"
                                                                           "To begin assembling your team, select 'Champion Camp' in the Main Menu")
-        img1 = Image.open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Images/choosingTeam_tutorial_picture1.png".format(computer_username))
+        img1 = Image.open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Images/ChoosingTeam/choosingTeam_tutorial_picture1.png".format(computer_username))
         img1.thumbnail((450, 250))
         img1 = ImageTk.PhotoImage(img1)
         image_label = tk.Label(tutorial_frame, image=img1)
@@ -21321,7 +21327,7 @@ class How2PlayPage(tk.Frame):
         choosing_team_tutorial_text_label = tk.Label(tutorial_frame, text="You have a total of three team slots\n "
                                                                           "This lets you keep your favourite combinations while being able to try something new!\n"
                                                                           "Press any of the 'Create' buttons to begin team assembly")
-        img2 = Image.open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Images/choosingTeam_tutorial_picture2.png".format(computer_username))
+        img2 = Image.open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Images/ChoosingTeam/choosingTeam_tutorial_picture2.png".format(computer_username))
         img2.thumbnail((550, 250))
         img2 = ImageTk.PhotoImage(img2)
         image_label = tk.Label(tutorial_frame, image=img2)
@@ -21346,7 +21352,7 @@ class How2PlayPage(tk.Frame):
                                                                           "Each specialization plays an important role inside the dungeon, and utilizing each one will get you further in your run\n"
                                                                           "To view each specializations champion selection range, click on the specialization name button up on the top of your page\n"
                                                                           "View Page 4-5-6 of this tutorial to see what each specialization does")
-        img3 = Image.open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Images/choosingTeam_tutorial_picture3.png".format(computer_username))
+        img3 = Image.open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Images/ChoosingTeam/choosingTeam_tutorial_picture3.png".format(computer_username))
         img3.thumbnail((800, 800))
         img3 = ImageTk.PhotoImage(img3)
         image_label = tk.Label(tutorial_frame, image=img3)
@@ -21426,7 +21432,7 @@ class How2PlayPage(tk.Frame):
         choosing_team_tutorial_text_label = tk.Label(tutorial_frame, text="To add a champion to your team, press the 'Add to team' button and they'll be added to the team bar on the bottom of the screen\n"
                                                                           "You may select any combination of champions by you many only have one of the same champion\n"                                                         
                                                                           "Its important to put together a team that can cover a wide array of scenarios so you can handle each challenge without being at a disadvantage")
-        img4 = Image.open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Images/choosingTeam_tutorial_picture4.png".format(computer_username))
+        img4 = Image.open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Images/ChoosingTeam/choosingTeam_tutorial_picture4.png".format(computer_username))
         img4.thumbnail((450, 450))
         img4 = ImageTk.PhotoImage(img4)
         image_label = tk.Label(tutorial_frame, image=img4)
@@ -21448,13 +21454,13 @@ class How2PlayPage(tk.Frame):
         slide_progress = tk.Label(tutorial_frame, text="8/10", font=self.medium_text_font_bold)
         choosing_team_tutorial_text_label = tk.Label(tutorial_frame, text="If you have all five team slots full and want to change a champion, don't fret!\n"
                                                                           "Just add the champion you want like normal and you'll be able to swap around champions in your party")
-        img5 = Image.open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Images/choosingTeam_tutorial_picture5.png".format(computer_username))
+        img5 = Image.open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Images/ChoosingTeam/choosingTeam_tutorial_picture5.png".format(computer_username))
         img5.thumbnail((400, 400))
         img5 = ImageTk.PhotoImage(img5)
         image_label1 = tk.Label(tutorial_frame, image=img5)
         image_label1.image = img5
         image_label1.grid(row=4, column=1, sticky="w")
-        img6 = Image.open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Images/choosingTeam_tutorial_picture6.png".format(computer_username))
+        img6 = Image.open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Images/ChoosingTeam/choosingTeam_tutorial_picture6.png".format(computer_username))
         img6.thumbnail((400, 400))
         img6 = ImageTk.PhotoImage(img6)
         image_label2 = tk.Label(tutorial_frame, image=img6)
@@ -21475,7 +21481,7 @@ class How2PlayPage(tk.Frame):
         title_label = tk.Label(tutorial_frame, text="Choosing your team", font=self.small_title_font)
         slide_progress = tk.Label(tutorial_frame, text="9/10", font=self.medium_text_font_bold)
         choosing_team_tutorial_text_label = tk.Label(tutorial_frame, text="Once you have chosen all five of your preferred champions, make sure to press the 'Confirm Changes' button to save that team to the slot")
-        img7 = Image.open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Images/choosingTeam_tutorial_picture7.png".format(computer_username))
+        img7 = Image.open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Images/ChoosingTeam/choosingTeam_tutorial_picture7.png".format(computer_username))
         img7.thumbnail((450, 450))
         img7 = ImageTk.PhotoImage(img7)
         image_label = tk.Label(tutorial_frame, image=img7)
@@ -21510,16 +21516,133 @@ class How2PlayPage(tk.Frame):
             widget.destroy()
         title_label = tk.Label(tutorial_frame, text="Entering the Dungeon", font=self.small_title_font)
         dungeon_settings_tutorial_button = tk.Button(tutorial_frame, text=":Dungeon Settings:", font=self.menu_button_font, width=20, command=self.dungeon_settings_tutorial_page1)
-        entering_combat_tutorial_button = tk.Button(tutorial_frame, text=":Entering Combat:", font=self.menu_button_font, width=20, command=self.entering_combat_tutorial_page)
+        entering_combat_tutorial_button = tk.Button(tutorial_frame, text=":Entering Combat:", font=self.menu_button_font, width=20, command=self.entering_combat_tutorial_menu)
         invis_label = tk.Label(tutorial_frame)
         invis_label.grid(row=1,column=0, padx=40)
         title_label.grid(row=1, column=1, sticky="nsew", pady=10)
         dungeon_settings_tutorial_button.grid(row=2, column=1, pady=10)
         entering_combat_tutorial_button.grid(row=3, column=1, pady=10)
-        button = tk.Button(tutorial_frame, text="Return to Menu",
-                           command=lambda: ParentClass.show_frame(app, "MainMenu"))
+        button = tk.Button(tutorial_frame, text="Back",
+                           command=self.opening_tutorial_menu)
         button.grid(row=5, column=1)
     def dungeon_settings_tutorial_page1(self):
+        for widget in tutorial_frame.winfo_children():
+            widget.destroy()
+        title_label = tk.Label(tutorial_frame, text="Dungeon Settings", font=self.small_title_font)
+        slide_progress = tk.Label(tutorial_frame, text="1/5", font=self.medium_text_font_bold)
+        choosing_team_tutorial_text_label = tk.Label(tutorial_frame, text="The Dungeon itself is perilous, but you can personally tune how you interact with the dungeon\n"
+                                                                          "Navigate to the 'Dungeon Management' options as shown in the pictures to begin going through the game setting")
+        img1 = Image.open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Images/DungeonSettings/dungeonSettings_tutorial_picture1.png".format(computer_username))
+        img1.thumbnail((400, 400))
+        img1 = ImageTk.PhotoImage(img1)
+        image_label1 = tk.Label(tutorial_frame, image=img1)
+        image_label1.image = img1
+        image_label1.grid(row=4, column=1, sticky="w")
+        img2 = Image.open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Images/DungeonSettings/dungeonSettings_tutorial_picture2.png".format(computer_username))
+        img2.thumbnail((400, 400))
+        img2 = ImageTk.PhotoImage(img2)
+        image_label2 = tk.Label(tutorial_frame, image=img2)
+        image_label2.image = img2
+        image_label2.grid(row=4, column=1, sticky="e")
+        next_button = tk.Button(tutorial_frame, text="Next Slide", font=self.menu_button_font, command=self.dungeon_settings_tutorial_page2)
+        exit_button = tk.Button(tutorial_frame, text="Exit", font=self.menu_button_font, command=self.entering_the_dungeon_tutorial_menu)
+        invis_label = tk.Label(tutorial_frame)
+        invis_label.grid(row=1,column=0, padx=80)
+        title_label.grid(row=1, column=1, sticky="nsew", pady=10)
+        slide_progress.grid(row=2, column=1, pady=10)
+        choosing_team_tutorial_text_label.grid(row=3, column=1, pady=10)
+        next_button.grid(row=5, column=1, pady=10)
+        exit_button.grid(row=6, column=1)
+    def dungeon_settings_tutorial_page2(self):
+        for widget in tutorial_frame.winfo_children():
+            widget.destroy()
+        title_label = tk.Label(tutorial_frame, text="Dungeon Settings", font=self.small_title_font)
+        slide_progress = tk.Label(tutorial_frame, text="2/5", font=self.medium_text_font_bold)
+        choosing_team_tutorial_text_label = tk.Label(tutorial_frame, text="The monsters inside the Dungeon become tougher the further you delve.\n"
+                                                                          "Each difficult allows you to change the rate at which the monsters DAMAGE/HEALTH scale at per FLOOR/ROOM respectively\n"
+                                                                          "Under each difficulty setting is the scaling modifier that takes affect")
+        img1 = Image.open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Images/DungeonSettings/dungeonSettings_tutorial_picture3.png".format(computer_username))
+        img1.thumbnail((400, 400))
+        img1 = ImageTk.PhotoImage(img1)
+        image_label1 = tk.Label(tutorial_frame, image=img1)
+        image_label1.image = img1
+        image_label1.grid(row=4, column=1)
+        next_button = tk.Button(tutorial_frame, text="Next Slide", font=self.menu_button_font, command=self.dungeon_settings_tutorial_page3)
+        exit_button = tk.Button(tutorial_frame, text="Exit", font=self.menu_button_font, command=self.entering_the_dungeon_tutorial_menu)
+        invis_label = tk.Label(tutorial_frame)
+        invis_label.grid(row=1,column=0, padx=80)
+        title_label.grid(row=1, column=1, sticky="nsew", pady=10)
+        slide_progress.grid(row=2, column=1, pady=10)
+        choosing_team_tutorial_text_label.grid(row=3, column=1, pady=10)
+        next_button.grid(row=5, column=1, pady=10)
+        exit_button.grid(row=6, column=1)
+    def dungeon_settings_tutorial_page3(self):
+        for widget in tutorial_frame.winfo_children():
+            widget.destroy()
+        title_label = tk.Label(tutorial_frame, text="Dungeon Settings", font=self.small_title_font)
+        slide_progress = tk.Label(tutorial_frame, text="3/5", font=self.medium_text_font_bold)
+        choosing_team_tutorial_text_label = tk.Label(tutorial_frame, text="To select a difficulty, just click on the button with the name of the difficulty you wish to play")
+        img1 = Image.open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Images/DungeonSettings/dungeonSettings_tutorial_picture4.png".format(computer_username))
+        img1.thumbnail((400, 400))
+        img1 = ImageTk.PhotoImage(img1)
+        image_label1 = tk.Label(tutorial_frame, image=img1)
+        image_label1.image = img1
+        image_label1.grid(row=4, column=1)
+        next_button = tk.Button(tutorial_frame, text="Next Slide", font=self.menu_button_font, command=self.dungeon_settings_tutorial_page4)
+        exit_button = tk.Button(tutorial_frame, text="Exit", font=self.menu_button_font, command=self.entering_the_dungeon_tutorial_menu)
+        invis_label = tk.Label(tutorial_frame)
+        invis_label.grid(row=1,column=0, padx=80)
+        title_label.grid(row=1, column=1, sticky="nsew", pady=10)
+        slide_progress.grid(row=2, column=1, pady=10)
+        choosing_team_tutorial_text_label.grid(row=3, column=1, pady=10)
+        next_button.grid(row=5, column=1, pady=10)
+        exit_button.grid(row=6, column=1)
+    def dungeon_settings_tutorial_page4(self):
+        for widget in tutorial_frame.winfo_children():
+            widget.destroy()
+        title_label = tk.Label(tutorial_frame, text="Dungeon Settings", font=self.small_title_font)
+        slide_progress = tk.Label(tutorial_frame, text="4/5", font=self.medium_text_font_bold)
+        choosing_team_tutorial_text_label = tk.Label(tutorial_frame, text="When in combat, lookout at the top of the screen to see what the current modifications the monsters have!\n"
+                                                                          "Remember, every floor the attack modifier will increase, and every room the health modifier will increase.\n"
+                                                                          "The in-game showcase also trackers the permanent health modifier, to understand the Permanent health modifier please view the Dungeon")
+        img1 = Image.open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Images/DungeonSettings/dungeonSettings_tutorial_picture5.png".format(computer_username))
+        img1.thumbnail((400, 400))
+        img1 = ImageTk.PhotoImage(img1)
+        image_label1 = tk.Label(tutorial_frame, image=img1)
+        image_label1.image = img1
+        image_label1.grid(row=4, column=1, sticky="w")
+        img2 = Image.open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Images/DungeonSettings/dungeonSettings_tutorial_picture6.png".format(computer_username))
+        img2.thumbnail((400, 400))
+        img2 = ImageTk.PhotoImage(img2)
+        image_label2 = tk.Label(tutorial_frame, image=img2)
+        image_label2.image = img2
+        image_label2.grid(row=4, column=1, sticky="e")
+        next_button = tk.Button(tutorial_frame, text="Next Slide", font=self.menu_button_font, command=self.dungeon_settings_tutorial_page2)
+        exit_button = tk.Button(tutorial_frame, text="Exit", font=self.menu_button_font, command=self.entering_the_dungeon_tutorial_menu)
+        invis_label = tk.Label(tutorial_frame)
+        invis_label.grid(row=1,column=0, padx=80)
+        title_label.grid(row=1, column=1, sticky="nsew", pady=10)
+        slide_progress.grid(row=2, column=1, pady=10)
+        choosing_team_tutorial_text_label.grid(row=3, column=1, pady=10)
+        next_button.grid(row=5, column=1, pady=10)
+        exit_button.grid(row=6, column=1)
+    def entering_combat_tutorial_menu(self):
+        for widget in tutorial_frame.winfo_children():
+            widget.destroy()
+        title_label = tk.Label(tutorial_frame, text="Entering Combat", font=self.small_title_font)
+        combat_user_interface_tutorial_button = tk.Button(tutorial_frame, text=":Combat User Interface:", font=self.menu_button_font, width=20, command=self.combat_user_interface_tutorial_page1)
+        champion_ability_tutorial_button = tk.Button(tutorial_frame, text=":Champion Ability Requirements:", font=self.menu_button_font, width=20, command=self.champion_ability_requirements_tutorial_page1)
+        special_effects_tutorial_button = tk.Button(tutorial_frame, text=":Special Combat Effects:", font=self.menu_button_font, width=16, command=self.special_effects_tutorial_page1)
+        invis_label = tk.Label(tutorial_frame)
+        invis_label.grid(row=1,column=0, padx=160)
+        title_label.grid(row=1, column=1, sticky="nsew", pady=10)
+        combat_user_interface_tutorial_button.grid(row=2, column=1, pady=10)
+        champion_ability_tutorial_button.grid(row=3, column=1, pady=10)
+        special_effects_tutorial_button.grid(row=4, column=1, pady=10)
+        button = tk.Button(tutorial_frame, text="Back",
+                           command= self.entering_the_dungeon_tutorial_menu)
+        button.grid(row=5, column=1)
+    def combat_user_interface_tutorial_page1(self):
         for widget in tutorial_frame.winfo_children():
             widget.destroy()
         title_label = tk.Label(tutorial_frame, text="Dungeon Settings", font=self.small_title_font)
@@ -21540,23 +21663,48 @@ class How2PlayPage(tk.Frame):
         choosing_team_tutorial_text_label.grid(row=3, column=1, pady=10)
         next_button.grid(row=5, column=1, pady=10)
         exit_button.grid(row=6, column=1)
-    def entering_combat_tutorial_page(self):
+    def champion_ability_requirements_tutorial_page1(self):
         for widget in tutorial_frame.winfo_children():
             widget.destroy()
-        title_label = tk.Label(tutorial_frame, text="Entering Combat", font=self.small_title_font)
-        combat_user_interface_tutorial_button = tk.Button(tutorial_frame, text=":Combat User Interface:", font=self.menu_button_font, width=20, command=self.choosing_team_tutorial_page1)
-        champion_ability_tutorial_button = tk.Button(tutorial_frame, text=":Champion Ability Requirements:", font=self.menu_button_font, width=20, command=self.entering_the_dungeon_tutorial_page)
-        special_effects_tutorial_button = tk.Button(tutorial_frame, text=":Special Combat Effects:", font=self.menu_button_font, width=16)
+        title_label = tk.Label(tutorial_frame, text="Dungeon Settings", font=self.small_title_font)
+        slide_progress = tk.Label(tutorial_frame, text="1/4", font=self.medium_text_font_bold)
+        choosing_team_tutorial_text_label = tk.Label(tutorial_frame, text="Once you have chosen all five of your preferred champions, make sure to press the 'Confirm Changes' button to save that team to the slot")
+        img7 = Image.open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Images/choosingTeam_tutorial_picture7.png".format(computer_username))
+        img7.thumbnail((450, 450))
+        img7 = ImageTk.PhotoImage(img7)
+        image_label = tk.Label(tutorial_frame, image=img7)
+        image_label.image = img7
+        image_label.grid(row=4, column=1)
+        next_button = tk.Button(tutorial_frame, text="Next Slide", font=self.menu_button_font, command=self.choosing_team_tutorial_page10)
+        exit_button = tk.Button(tutorial_frame, text="Exit", font=self.menu_button_font, command=self.entering_the_dungeon_tutorial_menu)
         invis_label = tk.Label(tutorial_frame)
-        invis_label.grid(row=1,column=0, padx=160)
+        invis_label.grid(row=1,column=0, padx=48)
         title_label.grid(row=1, column=1, sticky="nsew", pady=10)
-        combat_user_interface_tutorial_button.grid(row=2, column=1, pady=10)
-        champion_ability_tutorial_button.grid(row=3, column=1, pady=10)
-        special_effects_tutorial_button.grid(row=4, column=1, pady=10)
-        button = tk.Button(tutorial_frame, text="Return to Menu",
-                           command=lambda: ParentClass.show_frame(app, "MainMenu"))
-        button.grid(row=5, column=1)
-    
+        slide_progress.grid(row=2, column=1, pady=10)
+        choosing_team_tutorial_text_label.grid(row=3, column=1, pady=10)
+        next_button.grid(row=5, column=1, pady=10)
+        exit_button.grid(row=6, column=1)
+    def special_effects_tutorial_page1(self):
+        for widget in tutorial_frame.winfo_children():
+            widget.destroy()
+        title_label = tk.Label(tutorial_frame, text="Dungeon Settings", font=self.small_title_font)
+        slide_progress = tk.Label(tutorial_frame, text="1/4", font=self.medium_text_font_bold)
+        choosing_team_tutorial_text_label = tk.Label(tutorial_frame, text="Once you have chosen all five of your preferred champions, make sure to press the 'Confirm Changes' button to save that team to the slot")
+        img7 = Image.open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Images/choosingTeam_tutorial_picture7.png".format(computer_username))
+        img7.thumbnail((450, 450))
+        img7 = ImageTk.PhotoImage(img7)
+        image_label = tk.Label(tutorial_frame, image=img7)
+        image_label.image = img7
+        image_label.grid(row=4, column=1)
+        next_button = tk.Button(tutorial_frame, text="Next Slide", font=self.menu_button_font, command=self.choosing_team_tutorial_page10)
+        exit_button = tk.Button(tutorial_frame, text="Exit", font=self.menu_button_font, command=self.entering_the_dungeon_tutorial_menu)
+        invis_label = tk.Label(tutorial_frame)
+        invis_label.grid(row=1,column=0, padx=48)
+        title_label.grid(row=1, column=1, sticky="nsew", pady=10)
+        slide_progress.grid(row=2, column=1, pady=10)
+        choosing_team_tutorial_text_label.grid(row=3, column=1, pady=10)
+        next_button.grid(row=5, column=1, pady=10)
+        exit_button.grid(row=6, column=1)
     def leaderboard_tutorial_page1(self):
         for widget in tutorial_frame.winfo_children():
             widget.destroy()
@@ -21587,7 +21735,6 @@ class LeaderboardPage(tk.Frame):
         button = tk.Button(self, text="Return to Menu",
                            command=lambda: controller.show_frame("MainMenu"))
         button.grid()
-
 
 if __name__ == "__main__":
     app = ParentClass()
