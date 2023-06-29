@@ -56,7 +56,7 @@ PALADIN = Champions(1000, 0, 400, 'Olig, the Paladin', "Paladin", "PLD", "null",
 #CLR
 CASTLE_RANGER = Champions(1000, 0, 400, 'Brad, the Castle Ranger', "Ranger", "CLR", "null", ["Steady Shot", "Power Opt"], ["Equip Iron-cast Arrows", "Equip Tracker-tipped Arrows"])
 #THD
-THUNDER_APPRENTICE = Champions(1000, 0, 400, "Kel'ther, the Thunders Apprentice", "Thunderous Apprentice", "THD", "null", ["Lightning Bolt", "Chain Lightning"], ["Crashing Boom", "Thunderous Vigor"])
+THUNDER_LORD = Champions(1000, 0, 400, "Kel'ther, the Thunders Apprentice", "Thunderous Lord", "THD", "null", ["Lightning Bolt", "Chain Lightning"], ["Crashing Boom", "Thunderous Vigor"])
 #PWC
 POWER_CONDUIT = Champions(1000, 3, 0, 'Power Conduit', "Power Conduit", "PWC", "Charges", [], ["Muscle Enlarger", "Mistic Bloom", "Power Surge", "Full Potential"])
 
