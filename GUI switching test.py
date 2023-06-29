@@ -20,14 +20,14 @@ app = Flask(__name__)
 bcrypt = Bcrypt(app)
 
 class Champions:
-    def __init__(self, hp, rp, ap, name, title, code, rp_name, attack_list, specials_list):
+    def __init__(self, hp, rp, ap, name, title, code, rp_name, attack_list, specials_list, passive_list):
         #Health Point
         self.hp = hp
         #Resource Point
         self.rp = rp
         #Attack Power
         self.ap = ap
-        #Set name
+        #Set Name
         self.name = name
         #Set Title
         self.title = title
@@ -35,64 +35,66 @@ class Champions:
         self.code = code
         #Resource Power Name
         self.rp_name = rp_name
-        #Possible attacks List
+        # Attacks List
         self.attack_list = attack_list
-        #Possible Special Abilities List
+        # Special Abilities List
         self.specials_list = specials_list
+        #Passive Name
+        self.passive_list = passive_list
 #Tanks:
 #MNK
-MONK = Champions(2000, 100, 150, 'Feramon, the Monk', "Monk", "MNK", "Focus", ["Palm Strike", "Leg Sweep"], ["Harmonize", "Pressure Points"])
+MONK = Champions(2000, 100, 150, 'Feramon, the Monk', "Monk", "MNK", "Focus", ["Palm Strike", "Leg Sweep"], ["Harmonize", "Pressure Points"], ["Inner-body Connection"])
 #BBR
-BARBARIAN = Champions(2250, 100, 150, 'Baralor, the Barbarian', "Barbarian", "BBR", "Rage", ["Bloodthirst", "Pulverize"], ["Challenging Shout", "Impactful Boast"])
-#VBG
-VETERAN_BODYGUARD = Champions(2000, 0, 150, 'Hecutis, the Veteran Bodyguard', "Veteran Bodyguard", "VBG", "null", ["Shield Bash", "Trainwreck"], ["Fortification", "Block"])
+BARBARIAN = Champions(2250, 100, 150, 'Baralor, the Barbarian', "Barbarian", "BBR", "Rage", ["Bloodthirst", "Pulverize"], ["Challenging Shout", "Impactful Boast"], ["All Eyes on Me"])
+#KGG
+KINGS_GUARD = Champions(2000, 0, 150, 'Hecutis, the Kings-Guard', "Kings-Guard", "KGG", "null", ["Shield Bash", "Trainwreck"], ["Fortification", "Block"], ["Self-Sacrificing"])
 #MTF
-MASTER_FENCER = Champions(2000, 0, 150, 'Lorelai, the Master Fencer', "Fencer", "MTF", "null", ["Pierce", "Disruptive Slash"], ["Parry", "Elusive Measures"])
+MASTER_FENCER = Champions(2000, 0, 150, 'Lorelai, the Master Fencer', "Fencer", "MTF", "null", ["Flanking Strikes", "Riposte"], ["Magic Reflection", "Evasive Manoeuvres"], ["Quick Reflexes"])
 
 #DPS:
 
 #Melee
 #BKR
-BERSERKER = Champions(1000, 100, 400, 'Kelzarg, the Berserker', "Berserkser", "BKR", "Rage", ["Raging Blow", "Rampage"], ["Enrage", "Reckless Flurry"])
+BERSERKER = Champions(1000, 100, 400, 'Kelzarg, the Berserker', "Berserker", "BKR", "Rage", ["Raging Blow", "Rampage"], ["Enrage", "Reckless Flurry"], ["Ever-Burning Rage"])
 #RGE
-ROGUE = Champions(1000, 0, 400, 'Ryker, the Rogue', "Rogue", "RGE", "null", ["Serrated Slash", "Eviscerate"], ["Garrote", "Exploit Weakness"])
+ROGUE = Champions(1000, 0, 400, 'Ryker, the Rogue', "Rogue", "RGE", "null", ["Serrated Slash", "Eviscerate"], ["Garrote", "Exploit Weakness"], ["Incisions within Incisions"])
 #SRV
-SURVIVALIST = Champions(1000, 0, 400, 'Mally, the Survivalist', "Survivalist", "SRV", "null", ["Spear Thrust", "Scrap Bomb"], ["Play Dead", "Rushed Rest"])
+SURVIVALIST = Champions(1000, 0, 400, 'Mally, the Survivalist', "Survivalist", "SRV", "null", ["Spear Thrust", "Scrap Bomb"], ["Play Dead", "Rushed Rest"], ["Natural Advantage"])
 #BST
-BRAWLIST = Champions(1250, 0, 400, 'George, the Brawlist', "Brawlist", "BST", "null", ["Tactical Punch", "Uppercut"], ["Defensive Stance", "Rushdown"])
+BRAWLIST = Champions(1250, 0, 400, 'George, the Brawlist', "Brawlist", "BST", "null", ["Tactical Punch", "Uppercut"], ["Defensive Stance", "Rushdown"], ["Combo King"])
 
 #Magic
 #ADM
-ACADEMIC_MAGE = Champions(1000, 200, 400, 'Tulip, the Academic Mage', "Academics Mage", "ADM", "Mana", ["Frost Bolt", "Fireball"], ["Arcane Brilliance", "Magical Barrier"])
+ACADEMIC_MAGE = Champions(1000, 200, 400, 'Tulip, the Academic Mage', "Academics Mage", "ADM", "Mana", ["Frost Bolt", "Fireball"], ["Arcane Brilliance", "Magical Barrier"], ["Interwoven with Magic"])
 #DRD
-DRUID = Champions(1000, 200, 400, 'Fuds, the Druid', "Druid", "DRD", "Mana", ["Venus-fly Snap", "Vine-Swipe"], ["Thorns", "Prickle Arena"])
+DRUID = Champions(1000, 200, 400, 'Fuds, the Druid', "Druid", "DRD", "Mana", ["Vine-Swipe", "Invigorate Thorns"], ["Barbed Bush Armour", "Burst N Bloom"], ["Natural Selection"])
 #WRK
-WARLOCK = Champions(1000, 200, 400, "Sol'ghar, the Warlock", "Warlock", "WRK", "Mana", ["Black Bolt", "Void Infusion"], ["Wound Fissure", "Soul Tap"])
+WARLOCK = Champions(1000, 200, 400, "Sol'ghar, the Warlock", "Warlock", "WRK", "Mana", ["Black Bolt", "Void Infusion"], ["Wound Fissure", "Soul Tap"], ["Touch of Corruption"])
 #BDM
-BLOODMANCER = Champions(1000, 0, 400, 'Flynn, the Bloodmancer', "Bloodmancer", "BDM", "null", ["Drain Life", "Blood Spike"], ["Blood Boil", "Enharden Nerves"])
+BLOODMANCER = Champions(1000, 0, 400, 'Flynn, the Bloodmancer', "Bloodmancer", "BDM", "null", ["Drain Life", "Blood Spike"], ["Blood Boil", "Enharden Nerves"], ["Blood-strength Channeling"])
 
 #Mixed
 #PLD
-PALADIN = Champions(1000, 0, 400, 'Olig, the Paladin', "Paladin", "PLD", "null", ["Overhand Justice", "Righteous Blow"], ["Aura of Power", "Aura of Protection"])
-#CLR
-CASTLE_RANGER = Champions(1000, 0, 400, 'Brad, the Castle Ranger', "Ranger", "CLR", "null", ["Steady Shot", "Power Opt"], ["Equip Iron-cast Arrows", "Equip Tracker-tipped Arrows"])
-#THD
-THUNDER_APPRENTICE = Champions(1000, 0, 400, "Kel'ther, the Thunders Apprentice", "Thunderous Apprentice", "THD", "null", ["Lightning Bolt", "Chain Lightning"], ["Crashing Boom", "Thunderous Vigor"])
+PALADIN = Champions(1000, 0, 400, 'Olig, the Paladin', "Paladin", "PLD", "null", ["Holy Wrath", "Righteous Blow"], ["Crusade", "Damnation"], ["Holy Auras"])
+#LGR
+LEGION_RANGER = Champions(1000, 0, 400, 'Brad, the Legion Ranger', "Ranger", "LGR", "null", ["Steady Shot", "Power Opt"], ["Equip Iron-cast Arrows", "Equip Tracker-tipped Arrows"], ["Arrow Tips"])
+#MGM
+MAGNETIMANCER = Champions(1000, 0, 400, "Kel'ther, the Magnetimancer ", "Magnetimancer", "MGM", "null", ["Chain Bolts", "Electrical Expulsion"], ["Energise", "Superconductor"], ["Polarisation"])
 #PWC
-POWER_CONDUIT = Champions(1000, 3, 0, 'Power Conduit', "Power Conduit", "PWC", "Charges", [], ["Muscle Enlarger", "Mistic Bloom", "Power Surge", "Full Potential"])
+POWER_CONDUIT = Champions(1000, 3, 0, 'Power Conduit', "Power Conduit", "PWC", "Charges", [], ["Muscle Enlarger", "Mistic Bloom", "Power Surge", "Full Potential"], ["Energy Core"])
 
 #Healers:
 #ESP
-EARTH_SPEAKER = Champions(1000, 200, 150, "Delmanar, the Earth's Speaker", "Earth Speaker", "ESP", "Mana", ["Rock Barrage"], ["Healing Surge", "Rejuvenating Whirlpool", "Boulder Cocoon"])
+EARTH_SPEAKER = Champions(1000, 200, 150, "Delmanar, the Earth's Speaker", "Earth Speaker", "ESP", "Mana", ["Rock Barrage"], ["Spring Waters", "Ocean Tides", "Boulder Cocoon"], ["Tough Mud"])
 #PRS
-PRIEST_OF_THE_DEVOTED = Champions(1000, 200, 150, 'Sethuk, Priest of the Devoted', "Priest", "PRS", "Mana", ["Shimmering Bolt", "Divine Smite"], ["Healing Light", "Diffracting Nova"])
+PRIEST_OF_THE_DEVOTED = Champions(1000, 200, 150, 'Sethuk, Priest of the Devoted', "Priest", "PRS", "Mana", ["Shimmering Bolt", "Divine Smite"], ["Healing Light", "Diffracting Nova"], ["Eyes of the Divine"])
 #TWK
-TIME_WALKER = Champions(1000, 200, 150, 'Zaqner, the Time Walker', "Time Walker", "TWK", "Mana", ["Cybernetic Blast"], ["Nanoheal Bots", "Reverse Wounds", "Alter Time"])
+TIME_WALKER = Champions(1000, 200, 150, 'Zaqner, the Time Walker', "Time Walker", "TWK", "Mana", ["Cybernetic Blast"], ["Overclock Nanobots", "Reverse Wounds", "Alter Time"], ["Nanobots"])
 #FDM
-CHILD_OF_MEDICINE = Champions(1000, 0, 150, 'Curie, a Child of Medicine', "Field Medic", "FDM", "null", ["Throw Scissors"], ["Bandage Wound", "Perfected Herbal Tea", "G.3.T J.A.X.D"])
+FIELD_MEDIC = Champions(1000, 0, 150, 'Curie, Field Medic', "Field Medic", "FDM", "null", ["Throw Scissors"], ["Bandages", "Tight Tourniquet", "Secret Remedy"], ["Experienced Healing"])
 
 class Monsters:
-    def __init__(self, hp, ap, rp, rp_name, name, nickname, enter_word, attack_list, ai_spawned):
+    def __init__(self, hp, ap, rp, rp_name, name, nickname, enter_word, attack_list, ai_spawned, size_class):
         #Health Point
         self.hp = hp
         # Attack Power
@@ -111,16 +113,17 @@ class Monsters:
         self.attack_list = attack_list
         #Set the amount of AI enemies there will be
         self.ai_spawned = ai_spawned
+        #Size Class of the monster
+        self.size_class = size_class
+GROTHAK_THE_DESTROYER = Monsters(3000, 100, 0, "null", "Grothak the Destroyer", "Grothak", "", ["Club Slam"], 1, 'Huge')
 
-GROTHAK_THE_DESTROYER = Monsters(3000, 100, 0, "null", "Grothak the Destroyer", "Grothak", "", ["Club Slam"], 1)
+WORMPULP_BROTHERS = Monsters(1500, 50, 100, "Scent", "Wormpulp Brothers", "Wormpulp Brother", "the", ["Violent Thrash"], 2, 'Large')
 
-WORMPULP_BROTHERS = Monsters(1500, 50, 100, "Scent", "Wormpulp Brothers", "Wormpulp Brother", "the", ["Violent Thrash"], 2)
+SIREN_TRIPLETS = Monsters(1000, 33, 200, "Mana", "Siren Triplets", "Triplet", "the", ["Twilight Beam"], 3, 'Medium')
 
-SIREN_TRIPLETS = Monsters(1000, 33, 200, "Mana", "Siren Triplets", "Triplet", "the", ["Twilight Beam"], 3)
+VEMONSKIN_TROGGIES = Monsters(750, 25, 0, "null", "Venomskin Troggies", "Venomskin Troggie", "a gang of", ["Spear Thrust"], 4, 'Small')
 
-VEMONSKIN_TROGGIES = Monsters(750, 25, 0, "null", "Venomskin Troggies", "Venomskin Troggie", "a gang of", ["Spear Thrust"], 4)
-
-GIANT_LOCUST_SWARM = Monsters(600, 20, 0, "null", "Giant Locust Swarm", "Giant Locust", "a", ["Bite"], 5)
+GIANT_LOCUST_SWARM = Monsters(600, 20, 0, "null", "Giant Locust Swarm", "Giant Locust", "a", ["Bite"], 5, 'Tiny')
 
 #This class loads all Frames into one parent (container) and lets me call those Frames through the use of classes. I can call these class frames through the show.frame function
 class ParentClass(tk.Tk):
@@ -131,7 +134,7 @@ class ParentClass(tk.Tk):
         self.problem = ttk.Label(self, text="")
         self.title_font = tkfont.Font(family='Times New Roman Baltic', size=120, weight="bold")
         self.small_title_font = tkfont.Font(family='Times New Roman Baltic', size=80, weight="bold")
-        self.medium_text_font_bold = tkfont.Font(family='Times New ROman Baltic', size=50, weight="bold")
+        self.medium_text_font_bold = tkfont.Font(family='Times New Roman Baltic', size=50, weight="bold")
         self.menu_button_font = tkfont.Font(family='Helvetica', size=18, weight="bold")
         self.geometry('1280x720')
         container = tk.Frame(self)
@@ -820,7 +823,7 @@ class GameFrame(tk.Frame):
                 CHAMPION_LIST.insert(counter, character)
             if character == BARBARIAN.title:
                 CHAMPION_LIST.insert(counter, character)
-            if character == VETERAN_BODYGUARD.title:
+            if character == KINGS_GUARD.title:
                 CHAMPION_LIST.insert(counter, character)
             if character == MASTER_FENCER.title:
                 CHAMPION_LIST.insert(counter, character)
@@ -842,9 +845,9 @@ class GameFrame(tk.Frame):
                 CHAMPION_LIST.insert(counter, character)
             if character == PALADIN.title:
                 CHAMPION_LIST.insert(counter, character)
-            if character == CASTLE_RANGER.title:
+            if character == LEGION_RANGER.title:
                 CHAMPION_LIST.insert(counter, character)
-            if character == THUNDER_APPRENTICE.title:
+            if character == MAGNETIMANCER.title:
                 CHAMPION_LIST.insert(counter, character)
             if character == POWER_CONDUIT.title:
                 CHAMPION_LIST.insert(counter, character)
@@ -854,7 +857,7 @@ class GameFrame(tk.Frame):
                 CHAMPION_LIST.insert(counter, character)
             if character == TIME_WALKER.title:
                 CHAMPION_LIST.insert(counter, character)
-            if character == CHILD_OF_MEDICINE.title:
+            if character == FIELD_MEDIC.title:
                 CHAMPION_LIST.insert(counter, character)
             counter += 1
 
@@ -884,13 +887,13 @@ class GameFrame(tk.Frame):
                 champion_rpName_list.append(BARBARIAN.rp_name)
                 champion_attack_list = BARBARIAN.attack_list
                 champion_specials_list = BARBARIAN.specials_list
-            elif character == VETERAN_BODYGUARD.title:
-                champion_hp_list.append(VETERAN_BODYGUARD.hp)
-                champion_rp_list.append(VETERAN_BODYGUARD.rp)
-                champion_ap_list.append(VETERAN_BODYGUARD.ap)
-                champion_rpName_list.append(VETERAN_BODYGUARD.rp_name)
-                champion_attack_list = VETERAN_BODYGUARD.attack_list
-                champion_specials_list = VETERAN_BODYGUARD.specials_list
+            elif character == KINGS_GUARD.title:
+                champion_hp_list.append(KINGS_GUARD.hp)
+                champion_rp_list.append(KINGS_GUARD.rp)
+                champion_ap_list.append(KINGS_GUARD.ap)
+                champion_rpName_list.append(KINGS_GUARD.rp_name)
+                champion_attack_list = KINGS_GUARD.attack_list
+                champion_specials_list = KINGS_GUARD.specials_list
             elif character == MASTER_FENCER.title:
                 champion_hp_list.append(MASTER_FENCER.hp)
                 champion_rp_list.append(MASTER_FENCER.rp)
@@ -961,20 +964,20 @@ class GameFrame(tk.Frame):
                 champion_rpName_list.append(PALADIN.rp_name)
                 champion_attack_list = PALADIN.attack_list
                 champion_specials_list = PALADIN.specials_list
-            elif character == CASTLE_RANGER.title:
-                champion_hp_list.append(CASTLE_RANGER.hp)
-                champion_rp_list.append(CASTLE_RANGER.rp)
-                champion_ap_list.append(CASTLE_RANGER.ap)
-                champion_rpName_list.append(CASTLE_RANGER.rp_name)
-                champion_attack_list = CASTLE_RANGER.attack_list
-                champion_specials_list = CASTLE_RANGER.specials_list
-            elif character == THUNDER_APPRENTICE.title:
-                champion_hp_list.append(THUNDER_APPRENTICE.hp)
-                champion_rp_list.append(THUNDER_APPRENTICE.rp)
-                champion_ap_list.append(THUNDER_APPRENTICE.ap)
-                champion_rpName_list.append(THUNDER_APPRENTICE.rp_name)
-                champion_attack_list = THUNDER_APPRENTICE.attack_list
-                champion_specials_list = THUNDER_APPRENTICE.specials_list
+            elif character == LEGION_RANGER.title:
+                champion_hp_list.append(LEGION_RANGER.hp)
+                champion_rp_list.append(LEGION_RANGER.rp)
+                champion_ap_list.append(LEGION_RANGER.ap)
+                champion_rpName_list.append(LEGION_RANGER.rp_name)
+                champion_attack_list = LEGION_RANGER.attack_list
+                champion_specials_list = LEGION_RANGER.specials_list
+            elif character == MAGNETIMANCER.title:
+                champion_hp_list.append(MAGNETIMANCER.hp)
+                champion_rp_list.append(MAGNETIMANCER.rp)
+                champion_ap_list.append(MAGNETIMANCER.ap)
+                champion_rpName_list.append(MAGNETIMANCER.rp_name)
+                champion_attack_list = MAGNETIMANCER.attack_list
+                champion_specials_list = MAGNETIMANCER.specials_list
             elif character == POWER_CONDUIT.title:
                 champion_hp_list.append(POWER_CONDUIT.hp)
                 champion_rp_list.append(POWER_CONDUIT.rp)
@@ -1003,13 +1006,13 @@ class GameFrame(tk.Frame):
                 champion_rpName_list.append(TIME_WALKER.rp_name)
                 champion_attack_list = TIME_WALKER.attack_list
                 champion_specials_list = TIME_WALKER.specials_list
-            elif character == CHILD_OF_MEDICINE.title:
-                champion_hp_list.append(CHILD_OF_MEDICINE.hp)
-                champion_rp_list.append(CHILD_OF_MEDICINE.rp)
-                champion_ap_list.append(CHILD_OF_MEDICINE.ap)
-                champion_rpName_list.append(CHILD_OF_MEDICINE.rp_name)
-                champion_attack_list = CHILD_OF_MEDICINE.attack_list
-                champion_specials_list = CHILD_OF_MEDICINE.specials_list
+            elif character == FIELD_MEDIC.title:
+                champion_hp_list.append(FIELD_MEDIC.hp)
+                champion_rp_list.append(FIELD_MEDIC.rp)
+                champion_ap_list.append(FIELD_MEDIC.ap)
+                champion_rpName_list.append(FIELD_MEDIC.rp_name)
+                champion_attack_list = FIELD_MEDIC.attack_list
+                champion_specials_list = FIELD_MEDIC.specials_list
             if counter == 1:
                 CHAMPION1_HP = champion_hp_list[0]
                 CHAMPION_1_RP = champion_rp_list[0]
@@ -1276,11 +1279,11 @@ class GameFrame(tk.Frame):
         champion4_defensive = []
         champion5_defensive = []
         if PALADIN.title in CHAMPION_LIST:
-            champion1_statuses = ["Aura of Power"]
-            champion2_statuses = ["Aura of Power"]
-            champion3_statuses = ["Aura of Power"]
-            champion4_statuses = ["Aura of Power"]
-            champion5_statuses = ["Aura of Power"]
+            champion1_statuses = ["Crusade"]
+            champion2_statuses = ["Crusade"]
+            champion3_statuses = ["Crusade"]
+            champion4_statuses = ["Crusade"]
+            champion5_statuses = ["Crusade"]
         else:
             champion1_statuses = []
             champion2_statuses = []
@@ -1292,7 +1295,7 @@ class GameFrame(tk.Frame):
             bloodthirst_requirements, pulverize_requirements, challenging_shout_requirements, impactful_boast_requirements, \
             shield_bash_requirements, trainwreck_requirements, fortification_requirements, block_requirements, \
             champion1_fortification, champion2_fortification, champion3_fortification, champion4_fortification, champion5_fortification, \
-            pierce_requirements, disruptive_slash_requirements, parry_requirements, elusive_measures_requirements
+            flanking_strikes_requirements, riposte_requirements, magic_reflection_requirements, evasive_manoeuvres_requirements
         # Monk Abilities:
         palm_strike_requirements = [0, 0, 0, 20]
         leg_sweep_requirements = [30, 0, 3, 0]
@@ -1306,7 +1309,7 @@ class GameFrame(tk.Frame):
         pulverize_requirements = [20, 0, 0, 0]
         challenging_shout_requirements = [40, 0, 3, 20]
         impactful_boast_requirements = [20, 0, 0, 0]
-        # Veteran Bodyguard Abilities:
+        # Kings-Guard Abilities:
         shield_bash_requirements = [0, 0, 0, 0]
         trainwreck_requirements = [0, 0, 2, 0]
         fortification_requirements = [0, 0, 3, 0]
@@ -1317,10 +1320,10 @@ class GameFrame(tk.Frame):
         champion4_fortification = 0
         champion5_fortification = 0
         # Master Fencer Abilities
-        pierce_requirements = [0, 0, 0, 0]
-        disruptive_slash_requirements = [0, 0, 3, 0]
-        parry_requirements = [0, 0, 3, 0]
-        elusive_measures_requirements = [0, 0, 2, 0]
+        flanking_strikes_requirements = [0, 0, 0, 0]
+        riposte_requirements = [0, 0, 2, 0]
+        magic_reflection_requirements = [0, 0, 3, 0]
+        evasive_manoeuvres_requirements = [0, 0, 3, 0]
         global raging_blow_requirements, rampage_requirements, enrage_requirements, reckless_flurry_requirements, \
             champion1_enrage, champion2_enrage, champion3_enrage, champion4_enrage, champion5_enrage, reckless_flurry_buff, \
             serrated_slash_requirements, eviscerate_requirements, garrote_requirements, exploit_weakness_requirements, \
@@ -1359,7 +1362,7 @@ class GameFrame(tk.Frame):
         defensive_stance_requirements = [0, 0, 3, 0]
         rushdown_requirements = [0, 0, 4, 0]
         global frost_bolt_requirements, fireball_requirements, arcane_brilliance_requirements, magical_barrier_requirements, \
-            venusfly_snap_requirements, vine_swipe_requirements, thorns_requirements, prickle_arena_requirements, \
+            invigorate_thorns_requirements, vine_swipe_requirements, barbed_bush_armour_requirements, burst_n_bloom_requirements, \
             champion1_thorns, champion2_thorns, champion3_thorns, champion4_thorns, champion5_thorns, \
             black_bolt_requirements, void_infusion_requirements, wound_fissure_requirements, soul_tap_requirements, \
             drain_life_requirements, blood_spike_requirements, blood_boil_requirements, enharden_nerves_requirements, \
@@ -1370,10 +1373,10 @@ class GameFrame(tk.Frame):
         arcane_brilliance_requirements = [100, 0, 6, 0]
         magical_barrier_requirements = [20, 0, 0, 0]
         # Druid Abilities
-        venusfly_snap_requirements = [40, 0, 0, 0]
-        vine_swipe_requirements = [20, 0, 2, 0]
-        thorns_requirements = [10, 0, 0, 0]
-        prickle_arena_requirements = [30, 0, 5, 0]
+        vine_swipe_requirements = [0, 0, 0, 0]
+        invigorate_thorns_requirements = [0, 0, 1, 0]
+        burst_n_bloom_requirements = [0, 0, 0, 0]
+        barbed_bush_armour_requirements = [0, 0, 0, 0]
         champion1_thorns = 0
         champion2_thorns = 0
         champion3_thorns = 0
@@ -1387,37 +1390,37 @@ class GameFrame(tk.Frame):
         # Bloodmancer Abilities
         drain_life_requirements = [0, 0, 0, 0]
         blood_spike_requirements = [0, 0, 0, 0]
-        blood_boil_requirements = [0, 0, 4, 0]
-        enharden_nerves_requirements = [0, 0, 3, 0]
+        blood_boil_requirements = [0, 0, 3, 0]
+        enharden_nerves_requirements = [0, 0, 2, 0]
         blood_boil_buff = 0
-        global overhand_justice_requirements, righteous_blow_requirements, aura_of_power_requirements, aura_of_protection_requirements, champion1_aura, champion2_aura, champion3_aura, champion4_aura, champion5_aura, \
+        global holy_wrath_requirements, righteous_blow_requirements, crusade_requirements, damnation_requirements, \
+            champion1_aura, champion2_aura, champion3_aura, champion4_aura, champion5_aura, \
             steady_shot_requirements, power_opt_requirements, equip_iron_cast_arrows_requirements, equip_tracker_tipped_arrows_requirements, current_arrow_type, \
-            lightning_bolt_requirements, chain_lightning_requirements, crashing_boom_requirements, thunderous_vigor_requirements, \
+            chain_bolts_requirements, electrical_expulsion_requirements, energise_requirements, superconductor_requirements, \
             muscle_enlarger_requirements, mistic_bloom_requirements, power_surge_requirements, full_potential_requirements, \
-        champion1_muscleEnlarger, champion2_muscleEnlarger, champion3_muscleEnlarger, champion4_muscleEnlarger, champion5_muscleEnlarger, \
-        champion1_fullPotential, champion2_fullPotential, champion3_fullPotential, champion4_fullPotential, champion5_fullPotential
-
+            champion1_muscleEnlarger, champion2_muscleEnlarger, champion3_muscleEnlarger, champion4_muscleEnlarger, champion5_muscleEnlarger, \
+            champion1_fullPotential, champion2_fullPotential, champion3_fullPotential, champion4_fullPotential, champion5_fullPotential
         # Paladin Abilities
-        overhand_justice_requirements = [0, 0, 0, 0]
-        righteous_blow_requirements = [0, 0, 3, 0]
-        aura_of_power_requirements = [0, 0, 2, 0]
-        aura_of_protection_requirements = [0, 0, 2, 0]
+        holy_wrath_requirements = [0, 0, 0, 0]
+        righteous_blow_requirements = [0, 0, 2, 0]
+        crusade_requirements = [0, 0, 2, 0]
+        damnation_requirements = [0, 0, 2, 0]
         champion1_aura = 1
         champion2_aura = 1
         champion3_aura = 1
         champion4_aura = 1
         champion5_aura = 1
-        # Castle Ranger Abilitites
+        # Legion Ranger Abilitites
         steady_shot_requirements = [0, 0, 0, 0]
         power_opt_requirements = [0, 0, 2, 0]
         equip_iron_cast_arrows_requirements = [0, 0, 2, 0]
         equip_tracker_tipped_arrows_requirements = [0, 0, 2, 0]
         current_arrow_type = "Iron-cast"
         # Thunder Apprentice Abilities
-        lightning_bolt_requirements = [0, 0, 0, 0]
-        chain_lightning_requirements = [0, 0, 0, 0]
-        crashing_boom_requirements = [0, 0, 5, 0]
-        thunderous_vigor_requirements = [0, 0, 7, 0]
+        chain_bolts_requirements = [0, 0, 0, 0]
+        electrical_expulsion_requirements = [0, 0, 2, 0]
+        energise_requirements = [0, 0, 4, 0]
+        superconductor_requirements = [0, 0, 2, 0]
         # Power Conduit Abilities
         muscle_enlarger_requirements = [0, 0, 0, 1]
         champion1_muscleEnlarger = 0
@@ -1433,18 +1436,18 @@ class GameFrame(tk.Frame):
         champion3_fullPotential = 0
         champion4_fullPotential = 0
         champion5_fullPotential = 0
-        global rock_barrage_requirements, healing_surge_requirements, rejuvenating_whirlpool_requirements, boulder_cocoon_requirements, \
+        global rock_barrage_requirements, spring_waters_requirements, ocean_tides_requirements, boulder_cocoon_requirements, \
             shimmering_bolt_requirements, divine_smite_requirements, healing_light_requirements, diffracting_nova_requirements, \
-            cybernetic_blast_requirements, nanoheal_bots_requirements, reverse_wounds_requirements, alter_time_requirements,\
+            cybernetic_blast_requirements, overclock_nanobots_requirements, reverse_wounds_requirements, alter_time_requirements,\
             champion1_nanobot, champion2_nanobot, champion3_nanobot, champion4_nanobot, champion5_nanobot, \
             champion1_lastRoundDamageTaken_list, champion2_lastRoundDamageTaken_list, champion3_lastRoundDamageTaken_list, champion4_lastRoundDamageTaken_list,champion5_lastRoundDamageTaken_list, \
-            throw_scissors_requirements, bandage_wound_requirements, perfected_herbal_tea_requirements, g3t_jaxd_requirements, \
+            throw_scissors_requirements, bandages_requirements, tight_tourniquet_requirements, secret_remedy_requirements, \
             champion1_herb_tea, champion2_herb_tea, champion3_herb_tea, champion4_herb_tea, champion5_herb_tea, \
             champion1_JAXD, champion2_JAXD, champion3_JAXD, champion4_JAXD, champion5_JAXD
         # Earth Speaker Abilities
         rock_barrage_requirements = [0, 0, 0, 30]
-        healing_surge_requirements = [40, 0, 0, 0]
-        rejuvenating_whirlpool_requirements = [50, 0, 2, 0]
+        spring_waters_requirements = [40, 0, 0, 0]
+        ocean_tides_requirements = [50, 0, 2, 0]
         boulder_cocoon_requirements = [100, 0, 0, 0]
         # Priest of the Devoted Abilities
         shimmering_bolt_requirements = [0, 0, 0, 30]
@@ -1453,7 +1456,7 @@ class GameFrame(tk.Frame):
         diffracting_nova_requirements = [30, 0, 0, 0]
         # Time Walker Abilities
         cybernetic_blast_requirements = [0, 0, 0, 30]
-        nanoheal_bots_requirements = [20, 0, 0, 0]
+        overclock_nanobots_requirements = [20, 0, 2, 0]
         champion1_nanobot = [0, 0]
         champion2_nanobot = [0, 0]
         champion3_nanobot = [0, 0]
@@ -1466,16 +1469,16 @@ class GameFrame(tk.Frame):
         champion4_lastRoundDamageTaken_list = []
         champion5_lastRoundDamageTaken_list = []
         alter_time_requirements = [180, 0, 6, 0]
-        # Child of Medicine Abilities
+        # Field Medic Abilities
         throw_scissors_requirements = [0, 0, 0, 0]
-        bandage_wound_requirements = [0, 0, 0, 0]
-        perfected_herbal_tea_requirements = [0, 0, 3, 0]
+        bandages_requirements = [0, 0, 0, 0]
+        tight_tourniquet_requirements = [0, 0, 2, 0]
         champion1_herb_tea = [0, 0]
         champion2_herb_tea = [0, 0]
         champion3_herb_tea = [0, 0]
         champion4_herb_tea = [0, 0]
         champion5_herb_tea = [0, 0]
-        g3t_jaxd_requirements = [0, 0, 5, 0]
+        secret_remedy_requirements = [0, 0, 4, 0]
         champion1_JAXD = 0
         champion2_JAXD = 0
         champion3_JAXD = 0
@@ -2128,16 +2131,16 @@ class GameFrame(tk.Frame):
                 if CHAMPION_LIST[0] == BLOODMANCER.title:
                     if blood_boil_buff != 0:
                         effects_list.append("Blood Boil")
-                if CHAMPION_LIST[0] == CASTLE_RANGER.title:
+                if CHAMPION_LIST[0] == LEGION_RANGER.title:
                     effects_list.append("{}".format(current_arrow_type))
                 if CHAMPION_LIST[0] == SURVIVALIST.title:
                     if champion1_play_dead != 0:
                         effects_list.append("Playing Dead")
                 for status_effect in champion1_statuses:
-                    if status_effect == "Aura of Power":
-                        effects_list.append("Aura of Power [+20%]")
-                    if status_effect == "Aura of Protection":
-                        effects_list.append("Aura of Protection [+10%]")
+                    if status_effect == "Crusade":
+                        effects_list.append("Crusade [+20%]")
+                    if status_effect == "Damnation":
+                        effects_list.append("Damnation [+10%]")
                     if "Immunity:" in status_effect:
                         effects_list.append("{}".format(status_effect))
                     if "Defensive:" in status_effect:
@@ -2154,8 +2157,8 @@ class GameFrame(tk.Frame):
                         effects_list.append("Damage Buff: Enraged[+50%] ({})".format(champion1_enrage))
                     if status_effect == "Thorned":
                         effects_list.append("Utility Buff: Thorned[-200] ({})".format(champion1_thorns))
-                    if status_effect == "Healing Buff: Herbal Tea Remnants":
-                        effects_list.append("Herbal Tea Remnants[{}] ({})".format(champion1_herb_tea[0],champion1_herb_tea[1]))
+                    if status_effect == "Herbal Tea Remnants":
+                        effects_list.append("Healing Buff: Herbal Tea Remnants[{}] ({})".format(champion1_herb_tea[0],champion1_herb_tea[1]))
                     if status_effect == "Nanobot Support":
                         effects_list.append("Healing Buff: Nanobot Support[{}] ({})".format(champion1_nanobot[0],champion1_nanobot[1]))
                     if status_effect == "Blessed":
@@ -2170,16 +2173,16 @@ class GameFrame(tk.Frame):
                 if CHAMPION_LIST[1] == BLOODMANCER.title:
                     if blood_boil_buff != 0:
                         effects_list.append("Personal:Blood Boil")
-                if CHAMPION_LIST[1] == CASTLE_RANGER.title:
+                if CHAMPION_LIST[1] == LEGION_RANGER.title:
                     effects_list.append("{}".format(current_arrow_type))
                 if CHAMPION_LIST[1] == SURVIVALIST.title:
                     if champion2_play_dead != 0:
                         effects_list.append("Playing Dead")
                 for status_effect in champion2_statuses:
-                    if status_effect == "Aura of Power":
-                        effects_list.append("Aura of Power [+20%]")
-                    if status_effect == "Aura of Protection":
-                        effects_list.append("Aura of Protection [+10%]")
+                    if status_effect == "Crusade":
+                        effects_list.append("Crusade [+20%]")
+                    if status_effect == "Damnation":
+                        effects_list.append("Damnation [+10%]")
                     if "Immunity:" in status_effect:
                         effects_list.append("{}".format(status_effect))
                     if "Defensive:" in status_effect:
@@ -2196,8 +2199,8 @@ class GameFrame(tk.Frame):
                         effects_list.append("Damage Buff: Enraged[+50%] ({})".format(champion2_enrage))
                     if status_effect == "Thorned":
                         effects_list.append("Utility Buff: Thorned[-200] ({})".format(champion2_thorns))
-                    if status_effect == "Healing Buff: Herbal Tea Remnants":
-                        effects_list.append("Herbal Tea Remnants[{}] ({})".format(champion2_herb_tea[0],champion2_herb_tea[1]))
+                    if status_effect == "Herbal Tea Remnants":
+                        effects_list.append("Healing Buff: Herbal Tea Remnants[{}] ({})".format(champion2_herb_tea[0],champion2_herb_tea[1]))
                     if status_effect == "Nanobot Support":
                         effects_list.append("Healing Buff: Nanobot Support[{}] ({})".format(champion2_nanobot[0],champion2_nanobot[1]))
                     if status_effect == "Blessed":
@@ -2212,16 +2215,16 @@ class GameFrame(tk.Frame):
                 if CHAMPION_LIST[2] == BLOODMANCER.title:
                     if blood_boil_buff != 0:
                         effects_list.append("Personal:Blood Boil")
-                if CHAMPION_LIST[2] == CASTLE_RANGER.title:
+                if CHAMPION_LIST[2] == LEGION_RANGER.title:
                     effects_list.append("{}".format(current_arrow_type))
                 if CHAMPION_LIST[2] == SURVIVALIST.title:
                     if champion3_play_dead != 0:
                         effects_list.append("Playing Dead")
                 for status_effect in champion3_statuses:
-                    if status_effect == "Aura of Power":
-                        effects_list.append("Aura of Power [+20%]")
-                    if status_effect == "Aura of Protection":
-                        effects_list.append("Aura of Protection [+10%]")
+                    if status_effect == "Crusade":
+                        effects_list.append("Crusade [+20%]")
+                    if status_effect == "Damnation":
+                        effects_list.append("Damnation [+10%]")
                     if "Immunity:" in status_effect:
                         effects_list.append("{}".format(status_effect))
                     if "Defensive:" in status_effect:
@@ -2238,8 +2241,8 @@ class GameFrame(tk.Frame):
                         effects_list.append("Damage Buff: Enraged[+50%] ({})".format(champion3_enrage))
                     if status_effect == "Thorned":
                         effects_list.append("Utility Buff: Thorned[-200] ({})".format(champion3_thorns))
-                    if status_effect == "Healing Buff: Herbal Tea Remnants":
-                        effects_list.append("Herbal Tea Remnants[{}] ({})".format(champion3_herb_tea[0],champion3_herb_tea[1]))
+                    if status_effect == "Herbal Tea Remnants":
+                        effects_list.append("Healing Buff: Herbal Tea Remnants[{}] ({})".format(champion3_herb_tea[0],champion3_herb_tea[1]))
                     if status_effect == "Nanobot Support":
                         effects_list.append("Healing Buff: Nanobot Support[{}] ({})".format(champion3_nanobot[0],champion3_nanobot[1]))
                     if status_effect == "Blessed":
@@ -2254,16 +2257,16 @@ class GameFrame(tk.Frame):
                 if CHAMPION_LIST[3] == BLOODMANCER.title:
                     if blood_boil_buff != 0:
                         effects_list.append("Personal:Blood Boil")
-                if CHAMPION_LIST[3] == CASTLE_RANGER.title:
+                if CHAMPION_LIST[3] == LEGION_RANGER.title:
                     effects_list.append("{}".format(current_arrow_type))
                 if CHAMPION_LIST[3] == SURVIVALIST.title:
                     if champion4_play_dead != 0:
                         effects_list.append("Playing Dead")
                 for status_effect in champion4_statuses:
-                    if status_effect == "Aura of Power":
-                        effects_list.append("Aura of Power [+20%]")
-                    if status_effect == "Aura of Protection":
-                        effects_list.append("Aura of Protection [+10%]")
+                    if status_effect == "Crusade":
+                        effects_list.append("Crusade [+20%]")
+                    if status_effect == "Damnation":
+                        effects_list.append("Damnation [+10%]")
                     if "Immunity:" in status_effect:
                         effects_list.append("{}".format(status_effect))
                     if "Defensive:" in status_effect:
@@ -2280,8 +2283,8 @@ class GameFrame(tk.Frame):
                         effects_list.append("Damage Buff: Enraged[+50%] ({})".format(champion4_enrage))
                     if status_effect == "Thorned":
                         effects_list.append("Utility Buff: Thorned[-200] ({})".format(champion4_thorns))
-                    if status_effect == "Healing Buff: Herbal Tea Remnants":
-                        effects_list.append("Herbal Tea Remnants[{}] ({})".format(champion4_herb_tea[0],champion4_herb_tea[1]))
+                    if status_effect == "Herbal Tea Remnants":
+                        effects_list.append("Healing Buff: Herbal Tea Remnants[{}] ({})".format(champion4_herb_tea[0],champion4_herb_tea[1]))
                     if status_effect == "Nanobot Support":
                         effects_list.append("Healing Buff: Nanobot Support[{}] ({})".format(champion4_nanobot[0],champion4_nanobot[1]))
                     if status_effect == "Blessed":
@@ -2296,16 +2299,16 @@ class GameFrame(tk.Frame):
                 if CHAMPION_LIST[4] == BLOODMANCER.title:
                     if blood_boil_buff != 0:
                         effects_list.append("Personal:Blood Boil")
-                if CHAMPION_LIST[4] == CASTLE_RANGER.title:
+                if CHAMPION_LIST[4] == LEGION_RANGER.title:
                     effects_list.append("{}".format(current_arrow_type))
                 if CHAMPION_LIST[4] == SURVIVALIST.title:
                     if champion5_play_dead != 0:
                         effects_list.append("Playing Dead")
                 for status_effect in champion5_statuses:
-                    if status_effect == "Aura of Power":
-                        effects_list.append("Aura of Power [+20%]")
-                    if status_effect == "Aura of Protection":
-                        effects_list.append("Aura of Protection [+10%]")
+                    if status_effect == "Crusade":
+                        effects_list.append("Crusade [+20%]")
+                    if status_effect == "Damnation":
+                        effects_list.append("Damnation [+10%]")
                     if "Immunity:" in status_effect:
                         effects_list.append("{}".format(status_effect))
                     if "Defensive:" in status_effect:
@@ -2322,8 +2325,8 @@ class GameFrame(tk.Frame):
                         effects_list.append("Damage Buff: Enraged[+50%] ({})".format(champion5_enrage))
                     if status_effect == "Thorned":
                         effects_list.append("Utility Buff: Thorned[-200] ({})".format(champion5_thorns))
-                    if status_effect == "Healing Buff: Herbal Tea Remnants":
-                        effects_list.append("Herbal Tea Remnants[{}] ({})".format(champion5_herb_tea[0],champion5_herb_tea[1]))
+                    if status_effect == "Herbal Tea Remnants":
+                        effects_list.append("Healing Buff: Herbal Tea Remnants[{}] ({})".format(champion5_herb_tea[0],champion5_herb_tea[1]))
                     if status_effect == "Nanobot Support":
                         effects_list.append("Healing Buff: Nanobot Support[{}] ({})".format(champion5_nanobot[0],champion5_nanobot[1]))
                     if status_effect == "Blessed":
@@ -3735,6 +3738,7 @@ class GameFrame(tk.Frame):
             current_turn = "C3"
             for widget in dungeon_game_frame.winfo_children():
                 widget.destroy()
+            self.ai_choose_attack_targets()
             self.repeating_combatUI_refresh_function()
             self.champion_turn_ticker(3)
             self.player_combat_champion3()
@@ -4136,11 +4140,11 @@ class GameFrame(tk.Frame):
                                 for guards in champion1_immunity:
                                     if guards == "Block":
                                         immune_list.append(99)
-                                    if guards == "Parry":
+                                    if guards == "Magic Reflection":
                                         immune_list.append(101)
                                     if guards == "Cocoon":
                                         immune_list.append(100)
-                                    if guards == "Elusive Measures":
+                                    if guards == "Evasive Manoeuvres":
                                         immune_list.append(100)
                                     immune_list = sorted(immune_list, reverse=True)
                                     if immune_list[0] == 101:
@@ -4150,7 +4154,7 @@ class GameFrame(tk.Frame):
                                     if immune_list[0] == 99:
                                         bodyguard_counter = 1
                                         for champions in CHAMPION_LIST:
-                                            if champions == VETERAN_BODYGUARD.title:
+                                            if champions == KINGS_GUARD.title:
                                                 break
                                             bodyguard_counter += 1
                                         if bodyguard_counter == 1:
@@ -4223,11 +4227,11 @@ class GameFrame(tk.Frame):
                                 for guards in champion2_immunity:
                                     if guards == "Block":
                                         immune_list.append(99)
-                                    if guards == "Parry":
+                                    if guards == "Magic Reflection":
                                         immune_list.append(101)
                                     if guards == "Cocoon":
                                         immune_list.append(100)
-                                    if guards == "Elusive Measures":
+                                    if guards == "Evasive Manoeuvres":
                                         immune_list.append(100)
                                     immune_list = sorted(immune_list, reverse=True)
                                     if immune_list[0] == 101:
@@ -4241,7 +4245,7 @@ class GameFrame(tk.Frame):
                                     if immune_list[0] == 99:
                                         bodyguard_counter = 1
                                         for champions in CHAMPION_LIST:
-                                            if champions == VETERAN_BODYGUARD.title:
+                                            if champions == KINGS_GUARD.title:
                                                 break
                                             bodyguard_counter += 1
                                         if bodyguard_counter == 1:
@@ -4308,11 +4312,11 @@ class GameFrame(tk.Frame):
                                 for guards in champion3_immunity:
                                     if guards == "Block":
                                         immune_list.append(99)
-                                    if guards == "Parry":
+                                    if guards == "Magic Reflection":
                                         immune_list.append(101)
                                     if guards == "Cocoon":
                                         immune_list.append(100)
-                                    if guards == "Elusive Measures":
+                                    if guards == "Evasive Manoeuvres":
                                         immune_list.append(100)
                                     immune_list = sorted(immune_list, reverse=True)
                                     if immune_list[0] == 101:
@@ -4326,7 +4330,7 @@ class GameFrame(tk.Frame):
                                     if immune_list[0] == 99:
                                         bodyguard_counter = 1
                                         for champions in CHAMPION_LIST:
-                                            if champions == VETERAN_BODYGUARD.title:
+                                            if champions == KINGS_GUARD.title:
                                                 break
                                             bodyguard_counter += 1
                                         if bodyguard_counter == 1:
@@ -4393,11 +4397,11 @@ class GameFrame(tk.Frame):
                                 for guards in champion4_immunity:
                                     if guards == "Block":
                                         immune_list.append(99)
-                                    if guards == "Parry":
+                                    if guards == "Magic Reflection":
                                         immune_list.append(101)
                                     if guards == "Cocoon":
                                         immune_list.append(100)
-                                    if guards == "Elusive Measures":
+                                    if guards == "Evasive Manoeuvres":
                                         immune_list.append(100)
                                     immune_list = sorted(immune_list, reverse=True)
                                     if immune_list[0] == 101:
@@ -4411,7 +4415,7 @@ class GameFrame(tk.Frame):
                                     if immune_list[0] == 99:
                                         bodyguard_counter = 1
                                         for champions in CHAMPION_LIST:
-                                            if champions == VETERAN_BODYGUARD.title:
+                                            if champions == KINGS_GUARD.title:
                                                 break
                                             bodyguard_counter += 1
                                         if bodyguard_counter == 1:
@@ -4478,11 +4482,11 @@ class GameFrame(tk.Frame):
                                 for guards in champion5_immunity:
                                     if guards == "Block":
                                         immune_list.append(99)
-                                    if guards == "Parry":
+                                    if guards == "Magic Reflection":
                                         immune_list.append(101)
                                     if guards == "Cocoon":
                                         immune_list.append(100)
-                                    if guards == "Elusive Measures":
+                                    if guards == "Evasive Manoeuvres":
                                         immune_list.append(100)
                                     immune_list = sorted(immune_list, reverse=True)
                                     if immune_list[0] == 101:
@@ -4492,7 +4496,7 @@ class GameFrame(tk.Frame):
                                     if immune_list[0] == 99:
                                         bodyguard_counter = 1
                                         for champions in CHAMPION_LIST:
-                                            if champions == VETERAN_BODYGUARD.title:
+                                            if champions == KINGS_GUARD.title:
                                                 break
                                             bodyguard_counter += 1
                                         if bodyguard_counter == 1:
@@ -4561,11 +4565,11 @@ class GameFrame(tk.Frame):
                                     for guards in champion1_immunity:
                                         if guards == "Block":
                                             immune_list.append(99)
-                                        if guards == "Parry":
+                                        if guards == "Magic Reflection":
                                             immune_list.append(101)
                                         if guards == "Cocoon":
                                             immune_list.append(100)
-                                        if guards == "Elusive Measures":
+                                        if guards == "Evasive Manoeuvres":
                                             immune_list.append(100)
                                         immune_list = sorted(immune_list, reverse=True)
                                         if immune_list[0] == 101:
@@ -4575,7 +4579,7 @@ class GameFrame(tk.Frame):
                                         if immune_list[0] == 99:
                                             bodyguard_counter = 1
                                             for champions in CHAMPION_LIST:
-                                                if champions == VETERAN_BODYGUARD.title:
+                                                if champions == KINGS_GUARD.title:
                                                     break
                                                 bodyguard_counter += 1
                                             if bodyguard_counter == 1:
@@ -4642,11 +4646,11 @@ class GameFrame(tk.Frame):
                                     for guards in champion2_immunity:
                                         if guards == "Block":
                                             immune_list.append(99)
-                                        if guards == "Parry":
+                                        if guards == "Magic Reflection":
                                             immune_list.append(101)
                                         if guards == "Cocoon":
                                             immune_list.append(100)
-                                        if guards == "Elusive Measures":
+                                        if guards == "Evasive Manoeuvres":
                                             immune_list.append(100)
                                         immune_list = sorted(immune_list, reverse=True)
                                         if immune_list[0] == 101:
@@ -4656,7 +4660,7 @@ class GameFrame(tk.Frame):
                                         if immune_list[0] == 99:
                                             bodyguard_counter = 1
                                             for champions in CHAMPION_LIST:
-                                                if champions == VETERAN_BODYGUARD.title:
+                                                if champions == KINGS_GUARD.title:
                                                     break
                                                 bodyguard_counter += 1
                                             if bodyguard_counter == 1:
@@ -4723,11 +4727,11 @@ class GameFrame(tk.Frame):
                                     for guards in champion3_immunity:
                                         if guards == "Block":
                                             immune_list.append(99)
-                                        if guards == "Parry":
+                                        if guards == "Magic Reflection":
                                             immune_list.append(101)
                                         if guards == "Cocoon":
                                             immune_list.append(100)
-                                        if guards == "Elusive Measures":
+                                        if guards == "Evasive Manoeuvres":
                                             immune_list.append(100)
                                         immune_list = sorted(immune_list, reverse=True)
                                         if immune_list[0] == 101:
@@ -4737,7 +4741,7 @@ class GameFrame(tk.Frame):
                                         if immune_list[0] == 99:
                                             bodyguard_counter = 1
                                             for champions in CHAMPION_LIST:
-                                                if champions == VETERAN_BODYGUARD.title:
+                                                if champions == KINGS_GUARD.title:
                                                     break
                                                 bodyguard_counter += 1
                                             if bodyguard_counter == 1:
@@ -4804,11 +4808,11 @@ class GameFrame(tk.Frame):
                                     for guards in champion4_immunity:
                                         if guards == "Block":
                                             immune_list.append(99)
-                                        if guards == "Parry":
+                                        if guards == "Magic Reflection":
                                             immune_list.append(101)
                                         if guards == "Cocoon":
                                             immune_list.append(100)
-                                        if guards == "Elusive Measures":
+                                        if guards == "Evasive Manoeuvres":
                                             immune_list.append(100)
                                         immune_list = sorted(immune_list, reverse=True)
                                         if immune_list[0] == 101:
@@ -4822,7 +4826,7 @@ class GameFrame(tk.Frame):
                                         if immune_list[0] == 99:
                                             bodyguard_counter = 1
                                             for champions in CHAMPION_LIST:
-                                                if champions == VETERAN_BODYGUARD.title:
+                                                if champions == KINGS_GUARD.title:
                                                     break
                                                 bodyguard_counter += 1
                                             if bodyguard_counter == 1:
@@ -4889,11 +4893,11 @@ class GameFrame(tk.Frame):
                                     for guards in champion5_immunity:
                                         if guards == "Block":
                                             immune_list.append(99)
-                                        if guards == "Parry":
+                                        if guards == "Magic Reflection":
                                             immune_list.append(101)
                                         if guards == "Cocoon":
                                             immune_list.append(100)
-                                        if guards == "Elusive Measures":
+                                        if guards == "Evasive Manoeuvres":
                                             immune_list.append(100)
                                         immune_list = sorted(immune_list, reverse=True)
                                         if immune_list[0] == 101:
@@ -4903,7 +4907,7 @@ class GameFrame(tk.Frame):
                                         if immune_list[0] == 99:
                                             bodyguard_counter = 1
                                             for champions in CHAMPION_LIST:
-                                                if champions == VETERAN_BODYGUARD.title:
+                                                if champions == KINGS_GUARD.title:
                                                     break
                                                 bodyguard_counter += 1
                                             if bodyguard_counter == 1:
@@ -4978,11 +4982,11 @@ class GameFrame(tk.Frame):
                                             for guards in champion1_immunity:
                                                 if guards == "Block":
                                                     immune_list.append(99)
-                                                if guards == "Parry":
+                                                if guards == "Magic Reflection":
                                                     immune_list.append(101)
                                                 if guards == "Cocoon":
                                                     immune_list.append(100)
-                                                if guards == "Elusive Measures":
+                                                if guards == "Evasive Manoeuvres":
                                                     immune_list.append(100)
                                                 immune_list = sorted(immune_list, reverse=True)
                                                 if immune_list[0] == 101:
@@ -4992,7 +4996,7 @@ class GameFrame(tk.Frame):
                                                 if immune_list[0] == 99:
                                                     bodyguard_counter = 1
                                                     for champions in CHAMPION_LIST:
-                                                        if champions == VETERAN_BODYGUARD.title:
+                                                        if champions == KINGS_GUARD.title:
                                                             break
                                                         bodyguard_counter += 1
                                                     if bodyguard_counter == 1:
@@ -5059,11 +5063,11 @@ class GameFrame(tk.Frame):
                                             for guards in champion2_immunity:
                                                 if guards == "Block":
                                                     immune_list.append(99)
-                                                if guards == "Parry":
+                                                if guards == "Magic Reflection":
                                                     immune_list.append(101)
                                                 if guards == "Cocoon":
                                                     immune_list.append(100)
-                                                if guards == "Elusive Measures":
+                                                if guards == "Evasive Manoeuvres":
                                                     immune_list.append(100)
                                                 immune_list = sorted(immune_list, reverse=True)
                                                 if immune_list[0] == 101:
@@ -5073,7 +5077,7 @@ class GameFrame(tk.Frame):
                                                 if immune_list[0] == 99:
                                                     bodyguard_counter = 1
                                                     for champions in CHAMPION_LIST:
-                                                        if champions == VETERAN_BODYGUARD.title:
+                                                        if champions == KINGS_GUARD.title:
                                                             break
                                                         bodyguard_counter += 1
                                                     if bodyguard_counter == 1:
@@ -5140,11 +5144,11 @@ class GameFrame(tk.Frame):
                                             for guards in champion3_immunity:
                                                 if guards == "Block":
                                                     immune_list.append(99)
-                                                if guards == "Parry":
+                                                if guards == "Magic Reflection":
                                                     immune_list.append(101)
                                                 if guards == "Cocoon":
                                                     immune_list.append(100)
-                                                if guards == "Elusive Measures":
+                                                if guards == "Evasive Manoeuvres":
                                                     immune_list.append(100)
                                                 immune_list = sorted(immune_list, reverse=True)
                                                 if immune_list[0] == 101:
@@ -5154,7 +5158,7 @@ class GameFrame(tk.Frame):
                                                 if immune_list[0] == 99:
                                                     bodyguard_counter = 1
                                                     for champions in CHAMPION_LIST:
-                                                        if champions == VETERAN_BODYGUARD.title:
+                                                        if champions == KINGS_GUARD.title:
                                                             break
                                                         bodyguard_counter += 1
                                                     if bodyguard_counter == 1:
@@ -5221,11 +5225,11 @@ class GameFrame(tk.Frame):
                                             for guards in champion4_immunity:
                                                 if guards == "Block":
                                                     immune_list.append(99)
-                                                if guards == "Parry":
+                                                if guards == "Magic Reflection":
                                                     immune_list.append(101)
                                                 if guards == "Cocoon":
                                                     immune_list.append(100)
-                                                if guards == "Elusive Measures":
+                                                if guards == "Evasive Manoeuvres":
                                                     immune_list.append(100)
                                                 immune_list = sorted(immune_list, reverse=True)
                                                 if immune_list[0] == 101:
@@ -5235,7 +5239,7 @@ class GameFrame(tk.Frame):
                                                 if immune_list[0] == 99:
                                                     bodyguard_counter = 1
                                                     for champions in CHAMPION_LIST:
-                                                        if champions == VETERAN_BODYGUARD.title:
+                                                        if champions == KINGS_GUARD.title:
                                                             break
                                                         bodyguard_counter += 1
                                                     if bodyguard_counter == 1:
@@ -5302,11 +5306,11 @@ class GameFrame(tk.Frame):
                                             for guards in champion5_immunity:
                                                 if guards == "Block":
                                                     immune_list.append(99)
-                                                if guards == "Parry":
+                                                if guards == "Magic Reflection":
                                                     immune_list.append(101)
                                                 if guards == "Cocoon":
                                                     immune_list.append(100)
-                                                if guards == "Elusive Measures":
+                                                if guards == "Evasive Manoeuvres":
                                                     immune_list.append(100)
                                                 immune_list = sorted(immune_list, reverse=True)
                                                 if immune_list[0] == 101:
@@ -5316,7 +5320,7 @@ class GameFrame(tk.Frame):
                                                 if immune_list[0] == 99:
                                                     bodyguard_counter = 1
                                                     for champions in CHAMPION_LIST:
-                                                        if champions == VETERAN_BODYGUARD.title:
+                                                        if champions == KINGS_GUARD.title:
                                                             break
                                                         bodyguard_counter += 1
                                                     if bodyguard_counter == 1:
@@ -5429,11 +5433,11 @@ class GameFrame(tk.Frame):
                                 for guards in champion1_immunity:
                                     if guards == "Block":
                                         immune_list.append(99)
-                                    if guards == "Parry":
+                                    if guards == "Magic Reflection":
                                         immune_list.append(101)
                                     if guards == "Cocoon":
                                         immune_list.append(100)
-                                    if guards == "Elusive Measures":
+                                    if guards == "Evasive Manoeuvres":
                                         immune_list.append(100)
                                     immune_list = sorted(immune_list, reverse=True)
                                     if immune_list[0] == 101:
@@ -5443,7 +5447,7 @@ class GameFrame(tk.Frame):
                                     if immune_list[0] == 99:
                                         bodyguard_counter = 1
                                         for champions in CHAMPION_LIST:
-                                            if champions == VETERAN_BODYGUARD.title:
+                                            if champions == KINGS_GUARD.title:
                                                 break
                                             bodyguard_counter += 1
                                         if bodyguard_counter == 1:
@@ -5510,11 +5514,11 @@ class GameFrame(tk.Frame):
                                 for guards in champion2_immunity:
                                     if guards == "Block":
                                         immune_list.append(99)
-                                    if guards == "Parry":
+                                    if guards == "Magic Reflection":
                                         immune_list.append(101)
                                     if guards == "Cocoon":
                                         immune_list.append(100)
-                                    if guards == "Elusive Measures":
+                                    if guards == "Evasive Manoeuvres":
                                         immune_list.append(100)
                                     immune_list = sorted(immune_list, reverse=True)
                                     if immune_list[0] == 101:
@@ -5528,7 +5532,7 @@ class GameFrame(tk.Frame):
                                     if immune_list[0] == 99:
                                         bodyguard_counter = 1
                                         for champions in CHAMPION_LIST:
-                                            if champions == VETERAN_BODYGUARD.title:
+                                            if champions == KINGS_GUARD.title:
                                                 break
                                             bodyguard_counter += 1
                                         if bodyguard_counter == 1:
@@ -5595,11 +5599,11 @@ class GameFrame(tk.Frame):
                                 for guards in champion3_immunity:
                                     if guards == "Block":
                                         immune_list.append(99)
-                                    if guards == "Parry":
+                                    if guards == "Magic Reflection":
                                         immune_list.append(101)
                                     if guards == "Cocoon":
                                         immune_list.append(100)
-                                    if guards == "Elusive Measures":
+                                    if guards == "Evasive Manoeuvres":
                                         immune_list.append(100)
                                     immune_list = sorted(immune_list, reverse=True)
                                     if immune_list[0] == 101:
@@ -5613,7 +5617,7 @@ class GameFrame(tk.Frame):
                                     if immune_list[0] == 99:
                                         bodyguard_counter = 1
                                         for champions in CHAMPION_LIST:
-                                            if champions == VETERAN_BODYGUARD.title:
+                                            if champions == KINGS_GUARD.title:
                                                 break
                                             bodyguard_counter += 1
                                         if bodyguard_counter == 1:
@@ -5680,11 +5684,11 @@ class GameFrame(tk.Frame):
                                 for guards in champion4_immunity:
                                     if guards == "Block":
                                         immune_list.append(99)
-                                    if guards == "Parry":
+                                    if guards == "Magic Reflection":
                                         immune_list.append(101)
                                     if guards == "Cocoon":
                                         immune_list.append(100)
-                                    if guards == "Elusive Measures":
+                                    if guards == "Evasive Manoeuvres":
                                         immune_list.append(100)
                                     immune_list = sorted(immune_list, reverse=True)
                                     if immune_list[0] == 101:
@@ -5698,7 +5702,7 @@ class GameFrame(tk.Frame):
                                     if immune_list[0] == 99:
                                         bodyguard_counter = 1
                                         for champions in CHAMPION_LIST:
-                                            if champions == VETERAN_BODYGUARD.title:
+                                            if champions == KINGS_GUARD.title:
                                                 break
                                             bodyguard_counter += 1
                                         if bodyguard_counter == 1:
@@ -5765,11 +5769,11 @@ class GameFrame(tk.Frame):
                                 for guards in champion5_immunity:
                                     if guards == "Block":
                                         immune_list.append(99)
-                                    if guards == "Parry":
+                                    if guards == "Magic Reflection":
                                         immune_list.append(101)
                                     if guards == "Cocoon":
                                         immune_list.append(100)
-                                    if guards == "Elusive Measures":
+                                    if guards == "Evasive Manoeuvres":
                                         immune_list.append(100)
                                     immune_list = sorted(immune_list, reverse=True)
                                     if immune_list[0] == 101:
@@ -5779,7 +5783,7 @@ class GameFrame(tk.Frame):
                                     if immune_list[0] == 99:
                                         bodyguard_counter = 1
                                         for champions in CHAMPION_LIST:
-                                            if champions == VETERAN_BODYGUARD.title:
+                                            if champions == KINGS_GUARD.title:
                                                 break
                                             bodyguard_counter += 1
                                         if bodyguard_counter == 1:
@@ -5848,11 +5852,11 @@ class GameFrame(tk.Frame):
                                     for guards in champion1_immunity:
                                         if guards == "Block":
                                             immune_list.append(99)
-                                        if guards == "Parry":
+                                        if guards == "Magic Reflection":
                                             immune_list.append(101)
                                         if guards == "Cocoon":
                                             immune_list.append(100)
-                                        if guards == "Elusive Measures":
+                                        if guards == "Evasive Manoeuvres":
                                             immune_list.append(100)
                                         immune_list = sorted(immune_list, reverse=True)
                                         if immune_list[0] == 101:
@@ -5862,7 +5866,7 @@ class GameFrame(tk.Frame):
                                         if immune_list[0] == 99:
                                             bodyguard_counter = 1
                                             for champions in CHAMPION_LIST:
-                                                if champions == VETERAN_BODYGUARD.title:
+                                                if champions == KINGS_GUARD.title:
                                                     break
                                                 bodyguard_counter += 1
                                             if bodyguard_counter == 1:
@@ -5929,11 +5933,11 @@ class GameFrame(tk.Frame):
                                     for guards in champion2_immunity:
                                         if guards == "Block":
                                             immune_list.append(99)
-                                        if guards == "Parry":
+                                        if guards == "Magic Reflection":
                                             immune_list.append(101)
                                         if guards == "Cocoon":
                                             immune_list.append(100)
-                                        if guards == "Elusive Measures":
+                                        if guards == "Evasive Manoeuvres":
                                             immune_list.append(100)
                                         immune_list = sorted(immune_list, reverse=True)
                                         if immune_list[0] == 101:
@@ -5943,7 +5947,7 @@ class GameFrame(tk.Frame):
                                         if immune_list[0] == 99:
                                             bodyguard_counter = 1
                                             for champions in CHAMPION_LIST:
-                                                if champions == VETERAN_BODYGUARD.title:
+                                                if champions == KINGS_GUARD.title:
                                                     break
                                                 bodyguard_counter += 1
                                             if bodyguard_counter == 1:
@@ -6010,11 +6014,11 @@ class GameFrame(tk.Frame):
                                     for guards in champion3_immunity:
                                         if guards == "Block":
                                             immune_list.append(99)
-                                        if guards == "Parry":
+                                        if guards == "Magic Reflection":
                                             immune_list.append(101)
                                         if guards == "Cocoon":
                                             immune_list.append(100)
-                                        if guards == "Elusive Measures":
+                                        if guards == "Evasive Manoeuvres":
                                             immune_list.append(100)
                                         immune_list = sorted(immune_list, reverse=True)
                                         if immune_list[0] == 101:
@@ -6024,7 +6028,7 @@ class GameFrame(tk.Frame):
                                         if immune_list[0] == 99:
                                             bodyguard_counter = 1
                                             for champions in CHAMPION_LIST:
-                                                if champions == VETERAN_BODYGUARD.title:
+                                                if champions == KINGS_GUARD.title:
                                                     break
                                                 bodyguard_counter += 1
                                             if bodyguard_counter == 1:
@@ -6091,11 +6095,11 @@ class GameFrame(tk.Frame):
                                     for guards in champion4_immunity:
                                         if guards == "Block":
                                             immune_list.append(99)
-                                        if guards == "Parry":
+                                        if guards == "Magic Reflection":
                                             immune_list.append(101)
                                         if guards == "Cocoon":
                                             immune_list.append(100)
-                                        if guards == "Elusive Measures":
+                                        if guards == "Evasive Manoeuvres":
                                             immune_list.append(100)
                                         immune_list = sorted(immune_list, reverse=True)
                                         if immune_list[0] == 101:
@@ -6109,7 +6113,7 @@ class GameFrame(tk.Frame):
                                         if immune_list[0] == 99:
                                             bodyguard_counter = 1
                                             for champions in CHAMPION_LIST:
-                                                if champions == VETERAN_BODYGUARD.title:
+                                                if champions == KINGS_GUARD.title:
                                                     break
                                                 bodyguard_counter += 1
                                             if bodyguard_counter == 1:
@@ -6176,11 +6180,11 @@ class GameFrame(tk.Frame):
                                     for guards in champion5_immunity:
                                         if guards == "Block":
                                             immune_list.append(99)
-                                        if guards == "Parry":
+                                        if guards == "Magic Reflection":
                                             immune_list.append(101)
                                         if guards == "Cocoon":
                                             immune_list.append(100)
-                                        if guards == "Elusive Measures":
+                                        if guards == "Evasive Manoeuvres":
                                             immune_list.append(100)
                                         immune_list = sorted(immune_list, reverse=True)
                                         if immune_list[0] == 101:
@@ -6190,7 +6194,7 @@ class GameFrame(tk.Frame):
                                         if immune_list[0] == 99:
                                             bodyguard_counter = 1
                                             for champions in CHAMPION_LIST:
-                                                if champions == VETERAN_BODYGUARD.title:
+                                                if champions == KINGS_GUARD.title:
                                                     break
                                                 bodyguard_counter += 1
                                             if bodyguard_counter == 1:
@@ -6265,11 +6269,11 @@ class GameFrame(tk.Frame):
                                             for guards in champion1_immunity:
                                                 if guards == "Block":
                                                     immune_list.append(99)
-                                                if guards == "Parry":
+                                                if guards == "Magic Reflection":
                                                     immune_list.append(101)
                                                 if guards == "Cocoon":
                                                     immune_list.append(100)
-                                                if guards == "Elusive Measures":
+                                                if guards == "Evasive Manoeuvres":
                                                     immune_list.append(100)
                                                 immune_list = sorted(immune_list, reverse=True)
                                                 if immune_list[0] == 101:
@@ -6279,7 +6283,7 @@ class GameFrame(tk.Frame):
                                                 if immune_list[0] == 99:
                                                     bodyguard_counter = 1
                                                     for champions in CHAMPION_LIST:
-                                                        if champions == VETERAN_BODYGUARD.title:
+                                                        if champions == KINGS_GUARD.title:
                                                             break
                                                         bodyguard_counter += 1
                                                     if bodyguard_counter == 1:
@@ -6346,11 +6350,11 @@ class GameFrame(tk.Frame):
                                             for guards in champion2_immunity:
                                                 if guards == "Block":
                                                     immune_list.append(99)
-                                                if guards == "Parry":
+                                                if guards == "Magic Reflection":
                                                     immune_list.append(101)
                                                 if guards == "Cocoon":
                                                     immune_list.append(100)
-                                                if guards == "Elusive Measures":
+                                                if guards == "Evasive Manoeuvres":
                                                     immune_list.append(100)
                                                 immune_list = sorted(immune_list, reverse=True)
                                                 if immune_list[0] == 101:
@@ -6360,7 +6364,7 @@ class GameFrame(tk.Frame):
                                                 if immune_list[0] == 99:
                                                     bodyguard_counter = 1
                                                     for champions in CHAMPION_LIST:
-                                                        if champions == VETERAN_BODYGUARD.title:
+                                                        if champions == KINGS_GUARD.title:
                                                             break
                                                         bodyguard_counter += 1
                                                     if bodyguard_counter == 1:
@@ -6427,11 +6431,11 @@ class GameFrame(tk.Frame):
                                             for guards in champion3_immunity:
                                                 if guards == "Block":
                                                     immune_list.append(99)
-                                                if guards == "Parry":
+                                                if guards == "Magic Reflection":
                                                     immune_list.append(101)
                                                 if guards == "Cocoon":
                                                     immune_list.append(100)
-                                                if guards == "Elusive Measures":
+                                                if guards == "Evasive Manoeuvres":
                                                     immune_list.append(100)
                                                 immune_list = sorted(immune_list, reverse=True)
                                                 if immune_list[0] == 101:
@@ -6441,7 +6445,7 @@ class GameFrame(tk.Frame):
                                                 if immune_list[0] == 99:
                                                     bodyguard_counter = 1
                                                     for champions in CHAMPION_LIST:
-                                                        if champions == VETERAN_BODYGUARD.title:
+                                                        if champions == KINGS_GUARD.title:
                                                             break
                                                         bodyguard_counter += 1
                                                     if bodyguard_counter == 1:
@@ -6508,11 +6512,11 @@ class GameFrame(tk.Frame):
                                             for guards in champion4_immunity:
                                                 if guards == "Block":
                                                     immune_list.append(99)
-                                                if guards == "Parry":
+                                                if guards == "Magic Reflection":
                                                     immune_list.append(101)
                                                 if guards == "Cocoon":
                                                     immune_list.append(100)
-                                                if guards == "Elusive Measures":
+                                                if guards == "Evasive Manoeuvres":
                                                     immune_list.append(100)
                                                 immune_list = sorted(immune_list, reverse=True)
                                                 if immune_list[0] == 101:
@@ -6522,7 +6526,7 @@ class GameFrame(tk.Frame):
                                                 if immune_list[0] == 99:
                                                     bodyguard_counter = 1
                                                     for champions in CHAMPION_LIST:
-                                                        if champions == VETERAN_BODYGUARD.title:
+                                                        if champions == KINGS_GUARD.title:
                                                             break
                                                         bodyguard_counter += 1
                                                     if bodyguard_counter == 1:
@@ -6589,11 +6593,11 @@ class GameFrame(tk.Frame):
                                             for guards in champion5_immunity:
                                                 if guards == "Block":
                                                     immune_list.append(99)
-                                                if guards == "Parry":
+                                                if guards == "Magic Reflection":
                                                     immune_list.append(101)
                                                 if guards == "Cocoon":
                                                     immune_list.append(100)
-                                                if guards == "Elusive Measures":
+                                                if guards == "Evasive Manoeuvres":
                                                     immune_list.append(100)
                                                 immune_list = sorted(immune_list, reverse=True)
                                                 if immune_list[0] == 101:
@@ -6603,7 +6607,7 @@ class GameFrame(tk.Frame):
                                                 if immune_list[0] == 99:
                                                     bodyguard_counter = 1
                                                     for champions in CHAMPION_LIST:
-                                                        if champions == VETERAN_BODYGUARD.title:
+                                                        if champions == KINGS_GUARD.title:
                                                             break
                                                         bodyguard_counter += 1
                                                     if bodyguard_counter == 1:
@@ -6716,11 +6720,11 @@ class GameFrame(tk.Frame):
                                 for guards in champion1_immunity:
                                     if guards == "Block":
                                         immune_list.append(99)
-                                    if guards == "Parry":
+                                    if guards == "Magic Reflection":
                                         immune_list.append(101)
                                     if guards == "Cocoon":
                                         immune_list.append(100)
-                                    if guards == "Elusive Measures":
+                                    if guards == "Evasive Manoeuvres":
                                         immune_list.append(100)
                                     immune_list = sorted(immune_list, reverse=True)
                                     if immune_list[0] == 101:
@@ -6730,7 +6734,7 @@ class GameFrame(tk.Frame):
                                     if immune_list[0] == 99:
                                         bodyguard_counter = 1
                                         for champions in CHAMPION_LIST:
-                                            if champions == VETERAN_BODYGUARD.title:
+                                            if champions == KINGS_GUARD.title:
                                                 break
                                             bodyguard_counter += 1
                                         if bodyguard_counter == 1:
@@ -6797,11 +6801,11 @@ class GameFrame(tk.Frame):
                                 for guards in champion2_immunity:
                                     if guards == "Block":
                                         immune_list.append(99)
-                                    if guards == "Parry":
+                                    if guards == "Magic Reflection":
                                         immune_list.append(101)
                                     if guards == "Cocoon":
                                         immune_list.append(100)
-                                    if guards == "Elusive Measures":
+                                    if guards == "Evasive Manoeuvres":
                                         immune_list.append(100)
                                     immune_list = sorted(immune_list, reverse=True)
                                     if immune_list[0] == 101:
@@ -6815,7 +6819,7 @@ class GameFrame(tk.Frame):
                                     if immune_list[0] == 99:
                                         bodyguard_counter = 1
                                         for champions in CHAMPION_LIST:
-                                            if champions == VETERAN_BODYGUARD.title:
+                                            if champions == KINGS_GUARD.title:
                                                 break
                                             bodyguard_counter += 1
                                         if bodyguard_counter == 1:
@@ -6882,11 +6886,11 @@ class GameFrame(tk.Frame):
                                 for guards in champion3_immunity:
                                     if guards == "Block":
                                         immune_list.append(99)
-                                    if guards == "Parry":
+                                    if guards == "Magic Reflection":
                                         immune_list.append(101)
                                     if guards == "Cocoon":
                                         immune_list.append(100)
-                                    if guards == "Elusive Measures":
+                                    if guards == "Evasive Manoeuvres":
                                         immune_list.append(100)
                                     immune_list = sorted(immune_list, reverse=True)
                                     if immune_list[0] == 101:
@@ -6900,7 +6904,7 @@ class GameFrame(tk.Frame):
                                     if immune_list[0] == 99:
                                         bodyguard_counter = 1
                                         for champions in CHAMPION_LIST:
-                                            if champions == VETERAN_BODYGUARD.title:
+                                            if champions == KINGS_GUARD.title:
                                                 break
                                             bodyguard_counter += 1
                                         if bodyguard_counter == 1:
@@ -6967,11 +6971,11 @@ class GameFrame(tk.Frame):
                                 for guards in champion4_immunity:
                                     if guards == "Block":
                                         immune_list.append(99)
-                                    if guards == "Parry":
+                                    if guards == "Magic Reflection":
                                         immune_list.append(101)
                                     if guards == "Cocoon":
                                         immune_list.append(100)
-                                    if guards == "Elusive Measures":
+                                    if guards == "Evasive Manoeuvres":
                                         immune_list.append(100)
                                     immune_list = sorted(immune_list, reverse=True)
                                     if immune_list[0] == 101:
@@ -6985,7 +6989,7 @@ class GameFrame(tk.Frame):
                                     if immune_list[0] == 99:
                                         bodyguard_counter = 1
                                         for champions in CHAMPION_LIST:
-                                            if champions == VETERAN_BODYGUARD.title:
+                                            if champions == KINGS_GUARD.title:
                                                 break
                                             bodyguard_counter += 1
                                         if bodyguard_counter == 1:
@@ -7052,11 +7056,11 @@ class GameFrame(tk.Frame):
                                 for guards in champion5_immunity:
                                     if guards == "Block":
                                         immune_list.append(99)
-                                    if guards == "Parry":
+                                    if guards == "Magic Reflection":
                                         immune_list.append(101)
                                     if guards == "Cocoon":
                                         immune_list.append(100)
-                                    if guards == "Elusive Measures":
+                                    if guards == "Evasive Manoeuvres":
                                         immune_list.append(100)
                                     immune_list = sorted(immune_list, reverse=True)
                                     if immune_list[0] == 101:
@@ -7066,7 +7070,7 @@ class GameFrame(tk.Frame):
                                     if immune_list[0] == 99:
                                         bodyguard_counter = 1
                                         for champions in CHAMPION_LIST:
-                                            if champions == VETERAN_BODYGUARD.title:
+                                            if champions == KINGS_GUARD.title:
                                                 break
                                             bodyguard_counter += 1
                                         if bodyguard_counter == 1:
@@ -7135,11 +7139,11 @@ class GameFrame(tk.Frame):
                                     for guards in champion1_immunity:
                                         if guards == "Block":
                                             immune_list.append(99)
-                                        if guards == "Parry":
+                                        if guards == "Magic Reflection":
                                             immune_list.append(101)
                                         if guards == "Cocoon":
                                             immune_list.append(100)
-                                        if guards == "Elusive Measures":
+                                        if guards == "Evasive Manoeuvres":
                                             immune_list.append(100)
                                         immune_list = sorted(immune_list, reverse=True)
                                         if immune_list[0] == 101:
@@ -7149,7 +7153,7 @@ class GameFrame(tk.Frame):
                                         if immune_list[0] == 99:
                                             bodyguard_counter = 1
                                             for champions in CHAMPION_LIST:
-                                                if champions == VETERAN_BODYGUARD.title:
+                                                if champions == KINGS_GUARD.title:
                                                     break
                                                 bodyguard_counter += 1
                                             if bodyguard_counter == 1:
@@ -7216,11 +7220,11 @@ class GameFrame(tk.Frame):
                                     for guards in champion2_immunity:
                                         if guards == "Block":
                                             immune_list.append(99)
-                                        if guards == "Parry":
+                                        if guards == "Magic Reflection":
                                             immune_list.append(101)
                                         if guards == "Cocoon":
                                             immune_list.append(100)
-                                        if guards == "Elusive Measures":
+                                        if guards == "Evasive Manoeuvres":
                                             immune_list.append(100)
                                         immune_list = sorted(immune_list, reverse=True)
                                         if immune_list[0] == 101:
@@ -7230,7 +7234,7 @@ class GameFrame(tk.Frame):
                                         if immune_list[0] == 99:
                                             bodyguard_counter = 1
                                             for champions in CHAMPION_LIST:
-                                                if champions == VETERAN_BODYGUARD.title:
+                                                if champions == KINGS_GUARD.title:
                                                     break
                                                 bodyguard_counter += 1
                                             if bodyguard_counter == 1:
@@ -7297,11 +7301,11 @@ class GameFrame(tk.Frame):
                                     for guards in champion3_immunity:
                                         if guards == "Block":
                                             immune_list.append(99)
-                                        if guards == "Parry":
+                                        if guards == "Magic Reflection":
                                             immune_list.append(101)
                                         if guards == "Cocoon":
                                             immune_list.append(100)
-                                        if guards == "Elusive Measures":
+                                        if guards == "Evasive Manoeuvres":
                                             immune_list.append(100)
                                         immune_list = sorted(immune_list, reverse=True)
                                         if immune_list[0] == 101:
@@ -7311,7 +7315,7 @@ class GameFrame(tk.Frame):
                                         if immune_list[0] == 99:
                                             bodyguard_counter = 1
                                             for champions in CHAMPION_LIST:
-                                                if champions == VETERAN_BODYGUARD.title:
+                                                if champions == KINGS_GUARD.title:
                                                     break
                                                 bodyguard_counter += 1
                                             if bodyguard_counter == 1:
@@ -7378,11 +7382,11 @@ class GameFrame(tk.Frame):
                                     for guards in champion4_immunity:
                                         if guards == "Block":
                                             immune_list.append(99)
-                                        if guards == "Parry":
+                                        if guards == "Magic Reflection":
                                             immune_list.append(101)
                                         if guards == "Cocoon":
                                             immune_list.append(100)
-                                        if guards == "Elusive Measures":
+                                        if guards == "Evasive Manoeuvres":
                                             immune_list.append(100)
                                         immune_list = sorted(immune_list, reverse=True)
                                         if immune_list[0] == 101:
@@ -7396,7 +7400,7 @@ class GameFrame(tk.Frame):
                                         if immune_list[0] == 99:
                                             bodyguard_counter = 1
                                             for champions in CHAMPION_LIST:
-                                                if champions == VETERAN_BODYGUARD.title:
+                                                if champions == KINGS_GUARD.title:
                                                     break
                                                 bodyguard_counter += 1
                                             if bodyguard_counter == 1:
@@ -7463,11 +7467,11 @@ class GameFrame(tk.Frame):
                                     for guards in champion5_immunity:
                                         if guards == "Block":
                                             immune_list.append(99)
-                                        if guards == "Parry":
+                                        if guards == "Magic Reflection":
                                             immune_list.append(101)
                                         if guards == "Cocoon":
                                             immune_list.append(100)
-                                        if guards == "Elusive Measures":
+                                        if guards == "Evasive Manoeuvres":
                                             immune_list.append(100)
                                         immune_list = sorted(immune_list, reverse=True)
                                         if immune_list[0] == 101:
@@ -7477,7 +7481,7 @@ class GameFrame(tk.Frame):
                                         if immune_list[0] == 99:
                                             bodyguard_counter = 1
                                             for champions in CHAMPION_LIST:
-                                                if champions == VETERAN_BODYGUARD.title:
+                                                if champions == KINGS_GUARD.title:
                                                     break
                                                 bodyguard_counter += 1
                                             if bodyguard_counter == 1:
@@ -7552,11 +7556,11 @@ class GameFrame(tk.Frame):
                                             for guards in champion1_immunity:
                                                 if guards == "Block":
                                                     immune_list.append(99)
-                                                if guards == "Parry":
+                                                if guards == "Magic Reflection":
                                                     immune_list.append(101)
                                                 if guards == "Cocoon":
                                                     immune_list.append(100)
-                                                if guards == "Elusive Measures":
+                                                if guards == "Evasive Manoeuvres":
                                                     immune_list.append(100)
                                                 immune_list = sorted(immune_list, reverse=True)
                                                 if immune_list[0] == 101:
@@ -7566,7 +7570,7 @@ class GameFrame(tk.Frame):
                                                 if immune_list[0] == 99:
                                                     bodyguard_counter = 1
                                                     for champions in CHAMPION_LIST:
-                                                        if champions == VETERAN_BODYGUARD.title:
+                                                        if champions == KINGS_GUARD.title:
                                                             break
                                                         bodyguard_counter += 1
                                                     if bodyguard_counter == 1:
@@ -7633,11 +7637,11 @@ class GameFrame(tk.Frame):
                                             for guards in champion2_immunity:
                                                 if guards == "Block":
                                                     immune_list.append(99)
-                                                if guards == "Parry":
+                                                if guards == "Magic Reflection":
                                                     immune_list.append(101)
                                                 if guards == "Cocoon":
                                                     immune_list.append(100)
-                                                if guards == "Elusive Measures":
+                                                if guards == "Evasive Manoeuvres":
                                                     immune_list.append(100)
                                                 immune_list = sorted(immune_list, reverse=True)
                                                 if immune_list[0] == 101:
@@ -7647,7 +7651,7 @@ class GameFrame(tk.Frame):
                                                 if immune_list[0] == 99:
                                                     bodyguard_counter = 1
                                                     for champions in CHAMPION_LIST:
-                                                        if champions == VETERAN_BODYGUARD.title:
+                                                        if champions == KINGS_GUARD.title:
                                                             break
                                                         bodyguard_counter += 1
                                                     if bodyguard_counter == 1:
@@ -7714,11 +7718,11 @@ class GameFrame(tk.Frame):
                                             for guards in champion3_immunity:
                                                 if guards == "Block":
                                                     immune_list.append(99)
-                                                if guards == "Parry":
+                                                if guards == "Magic Reflection":
                                                     immune_list.append(101)
                                                 if guards == "Cocoon":
                                                     immune_list.append(100)
-                                                if guards == "Elusive Measures":
+                                                if guards == "Evasive Manoeuvres":
                                                     immune_list.append(100)
                                                 immune_list = sorted(immune_list, reverse=True)
                                                 if immune_list[0] == 101:
@@ -7728,7 +7732,7 @@ class GameFrame(tk.Frame):
                                                 if immune_list[0] == 99:
                                                     bodyguard_counter = 1
                                                     for champions in CHAMPION_LIST:
-                                                        if champions == VETERAN_BODYGUARD.title:
+                                                        if champions == KINGS_GUARD.title:
                                                             break
                                                         bodyguard_counter += 1
                                                     if bodyguard_counter == 1:
@@ -7795,11 +7799,11 @@ class GameFrame(tk.Frame):
                                             for guards in champion4_immunity:
                                                 if guards == "Block":
                                                     immune_list.append(99)
-                                                if guards == "Parry":
+                                                if guards == "Magic Reflection":
                                                     immune_list.append(101)
                                                 if guards == "Cocoon":
                                                     immune_list.append(100)
-                                                if guards == "Elusive Measures":
+                                                if guards == "Evasive Manoeuvres":
                                                     immune_list.append(100)
                                                 immune_list = sorted(immune_list, reverse=True)
                                                 if immune_list[0] == 101:
@@ -7809,7 +7813,7 @@ class GameFrame(tk.Frame):
                                                 if immune_list[0] == 99:
                                                     bodyguard_counter = 1
                                                     for champions in CHAMPION_LIST:
-                                                        if champions == VETERAN_BODYGUARD.title:
+                                                        if champions == KINGS_GUARD.title:
                                                             break
                                                         bodyguard_counter += 1
                                                     if bodyguard_counter == 1:
@@ -7876,11 +7880,11 @@ class GameFrame(tk.Frame):
                                             for guards in champion5_immunity:
                                                 if guards == "Block":
                                                     immune_list.append(99)
-                                                if guards == "Parry":
+                                                if guards == "Magic Reflection":
                                                     immune_list.append(101)
                                                 if guards == "Cocoon":
                                                     immune_list.append(100)
-                                                if guards == "Elusive Measures":
+                                                if guards == "Evasive Manoeuvres":
                                                     immune_list.append(100)
                                                 immune_list = sorted(immune_list, reverse=True)
                                                 if immune_list[0] == 101:
@@ -7890,7 +7894,7 @@ class GameFrame(tk.Frame):
                                                 if immune_list[0] == 99:
                                                     bodyguard_counter = 1
                                                     for champions in CHAMPION_LIST:
-                                                        if champions == VETERAN_BODYGUARD.title:
+                                                        if champions == KINGS_GUARD.title:
                                                             break
                                                         bodyguard_counter += 1
                                                     if bodyguard_counter == 1:
@@ -8003,11 +8007,11 @@ class GameFrame(tk.Frame):
                                 for guards in champion1_immunity:
                                     if guards == "Block":
                                         immune_list.append(99)
-                                    if guards == "Parry":
+                                    if guards == "Magic Reflection":
                                         immune_list.append(101)
                                     if guards == "Cocoon":
                                         immune_list.append(100)
-                                    if guards == "Elusive Measures":
+                                    if guards == "Evasive Manoeuvres":
                                         immune_list.append(100)
                                     immune_list = sorted(immune_list, reverse=True)
                                     if immune_list[0] == 101:
@@ -8017,7 +8021,7 @@ class GameFrame(tk.Frame):
                                     if immune_list[0] == 99:
                                         bodyguard_counter = 1
                                         for champions in CHAMPION_LIST:
-                                            if champions == VETERAN_BODYGUARD.title:
+                                            if champions == KINGS_GUARD.title:
                                                 break
                                             bodyguard_counter += 1
                                         if bodyguard_counter == 1:
@@ -8084,11 +8088,11 @@ class GameFrame(tk.Frame):
                                 for guards in champion2_immunity:
                                     if guards == "Block":
                                         immune_list.append(99)
-                                    if guards == "Parry":
+                                    if guards == "Magic Reflection":
                                         immune_list.append(101)
                                     if guards == "Cocoon":
                                         immune_list.append(100)
-                                    if guards == "Elusive Measures":
+                                    if guards == "Evasive Manoeuvres":
                                         immune_list.append(100)
                                     immune_list = sorted(immune_list, reverse=True)
                                     if immune_list[0] == 101:
@@ -8102,7 +8106,7 @@ class GameFrame(tk.Frame):
                                     if immune_list[0] == 99:
                                         bodyguard_counter = 1
                                         for champions in CHAMPION_LIST:
-                                            if champions == VETERAN_BODYGUARD.title:
+                                            if champions == KINGS_GUARD.title:
                                                 break
                                             bodyguard_counter += 1
                                         if bodyguard_counter == 1:
@@ -8169,11 +8173,11 @@ class GameFrame(tk.Frame):
                                 for guards in champion3_immunity:
                                     if guards == "Block":
                                         immune_list.append(99)
-                                    if guards == "Parry":
+                                    if guards == "Magic Reflection":
                                         immune_list.append(101)
                                     if guards == "Cocoon":
                                         immune_list.append(100)
-                                    if guards == "Elusive Measures":
+                                    if guards == "Evasive Manoeuvres":
                                         immune_list.append(100)
                                     immune_list = sorted(immune_list, reverse=True)
                                     if immune_list[0] == 101:
@@ -8187,7 +8191,7 @@ class GameFrame(tk.Frame):
                                     if immune_list[0] == 99:
                                         bodyguard_counter = 1
                                         for champions in CHAMPION_LIST:
-                                            if champions == VETERAN_BODYGUARD.title:
+                                            if champions == KINGS_GUARD.title:
                                                 break
                                             bodyguard_counter += 1
                                         if bodyguard_counter == 1:
@@ -8254,11 +8258,11 @@ class GameFrame(tk.Frame):
                                 for guards in champion4_immunity:
                                     if guards == "Block":
                                         immune_list.append(99)
-                                    if guards == "Parry":
+                                    if guards == "Magic Reflection":
                                         immune_list.append(101)
                                     if guards == "Cocoon":
                                         immune_list.append(100)
-                                    if guards == "Elusive Measures":
+                                    if guards == "Evasive Manoeuvres":
                                         immune_list.append(100)
                                     immune_list = sorted(immune_list, reverse=True)
                                     if immune_list[0] == 101:
@@ -8272,7 +8276,7 @@ class GameFrame(tk.Frame):
                                     if immune_list[0] == 99:
                                         bodyguard_counter = 1
                                         for champions in CHAMPION_LIST:
-                                            if champions == VETERAN_BODYGUARD.title:
+                                            if champions == KINGS_GUARD.title:
                                                 break
                                             bodyguard_counter += 1
                                         if bodyguard_counter == 1:
@@ -8339,11 +8343,11 @@ class GameFrame(tk.Frame):
                                 for guards in champion5_immunity:
                                     if guards == "Block":
                                         immune_list.append(99)
-                                    if guards == "Parry":
+                                    if guards == "Magic Reflection":
                                         immune_list.append(101)
                                     if guards == "Cocoon":
                                         immune_list.append(100)
-                                    if guards == "Elusive Measures":
+                                    if guards == "Evasive Manoeuvres":
                                         immune_list.append(100)
                                     immune_list = sorted(immune_list, reverse=True)
                                     if immune_list[0] == 101:
@@ -8353,7 +8357,7 @@ class GameFrame(tk.Frame):
                                     if immune_list[0] == 99:
                                         bodyguard_counter = 1
                                         for champions in CHAMPION_LIST:
-                                            if champions == VETERAN_BODYGUARD.title:
+                                            if champions == KINGS_GUARD.title:
                                                 break
                                             bodyguard_counter += 1
                                         if bodyguard_counter == 1:
@@ -8422,11 +8426,11 @@ class GameFrame(tk.Frame):
                                     for guards in champion1_immunity:
                                         if guards == "Block":
                                             immune_list.append(99)
-                                        if guards == "Parry":
+                                        if guards == "Magic Reflection":
                                             immune_list.append(101)
                                         if guards == "Cocoon":
                                             immune_list.append(100)
-                                        if guards == "Elusive Measures":
+                                        if guards == "Evasive Manoeuvres":
                                             immune_list.append(100)
                                         immune_list = sorted(immune_list, reverse=True)
                                         if immune_list[0] == 101:
@@ -8436,7 +8440,7 @@ class GameFrame(tk.Frame):
                                         if immune_list[0] == 99:
                                             bodyguard_counter = 1
                                             for champions in CHAMPION_LIST:
-                                                if champions == VETERAN_BODYGUARD.title:
+                                                if champions == KINGS_GUARD.title:
                                                     break
                                                 bodyguard_counter += 1
                                             if bodyguard_counter == 1:
@@ -8503,11 +8507,11 @@ class GameFrame(tk.Frame):
                                     for guards in champion2_immunity:
                                         if guards == "Block":
                                             immune_list.append(99)
-                                        if guards == "Parry":
+                                        if guards == "Magic Reflection":
                                             immune_list.append(101)
                                         if guards == "Cocoon":
                                             immune_list.append(100)
-                                        if guards == "Elusive Measures":
+                                        if guards == "Evasive Manoeuvres":
                                             immune_list.append(100)
                                         immune_list = sorted(immune_list, reverse=True)
                                         if immune_list[0] == 101:
@@ -8517,7 +8521,7 @@ class GameFrame(tk.Frame):
                                         if immune_list[0] == 99:
                                             bodyguard_counter = 1
                                             for champions in CHAMPION_LIST:
-                                                if champions == VETERAN_BODYGUARD.title:
+                                                if champions == KINGS_GUARD.title:
                                                     break
                                                 bodyguard_counter += 1
                                             if bodyguard_counter == 1:
@@ -8584,11 +8588,11 @@ class GameFrame(tk.Frame):
                                     for guards in champion3_immunity:
                                         if guards == "Block":
                                             immune_list.append(99)
-                                        if guards == "Parry":
+                                        if guards == "Magic Reflection":
                                             immune_list.append(101)
                                         if guards == "Cocoon":
                                             immune_list.append(100)
-                                        if guards == "Elusive Measures":
+                                        if guards == "Evasive Manoeuvres":
                                             immune_list.append(100)
                                         immune_list = sorted(immune_list, reverse=True)
                                         if immune_list[0] == 101:
@@ -8598,7 +8602,7 @@ class GameFrame(tk.Frame):
                                         if immune_list[0] == 99:
                                             bodyguard_counter = 1
                                             for champions in CHAMPION_LIST:
-                                                if champions == VETERAN_BODYGUARD.title:
+                                                if champions == KINGS_GUARD.title:
                                                     break
                                                 bodyguard_counter += 1
                                             if bodyguard_counter == 1:
@@ -8665,11 +8669,11 @@ class GameFrame(tk.Frame):
                                     for guards in champion4_immunity:
                                         if guards == "Block":
                                             immune_list.append(99)
-                                        if guards == "Parry":
+                                        if guards == "Magic Reflection":
                                             immune_list.append(101)
                                         if guards == "Cocoon":
                                             immune_list.append(100)
-                                        if guards == "Elusive Measures":
+                                        if guards == "Evasive Manoeuvres":
                                             immune_list.append(100)
                                         immune_list = sorted(immune_list, reverse=True)
                                         if immune_list[0] == 101:
@@ -8683,7 +8687,7 @@ class GameFrame(tk.Frame):
                                         if immune_list[0] == 99:
                                             bodyguard_counter = 1
                                             for champions in CHAMPION_LIST:
-                                                if champions == VETERAN_BODYGUARD.title:
+                                                if champions == KINGS_GUARD.title:
                                                     break
                                                 bodyguard_counter += 1
                                             if bodyguard_counter == 1:
@@ -8750,11 +8754,11 @@ class GameFrame(tk.Frame):
                                     for guards in champion5_immunity:
                                         if guards == "Block":
                                             immune_list.append(99)
-                                        if guards == "Parry":
+                                        if guards == "Magic Reflection":
                                             immune_list.append(101)
                                         if guards == "Cocoon":
                                             immune_list.append(100)
-                                        if guards == "Elusive Measures":
+                                        if guards == "Evasive Manoeuvres":
                                             immune_list.append(100)
                                         immune_list = sorted(immune_list, reverse=True)
                                         if immune_list[0] == 101:
@@ -8764,7 +8768,7 @@ class GameFrame(tk.Frame):
                                         if immune_list[0] == 99:
                                             bodyguard_counter = 1
                                             for champions in CHAMPION_LIST:
-                                                if champions == VETERAN_BODYGUARD.title:
+                                                if champions == KINGS_GUARD.title:
                                                     break
                                                 bodyguard_counter += 1
                                             if bodyguard_counter == 1:
@@ -8839,11 +8843,11 @@ class GameFrame(tk.Frame):
                                             for guards in champion1_immunity:
                                                 if guards == "Block":
                                                     immune_list.append(99)
-                                                if guards == "Parry":
+                                                if guards == "Magic Reflection":
                                                     immune_list.append(101)
                                                 if guards == "Cocoon":
                                                     immune_list.append(100)
-                                                if guards == "Elusive Measures":
+                                                if guards == "Evasive Manoeuvres":
                                                     immune_list.append(100)
                                                 immune_list = sorted(immune_list, reverse=True)
                                                 if immune_list[0] == 101:
@@ -8853,7 +8857,7 @@ class GameFrame(tk.Frame):
                                                 if immune_list[0] == 99:
                                                     bodyguard_counter = 1
                                                     for champions in CHAMPION_LIST:
-                                                        if champions == VETERAN_BODYGUARD.title:
+                                                        if champions == KINGS_GUARD.title:
                                                             break
                                                         bodyguard_counter += 1
                                                     if bodyguard_counter == 1:
@@ -8920,11 +8924,11 @@ class GameFrame(tk.Frame):
                                             for guards in champion2_immunity:
                                                 if guards == "Block":
                                                     immune_list.append(99)
-                                                if guards == "Parry":
+                                                if guards == "Magic Reflection":
                                                     immune_list.append(101)
                                                 if guards == "Cocoon":
                                                     immune_list.append(100)
-                                                if guards == "Elusive Measures":
+                                                if guards == "Evasive Manoeuvres":
                                                     immune_list.append(100)
                                                 immune_list = sorted(immune_list, reverse=True)
                                                 if immune_list[0] == 101:
@@ -8934,7 +8938,7 @@ class GameFrame(tk.Frame):
                                                 if immune_list[0] == 99:
                                                     bodyguard_counter = 1
                                                     for champions in CHAMPION_LIST:
-                                                        if champions == VETERAN_BODYGUARD.title:
+                                                        if champions == KINGS_GUARD.title:
                                                             break
                                                         bodyguard_counter += 1
                                                     if bodyguard_counter == 1:
@@ -9001,11 +9005,11 @@ class GameFrame(tk.Frame):
                                             for guards in champion3_immunity:
                                                 if guards == "Block":
                                                     immune_list.append(99)
-                                                if guards == "Parry":
+                                                if guards == "Magic Reflection":
                                                     immune_list.append(101)
                                                 if guards == "Cocoon":
                                                     immune_list.append(100)
-                                                if guards == "Elusive Measures":
+                                                if guards == "Evasive Manoeuvres":
                                                     immune_list.append(100)
                                                 immune_list = sorted(immune_list, reverse=True)
                                                 if immune_list[0] == 101:
@@ -9015,7 +9019,7 @@ class GameFrame(tk.Frame):
                                                 if immune_list[0] == 99:
                                                     bodyguard_counter = 1
                                                     for champions in CHAMPION_LIST:
-                                                        if champions == VETERAN_BODYGUARD.title:
+                                                        if champions == KINGS_GUARD.title:
                                                             break
                                                         bodyguard_counter += 1
                                                     if bodyguard_counter == 1:
@@ -9082,11 +9086,11 @@ class GameFrame(tk.Frame):
                                             for guards in champion4_immunity:
                                                 if guards == "Block":
                                                     immune_list.append(99)
-                                                if guards == "Parry":
+                                                if guards == "Magic Reflection":
                                                     immune_list.append(101)
                                                 if guards == "Cocoon":
                                                     immune_list.append(100)
-                                                if guards == "Elusive Measures":
+                                                if guards == "Evasive Manoeuvres":
                                                     immune_list.append(100)
                                                 immune_list = sorted(immune_list, reverse=True)
                                                 if immune_list[0] == 101:
@@ -9096,7 +9100,7 @@ class GameFrame(tk.Frame):
                                                 if immune_list[0] == 99:
                                                     bodyguard_counter = 1
                                                     for champions in CHAMPION_LIST:
-                                                        if champions == VETERAN_BODYGUARD.title:
+                                                        if champions == KINGS_GUARD.title:
                                                             break
                                                         bodyguard_counter += 1
                                                     if bodyguard_counter == 1:
@@ -9163,11 +9167,11 @@ class GameFrame(tk.Frame):
                                             for guards in champion5_immunity:
                                                 if guards == "Block":
                                                     immune_list.append(99)
-                                                if guards == "Parry":
+                                                if guards == "Magic Reflection":
                                                     immune_list.append(101)
                                                 if guards == "Cocoon":
                                                     immune_list.append(100)
-                                                if guards == "Elusive Measures":
+                                                if guards == "Evasive Manoeuvres":
                                                     immune_list.append(100)
                                                 immune_list = sorted(immune_list, reverse=True)
                                                 if immune_list[0] == 101:
@@ -9177,7 +9181,7 @@ class GameFrame(tk.Frame):
                                                 if immune_list[0] == 99:
                                                     bodyguard_counter = 1
                                                     for champions in CHAMPION_LIST:
-                                                        if champions == VETERAN_BODYGUARD.title:
+                                                        if champions == KINGS_GUARD.title:
                                                             break
                                                         bodyguard_counter += 1
                                                     if bodyguard_counter == 1:
@@ -9290,11 +9294,11 @@ class GameFrame(tk.Frame):
                                 for guards in champion1_immunity:
                                     if guards == "Block":
                                         immune_list.append(99)
-                                    if guards == "Parry":
+                                    if guards == "Magic Reflection":
                                         immune_list.append(101)
                                     if guards == "Cocoon":
                                         immune_list.append(100)
-                                    if guards == "Elusive Measures":
+                                    if guards == "Evasive Manoeuvres":
                                         immune_list.append(100)
                                     immune_list = sorted(immune_list, reverse=True)
                                     if immune_list[0] == 101:
@@ -9304,7 +9308,7 @@ class GameFrame(tk.Frame):
                                     if immune_list[0] == 99:
                                         bodyguard_counter = 1
                                         for champions in CHAMPION_LIST:
-                                            if champions == VETERAN_BODYGUARD.title:
+                                            if champions == KINGS_GUARD.title:
                                                 break
                                             bodyguard_counter += 1
                                         if bodyguard_counter == 1:
@@ -9371,11 +9375,11 @@ class GameFrame(tk.Frame):
                                 for guards in champion2_immunity:
                                     if guards == "Block":
                                         immune_list.append(99)
-                                    if guards == "Parry":
+                                    if guards == "Magic Reflection":
                                         immune_list.append(101)
                                     if guards == "Cocoon":
                                         immune_list.append(100)
-                                    if guards == "Elusive Measures":
+                                    if guards == "Evasive Manoeuvres":
                                         immune_list.append(100)
                                     immune_list = sorted(immune_list, reverse=True)
                                     if immune_list[0] == 101:
@@ -9389,7 +9393,7 @@ class GameFrame(tk.Frame):
                                     if immune_list[0] == 99:
                                         bodyguard_counter = 1
                                         for champions in CHAMPION_LIST:
-                                            if champions == VETERAN_BODYGUARD.title:
+                                            if champions == KINGS_GUARD.title:
                                                 break
                                             bodyguard_counter += 1
                                         if bodyguard_counter == 1:
@@ -9456,11 +9460,11 @@ class GameFrame(tk.Frame):
                                 for guards in champion3_immunity:
                                     if guards == "Block":
                                         immune_list.append(99)
-                                    if guards == "Parry":
+                                    if guards == "Magic Reflection":
                                         immune_list.append(101)
                                     if guards == "Cocoon":
                                         immune_list.append(100)
-                                    if guards == "Elusive Measures":
+                                    if guards == "Evasive Manoeuvres":
                                         immune_list.append(100)
                                     immune_list = sorted(immune_list, reverse=True)
                                     if immune_list[0] == 101:
@@ -9474,7 +9478,7 @@ class GameFrame(tk.Frame):
                                     if immune_list[0] == 99:
                                         bodyguard_counter = 1
                                         for champions in CHAMPION_LIST:
-                                            if champions == VETERAN_BODYGUARD.title:
+                                            if champions == KINGS_GUARD.title:
                                                 break
                                             bodyguard_counter += 1
                                         if bodyguard_counter == 1:
@@ -9541,11 +9545,11 @@ class GameFrame(tk.Frame):
                                 for guards in champion4_immunity:
                                     if guards == "Block":
                                         immune_list.append(99)
-                                    if guards == "Parry":
+                                    if guards == "Magic Reflection":
                                         immune_list.append(101)
                                     if guards == "Cocoon":
                                         immune_list.append(100)
-                                    if guards == "Elusive Measures":
+                                    if guards == "Evasive Manoeuvres":
                                         immune_list.append(100)
                                     immune_list = sorted(immune_list, reverse=True)
                                     if immune_list[0] == 101:
@@ -9559,7 +9563,7 @@ class GameFrame(tk.Frame):
                                     if immune_list[0] == 99:
                                         bodyguard_counter = 1
                                         for champions in CHAMPION_LIST:
-                                            if champions == VETERAN_BODYGUARD.title:
+                                            if champions == KINGS_GUARD.title:
                                                 break
                                             bodyguard_counter += 1
                                         if bodyguard_counter == 1:
@@ -9626,11 +9630,11 @@ class GameFrame(tk.Frame):
                                 for guards in champion5_immunity:
                                     if guards == "Block":
                                         immune_list.append(99)
-                                    if guards == "Parry":
+                                    if guards == "Magic Reflection":
                                         immune_list.append(101)
                                     if guards == "Cocoon":
                                         immune_list.append(100)
-                                    if guards == "Elusive Measures":
+                                    if guards == "Evasive Manoeuvres":
                                         immune_list.append(100)
                                     immune_list = sorted(immune_list, reverse=True)
                                     if immune_list[0] == 101:
@@ -9640,7 +9644,7 @@ class GameFrame(tk.Frame):
                                     if immune_list[0] == 99:
                                         bodyguard_counter = 1
                                         for champions in CHAMPION_LIST:
-                                            if champions == VETERAN_BODYGUARD.title:
+                                            if champions == KINGS_GUARD.title:
                                                 break
                                             bodyguard_counter += 1
                                         if bodyguard_counter == 1:
@@ -9709,11 +9713,11 @@ class GameFrame(tk.Frame):
                                     for guards in champion1_immunity:
                                         if guards == "Block":
                                             immune_list.append(99)
-                                        if guards == "Parry":
+                                        if guards == "Magic Reflection":
                                             immune_list.append(101)
                                         if guards == "Cocoon":
                                             immune_list.append(100)
-                                        if guards == "Elusive Measures":
+                                        if guards == "Evasive Manoeuvres":
                                             immune_list.append(100)
                                         immune_list = sorted(immune_list, reverse=True)
                                         if immune_list[0] == 101:
@@ -9723,7 +9727,7 @@ class GameFrame(tk.Frame):
                                         if immune_list[0] == 99:
                                             bodyguard_counter = 1
                                             for champions in CHAMPION_LIST:
-                                                if champions == VETERAN_BODYGUARD.title:
+                                                if champions == KINGS_GUARD.title:
                                                     break
                                                 bodyguard_counter += 1
                                             if bodyguard_counter == 1:
@@ -9790,11 +9794,11 @@ class GameFrame(tk.Frame):
                                     for guards in champion2_immunity:
                                         if guards == "Block":
                                             immune_list.append(99)
-                                        if guards == "Parry":
+                                        if guards == "Magic Reflection":
                                             immune_list.append(101)
                                         if guards == "Cocoon":
                                             immune_list.append(100)
-                                        if guards == "Elusive Measures":
+                                        if guards == "Evasive Manoeuvres":
                                             immune_list.append(100)
                                         immune_list = sorted(immune_list, reverse=True)
                                         if immune_list[0] == 101:
@@ -9804,7 +9808,7 @@ class GameFrame(tk.Frame):
                                         if immune_list[0] == 99:
                                             bodyguard_counter = 1
                                             for champions in CHAMPION_LIST:
-                                                if champions == VETERAN_BODYGUARD.title:
+                                                if champions == KINGS_GUARD.title:
                                                     break
                                                 bodyguard_counter += 1
                                             if bodyguard_counter == 1:
@@ -9871,11 +9875,11 @@ class GameFrame(tk.Frame):
                                     for guards in champion3_immunity:
                                         if guards == "Block":
                                             immune_list.append(99)
-                                        if guards == "Parry":
+                                        if guards == "Magic Reflection":
                                             immune_list.append(101)
                                         if guards == "Cocoon":
                                             immune_list.append(100)
-                                        if guards == "Elusive Measures":
+                                        if guards == "Evasive Manoeuvres":
                                             immune_list.append(100)
                                         immune_list = sorted(immune_list, reverse=True)
                                         if immune_list[0] == 101:
@@ -9885,7 +9889,7 @@ class GameFrame(tk.Frame):
                                         if immune_list[0] == 99:
                                             bodyguard_counter = 1
                                             for champions in CHAMPION_LIST:
-                                                if champions == VETERAN_BODYGUARD.title:
+                                                if champions == KINGS_GUARD.title:
                                                     break
                                                 bodyguard_counter += 1
                                             if bodyguard_counter == 1:
@@ -9952,11 +9956,11 @@ class GameFrame(tk.Frame):
                                     for guards in champion4_immunity:
                                         if guards == "Block":
                                             immune_list.append(99)
-                                        if guards == "Parry":
+                                        if guards == "Magic Reflection":
                                             immune_list.append(101)
                                         if guards == "Cocoon":
                                             immune_list.append(100)
-                                        if guards == "Elusive Measures":
+                                        if guards == "Evasive Manoeuvres":
                                             immune_list.append(100)
                                         immune_list = sorted(immune_list, reverse=True)
                                         if immune_list[0] == 101:
@@ -9970,7 +9974,7 @@ class GameFrame(tk.Frame):
                                         if immune_list[0] == 99:
                                             bodyguard_counter = 1
                                             for champions in CHAMPION_LIST:
-                                                if champions == VETERAN_BODYGUARD.title:
+                                                if champions == KINGS_GUARD.title:
                                                     break
                                                 bodyguard_counter += 1
                                             if bodyguard_counter == 1:
@@ -10037,11 +10041,11 @@ class GameFrame(tk.Frame):
                                     for guards in champion5_immunity:
                                         if guards == "Block":
                                             immune_list.append(99)
-                                        if guards == "Parry":
+                                        if guards == "Magic Reflection":
                                             immune_list.append(101)
                                         if guards == "Cocoon":
                                             immune_list.append(100)
-                                        if guards == "Elusive Measures":
+                                        if guards == "Evasive Manoeuvres":
                                             immune_list.append(100)
                                         immune_list = sorted(immune_list, reverse=True)
                                         if immune_list[0] == 101:
@@ -10051,7 +10055,7 @@ class GameFrame(tk.Frame):
                                         if immune_list[0] == 99:
                                             bodyguard_counter = 1
                                             for champions in CHAMPION_LIST:
-                                                if champions == VETERAN_BODYGUARD.title:
+                                                if champions == KINGS_GUARD.title:
                                                     break
                                                 bodyguard_counter += 1
                                             if bodyguard_counter == 1:
@@ -10126,11 +10130,11 @@ class GameFrame(tk.Frame):
                                             for guards in champion1_immunity:
                                                 if guards == "Block":
                                                     immune_list.append(99)
-                                                if guards == "Parry":
+                                                if guards == "Magic Reflection":
                                                     immune_list.append(101)
                                                 if guards == "Cocoon":
                                                     immune_list.append(100)
-                                                if guards == "Elusive Measures":
+                                                if guards == "Evasive Manoeuvres":
                                                     immune_list.append(100)
                                                 immune_list = sorted(immune_list, reverse=True)
                                                 if immune_list[0] == 101:
@@ -10140,7 +10144,7 @@ class GameFrame(tk.Frame):
                                                 if immune_list[0] == 99:
                                                     bodyguard_counter = 1
                                                     for champions in CHAMPION_LIST:
-                                                        if champions == VETERAN_BODYGUARD.title:
+                                                        if champions == KINGS_GUARD.title:
                                                             break
                                                         bodyguard_counter += 1
                                                     if bodyguard_counter == 1:
@@ -10207,11 +10211,11 @@ class GameFrame(tk.Frame):
                                             for guards in champion2_immunity:
                                                 if guards == "Block":
                                                     immune_list.append(99)
-                                                if guards == "Parry":
+                                                if guards == "Magic Reflection":
                                                     immune_list.append(101)
                                                 if guards == "Cocoon":
                                                     immune_list.append(100)
-                                                if guards == "Elusive Measures":
+                                                if guards == "Evasive Manoeuvres":
                                                     immune_list.append(100)
                                                 immune_list = sorted(immune_list, reverse=True)
                                                 if immune_list[0] == 101:
@@ -10221,7 +10225,7 @@ class GameFrame(tk.Frame):
                                                 if immune_list[0] == 99:
                                                     bodyguard_counter = 1
                                                     for champions in CHAMPION_LIST:
-                                                        if champions == VETERAN_BODYGUARD.title:
+                                                        if champions == KINGS_GUARD.title:
                                                             break
                                                         bodyguard_counter += 1
                                                     if bodyguard_counter == 1:
@@ -10288,11 +10292,11 @@ class GameFrame(tk.Frame):
                                             for guards in champion3_immunity:
                                                 if guards == "Block":
                                                     immune_list.append(99)
-                                                if guards == "Parry":
+                                                if guards == "Magic Reflection":
                                                     immune_list.append(101)
                                                 if guards == "Cocoon":
                                                     immune_list.append(100)
-                                                if guards == "Elusive Measures":
+                                                if guards == "Evasive Manoeuvres":
                                                     immune_list.append(100)
                                                 immune_list = sorted(immune_list, reverse=True)
                                                 if immune_list[0] == 101:
@@ -10302,7 +10306,7 @@ class GameFrame(tk.Frame):
                                                 if immune_list[0] == 99:
                                                     bodyguard_counter = 1
                                                     for champions in CHAMPION_LIST:
-                                                        if champions == VETERAN_BODYGUARD.title:
+                                                        if champions == KINGS_GUARD.title:
                                                             break
                                                         bodyguard_counter += 1
                                                     if bodyguard_counter == 1:
@@ -10369,11 +10373,11 @@ class GameFrame(tk.Frame):
                                             for guards in champion4_immunity:
                                                 if guards == "Block":
                                                     immune_list.append(99)
-                                                if guards == "Parry":
+                                                if guards == "Magic Reflection":
                                                     immune_list.append(101)
                                                 if guards == "Cocoon":
                                                     immune_list.append(100)
-                                                if guards == "Elusive Measures":
+                                                if guards == "Evasive Manoeuvres":
                                                     immune_list.append(100)
                                                 immune_list = sorted(immune_list, reverse=True)
                                                 if immune_list[0] == 101:
@@ -10383,7 +10387,7 @@ class GameFrame(tk.Frame):
                                                 if immune_list[0] == 99:
                                                     bodyguard_counter = 1
                                                     for champions in CHAMPION_LIST:
-                                                        if champions == VETERAN_BODYGUARD.title:
+                                                        if champions == KINGS_GUARD.title:
                                                             break
                                                         bodyguard_counter += 1
                                                     if bodyguard_counter == 1:
@@ -10450,11 +10454,11 @@ class GameFrame(tk.Frame):
                                             for guards in champion5_immunity:
                                                 if guards == "Block":
                                                     immune_list.append(99)
-                                                if guards == "Parry":
+                                                if guards == "Magic Reflection":
                                                     immune_list.append(101)
                                                 if guards == "Cocoon":
                                                     immune_list.append(100)
-                                                if guards == "Elusive Measures":
+                                                if guards == "Evasive Manoeuvres":
                                                     immune_list.append(100)
                                                 immune_list = sorted(immune_list, reverse=True)
                                                 if immune_list[0] == 101:
@@ -10464,7 +10468,7 @@ class GameFrame(tk.Frame):
                                                 if immune_list[0] == 99:
                                                     bodyguard_counter = 1
                                                     for champions in CHAMPION_LIST:
-                                                        if champions == VETERAN_BODYGUARD.title:
+                                                        if champions == KINGS_GUARD.title:
                                                             break
                                                         bodyguard_counter += 1
                                                     if bodyguard_counter == 1:
@@ -10707,8 +10711,8 @@ class GameFrame(tk.Frame):
             champion5_defensive = []
             if "Immunity: Block" in champion1_statuses:
                 champion1_statuses.remove("Immunity: Block")
-            if "Immunity: Parry" in champion1_statuses:
-                champion1_statuses.remove("Immunity: Parry")
+            if "Immunity: Magic Reflection" in champion1_statuses:
+                champion1_statuses.remove("Immunity: Magic Reflection")
             if "Immunity: Cocoon" in champion1_statuses:
                 champion1_statuses.remove("Immunity: Cocoon")
             if "Immunity: Evasion" in champion1_statuses:
@@ -10721,8 +10725,8 @@ class GameFrame(tk.Frame):
                 champion1_statuses.remove("Defensive: Enharden Nerves")
             if "Immunity: Block" in champion2_statuses:
                 champion2_statuses.remove("Immunity: Block")
-            if "Immunity: Parry" in champion2_statuses:
-                champion2_statuses.remove("Immunity: Parry")
+            if "Immunity: Magic Reflection" in champion2_statuses:
+                champion2_statuses.remove("Immunity: Magic Reflection")
             if "Immunity: Cocoon" in champion2_statuses:
                 champion2_statuses.remove("Immunity: Cocoon")
             if "Immunity: Evasion" in champion2_statuses:
@@ -10735,8 +10739,8 @@ class GameFrame(tk.Frame):
                 champion2_statuses.remove("Defensive: Enharden Nerves")
             if "Immunity: Block" in champion3_statuses:
                 champion3_statuses.remove("Immunity: Block")
-            if "Immunity: Parry" in champion3_statuses:
-                champion3_statuses.remove("Immunity: Parry")
+            if "Immunity: Magic Reflection" in champion3_statuses:
+                champion3_statuses.remove("Immunity: Magic Reflection")
             if "Immunity: Cocoon" in champion3_statuses:
                 champion3_statuses.remove("Immunity: Cocoon")
             if "Immunity: Evasion" in champion3_statuses:
@@ -10749,8 +10753,8 @@ class GameFrame(tk.Frame):
                 champion3_statuses.remove("Defensive: Enharden Nerves")
             if "Immunity: Block" in champion4_statuses:
                 champion4_statuses.remove("Immunity: Block")
-            if "Immunity: Parry" in champion4_statuses:
-                champion4_statuses.remove("Immunity: Parry")
+            if "Immunity: Magic Reflection" in champion4_statuses:
+                champion4_statuses.remove("Immunity: Magic Reflection")
             if "Immunity: Cocoon" in champion4_statuses:
                 champion4_statuses.remove("Immunity: Cocoon")
             if "Immunity: Evasion" in champion4_statuses:
@@ -10763,8 +10767,8 @@ class GameFrame(tk.Frame):
                 champion4_statuses.remove("Defensive: Enharden Nerves")
             if "Immunity: Block" in champion5_statuses:
                 champion5_statuses.remove("Immunity: Block")
-            if "Immunity: Parry" in champion5_statuses:
-                champion5_statuses.remove("Immunity: Parry")
+            if "Immunity: Magic Reflection" in champion5_statuses:
+                champion5_statuses.remove("Immunity: Magic Reflection")
             if "Immunity: Cocoon" in champion5_statuses:
                 champion5_statuses.remove("Immunity: Cocoon")
             if "Immunity: Evasion" in champion5_statuses:
@@ -11341,7 +11345,91 @@ class GameFrame(tk.Frame):
             return math.ceil(ai5_damage_done)
 
     def combat_to_progression(self):
-        global roomLevel, floorLevel, from_combat, permaHealthMod
+        global roomLevel, floorLevel, from_combat, permaHealthMod, \
+            champion1_nanobot, champion2_nanobot, champion3_nanobot, champion4_nanobot, champion5_nanobot, \
+            champion1_herb_tea, champion2_herb_tea, champion3_herb_tea, champion4_herb_tea,champion5_herb_tea, \
+            champion1_hp, champion2_hp, champion3_hp, champion4_hp, champion5_hp
+        if current_turn == "C2":
+            self.champion_turn_ticker(3)
+            self.champion_turn_ticker(4)
+            self.champion_turn_ticker(5)
+        if current_turn == "C3":
+            self.champion_turn_ticker(4)
+            self.champion_turn_ticker(5)
+        if current_turn == "C4":
+            self.champion_turn_ticker(5)
+        if current_turn == "MW":
+            self.champion_turn_ticker(1)
+        if champion1_nanobot[1] != 0:
+            champion1_nanobot[1] = champion1_nanobot[1] - 1
+            champion1_hp = champion1_hp + champion1_nanobot[0]
+            if champion1_hp > CHAMPION1_HP:
+                champion1_hp = CHAMPION1_HP
+            if champion1_nanobot[1] == 0:
+                champion1_statuses.remove("Nanobot Support")
+        if champion2_nanobot[1] != 0:
+            champion2_nanobot[1] = champion2_nanobot[1] - 1
+            champion2_hp = champion2_hp + champion2_nanobot[0]
+            if champion2_hp > CHAMPION2_HP:
+                champion2_hp = CHAMPION2_HP
+            if champion2_nanobot[1] == 0:
+                champion2_statuses.remove("Nanobot Support")
+        if champion3_nanobot[1] != 0:
+            champion3_nanobot[1] = champion3_nanobot[1] - 1
+            champion3_hp = champion3_hp + champion3_nanobot[0]
+            if champion3_hp > CHAMPION3_HP:
+                champion3_hp = CHAMPION3_HP
+            if champion3_nanobot[1] == 0:
+                champion3_statuses.remove("Nanobot Support")
+        if champion4_nanobot[1] != 0:
+            champion4_nanobot[1] = champion4_nanobot[1] - 1
+            champion4_hp = champion4_hp + champion4_nanobot[0]
+            if champion4_hp > CHAMPION4_HP:
+                champion4_hp = CHAMPION4_HP
+            if champion4_nanobot[1] == 0:
+                champion4_statuses.remove("Nanobot Support")
+        if champion5_nanobot[1] != 0:
+            champion5_nanobot[1] = champion5_nanobot[1] - 1
+            champion5_hp = champion5_hp + champion5_nanobot[0]
+            if champion5_hp > CHAMPION5_HP:
+                champion5_hp = CHAMPION5_HP
+            if champion5_nanobot[1] == 0:
+                champion5_statuses.remove("Nanobot Support")
+        if champion1_herb_tea[1] != 0:
+            champion1_herb_tea[1] = champion1_herb_tea[1] - 1
+            champion1_hp = champion1_hp + champion1_herb_tea[0]
+            if champion1_hp > CHAMPION1_HP:
+                champion1_hp = CHAMPION1_HP
+            if champion1_herb_tea[1] == 0:
+                champion1_statuses.remove("Herbal Tea Remnants")
+        if champion2_herb_tea[1] != 0:
+            champion2_herb_tea[1] = champion2_herb_tea[1] - 1
+            champion2_hp = champion2_hp + champion2_herb_tea[0]
+            if champion2_hp > CHAMPION2_HP:
+                champion2_hp = CHAMPION2_HP
+            if champion2_herb_tea[1] == 0:
+                champion2_statuses.remove("Herbal Tea Remnants")
+        if champion3_herb_tea[1] != 0:
+            champion3_herb_tea[1] = champion3_herb_tea[1] - 1
+            champion3_hp = champion3_hp + champion3_herb_tea[0]
+            if champion3_hp > CHAMPION3_HP:
+                champion3_hp = CHAMPION3_HP
+            if champion3_herb_tea[1] == 0:
+                champion3_statuses.remove("Herbal Tea Remnants")
+        if champion4_herb_tea[1] != 0:
+            champion4_herb_tea[1] = champion4_herb_tea[1] - 1
+            champion4_hp = champion4_hp + champion4_herb_tea[0]
+            if champion4_hp > CHAMPION4_HP:
+                champion4_hp = CHAMPION4_HP
+            if champion4_herb_tea[1] == 0:
+                champion4_statuses.remove("Herbal Tea Remnants")
+        if champion5_herb_tea[1] != 0:
+            champion5_herb_tea[1] = champion5_herb_tea[1] - 1
+            champion5_hp = champion5_hp + champion5_herb_tea[0]
+            if champion5_hp > CHAMPION5_HP:
+                champion5_hp = CHAMPION5_HP
+            if champion5_herb_tea[1] == 0:
+                champion5_statuses.remove("Herbal Tea Remnants")
         roomLevel += 1
         if roomLevel > 5:
             floorLevel += 1
@@ -11392,14 +11480,14 @@ class GameFrame(tk.Frame):
 
     def champion_turn_ticker(self, champion_position):
         global leg_sweep_requirements, pressure_points_requirements, challenging_shout_requirements, trainwreck_requirements, \
-            fortification_requirements, disruptive_slash_requirements, parry_requirements, elusive_measures_requirements, \
+            fortification_requirements, riposte_requirements, magic_reflection_requirements, evasive_manoeuvres_requirements, \
             reckless_flurry_requirements, eviscerate_requirements, exploit_weakness_requirements, scrap_bomb_requirements, \
             play_dead_requirements, rushed_rest_requirements, uppercut_requirements, defensive_stance_requirements, \
-            rushdown_requirements, arcane_brilliance_requirements, vine_swipe_requirements, prickle_arena_requirements, \
+            rushdown_requirements, arcane_brilliance_requirements, vine_swipe_requirements, burst_n_bloom_requirements, \
             wound_fissure_requirements, blood_boil_requirements, enharden_nerves_requirements, righteous_blow_requirements, \
-            aura_of_power_requirements, aura_of_protection_requirements, power_opt_requirements, equip_iron_cast_arrows_requirements, \
-            equip_tracker_tipped_arrows_requirements, crashing_boom_requirements, thunderous_vigor_requirements, rejuvenating_whirlpool_requirements, \
-            alter_time_requirements, perfected_herbal_tea_requirements, g3t_jaxd_requirements
+            crusade_requirements, damnation_requirements, power_opt_requirements, equip_iron_cast_arrows_requirements, \
+            equip_tracker_tipped_arrows_requirements, energise_requirements, superconductor_requirements, ocean_tides_requirements, \
+            alter_time_requirements, tight_tourniquet_requirements, secret_remedy_requirements
         if champion_position == 1:
             if CHAMPION_LIST[0] == "Monk":
                 if leg_sweep_requirements[1] > 0:
@@ -11409,18 +11497,18 @@ class GameFrame(tk.Frame):
             if CHAMPION_LIST[0] == "Barbarian":
                 if challenging_shout_requirements[1] > 0:
                     challenging_shout_requirements[1] = challenging_shout_requirements[1] - 1
-            if CHAMPION_LIST[0] == "Veteran Bodyguard":
+            if CHAMPION_LIST[0] == "Kings-Guard":
                 if trainwreck_requirements[1] > 0:
                     trainwreck_requirements[1] = trainwreck_requirements[1] - 1
                 if fortification_requirements[1] > 0:
                     fortification_requirements[1] = fortification_requirements[1] - 1
             if CHAMPION_LIST[0] == "Fencer":
-                if disruptive_slash_requirements[1] > 0:
-                    disruptive_slash_requirements[1] = disruptive_slash_requirements[1] - 1
-                if parry_requirements[1] > 0:
-                    parry_requirements[1] = parry_requirements[1] - 1
-                if elusive_measures_requirements[1] > 0:
-                    elusive_measures_requirements[1] = elusive_measures_requirements[1] - 1
+                if riposte_requirements[1] > 0:
+                    riposte_requirements[1] = riposte_requirements[1] - 1
+                if magic_reflection_requirements[1] > 0:
+                    magic_reflection_requirements[1] = magic_reflection_requirements[1] - 1
+                if evasive_manoeuvres_requirements[1] > 0:
+                    evasive_manoeuvres_requirements[1] = evasive_manoeuvres_requirements[1] - 1
             if CHAMPION_LIST[0] == "Berserker":
                 if reckless_flurry_requirements[1] > 0:
                     reckless_flurry_requirements[1] = reckless_flurry_requirements[1] - 1
@@ -11449,8 +11537,8 @@ class GameFrame(tk.Frame):
             if CHAMPION_LIST[0] == "Druid":
                 if vine_swipe_requirements[1] > 0:
                     vine_swipe_requirements[1] = vine_swipe_requirements[1] - 1
-                if prickle_arena_requirements[1] > 0:
-                    prickle_arena_requirements[1] = prickle_arena_requirements[1] - 1
+                if burst_n_bloom_requirements[1] > 0:
+                    burst_n_bloom_requirements[1] = burst_n_bloom_requirements[1] - 1
             if CHAMPION_LIST[0] == "Warlock":
                 if wound_fissure_requirements[1] > 0:
                     wound_fissure_requirements[1] = wound_fissure_requirements[1] - 1
@@ -11462,10 +11550,10 @@ class GameFrame(tk.Frame):
             if CHAMPION_LIST[0] == "Paladin":
                 if righteous_blow_requirements[1] > 0:
                     righteous_blow_requirements[1] = righteous_blow_requirements[1] - 1
-                if aura_of_power_requirements[1] > 0:
-                    aura_of_power_requirements[1] = aura_of_power_requirements[1] - 1
-                if aura_of_protection_requirements[1] > 0:
-                    aura_of_protection_requirements[1] = aura_of_protection_requirements[1] - 1
+                if crusade_requirements[1] > 0:
+                    crusade_requirements[1] = crusade_requirements[1] - 1
+                if damnation_requirements[1] > 0:
+                    damnation_requirements[1] = damnation_requirements[1] - 1
             if CHAMPION_LIST[0] == "Ranger":
                 if power_opt_requirements[1] > 0:
                     power_opt_requirements[1] = power_opt_requirements[1] - 1
@@ -11473,22 +11561,22 @@ class GameFrame(tk.Frame):
                     equip_iron_cast_arrows_requirements[1] = equip_iron_cast_arrows_requirements[1] - 1
                 if equip_tracker_tipped_arrows_requirements[1] > 0:
                     equip_tracker_tipped_arrows_requirements[1] = equip_tracker_tipped_arrows_requirements[1] - 1
-            if CHAMPION_LIST[0] == "Thunderous Apprentice":
-                if crashing_boom_requirements[1] > 0:
-                    crashing_boom_requirements[1] = crashing_boom_requirements[1] - 1
-                if thunderous_vigor_requirements[1] > 0:
-                    thunderous_vigor_requirements[1] = thunderous_vigor_requirements[1] - 1
+            if CHAMPION_LIST[0] == "Magnetimancer":
+                if energise_requirements[1] > 0:
+                    energise_requirements[1] = energise_requirements[1] - 1
+                if superconductor_requirements[1] > 0:
+                    superconductor_requirements[1] = superconductor_requirements[1] - 1
             if CHAMPION_LIST[0] == "Earth Speaker":
-                if rejuvenating_whirlpool_requirements[1] > 0:
-                    rejuvenating_whirlpool_requirements[1] = rejuvenating_whirlpool_requirements[1] - 1
+                if ocean_tides_requirements[1] > 0:
+                    ocean_tides_requirements[1] = ocean_tides_requirements[1] - 1
             if CHAMPION_LIST[0] == "Time Walker":
                 if alter_time_requirements[1] > 0:
                     alter_time_requirements[1] = alter_time_requirements[1] - 1
             if CHAMPION_LIST[0] == "Field Medic":
-                if perfected_herbal_tea_requirements[1] > 0:
-                    perfected_herbal_tea_requirements[1] = perfected_herbal_tea_requirements[1] - 1
-                if g3t_jaxd_requirements[1] > 0:
-                    g3t_jaxd_requirements[1] = g3t_jaxd_requirements[1] - 1
+                if tight_tourniquet_requirements[1] > 0:
+                    tight_tourniquet_requirements[1] = tight_tourniquet_requirements[1] - 1
+                if secret_remedy_requirements[1] > 0:
+                    secret_remedy_requirements[1] = secret_remedy_requirements[1] - 1
         if champion_position == 2:
             if CHAMPION_LIST[1] == "Monk":
                 if leg_sweep_requirements[1] > 0:
@@ -11498,18 +11586,18 @@ class GameFrame(tk.Frame):
             if CHAMPION_LIST[1] == "Barbarian":
                 if challenging_shout_requirements[1] > 0:
                     challenging_shout_requirements[1] = challenging_shout_requirements[1] - 1
-            if CHAMPION_LIST[1] == "Veteran Bodyguard":
+            if CHAMPION_LIST[1] == "Kings-Guard":
                 if trainwreck_requirements[1] > 0:
                     trainwreck_requirements[1] = trainwreck_requirements[1] - 1
                 if fortification_requirements[1] > 0:
                     fortification_requirements[1] = fortification_requirements[1] - 1
             if CHAMPION_LIST[1] == "Fencer":
-                if disruptive_slash_requirements[1] > 0:
-                    disruptive_slash_requirements[1] = disruptive_slash_requirements[1] - 1
-                if parry_requirements[1] > 0:
-                    parry_requirements[1] = parry_requirements[1] - 1
-                if elusive_measures_requirements[1] > 0:
-                    elusive_measures_requirements[1] = elusive_measures_requirements[1] - 1
+                if riposte_requirements[1] > 0:
+                    riposte_requirements[1] = riposte_requirements[1] - 1
+                if magic_reflection_requirements[1] > 0:
+                    magic_reflection_requirements[1] = magic_reflection_requirements[1] - 1
+                if evasive_manoeuvres_requirements[1] > 0:
+                    evasive_manoeuvres_requirements[1] = evasive_manoeuvres_requirements[1] - 1
             if CHAMPION_LIST[1] == "Berserker":
                 if reckless_flurry_requirements[1] > 0:
                     reckless_flurry_requirements[1] = reckless_flurry_requirements[1] - 1
@@ -11538,8 +11626,8 @@ class GameFrame(tk.Frame):
             if CHAMPION_LIST[1] == "Druid":
                 if vine_swipe_requirements[1] > 0:
                     vine_swipe_requirements[1] = vine_swipe_requirements[1] - 1
-                if prickle_arena_requirements[1] > 0:
-                    prickle_arena_requirements[1] = prickle_arena_requirements[1] - 1
+                if burst_n_bloom_requirements[1] > 0:
+                    burst_n_bloom_requirements[1] = burst_n_bloom_requirements[1] - 1
             if CHAMPION_LIST[1] == "Warlock":
                 if wound_fissure_requirements[1] > 0:
                     wound_fissure_requirements[1] = wound_fissure_requirements[1] - 1
@@ -11551,10 +11639,10 @@ class GameFrame(tk.Frame):
             if CHAMPION_LIST[1] == "Paladin":
                 if righteous_blow_requirements[1] > 0:
                     righteous_blow_requirements[1] = righteous_blow_requirements[1] - 1
-                if aura_of_power_requirements[1] > 0:
-                    aura_of_power_requirements[1] = aura_of_power_requirements[1] - 1
-                if aura_of_protection_requirements[1] > 0:
-                    aura_of_protection_requirements[1] = aura_of_protection_requirements[1] - 1
+                if crusade_requirements[1] > 0:
+                    crusade_requirements[1] = crusade_requirements[1] - 1
+                if damnation_requirements[1] > 0:
+                    damnation_requirements[1] = damnation_requirements[1] - 1
             if CHAMPION_LIST[1] == "Ranger":
                 if power_opt_requirements[1] > 0:
                     power_opt_requirements[1] = power_opt_requirements[1] - 1
@@ -11562,22 +11650,22 @@ class GameFrame(tk.Frame):
                     equip_iron_cast_arrows_requirements[1] = equip_iron_cast_arrows_requirements[1] - 1
                 if equip_tracker_tipped_arrows_requirements[1] > 0:
                     equip_tracker_tipped_arrows_requirements[1] = equip_tracker_tipped_arrows_requirements[1] - 1
-            if CHAMPION_LIST[1] == "Thunderous Apprentice":
-                if crashing_boom_requirements[1] > 0:
-                    crashing_boom_requirements[1] = crashing_boom_requirements[1] - 1
-                if thunderous_vigor_requirements[1] > 0:
-                    thunderous_vigor_requirements[1] = thunderous_vigor_requirements[1] - 1
+            if CHAMPION_LIST[1] == "Magnetimancer":
+                if energise_requirements[1] > 0:
+                    energise_requirements[1] = energise_requirements[1] - 1
+                if superconductor_requirements[1] > 0:
+                    superconductor_requirements[1] = superconductor_requirements[1] - 1
             if CHAMPION_LIST[1] == "Earth Speaker":
-                if rejuvenating_whirlpool_requirements[1] > 0:
-                    rejuvenating_whirlpool_requirements[1] = rejuvenating_whirlpool_requirements[1] - 1
+                if ocean_tides_requirements[1] > 0:
+                    ocean_tides_requirements[1] = ocean_tides_requirements[1] - 1
             if CHAMPION_LIST[1] == "Time Walker":
                 if alter_time_requirements[1] > 0:
                     alter_time_requirements[1] = alter_time_requirements[1] - 1
             if CHAMPION_LIST[1] == "Field Medic":
-                if perfected_herbal_tea_requirements[1] > 0:
-                    perfected_herbal_tea_requirements[1] = perfected_herbal_tea_requirements[1] - 1
-                if g3t_jaxd_requirements[1] > 0:
-                    g3t_jaxd_requirements[1] = g3t_jaxd_requirements[1] - 1
+                if tight_tourniquet_requirements[1] > 0:
+                    tight_tourniquet_requirements[1] = tight_tourniquet_requirements[1] - 1
+                if secret_remedy_requirements[1] > 0:
+                    secret_remedy_requirements[1] = secret_remedy_requirements[1] - 1
         if champion_position == 3:
             if CHAMPION_LIST[2] == "Monk":
                 if leg_sweep_requirements[1] > 0:
@@ -11587,18 +11675,18 @@ class GameFrame(tk.Frame):
             if CHAMPION_LIST[2] == "Barbarian":
                 if challenging_shout_requirements[1] > 0:
                     challenging_shout_requirements[1] = challenging_shout_requirements[1] - 1
-            if CHAMPION_LIST[2] == "Veteran Bodyguard":
+            if CHAMPION_LIST[2] == "Kings-Guard":
                 if trainwreck_requirements[1] > 0:
                     trainwreck_requirements[1] = trainwreck_requirements[1] - 1
                 if fortification_requirements[1] > 0:
                     fortification_requirements[1] = fortification_requirements[1] - 1
             if CHAMPION_LIST[2] == "Fencer":
-                if disruptive_slash_requirements[1] > 0:
-                    disruptive_slash_requirements[1] = disruptive_slash_requirements[1] - 1
-                if parry_requirements[1] > 0:
-                    parry_requirements[1] = parry_requirements[1] - 1
-                if elusive_measures_requirements[1] > 0:
-                    elusive_measures_requirements[1] = elusive_measures_requirements[1] - 1
+                if riposte_requirements[1] > 0:
+                    riposte_requirements[1] = riposte_requirements[1] - 1
+                if magic_reflection_requirements[1] > 0:
+                    magic_reflection_requirements[1] = magic_reflection_requirements[1] - 1
+                if evasive_manoeuvres_requirements[1] > 0:
+                    evasive_manoeuvres_requirements[1] = evasive_manoeuvres_requirements[1] - 1
             if CHAMPION_LIST[2] == "Berserker":
                 if reckless_flurry_requirements[1] > 0:
                     reckless_flurry_requirements[1] = reckless_flurry_requirements[1] - 1
@@ -11627,8 +11715,8 @@ class GameFrame(tk.Frame):
             if CHAMPION_LIST[2] == "Druid":
                 if vine_swipe_requirements[1] > 0:
                     vine_swipe_requirements[1] = vine_swipe_requirements[1] - 1
-                if prickle_arena_requirements[1] > 0:
-                    prickle_arena_requirements[1] = prickle_arena_requirements[1] - 1
+                if burst_n_bloom_requirements[1] > 0:
+                    burst_n_bloom_requirements[1] = burst_n_bloom_requirements[1] - 1
             if CHAMPION_LIST[2] == "Warlock":
                 if wound_fissure_requirements[1] > 0:
                     wound_fissure_requirements[1] = wound_fissure_requirements[1] - 1
@@ -11640,10 +11728,10 @@ class GameFrame(tk.Frame):
             if CHAMPION_LIST[2] == "Paladin":
                 if righteous_blow_requirements[1] > 0:
                     righteous_blow_requirements[1] = righteous_blow_requirements[1] - 1
-                if aura_of_power_requirements[1] > 0:
-                    aura_of_power_requirements[1] = aura_of_power_requirements[1] - 1
-                if aura_of_protection_requirements[1] > 0:
-                    aura_of_protection_requirements[1] = aura_of_protection_requirements[1] - 1
+                if crusade_requirements[1] > 0:
+                    crusade_requirements[1] = crusade_requirements[1] - 1
+                if damnation_requirements[1] > 0:
+                    damnation_requirements[1] = damnation_requirements[1] - 1
             if CHAMPION_LIST[2] == "Ranger":
                 if power_opt_requirements[1] > 0:
                     power_opt_requirements[1] = power_opt_requirements[1] - 1
@@ -11651,22 +11739,22 @@ class GameFrame(tk.Frame):
                     equip_iron_cast_arrows_requirements[1] = equip_iron_cast_arrows_requirements[1] - 1
                 if equip_tracker_tipped_arrows_requirements[1] > 0:
                     equip_tracker_tipped_arrows_requirements[1] = equip_tracker_tipped_arrows_requirements[1] - 1
-            if CHAMPION_LIST[2] == "Thunderous Apprentice":
-                if crashing_boom_requirements[1] > 0:
-                    crashing_boom_requirements[1] = crashing_boom_requirements[1] - 1
-                if thunderous_vigor_requirements[1] > 0:
-                    thunderous_vigor_requirements[1] = thunderous_vigor_requirements[1] - 1
+            if CHAMPION_LIST[2] == "Magnetimancer":
+                if energise_requirements[1] > 0:
+                    energise_requirements[1] = energise_requirements[1] - 1
+                if superconductor_requirements[1] > 0:
+                    superconductor_requirements[1] = superconductor_requirements[1] - 1
             if CHAMPION_LIST[2] == "Earth Speaker":
-                if rejuvenating_whirlpool_requirements[1] > 0:
-                    rejuvenating_whirlpool_requirements[1] = rejuvenating_whirlpool_requirements[1] - 1
+                if ocean_tides_requirements[1] > 0:
+                    ocean_tides_requirements[1] = ocean_tides_requirements[1] - 1
             if CHAMPION_LIST[2] == "Time Walker":
                 if alter_time_requirements[1] > 0:
                     alter_time_requirements[1] = alter_time_requirements[1] - 1
             if CHAMPION_LIST[2] == "Field Medic":
-                if perfected_herbal_tea_requirements[1] > 0:
-                    perfected_herbal_tea_requirements[1] = perfected_herbal_tea_requirements[1] - 1
-                if g3t_jaxd_requirements[1] > 0:
-                    g3t_jaxd_requirements[1] = g3t_jaxd_requirements[1] - 1
+                if tight_tourniquet_requirements[1] > 0:
+                    tight_tourniquet_requirements[1] = tight_tourniquet_requirements[1] - 1
+                if secret_remedy_requirements[1] > 0:
+                    secret_remedy_requirements[1] = secret_remedy_requirements[1] - 1
         if champion_position == 4:
             if CHAMPION_LIST[3] == "Monk":
                 if leg_sweep_requirements[1] > 0:
@@ -11676,18 +11764,18 @@ class GameFrame(tk.Frame):
             if CHAMPION_LIST[3] == "Barbarian":
                 if challenging_shout_requirements[1] > 0:
                     challenging_shout_requirements[1] = challenging_shout_requirements[1] - 1
-            if CHAMPION_LIST[3] == "Veteran Bodyguard":
+            if CHAMPION_LIST[3] == "Kings-Guard":
                 if trainwreck_requirements[1] > 0:
                     trainwreck_requirements[1] = trainwreck_requirements[1] - 1
                 if fortification_requirements[1] > 0:
                     fortification_requirements[1] = fortification_requirements[1] - 1
             if CHAMPION_LIST[3] == "Fencer":
-                if disruptive_slash_requirements[1] > 0:
-                    disruptive_slash_requirements[1] = disruptive_slash_requirements[1] - 1
-                if parry_requirements[1] > 0:
-                    parry_requirements[1] = parry_requirements[1] - 1
-                if elusive_measures_requirements[1] > 0:
-                    elusive_measures_requirements[1] = elusive_measures_requirements[1] - 1
+                if riposte_requirements[1] > 0:
+                    riposte_requirements[1] = riposte_requirements[1] - 1
+                if magic_reflection_requirements[1] > 0:
+                    magic_reflection_requirements[1] = magic_reflection_requirements[1] - 1
+                if evasive_manoeuvres_requirements[1] > 0:
+                    evasive_manoeuvres_requirements[1] = evasive_manoeuvres_requirements[1] - 1
             if CHAMPION_LIST[3] == "Berserker":
                 if reckless_flurry_requirements[1] > 0:
                     reckless_flurry_requirements[1] = reckless_flurry_requirements[1] - 1
@@ -11716,8 +11804,8 @@ class GameFrame(tk.Frame):
             if CHAMPION_LIST[3] == "Druid":
                 if vine_swipe_requirements[1] > 0:
                     vine_swipe_requirements[1] = vine_swipe_requirements[1] - 1
-                if prickle_arena_requirements[1] > 0:
-                    prickle_arena_requirements[1] = prickle_arena_requirements[1] - 1
+                if burst_n_bloom_requirements[1] > 0:
+                    burst_n_bloom_requirements[1] = burst_n_bloom_requirements[1] - 1
             if CHAMPION_LIST[3] == "Warlock":
                 if wound_fissure_requirements[1] > 0:
                     wound_fissure_requirements[1] = wound_fissure_requirements[1] - 1
@@ -11729,10 +11817,10 @@ class GameFrame(tk.Frame):
             if CHAMPION_LIST[3] == "Paladin":
                 if righteous_blow_requirements[1] > 0:
                     righteous_blow_requirements[1] = righteous_blow_requirements[1] - 1
-                if aura_of_power_requirements[1] > 0:
-                    aura_of_power_requirements[1] = aura_of_power_requirements[1] - 1
-                if aura_of_protection_requirements[1] > 0:
-                    aura_of_protection_requirements[1] = aura_of_protection_requirements[1] - 1
+                if crusade_requirements[1] > 0:
+                    crusade_requirements[1] = crusade_requirements[1] - 1
+                if damnation_requirements[1] > 0:
+                    damnation_requirements[1] = damnation_requirements[1] - 1
             if CHAMPION_LIST[3] == "Ranger":
                 if power_opt_requirements[1] > 0:
                     power_opt_requirements[1] = power_opt_requirements[1] - 1
@@ -11740,22 +11828,22 @@ class GameFrame(tk.Frame):
                     equip_iron_cast_arrows_requirements[1] = equip_iron_cast_arrows_requirements[1] - 1
                 if equip_tracker_tipped_arrows_requirements[1] > 0:
                     equip_tracker_tipped_arrows_requirements[1] = equip_tracker_tipped_arrows_requirements[1] - 1
-            if CHAMPION_LIST[3] == "Thunderous Apprentice":
-                if crashing_boom_requirements[1] > 0:
-                    crashing_boom_requirements[1] = crashing_boom_requirements[1] - 1
-                if thunderous_vigor_requirements[1] > 0:
-                    thunderous_vigor_requirements[1] = thunderous_vigor_requirements[1] - 1
+            if CHAMPION_LIST[3] == "Magnetimancer":
+                if energise_requirements[1] > 0:
+                    energise_requirements[1] = energise_requirements[1] - 1
+                if superconductor_requirements[1] > 0:
+                    superconductor_requirements[1] = superconductor_requirements[1] - 1
             if CHAMPION_LIST[3] == "Earth Speaker":
-                if rejuvenating_whirlpool_requirements[1] > 0:
-                    rejuvenating_whirlpool_requirements[1] = rejuvenating_whirlpool_requirements[1] - 1
+                if ocean_tides_requirements[1] > 0:
+                    ocean_tides_requirements[1] = ocean_tides_requirements[1] - 1
             if CHAMPION_LIST[3] == "Time Walker":
                 if alter_time_requirements[1] > 0:
                     alter_time_requirements[1] = alter_time_requirements[1] - 1
             if CHAMPION_LIST[3] == "Field Medic":
-                if perfected_herbal_tea_requirements[1] > 0:
-                    perfected_herbal_tea_requirements[1] = perfected_herbal_tea_requirements[1] - 1
-                if g3t_jaxd_requirements[1] > 0:
-                    g3t_jaxd_requirements[1] = g3t_jaxd_requirements[1] - 1
+                if tight_tourniquet_requirements[1] > 0:
+                    tight_tourniquet_requirements[1] = tight_tourniquet_requirements[1] - 1
+                if secret_remedy_requirements[1] > 0:
+                    secret_remedy_requirements[1] = secret_remedy_requirements[1] - 1
         if champion_position == 5:
             if CHAMPION_LIST[4] == "Monk":
                 if leg_sweep_requirements[1] > 0:
@@ -11765,18 +11853,18 @@ class GameFrame(tk.Frame):
             if CHAMPION_LIST[4] == "Barbarian":
                 if challenging_shout_requirements[1] > 0:
                     challenging_shout_requirements[1] = challenging_shout_requirements[1] - 1
-            if CHAMPION_LIST[4] == "Veteran Bodyguard":
+            if CHAMPION_LIST[4] == "Kings-Guard":
                 if trainwreck_requirements[1] > 0:
                     trainwreck_requirements[1] = trainwreck_requirements[1] - 1
                 if fortification_requirements[1] > 0:
                     fortification_requirements[1] = fortification_requirements[1] - 1
             if CHAMPION_LIST[4] == "Fencer":
-                if disruptive_slash_requirements[1] > 0:
-                    disruptive_slash_requirements[1] = disruptive_slash_requirements[1] - 1
-                if parry_requirements[1] > 0:
-                    parry_requirements[1] = parry_requirements[1] - 1
-                if elusive_measures_requirements[1] > 0:
-                    elusive_measures_requirements[1] = elusive_measures_requirements[1] - 1
+                if riposte_requirements[1] > 0:
+                    riposte_requirements[1] = riposte_requirements[1] - 1
+                if magic_reflection_requirements[1] > 0:
+                    magic_reflection_requirements[1] = magic_reflection_requirements[1] - 1
+                if evasive_manoeuvres_requirements[1] > 0:
+                    evasive_manoeuvres_requirements[1] = evasive_manoeuvres_requirements[1] - 1
             if CHAMPION_LIST[4] == "Berserker":
                 if reckless_flurry_requirements[1] > 0:
                     reckless_flurry_requirements[1] = reckless_flurry_requirements[1] - 1
@@ -11805,8 +11893,8 @@ class GameFrame(tk.Frame):
             if CHAMPION_LIST[4] == "Druid":
                 if vine_swipe_requirements[1] > 0:
                     vine_swipe_requirements[1] = vine_swipe_requirements[1] - 1
-                if prickle_arena_requirements[1] > 0:
-                    prickle_arena_requirements[1] = prickle_arena_requirements[1] - 1
+                if burst_n_bloom_requirements[1] > 0:
+                    burst_n_bloom_requirements[1] = burst_n_bloom_requirements[1] - 1
             if CHAMPION_LIST[4] == "Warlock":
                 if wound_fissure_requirements[1] > 0:
                     wound_fissure_requirements[1] = wound_fissure_requirements[1] - 1
@@ -11818,10 +11906,10 @@ class GameFrame(tk.Frame):
             if CHAMPION_LIST[4] == "Paladin":
                 if righteous_blow_requirements[1] > 0:
                     righteous_blow_requirements[1] = righteous_blow_requirements[1] - 1
-                if aura_of_power_requirements[1] > 0:
-                    aura_of_power_requirements[1] = aura_of_power_requirements[1] - 1
-                if aura_of_protection_requirements[1] > 0:
-                    aura_of_protection_requirements[1] = aura_of_protection_requirements[1] - 1
+                if crusade_requirements[1] > 0:
+                    crusade_requirements[1] = crusade_requirements[1] - 1
+                if damnation_requirements[1] > 0:
+                    damnation_requirements[1] = damnation_requirements[1] - 1
             if CHAMPION_LIST[4] == "Ranger":
                 if power_opt_requirements[1] > 0:
                     power_opt_requirements[1] = power_opt_requirements[1] - 1
@@ -11829,22 +11917,22 @@ class GameFrame(tk.Frame):
                     equip_iron_cast_arrows_requirements[1] = equip_iron_cast_arrows_requirements[1] - 1
                 if equip_tracker_tipped_arrows_requirements[1] > 0:
                     equip_tracker_tipped_arrows_requirements[1] = equip_tracker_tipped_arrows_requirements[1] - 1
-            if CHAMPION_LIST[4] == "Thunderous Apprentice":
-                if crashing_boom_requirements[1] > 0:
-                    crashing_boom_requirements[1] = crashing_boom_requirements[1] - 1
-                if thunderous_vigor_requirements[1] > 0:
-                    thunderous_vigor_requirements[1] = thunderous_vigor_requirements[1] - 1
+            if CHAMPION_LIST[4] == "Magnetimancer":
+                if energise_requirements[1] > 0:
+                    energise_requirements[1] = energise_requirements[1] - 1
+                if superconductor_requirements[1] > 0:
+                    superconductor_requirements[1] = superconductor_requirements[1] - 1
             if CHAMPION_LIST[4] == "Earth Speaker":
-                if rejuvenating_whirlpool_requirements[1] > 0:
-                    rejuvenating_whirlpool_requirements[1] = rejuvenating_whirlpool_requirements[1] - 1
+                if ocean_tides_requirements[1] > 0:
+                    ocean_tides_requirements[1] = ocean_tides_requirements[1] - 1
             if CHAMPION_LIST[4] == "Time Walker":
                 if alter_time_requirements[1] > 0:
                     alter_time_requirements[1] = alter_time_requirements[1] - 1
             if CHAMPION_LIST[4] == "Field Medic":
-                if perfected_herbal_tea_requirements[1] > 0:
-                    perfected_herbal_tea_requirements[1] = perfected_herbal_tea_requirements[1] - 1
-                if g3t_jaxd_requirements[1] > 0:
-                    g3t_jaxd_requirements[1] = g3t_jaxd_requirements[1] - 1
+                if tight_tourniquet_requirements[1] > 0:
+                    tight_tourniquet_requirements[1] = tight_tourniquet_requirements[1] - 1
+                if secret_remedy_requirements[1] > 0:
+                    secret_remedy_requirements[1] = secret_remedy_requirements[1] - 1
 
     def attack_button(self):
         global attack1_button, attack1_button_details, attack2_button, attack2_button_details, attack3_button, attack3_button_details, attack4_button, attack4_button_details, back_button, \
@@ -12250,14 +12338,14 @@ class GameFrame(tk.Frame):
             global shield_bash_requirements
             if shield_bash_requirements[1] == 0:
                 for character in CHAMPION_LIST:
-                    if character == VETERAN_BODYGUARD.title:
+                    if character == KINGS_GUARD.title:
                         if counter == 1:
                             if shield_bash_requirements[0] <= champion1_rp:
                                 champion1_rp = champion1_rp - shield_bash_requirements[0]
                                 shield_bash_requirements[1] = shield_bash_requirements[2]
                                 champion1_rp = champion1_rp + shield_bash_requirements[3]
-                                damage_done = math.ceil(VETERAN_BODYGUARD.ap * self.calculate_champion_damage(1))
-                                damage_done = math.ceil(VETERAN_BODYGUARD.ap * self.calculate_champion_damage(1))
+                                damage_done = math.ceil(KINGS_GUARD.ap * self.calculate_champion_damage(1))
+                                damage_done = math.ceil(KINGS_GUARD.ap * self.calculate_champion_damage(1))
                                 ability_data = ["Shield Bash", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -12266,8 +12354,8 @@ class GameFrame(tk.Frame):
                                 champion2_rp = champion2_rp - shield_bash_requirements[0]
                                 shield_bash_requirements[1] = shield_bash_requirements[2]
                                 champion2_rp = champion2_rp + shield_bash_requirements[3]
-                                damage_done = math.ceil(VETERAN_BODYGUARD.ap * self.calculate_champion_damage(2))
-                                damage_done = math.ceil(VETERAN_BODYGUARD.ap * self.calculate_champion_damage(2))
+                                damage_done = math.ceil(KINGS_GUARD.ap * self.calculate_champion_damage(2))
+                                damage_done = math.ceil(KINGS_GUARD.ap * self.calculate_champion_damage(2))
                                 ability_data = ["Shield Bash", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -12276,8 +12364,8 @@ class GameFrame(tk.Frame):
                                 champion3_rp = champion3_rp - shield_bash_requirements[0]
                                 shield_bash_requirements[1] = shield_bash_requirements[2]
                                 champion3_rp = champion3_rp + shield_bash_requirements[3]
-                                damage_done = math.ceil(VETERAN_BODYGUARD.ap * self.calculate_champion_damage(3))
-                                damage_done = math.ceil(VETERAN_BODYGUARD.ap * self.calculate_champion_damage(3))
+                                damage_done = math.ceil(KINGS_GUARD.ap * self.calculate_champion_damage(3))
+                                damage_done = math.ceil(KINGS_GUARD.ap * self.calculate_champion_damage(3))
                                 ability_data = ["Shield Bash", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -12286,8 +12374,8 @@ class GameFrame(tk.Frame):
                                 champion4_rp = champion4_rp - shield_bash_requirements[0]
                                 shield_bash_requirements[1] = shield_bash_requirements[2]
                                 champion4_rp = champion4_rp + shield_bash_requirements[3]
-                                damage_done = math.ceil(VETERAN_BODYGUARD.ap * self.calculate_champion_damage(4))
-                                damage_done = math.ceil(VETERAN_BODYGUARD.ap * self.calculate_champion_damage(4))
+                                damage_done = math.ceil(KINGS_GUARD.ap * self.calculate_champion_damage(4))
+                                damage_done = math.ceil(KINGS_GUARD.ap * self.calculate_champion_damage(4))
                                 ability_data = ["Shield Bash", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -12296,8 +12384,8 @@ class GameFrame(tk.Frame):
                                 champion5_rp = champion5_rp - shield_bash_requirements[0]
                                 shield_bash_requirements[1] = shield_bash_requirements[2]
                                 champion5_rp = champion5_rp + shield_bash_requirements[3]
-                                damage_done = math.ceil(VETERAN_BODYGUARD.ap * self.calculate_champion_damage(5))
-                                damage_done = math.ceil(VETERAN_BODYGUARD.ap * self.calculate_champion_damage(5))
+                                damage_done = math.ceil(KINGS_GUARD.ap * self.calculate_champion_damage(5))
+                                damage_done = math.ceil(KINGS_GUARD.ap * self.calculate_champion_damage(5))
                                 ability_data = ["Shield Bash", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -12308,14 +12396,14 @@ class GameFrame(tk.Frame):
             global trainwreck_requirements
             if trainwreck_requirements[1] == 0:
                 for character in CHAMPION_LIST:
-                    if character == VETERAN_BODYGUARD.title:
+                    if character == KINGS_GUARD.title:
                         if counter == 1:
                             if trainwreck_requirements[0] <= champion1_rp:
                                 champion1_rp = champion1_rp - trainwreck_requirements[0]
                                 trainwreck_requirements[1] = trainwreck_requirements[2]
                                 champion1_rp = champion1_rp + trainwreck_requirements[3]
-                                damage_done = math.ceil(VETERAN_BODYGUARD.ap * self.calculate_champion_damage(1))
-                                damage_done = math.ceil(VETERAN_BODYGUARD.ap * self.calculate_champion_damage(1))
+                                damage_done = math.ceil(KINGS_GUARD.ap * self.calculate_champion_damage(1))
+                                damage_done = math.ceil(KINGS_GUARD.ap * self.calculate_champion_damage(1))
                                 ability_data = ["Trainwreck", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -12324,8 +12412,8 @@ class GameFrame(tk.Frame):
                                 champion2_rp = champion2_rp - trainwreck_requirements[0]
                                 trainwreck_requirements[1] = trainwreck_requirements[2]
                                 champion2_rp = champion2_rp + trainwreck_requirements[3]
-                                damage_done = math.ceil(VETERAN_BODYGUARD.ap * self.calculate_champion_damage(2))
-                                damage_done = math.ceil(VETERAN_BODYGUARD.ap * self.calculate_champion_damage(2))
+                                damage_done = math.ceil(KINGS_GUARD.ap * self.calculate_champion_damage(2))
+                                damage_done = math.ceil(KINGS_GUARD.ap * self.calculate_champion_damage(2))
                                 ability_data = ["Trainwreck", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -12334,8 +12422,8 @@ class GameFrame(tk.Frame):
                                 champion3_rp = champion3_rp - trainwreck_requirements[0]
                                 trainwreck_requirements[1] = trainwreck_requirements[2]
                                 champion3_rp = champion3_rp + trainwreck_requirements[3]
-                                damage_done = math.ceil(VETERAN_BODYGUARD.ap * self.calculate_champion_damage(3))
-                                damage_done = math.ceil(VETERAN_BODYGUARD.ap * self.calculate_champion_damage(3))
+                                damage_done = math.ceil(KINGS_GUARD.ap * self.calculate_champion_damage(3))
+                                damage_done = math.ceil(KINGS_GUARD.ap * self.calculate_champion_damage(3))
                                 ability_data = ["Trainwreck", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -12344,8 +12432,8 @@ class GameFrame(tk.Frame):
                                 champion4_rp = champion4_rp - trainwreck_requirements[0]
                                 trainwreck_requirements[1] = trainwreck_requirements[2]
                                 champion4_rp = champion4_rp + trainwreck_requirements[3]
-                                damage_done = math.ceil(VETERAN_BODYGUARD.ap * self.calculate_champion_damage(4))
-                                damage_done = math.ceil(VETERAN_BODYGUARD.ap * self.calculate_champion_damage(4))
+                                damage_done = math.ceil(KINGS_GUARD.ap * self.calculate_champion_damage(4))
+                                damage_done = math.ceil(KINGS_GUARD.ap * self.calculate_champion_damage(4))
                                 ability_data = ["Trainwreck", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -12354,125 +12442,125 @@ class GameFrame(tk.Frame):
                                 champion5_rp = champion5_rp - trainwreck_requirements[0]
                                 trainwreck_requirements[1] = trainwreck_requirements[2]
                                 champion5_rp = champion5_rp + trainwreck_requirements[3]
-                                damage_done = math.ceil(VETERAN_BODYGUARD.ap * self.calculate_champion_damage(5))
-                                damage_done = math.ceil(VETERAN_BODYGUARD.ap * self.calculate_champion_damage(5))
+                                damage_done = math.ceil(KINGS_GUARD.ap * self.calculate_champion_damage(5))
+                                damage_done = math.ceil(KINGS_GUARD.ap * self.calculate_champion_damage(5))
                                 ability_data = ["Trainwreck", "enemy", "1T", damage_done]
                             else:
                                 return
                     counter += 1
             else:
                 return
-        elif ability_name == "Pierce":
-            global pierce_requirements
-            if pierce_requirements[1] == 0:
+        elif ability_name == "Flanking Strikes":
+            global flanking_strikes_requirements
+            if flanking_strikes_requirements[1] == 0:
                 for character in CHAMPION_LIST:
                     if character == MASTER_FENCER.title:
                         if counter == 1:
-                            if pierce_requirements[0] <= champion1_rp:
-                                champion1_rp = champion1_rp - pierce_requirements[0]
-                                pierce_requirements[1] = pierce_requirements[2]
-                                champion1_rp = champion1_rp + pierce_requirements[3]
+                            if flanking_strikes_requirements[0] <= champion1_rp:
+                                champion1_rp = champion1_rp - flanking_strikes_requirements[0]
+                                flanking_strikes_requirements[1] = flanking_strikes_requirements[2]
+                                champion1_rp = champion1_rp + flanking_strikes_requirements[3]
                                 damage_done = math.ceil(MASTER_FENCER.ap * self.calculate_champion_damage(1))
                                 damage_done = math.ceil(MASTER_FENCER.ap * self.calculate_champion_damage(1))
-                                ability_data = ["Pierce", "enemy", "2T", damage_done]
+                                ability_data = ["Flanking Strikes", "enemy", "2T", damage_done]
                             else:
                                 return
                         if counter == 2:
-                            if pierce_requirements[0] <= champion2_rp:
-                                champion2_rp = champion2_rp - pierce_requirements[0]
-                                pierce_requirements[1] = pierce_requirements[2]
-                                champion2_rp = champion2_rp + pierce_requirements[3]
+                            if flanking_strikes_requirements[0] <= champion2_rp:
+                                champion2_rp = champion2_rp - flanking_strikes_requirements[0]
+                                flanking_strikes_requirements[1] = flanking_strikes_requirements[2]
+                                champion2_rp = champion2_rp + flanking_strikes_requirements[3]
                                 damage_done = math.ceil(MASTER_FENCER.ap * self.calculate_champion_damage(2))
                                 damage_done = math.ceil(MASTER_FENCER.ap * self.calculate_champion_damage(2))
-                                ability_data = ["Pierce", "enemy", "2T", damage_done]
+                                ability_data = ["Flanking Strikes", "enemy", "2T", damage_done]
                             else:
                                 return
                         if counter == 3:
-                            if pierce_requirements[0] <= champion3_rp:
-                                champion3_rp = champion3_rp - pierce_requirements[0]
-                                pierce_requirements[1] = pierce_requirements[2]
-                                champion3_rp = champion3_rp + pierce_requirements[3]
+                            if flanking_strikes_requirements[0] <= champion3_rp:
+                                champion3_rp = champion3_rp - flanking_strikes_requirements[0]
+                                flanking_strikes_requirements[1] = flanking_strikes_requirements[2]
+                                champion3_rp = champion3_rp + flanking_strikes_requirements[3]
                                 damage_done = math.ceil(MASTER_FENCER.ap * self.calculate_champion_damage(3))
                                 damage_done = math.ceil(MASTER_FENCER.ap * self.calculate_champion_damage(3))
-                                ability_data = ["Pierce", "enemy", "2T", damage_done]
+                                ability_data = ["Flanking Strikes", "enemy", "2T", damage_done]
                             else:
                                 return
                         if counter == 4:
-                            if pierce_requirements[0] <= champion4_rp:
-                                champion4_rp = champion4_rp - pierce_requirements[0]
-                                pierce_requirements[1] = pierce_requirements[2]
-                                champion4_rp = champion4_rp + pierce_requirements[3]
+                            if flanking_strikes_requirements[0] <= champion4_rp:
+                                champion4_rp = champion4_rp - flanking_strikes_requirements[0]
+                                flanking_strikes_requirements[1] = flanking_strikes_requirements[2]
+                                champion4_rp = champion4_rp + flanking_strikes_requirements[3]
                                 damage_done = math.ceil(MASTER_FENCER.ap * self.calculate_champion_damage(4))
                                 damage_done = math.ceil(MASTER_FENCER.ap * self.calculate_champion_damage(4))
-                                ability_data = ["Pierce", "enemy", "2T", damage_done]
+                                ability_data = ["Flanking Strikes", "enemy", "2T", damage_done]
                             else:
                                 return
                         if counter == 5:
-                            if pierce_requirements[0] <= champion5_rp:
-                                champion5_rp = champion5_rp - pierce_requirements[0]
-                                pierce_requirements[1] = pierce_requirements[2]
-                                champion5_rp = champion5_rp + pierce_requirements[3]
+                            if flanking_strikes_requirements[0] <= champion5_rp:
+                                champion5_rp = champion5_rp - flanking_strikes_requirements[0]
+                                flanking_strikes_requirements[1] = flanking_strikes_requirements[2]
+                                champion5_rp = champion5_rp + flanking_strikes_requirements[3]
                                 damage_done = math.ceil(MASTER_FENCER.ap * self.calculate_champion_damage(5))
                                 damage_done = math.ceil(MASTER_FENCER.ap * self.calculate_champion_damage(5))
-                                ability_data = ["Pierce", "enemy", "2T", damage_done]
+                                ability_data = ["Flanking Strikes", "enemy", "2T", damage_done]
                             else:
                                 return
                     counter += 1
             else:
                 return
-        elif ability_name == "Disruptive Slash":
-            global disruptive_slash_requirements
-            if disruptive_slash_requirements[1] == 0:
+        elif ability_name == "Riposte":
+            global riposte_requirements
+            if riposte_requirements[1] == 0:
                 for character in CHAMPION_LIST:
                     if character == MASTER_FENCER.title:
                         if counter == 1:
-                            if disruptive_slash_requirements[0] <= champion1_rp:
-                                champion1_rp = champion1_rp - disruptive_slash_requirements[0]
-                                disruptive_slash_requirements[1] = disruptive_slash_requirements[2]
-                                champion1_rp = champion1_rp + disruptive_slash_requirements[3]
+                            if riposte_requirements[0] <= champion1_rp:
+                                champion1_rp = champion1_rp - riposte_requirements[0]
+                                riposte_requirements[1] = riposte_requirements[2]
+                                champion1_rp = champion1_rp + riposte_requirements[3]
                                 damage_done = math.ceil(MASTER_FENCER.ap * self.calculate_champion_damage(1))
                                 damage_done = math.ceil(MASTER_FENCER.ap * self.calculate_champion_damage(1))
-                                ability_data = ["Disruptive Slash", "enemy", "1T", damage_done]
+                                ability_data = ["Riposte", "enemy", "1T", damage_done]
                             else:
                                 return
                         if counter == 2:
-                            if disruptive_slash_requirements[0] <= champion2_rp:
-                                champion2_rp = champion2_rp - disruptive_slash_requirements[0]
-                                disruptive_slash_requirements[1] = disruptive_slash_requirements[2]
-                                champion2_rp = champion2_rp + disruptive_slash_requirements[3]
+                            if riposte_requirements[0] <= champion2_rp:
+                                champion2_rp = champion2_rp - riposte_requirements[0]
+                                riposte_requirements[1] = riposte_requirements[2]
+                                champion2_rp = champion2_rp + riposte_requirements[3]
                                 damage_done = math.ceil(MASTER_FENCER.ap * self.calculate_champion_damage(2))
                                 damage_done = math.ceil(MASTER_FENCER.ap * self.calculate_champion_damage(2))
-                                ability_data = ["Disruptive Slash", "enemy", "1T", damage_done]
+                                ability_data = ["Riposte", "enemy", "1T", damage_done]
                             else:
                                 return
                         if counter == 3:
-                            if disruptive_slash_requirements[0] <= champion3_rp:
-                                champion3_rp = champion3_rp - disruptive_slash_requirements[0]
-                                disruptive_slash_requirements[1] = disruptive_slash_requirements[2]
-                                champion3_rp = champion3_rp + disruptive_slash_requirements[3]
+                            if riposte_requirements[0] <= champion3_rp:
+                                champion3_rp = champion3_rp - riposte_requirements[0]
+                                riposte_requirements[1] = riposte_requirements[2]
+                                champion3_rp = champion3_rp + riposte_requirements[3]
                                 damage_done = math.ceil(MASTER_FENCER.ap * self.calculate_champion_damage(3))
                                 damage_done = math.ceil(MASTER_FENCER.ap * self.calculate_champion_damage(3))
-                                ability_data = ["Disruptive Slash", "enemy", "1T", damage_done]
+                                ability_data = ["Riposte", "enemy", "1T", damage_done]
                             else:
                                 return
                         if counter == 4:
-                            if disruptive_slash_requirements[0] <= champion4_rp:
-                                champion4_rp = champion4_rp - disruptive_slash_requirements[0]
-                                disruptive_slash_requirements[1] = disruptive_slash_requirements[2]
-                                champion4_rp = champion4_rp + disruptive_slash_requirements[3]
+                            if riposte_requirements[0] <= champion4_rp:
+                                champion4_rp = champion4_rp - riposte_requirements[0]
+                                riposte_requirements[1] = riposte_requirements[2]
+                                champion4_rp = champion4_rp + riposte_requirements[3]
                                 damage_done = math.ceil(MASTER_FENCER.ap * self.calculate_champion_damage(4))
                                 damage_done = math.ceil(MASTER_FENCER.ap * self.calculate_champion_damage(4))
-                                ability_data = ["Disruptive Slash", "enemy", "1T", damage_done]
+                                ability_data = ["Riposte", "enemy", "1T", damage_done]
                             else:
                                 return
                         if counter == 5:
-                            if disruptive_slash_requirements[0] <= champion5_rp:
-                                champion5_rp = champion5_rp - disruptive_slash_requirements[0]
-                                disruptive_slash_requirements[1] = disruptive_slash_requirements[2]
-                                champion5_rp = champion5_rp + disruptive_slash_requirements[3]
+                            if riposte_requirements[0] <= champion5_rp:
+                                champion5_rp = champion5_rp - riposte_requirements[0]
+                                riposte_requirements[1] = riposte_requirements[2]
+                                champion5_rp = champion5_rp + riposte_requirements[3]
                                 damage_done = math.ceil(MASTER_FENCER.ap * self.calculate_champion_damage(5))
                                 damage_done = math.ceil(MASTER_FENCER.ap * self.calculate_champion_damage(5))
-                                ability_data = ["Disruptive Slash", "enemy", "1T", damage_done]
+                                ability_data = ["Riposte", "enemy", "1T", damage_done]
                             else:
                                 return
                     counter += 1
@@ -13058,59 +13146,59 @@ class GameFrame(tk.Frame):
                     counter += 1
             else:
                 return
-        elif ability_name == "Venus-fly Snap":
-            global venusfly_snap_requirements
-            if venusfly_snap_requirements[1] == 0:
+        elif ability_name == "Invigorate Thorns":
+            global invigorate_thorns_requirements
+            if invigorate_thorns_requirements[1] == 0:
                 for character in CHAMPION_LIST:
                     if character == DRUID.title:
                         if counter == 1:
-                            if venusfly_snap_requirements[0] <= champion1_rp:
-                                champion1_rp = champion1_rp - venusfly_snap_requirements[0]
-                                venusfly_snap_requirements[1] = venusfly_snap_requirements[2]
-                                champion1_rp = champion1_rp + venusfly_snap_requirements[3]
+                            if invigorate_thorns_requirements[0] <= champion1_rp:
+                                champion1_rp = champion1_rp - invigorate_thorns_requirements[0]
+                                invigorate_thorns_requirements[1] = invigorate_thorns_requirements[2]
+                                champion1_rp = champion1_rp + invigorate_thorns_requirements[3]
                                 damage_done = math.ceil(DRUID.ap * self.calculate_champion_damage(1))
                                 damage_done = math.ceil(     DRUID.ap * self.calculate_champion_damage(1))
-                                ability_data = ["Venus-fly Snap", "enemy", "1T", damage_done]
+                                ability_data = ["Invigorate Thorns", "enemy", "1T", damage_done]
                             else:
                                 return
                         if counter == 2:
-                            if venusfly_snap_requirements[0] <= champion2_rp:
-                                champion2_rp = champion2_rp - venusfly_snap_requirements[0]
-                                venusfly_snap_requirements[1] = venusfly_snap_requirements[2]
-                                champion2_rp = champion2_rp + venusfly_snap_requirements[3]
+                            if invigorate_thorns_requirements[0] <= champion2_rp:
+                                champion2_rp = champion2_rp - invigorate_thorns_requirements[0]
+                                invigorate_thorns_requirements[1] = invigorate_thorns_requirements[2]
+                                champion2_rp = champion2_rp + invigorate_thorns_requirements[3]
                                 damage_done = math.ceil(DRUID.ap * self.calculate_champion_damage(2))
                                 damage_done = math.ceil(     DRUID.ap * self.calculate_champion_damage(2))
-                                ability_data = ["Venus-fly Snap", "enemy", "1T", damage_done]
+                                ability_data = ["Invigorate Thorns", "enemy", "1T", damage_done]
                             else:
                                 return
                         if counter == 3:
-                            if venusfly_snap_requirements[0] <= champion3_rp:
-                                champion3_rp = champion3_rp - venusfly_snap_requirements[0]
-                                venusfly_snap_requirements[1] = venusfly_snap_requirements[2]
-                                champion3_rp = champion3_rp + venusfly_snap_requirements[3]
+                            if invigorate_thorns_requirements[0] <= champion3_rp:
+                                champion3_rp = champion3_rp - invigorate_thorns_requirements[0]
+                                invigorate_thorns_requirements[1] = invigorate_thorns_requirements[2]
+                                champion3_rp = champion3_rp + invigorate_thorns_requirements[3]
                                 damage_done = math.ceil(DRUID.ap * self.calculate_champion_damage(3))
                                 damage_done = math.ceil(     DRUID.ap * self.calculate_champion_damage(3))
-                                ability_data = ["Venus-fly Snap", "enemy", "1T", damage_done]
+                                ability_data = ["Invigorate Thorns", "enemy", "1T", damage_done]
                             else:
                                 return
                         if counter == 4:
-                            if venusfly_snap_requirements[0] <= champion4_rp:
-                                champion4_rp = champion4_rp - venusfly_snap_requirements[0]
-                                venusfly_snap_requirements[1] = venusfly_snap_requirements[2]
-                                champion4_rp = champion4_rp + venusfly_snap_requirements[3]
+                            if invigorate_thorns_requirements[0] <= champion4_rp:
+                                champion4_rp = champion4_rp - invigorate_thorns_requirements[0]
+                                invigorate_thorns_requirements[1] = invigorate_thorns_requirements[2]
+                                champion4_rp = champion4_rp + invigorate_thorns_requirements[3]
                                 damage_done = math.ceil(DRUID.ap * self.calculate_champion_damage(4))
                                 damage_done = math.ceil(     DRUID.ap * self.calculate_champion_damage(4))
-                                ability_data = ["Venus-fly Snap", "enemy", "1T", damage_done]
+                                ability_data = ["Invigorate Thorns", "enemy", "1T", damage_done]
                             else:
                                 return
                         if counter == 5:
-                            if venusfly_snap_requirements[0] <= champion5_rp:
-                                champion5_rp = champion5_rp - venusfly_snap_requirements[0]
-                                venusfly_snap_requirements[1] = venusfly_snap_requirements[2]
-                                champion5_rp = champion5_rp + venusfly_snap_requirements[3]
+                            if invigorate_thorns_requirements[0] <= champion5_rp:
+                                champion5_rp = champion5_rp - invigorate_thorns_requirements[0]
+                                invigorate_thorns_requirements[1] = invigorate_thorns_requirements[2]
+                                champion5_rp = champion5_rp + invigorate_thorns_requirements[3]
                                 damage_done = math.ceil(DRUID.ap * self.calculate_champion_damage(5))
                                 damage_done = math.ceil(     DRUID.ap * self.calculate_champion_damage(5))
-                                ability_data = ["Venus-fly Snap", "enemy", "1T", damage_done]
+                                ability_data = ["Invigorate Thorns", "enemy", "1T", damage_done]
                             else:
                                 return
                     counter += 1
@@ -13406,59 +13494,59 @@ class GameFrame(tk.Frame):
                     counter += 1
             else:
                 return
-        elif ability_name == "Overhand Justice":
-            global overhand_justice_requirements
-            if overhand_justice_requirements[1] == 0:
+        elif ability_name == "Holy Wrath":
+            global holy_wrath_requirements
+            if holy_wrath_requirements[1] == 0:
                 for character in CHAMPION_LIST:
                     if character == PALADIN.title:
                         if counter == 1:
-                            if overhand_justice_requirements[0] <= champion1_rp:
-                                champion1_rp = champion1_rp - overhand_justice_requirements[0]
-                                overhand_justice_requirements[1] = overhand_justice_requirements[2]
-                                champion1_rp = champion1_rp + overhand_justice_requirements[3]
+                            if holy_wrath_requirements[0] <= champion1_rp:
+                                champion1_rp = champion1_rp - holy_wrath_requirements[0]
+                                holy_wrath_requirements[1] = holy_wrath_requirements[2]
+                                champion1_rp = champion1_rp + holy_wrath_requirements[3]
                                 damage_done = math.ceil(PALADIN.ap * self.calculate_champion_damage(1))
                                 damage_done = math.ceil(     PALADIN.ap * self.calculate_champion_damage(1))
-                                ability_data = ["Overhand Justice", "enemy", "1T", damage_done]
+                                ability_data = ["Holy Wrath", "enemy", "1T", damage_done]
                             else:
                                 return
                         if counter == 2:
-                            if overhand_justice_requirements[0] <= champion2_rp:
-                                champion2_rp = champion2_rp - overhand_justice_requirements[0]
-                                overhand_justice_requirements[1] = overhand_justice_requirements[2]
-                                champion2_rp = champion2_rp + overhand_justice_requirements[3]
+                            if holy_wrath_requirements[0] <= champion2_rp:
+                                champion2_rp = champion2_rp - holy_wrath_requirements[0]
+                                holy_wrath_requirements[1] = holy_wrath_requirements[2]
+                                champion2_rp = champion2_rp + holy_wrath_requirements[3]
                                 damage_done = math.ceil(PALADIN.ap * self.calculate_champion_damage(2))
                                 damage_done = math.ceil(     PALADIN.ap * self.calculate_champion_damage(2))
-                                ability_data = ["Overhand Justice", "enemy", "1T", damage_done]
+                                ability_data = ["Holy Wrath", "enemy", "1T", damage_done]
                             else:
                                 return
                         if counter == 3:
-                            if overhand_justice_requirements[0] <= champion3_rp:
-                                champion3_rp = champion3_rp - overhand_justice_requirements[0]
-                                overhand_justice_requirements[1] = overhand_justice_requirements[2]
-                                champion3_rp = champion3_rp + overhand_justice_requirements[3]
+                            if holy_wrath_requirements[0] <= champion3_rp:
+                                champion3_rp = champion3_rp - holy_wrath_requirements[0]
+                                holy_wrath_requirements[1] = holy_wrath_requirements[2]
+                                champion3_rp = champion3_rp + holy_wrath_requirements[3]
                                 damage_done = math.ceil(PALADIN.ap * self.calculate_champion_damage(3))
                                 damage_done = math.ceil(     PALADIN.ap * self.calculate_champion_damage(3))
-                                ability_data = ["Overhand Justice", "enemy", "1T", damage_done]
+                                ability_data = ["Holy Wrath", "enemy", "1T", damage_done]
                             else:
                                 return
                         if counter == 4:
-                            if overhand_justice_requirements[0] <= champion4_rp:
-                                champion4_rp = champion4_rp - overhand_justice_requirements[0]
-                                overhand_justice_requirements[1] = overhand_justice_requirements[2]
-                                champion4_rp = champion4_rp + overhand_justice_requirements[3]
+                            if holy_wrath_requirements[0] <= champion4_rp:
+                                champion4_rp = champion4_rp - holy_wrath_requirements[0]
+                                holy_wrath_requirements[1] = holy_wrath_requirements[2]
+                                champion4_rp = champion4_rp + holy_wrath_requirements[3]
                                 damage_done = math.ceil(PALADIN.ap * self.calculate_champion_damage(4))
                                 damage_done = math.ceil(     PALADIN.ap * self.calculate_champion_damage(4))
-                                ability_data = ["Overhand Justice", "enemy", "1T", damage_done]
+                                ability_data = ["Holy Wrath", "enemy", "1T", damage_done]
                             else:
                                 return
                         if counter == 5:
-                            if overhand_justice_requirements[0] <= champion5_rp:
-                                champion5_rp = champion5_rp - overhand_justice_requirements[0]
-                                overhand_justice_requirements[1] = overhand_justice_requirements[2]
-                                champion5_rp = champion5_rp + overhand_justice_requirements[3]
+                            if holy_wrath_requirements[0] <= champion5_rp:
+                                champion5_rp = champion5_rp - holy_wrath_requirements[0]
+                                holy_wrath_requirements[1] = holy_wrath_requirements[2]
+                                champion5_rp = champion5_rp + holy_wrath_requirements[3]
                                 damage_done = math.ceil(PALADIN.ap * self.calculate_champion_damage(5))
                                 damage_done = math.ceil(     PALADIN.ap * self.calculate_champion_damage(5))
-                                ability_data = ["Overhand Justice", "enemy", "1T", damage_done]
+                                ability_data = ["Holy Wrath", "enemy", "1T", damage_done]
                             else:
                                 return
                     counter += 1
@@ -13526,14 +13614,14 @@ class GameFrame(tk.Frame):
             global steady_shot_requirements
             if steady_shot_requirements[1] == 0:
                 for character in CHAMPION_LIST:
-                    if character == CASTLE_RANGER.title:
+                    if character == LEGION_RANGER.title:
                         if counter == 1:
                             if steady_shot_requirements[0] <= champion1_rp:
                                 champion1_rp = champion1_rp - steady_shot_requirements[0]
                                 steady_shot_requirements[1] = steady_shot_requirements[2]
                                 champion1_rp = champion1_rp + steady_shot_requirements[3]
-                                damage_done = math.ceil(CASTLE_RANGER.ap * self.calculate_champion_damage(1))
-                                damage_done = math.ceil(     CASTLE_RANGER.ap * self.calculate_champion_damage(1))
+                                damage_done = math.ceil(LEGION_RANGER.ap * self.calculate_champion_damage(1))
+                                damage_done = math.ceil(     LEGION_RANGER.ap * self.calculate_champion_damage(1))
                                 ability_data = ["Steady Shot", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -13542,8 +13630,8 @@ class GameFrame(tk.Frame):
                                 champion2_rp = champion2_rp - steady_shot_requirements[0]
                                 steady_shot_requirements[1] = steady_shot_requirements[2]
                                 champion2_rp = champion2_rp + steady_shot_requirements[3]
-                                damage_done = math.ceil(CASTLE_RANGER.ap * self.calculate_champion_damage(2))
-                                damage_done = math.ceil(     CASTLE_RANGER.ap * self.calculate_champion_damage(2))
+                                damage_done = math.ceil(LEGION_RANGER.ap * self.calculate_champion_damage(2))
+                                damage_done = math.ceil(     LEGION_RANGER.ap * self.calculate_champion_damage(2))
                                 ability_data = ["Steady Shot", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -13552,8 +13640,8 @@ class GameFrame(tk.Frame):
                                 champion3_rp = champion3_rp - steady_shot_requirements[0]
                                 steady_shot_requirements[1] = steady_shot_requirements[2]
                                 champion3_rp = champion3_rp + steady_shot_requirements[3]
-                                damage_done = math.ceil(CASTLE_RANGER.ap * self.calculate_champion_damage(3))
-                                damage_done = math.ceil(     CASTLE_RANGER.ap * self.calculate_champion_damage(3))
+                                damage_done = math.ceil(LEGION_RANGER.ap * self.calculate_champion_damage(3))
+                                damage_done = math.ceil(     LEGION_RANGER.ap * self.calculate_champion_damage(3))
                                 ability_data = ["Steady Shot", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -13562,8 +13650,8 @@ class GameFrame(tk.Frame):
                                 champion4_rp = champion4_rp - steady_shot_requirements[0]
                                 steady_shot_requirements[1] = steady_shot_requirements[2]
                                 champion4_rp = champion4_rp + steady_shot_requirements[3]
-                                damage_done = math.ceil(CASTLE_RANGER.ap * self.calculate_champion_damage(4))
-                                damage_done = math.ceil(     CASTLE_RANGER.ap * self.calculate_champion_damage(4))
+                                damage_done = math.ceil(LEGION_RANGER.ap * self.calculate_champion_damage(4))
+                                damage_done = math.ceil(     LEGION_RANGER.ap * self.calculate_champion_damage(4))
                                 ability_data = ["Steady Shot", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -13572,8 +13660,8 @@ class GameFrame(tk.Frame):
                                 champion5_rp = champion5_rp - steady_shot_requirements[0]
                                 steady_shot_requirements[1] = steady_shot_requirements[2]
                                 champion5_rp = champion5_rp + steady_shot_requirements[3]
-                                damage_done = math.ceil(CASTLE_RANGER.ap * self.calculate_champion_damage(5))
-                                damage_done = math.ceil(     CASTLE_RANGER.ap * self.calculate_champion_damage(5))
+                                damage_done = math.ceil(LEGION_RANGER.ap * self.calculate_champion_damage(5))
+                                damage_done = math.ceil(     LEGION_RANGER.ap * self.calculate_champion_damage(5))
                                 ability_data = ["Steady Shot", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -13584,14 +13672,14 @@ class GameFrame(tk.Frame):
             global power_opt_requirements
             if power_opt_requirements[1] == 0:
                 for character in CHAMPION_LIST:
-                    if character == CASTLE_RANGER.title:
+                    if character == LEGION_RANGER.title:
                         if counter == 1:
                             if power_opt_requirements[0] <= champion1_rp:
                                 champion1_rp = champion1_rp - power_opt_requirements[0]
                                 power_opt_requirements[1] = power_opt_requirements[2]
                                 champion1_rp = champion1_rp + power_opt_requirements[3]
-                                damage_done = math.ceil(CASTLE_RANGER.ap * self.calculate_champion_damage(1))
-                                damage_done = math.ceil(     CASTLE_RANGER.ap * self.calculate_champion_damage(1))
+                                damage_done = math.ceil(LEGION_RANGER.ap * self.calculate_champion_damage(1))
+                                damage_done = math.ceil(     LEGION_RANGER.ap * self.calculate_champion_damage(1))
                                 ability_data = ["Power Opt", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -13600,8 +13688,8 @@ class GameFrame(tk.Frame):
                                 champion2_rp = champion2_rp - power_opt_requirements[0]
                                 power_opt_requirements[1] = power_opt_requirements[2]
                                 champion2_rp = champion2_rp + power_opt_requirements[3]
-                                damage_done = math.ceil(CASTLE_RANGER.ap * self.calculate_champion_damage(2))
-                                damage_done = math.ceil(     CASTLE_RANGER.ap * self.calculate_champion_damage(2))
+                                damage_done = math.ceil(LEGION_RANGER.ap * self.calculate_champion_damage(2))
+                                damage_done = math.ceil(     LEGION_RANGER.ap * self.calculate_champion_damage(2))
                                 ability_data = ["Power Opt", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -13610,8 +13698,8 @@ class GameFrame(tk.Frame):
                                 champion3_rp = champion3_rp - power_opt_requirements[0]
                                 power_opt_requirements[1] = power_opt_requirements[2]
                                 champion3_rp = champion3_rp + power_opt_requirements[3]
-                                damage_done = math.ceil(CASTLE_RANGER.ap * self.calculate_champion_damage(3))
-                                damage_done = math.ceil(     CASTLE_RANGER.ap * self.calculate_champion_damage(3))
+                                damage_done = math.ceil(LEGION_RANGER.ap * self.calculate_champion_damage(3))
+                                damage_done = math.ceil(     LEGION_RANGER.ap * self.calculate_champion_damage(3))
                                 ability_data = ["Power Opt", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -13620,8 +13708,8 @@ class GameFrame(tk.Frame):
                                 champion4_rp = champion4_rp - power_opt_requirements[0]
                                 power_opt_requirements[1] = power_opt_requirements[2]
                                 champion4_rp = champion4_rp + power_opt_requirements[3]
-                                damage_done = math.ceil(CASTLE_RANGER.ap * self.calculate_champion_damage(4))
-                                damage_done = math.ceil(     CASTLE_RANGER.ap * self.calculate_champion_damage(4))
+                                damage_done = math.ceil(LEGION_RANGER.ap * self.calculate_champion_damage(4))
+                                damage_done = math.ceil(     LEGION_RANGER.ap * self.calculate_champion_damage(4))
                                 ability_data = ["Power Opt", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -13630,125 +13718,125 @@ class GameFrame(tk.Frame):
                                 champion5_rp = champion5_rp - power_opt_requirements[0]
                                 power_opt_requirements[1] = power_opt_requirements[2]
                                 champion5_rp = champion5_rp + power_opt_requirements[3]
-                                damage_done = math.ceil(CASTLE_RANGER.ap * self.calculate_champion_damage(5))
-                                damage_done = math.ceil(     CASTLE_RANGER.ap * self.calculate_champion_damage(5))
+                                damage_done = math.ceil(LEGION_RANGER.ap * self.calculate_champion_damage(5))
+                                damage_done = math.ceil(     LEGION_RANGER.ap * self.calculate_champion_damage(5))
                                 ability_data = ["Power Opt", "enemy", "1T", damage_done]
                             else:
                                 return
                     counter += 1
             else:
                 return
-        elif ability_name == "Lightning Bolt":
-            global lightning_bolt_requirements
-            if lightning_bolt_requirements[1] == 0:
+        elif ability_name == "Chain Bolts":
+            global chain_bolts_requirements
+            if chain_bolts_requirements[1] == 0:
                 for character in CHAMPION_LIST:
-                    if character == THUNDER_APPRENTICE.title:
+                    if character == MAGNETIMANCER.title:
                         if counter == 1:
-                            if lightning_bolt_requirements[0] <= champion1_rp:
-                                champion1_rp = champion1_rp - lightning_bolt_requirements[0]
-                                lightning_bolt_requirements[1] = lightning_bolt_requirements[2]
-                                champion1_rp = champion1_rp + lightning_bolt_requirements[3]
-                                damage_done = math.ceil(THUNDER_APPRENTICE.ap * self.calculate_champion_damage(1))
-                                damage_done = math.ceil(     THUNDER_APPRENTICE.ap * self.calculate_champion_damage(1))
-                                ability_data = ["Lightning Bolt", "enemy", "1T", damage_done]
+                            if chain_bolts_requirements[0] <= champion1_rp:
+                                champion1_rp = champion1_rp - chain_bolts_requirements[0]
+                                chain_bolts_requirements[1] = chain_bolts_requirements[2]
+                                champion1_rp = champion1_rp + chain_bolts_requirements[3]
+                                damage_done = math.ceil(MAGNETIMANCER.ap * self.calculate_champion_damage(1))
+                                damage_done = math.ceil(     MAGNETIMANCER.ap * self.calculate_champion_damage(1))
+                                ability_data = ["Chain Bolts", "enemy", "1T", damage_done]
                             else:
                                 return
                         if counter == 2:
-                            if lightning_bolt_requirements[0] <= champion2_rp:
-                                champion2_rp = champion2_rp - lightning_bolt_requirements[0]
-                                lightning_bolt_requirements[1] = lightning_bolt_requirements[2]
-                                champion2_rp = champion2_rp + lightning_bolt_requirements[3]
-                                damage_done = math.ceil(THUNDER_APPRENTICE.ap * self.calculate_champion_damage(2))
-                                damage_done = math.ceil(     THUNDER_APPRENTICE.ap * self.calculate_champion_damage(2))
-                                ability_data = ["Lightning Bolt", "enemy", "1T", damage_done]
+                            if chain_bolts_requirements[0] <= champion2_rp:
+                                champion2_rp = champion2_rp - chain_bolts_requirements[0]
+                                chain_bolts_requirements[1] = chain_bolts_requirements[2]
+                                champion2_rp = champion2_rp + chain_bolts_requirements[3]
+                                damage_done = math.ceil(MAGNETIMANCER.ap * self.calculate_champion_damage(2))
+                                damage_done = math.ceil(     MAGNETIMANCER.ap * self.calculate_champion_damage(2))
+                                ability_data = ["Chain Bolts", "enemy", "1T", damage_done]
                             else:
                                 return
                         if counter == 3:
-                            if lightning_bolt_requirements[0] <= champion3_rp:
-                                champion3_rp = champion3_rp - lightning_bolt_requirements[0]
-                                lightning_bolt_requirements[1] = lightning_bolt_requirements[2]
-                                champion3_rp = champion3_rp + lightning_bolt_requirements[3]
-                                damage_done = math.ceil(THUNDER_APPRENTICE.ap * self.calculate_champion_damage(3))
-                                damage_done = math.ceil(     THUNDER_APPRENTICE.ap * self.calculate_champion_damage(3))
-                                ability_data = ["Lightning Bolt", "enemy", "1T", damage_done]
+                            if chain_bolts_requirements[0] <= champion3_rp:
+                                champion3_rp = champion3_rp - chain_bolts_requirements[0]
+                                chain_bolts_requirements[1] = chain_bolts_requirements[2]
+                                champion3_rp = champion3_rp + chain_bolts_requirements[3]
+                                damage_done = math.ceil(MAGNETIMANCER.ap * self.calculate_champion_damage(3))
+                                damage_done = math.ceil(     MAGNETIMANCER.ap * self.calculate_champion_damage(3))
+                                ability_data = ["Chain Bolts", "enemy", "1T", damage_done]
                             else:
                                 return
                         if counter == 4:
-                            if lightning_bolt_requirements[0] <= champion4_rp:
-                                champion4_rp = champion4_rp - lightning_bolt_requirements[0]
-                                lightning_bolt_requirements[1] = lightning_bolt_requirements[2]
-                                champion4_rp = champion4_rp + lightning_bolt_requirements[3]
-                                damage_done = math.ceil(THUNDER_APPRENTICE.ap * self.calculate_champion_damage(4))
-                                damage_done = math.ceil(     THUNDER_APPRENTICE.ap * self.calculate_champion_damage(4))
-                                ability_data = ["Lightning Bolt", "enemy", "1T", damage_done]
+                            if chain_bolts_requirements[0] <= champion4_rp:
+                                champion4_rp = champion4_rp - chain_bolts_requirements[0]
+                                chain_bolts_requirements[1] = chain_bolts_requirements[2]
+                                champion4_rp = champion4_rp + chain_bolts_requirements[3]
+                                damage_done = math.ceil(MAGNETIMANCER.ap * self.calculate_champion_damage(4))
+                                damage_done = math.ceil(     MAGNETIMANCER.ap * self.calculate_champion_damage(4))
+                                ability_data = ["Chain Bolts", "enemy", "1T", damage_done]
                             else:
                                 return
                         if counter == 5:
-                            if lightning_bolt_requirements[0] <= champion5_rp:
-                                champion5_rp = champion5_rp - lightning_bolt_requirements[0]
-                                lightning_bolt_requirements[1] = lightning_bolt_requirements[2]
-                                champion5_rp = champion5_rp + lightning_bolt_requirements[3]
-                                damage_done = math.ceil(THUNDER_APPRENTICE.ap * self.calculate_champion_damage(5))
-                                damage_done = math.ceil(     THUNDER_APPRENTICE.ap * self.calculate_champion_damage(5))
-                                ability_data = ["Lightning Bolt", "enemy", "1T", damage_done]
+                            if chain_bolts_requirements[0] <= champion5_rp:
+                                champion5_rp = champion5_rp - chain_bolts_requirements[0]
+                                chain_bolts_requirements[1] = chain_bolts_requirements[2]
+                                champion5_rp = champion5_rp + chain_bolts_requirements[3]
+                                damage_done = math.ceil(MAGNETIMANCER.ap * self.calculate_champion_damage(5))
+                                damage_done = math.ceil(     MAGNETIMANCER.ap * self.calculate_champion_damage(5))
+                                ability_data = ["Chain Bolts", "enemy", "1T", damage_done]
                             else:
                                 return
                     counter += 1
             else:
                 return
-        elif ability_name == "Chain Lightning":
-            global chain_lightning_requirements
-            if chain_lightning_requirements[1] == 0:
+        elif ability_name == "Electrical Expulsion":
+            global electrical_expulsion_requirements
+            if electrical_expulsion_requirements[1] == 0:
                 for character in CHAMPION_LIST:
-                    if character == THUNDER_APPRENTICE.title:
+                    if character == MAGNETIMANCER.title:
                         if counter == 1:
-                            if chain_lightning_requirements[0] <= champion1_rp:
-                                champion1_rp = champion1_rp - chain_lightning_requirements[0]
-                                chain_lightning_requirements[1] = chain_lightning_requirements[2]
-                                champion1_rp = champion1_rp + chain_lightning_requirements[3]
-                                damage_done = math.ceil(THUNDER_APPRENTICE.ap * self.calculate_champion_damage(1))
-                                damage_done = math.ceil(     THUNDER_APPRENTICE.ap * self.calculate_champion_damage(1))
-                                ability_data = ["Chain Lightning", "enemy", "AOE", damage_done]
+                            if electrical_expulsion_requirements[0] <= champion1_rp:
+                                champion1_rp = champion1_rp - electrical_expulsion_requirements[0]
+                                electrical_expulsion_requirements[1] = electrical_expulsion_requirements[2]
+                                champion1_rp = champion1_rp + electrical_expulsion_requirements[3]
+                                damage_done = math.ceil(MAGNETIMANCER.ap * self.calculate_champion_damage(1))
+                                damage_done = math.ceil(     MAGNETIMANCER.ap * self.calculate_champion_damage(1))
+                                ability_data = ["Electrical Expulsion", "enemy", "AOE", damage_done]
                             else:
                                 return
                         if counter == 2:
-                            if chain_lightning_requirements[0] <= champion2_rp:
-                                champion2_rp = champion2_rp - chain_lightning_requirements[0]
-                                chain_lightning_requirements[1] = chain_lightning_requirements[2]
-                                champion2_rp = champion2_rp + chain_lightning_requirements[3]
-                                damage_done = math.ceil(THUNDER_APPRENTICE.ap * self.calculate_champion_damage(2))
-                                damage_done = math.ceil(     THUNDER_APPRENTICE.ap * self.calculate_champion_damage(2))
-                                ability_data = ["Chain Lightning", "enemy", "AOE", damage_done]
+                            if electrical_expulsion_requirements[0] <= champion2_rp:
+                                champion2_rp = champion2_rp - electrical_expulsion_requirements[0]
+                                electrical_expulsion_requirements[1] = electrical_expulsion_requirements[2]
+                                champion2_rp = champion2_rp + electrical_expulsion_requirements[3]
+                                damage_done = math.ceil(MAGNETIMANCER.ap * self.calculate_champion_damage(2))
+                                damage_done = math.ceil(     MAGNETIMANCER.ap * self.calculate_champion_damage(2))
+                                ability_data = ["Electrical Expulsion", "enemy", "AOE", damage_done]
                             else:
                                 return
                         if counter == 3:
-                            if chain_lightning_requirements[0] <= champion3_rp:
-                                champion3_rp = champion3_rp - chain_lightning_requirements[0]
-                                chain_lightning_requirements[1] = chain_lightning_requirements[2]
-                                champion3_rp = champion3_rp + chain_lightning_requirements[3]
-                                damage_done = math.ceil(THUNDER_APPRENTICE.ap * self.calculate_champion_damage(3))
-                                damage_done = math.ceil(     THUNDER_APPRENTICE.ap * self.calculate_champion_damage(3))
-                                ability_data = ["Chain Lightning", "enemy", "AOE", damage_done]
+                            if electrical_expulsion_requirements[0] <= champion3_rp:
+                                champion3_rp = champion3_rp - electrical_expulsion_requirements[0]
+                                electrical_expulsion_requirements[1] = electrical_expulsion_requirements[2]
+                                champion3_rp = champion3_rp + electrical_expulsion_requirements[3]
+                                damage_done = math.ceil(MAGNETIMANCER.ap * self.calculate_champion_damage(3))
+                                damage_done = math.ceil(     MAGNETIMANCER.ap * self.calculate_champion_damage(3))
+                                ability_data = ["Electrical Expulsion", "enemy", "AOE", damage_done]
                             else:
                                 return
                         if counter == 4:
-                            if chain_lightning_requirements[0] <= champion4_rp:
-                                champion4_rp = champion4_rp - chain_lightning_requirements[0]
-                                chain_lightning_requirements[1] = chain_lightning_requirements[2]
-                                champion4_rp = champion4_rp + chain_lightning_requirements[3]
-                                damage_done = math.ceil(THUNDER_APPRENTICE.ap * self.calculate_champion_damage(4))
-                                damage_done = math.ceil(     THUNDER_APPRENTICE.ap * self.calculate_champion_damage(4))
-                                ability_data = ["Chain Lightning", "enemy", "AOE", damage_done]
+                            if electrical_expulsion_requirements[0] <= champion4_rp:
+                                champion4_rp = champion4_rp - electrical_expulsion_requirements[0]
+                                electrical_expulsion_requirements[1] = electrical_expulsion_requirements[2]
+                                champion4_rp = champion4_rp + electrical_expulsion_requirements[3]
+                                damage_done = math.ceil(MAGNETIMANCER.ap * self.calculate_champion_damage(4))
+                                damage_done = math.ceil(     MAGNETIMANCER.ap * self.calculate_champion_damage(4))
+                                ability_data = ["Electrical Expulsion", "enemy", "AOE", damage_done]
                             else:
                                 return
                         if counter == 5:
-                            if chain_lightning_requirements[0] <= champion5_rp:
-                                champion5_rp = champion5_rp - chain_lightning_requirements[0]
-                                chain_lightning_requirements[1] = chain_lightning_requirements[2]
-                                champion5_rp = champion5_rp + chain_lightning_requirements[3]
-                                damage_done = math.ceil(THUNDER_APPRENTICE.ap * self.calculate_champion_damage(5))
-                                damage_done = math.ceil(     THUNDER_APPRENTICE.ap * self.calculate_champion_damage(5))
-                                ability_data = ["Chain Lightning", "enemy", "AOE", damage_done]
+                            if electrical_expulsion_requirements[0] <= champion5_rp:
+                                champion5_rp = champion5_rp - electrical_expulsion_requirements[0]
+                                electrical_expulsion_requirements[1] = electrical_expulsion_requirements[2]
+                                champion5_rp = champion5_rp + electrical_expulsion_requirements[3]
+                                damage_done = math.ceil(MAGNETIMANCER.ap * self.calculate_champion_damage(5))
+                                damage_done = math.ceil(     MAGNETIMANCER.ap * self.calculate_champion_damage(5))
+                                ability_data = ["Electrical Expulsion", "enemy", "AOE", damage_done]
                             else:
                                 return
                     counter += 1
@@ -13990,14 +14078,14 @@ class GameFrame(tk.Frame):
             global throw_scissors_requirements
             if throw_scissors_requirements[1] == 0:
                 for character in CHAMPION_LIST:
-                    if character == CHILD_OF_MEDICINE.title:
+                    if character == FIELD_MEDIC.title:
                         if counter == 1:
                             if throw_scissors_requirements[0] <= champion1_rp:
                                 champion1_rp = champion1_rp - throw_scissors_requirements[0]
                                 throw_scissors_requirements[1] = throw_scissors_requirements[2]
                                 champion1_rp = champion1_rp + throw_scissors_requirements[3]
-                                damage_done = math.ceil(CHILD_OF_MEDICINE.ap * self.calculate_champion_damage(1))
-                                damage_done = math.ceil(CHILD_OF_MEDICINE.ap * self.calculate_champion_damage(1))
+                                damage_done = math.ceil(FIELD_MEDIC.ap * self.calculate_champion_damage(1))
+                                damage_done = math.ceil(FIELD_MEDIC.ap * self.calculate_champion_damage(1))
                                 ability_data = ["Throw Scissors", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -14006,8 +14094,8 @@ class GameFrame(tk.Frame):
                                 champion2_rp = champion2_rp - throw_scissors_requirements[0]
                                 throw_scissors_requirements[1] = throw_scissors_requirements[2]
                                 champion2_rp = champion2_rp + throw_scissors_requirements[3]
-                                damage_done = math.ceil(CHILD_OF_MEDICINE.ap * self.calculate_champion_damage(2))
-                                damage_done = math.ceil(CHILD_OF_MEDICINE.ap * self.calculate_champion_damage(2))
+                                damage_done = math.ceil(FIELD_MEDIC.ap * self.calculate_champion_damage(2))
+                                damage_done = math.ceil(FIELD_MEDIC.ap * self.calculate_champion_damage(2))
                                 ability_data = ["Throw Scissors", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -14016,8 +14104,8 @@ class GameFrame(tk.Frame):
                                 champion3_rp = champion3_rp - throw_scissors_requirements[0]
                                 throw_scissors_requirements[1] = throw_scissors_requirements[2]
                                 champion3_rp = champion3_rp + throw_scissors_requirements[3]
-                                damage_done = math.ceil(CHILD_OF_MEDICINE.ap * self.calculate_champion_damage(3))
-                                damage_done = math.ceil(CHILD_OF_MEDICINE.ap * self.calculate_champion_damage(3))
+                                damage_done = math.ceil(FIELD_MEDIC.ap * self.calculate_champion_damage(3))
+                                damage_done = math.ceil(FIELD_MEDIC.ap * self.calculate_champion_damage(3))
                                 ability_data = ["Throw Scissors", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -14026,8 +14114,8 @@ class GameFrame(tk.Frame):
                                 champion4_rp = champion4_rp - throw_scissors_requirements[0]
                                 throw_scissors_requirements[1] = throw_scissors_requirements[2]
                                 champion4_rp = champion4_rp + throw_scissors_requirements[3]
-                                damage_done = math.ceil(CHILD_OF_MEDICINE.ap * self.calculate_champion_damage(4))
-                                damage_done = math.ceil(CHILD_OF_MEDICINE.ap * self.calculate_champion_damage(4))
+                                damage_done = math.ceil(FIELD_MEDIC.ap * self.calculate_champion_damage(4))
+                                damage_done = math.ceil(FIELD_MEDIC.ap * self.calculate_champion_damage(4))
                                 ability_data = ["Throw Scissors", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -14036,8 +14124,8 @@ class GameFrame(tk.Frame):
                                 champion5_rp = champion5_rp - throw_scissors_requirements[0]
                                 throw_scissors_requirements[1] = throw_scissors_requirements[2]
                                 champion5_rp = champion5_rp + throw_scissors_requirements[3]
-                                damage_done = math.ceil(CHILD_OF_MEDICINE.ap * self.calculate_champion_damage(5))
-                                damage_done = math.ceil(CHILD_OF_MEDICINE.ap * self.calculate_champion_damage(5))
+                                damage_done = math.ceil(FIELD_MEDIC.ap * self.calculate_champion_damage(5))
+                                damage_done = math.ceil(FIELD_MEDIC.ap * self.calculate_champion_damage(5))
                                 ability_data = ["Throw Scissors", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -14430,7 +14518,7 @@ class GameFrame(tk.Frame):
             global fortification_requirements
             if fortification_requirements[1] == 0:
                 for character in CHAMPION_LIST:
-                    if character == VETERAN_BODYGUARD.title:
+                    if character == KINGS_GUARD.title:
                         if counter == 1:
                             if fortification_requirements[0] <= champion1_rp:
                                 champion1_rp = champion1_rp - fortification_requirements[0]
@@ -14478,7 +14566,7 @@ class GameFrame(tk.Frame):
             global block_requirements
             if block_requirements[1] == 0:
                 for character in CHAMPION_LIST:
-                    if character == VETERAN_BODYGUARD.title:
+                    if character == KINGS_GUARD.title:
                         if counter == 1:
                             if block_requirements[0] <= champion1_rp:
                                 champion1_rp = champion1_rp - block_requirements[0]
@@ -14522,97 +14610,97 @@ class GameFrame(tk.Frame):
                     counter += 1
             else:
                 return
-        elif ability_name == "Parry":
-            global parry_requirements
-            if parry_requirements[1] == 0:
+        elif ability_name == "Magic Reflection":
+            global magic_reflection_requirements
+            if magic_reflection_requirements[1] == 0:
                 for character in CHAMPION_LIST:
                     if character == MASTER_FENCER.title:
                         if counter == 1:
-                            if parry_requirements[0] <= champion1_rp:
-                                champion1_rp = champion1_rp - parry_requirements[0]
-                                parry_requirements[1] = parry_requirements[2]
-                                champion1_rp = champion1_rp + parry_requirements[3]
-                                ability_data = ["Parry", "ally", "1T"]
+                            if magic_reflection_requirements[0] <= champion1_rp:
+                                champion1_rp = champion1_rp - magic_reflection_requirements[0]
+                                magic_reflection_requirements[1] = magic_reflection_requirements[2]
+                                champion1_rp = champion1_rp + magic_reflection_requirements[3]
+                                ability_data = ["Magic Reflection", "ally", "1T"]
                             else:
                                 return
                         if counter == 2:
-                            if parry_requirements[0] <= champion2_rp:
-                                champion2_rp = champion2_rp - parry_requirements[0]
-                                parry_requirements[1] = parry_requirements[2]
-                                champion2_rp = champion2_rp + parry_requirements[3]
-                                ability_data = ["Parry", "ally", "1T"]
+                            if magic_reflection_requirements[0] <= champion2_rp:
+                                champion2_rp = champion2_rp - magic_reflection_requirements[0]
+                                magic_reflection_requirements[1] = magic_reflection_requirements[2]
+                                champion2_rp = champion2_rp + magic_reflection_requirements[3]
+                                ability_data = ["Magic Reflection", "ally", "1T"]
                             else:
                                 return
                         if counter == 3:
-                            if parry_requirements[0] <= champion3_rp:
-                                champion3_rp = champion3_rp - parry_requirements[0]
-                                parry_requirements[1] = parry_requirements[2]
-                                champion3_rp = champion3_rp + parry_requirements[3]
-                                ability_data = ["Parry", "ally", "1T"]
+                            if magic_reflection_requirements[0] <= champion3_rp:
+                                champion3_rp = champion3_rp - magic_reflection_requirements[0]
+                                magic_reflection_requirements[1] = magic_reflection_requirements[2]
+                                champion3_rp = champion3_rp + magic_reflection_requirements[3]
+                                ability_data = ["Magic Reflection", "ally", "1T"]
                             else:
                                 return
                         if counter == 4:
-                            if parry_requirements[0] <= champion4_rp:
-                                champion4_rp = champion4_rp - parry_requirements[0]
-                                parry_requirements[1] = parry_requirements[2]
-                                champion4_rp = champion4_rp + parry_requirements[3]
-                                ability_data = ["Parry", "ally", "1T"]
+                            if magic_reflection_requirements[0] <= champion4_rp:
+                                champion4_rp = champion4_rp - magic_reflection_requirements[0]
+                                magic_reflection_requirements[1] = magic_reflection_requirements[2]
+                                champion4_rp = champion4_rp + magic_reflection_requirements[3]
+                                ability_data = ["Magic Reflection", "ally", "1T"]
                             else:
                                 return
                         if counter == 5:
-                            if parry_requirements[0] <= champion5_rp:
-                                champion5_rp = champion5_rp - parry_requirements[0]
-                                parry_requirements[1] = parry_requirements[2]
-                                champion5_rp = champion5_rp + parry_requirements[3]
-                                ability_data = ["Parry", "ally", "1T"]
+                            if magic_reflection_requirements[0] <= champion5_rp:
+                                champion5_rp = champion5_rp - magic_reflection_requirements[0]
+                                magic_reflection_requirements[1] = magic_reflection_requirements[2]
+                                champion5_rp = champion5_rp + magic_reflection_requirements[3]
+                                ability_data = ["Magic Reflection", "ally", "1T"]
                             else:
                                 return
                     counter += 1
             else:
                 return
-        elif ability_name == "Elusive Measures":
-            global elusive_measures_requirements
-            if elusive_measures_requirements[1] == 0:
+        elif ability_name == "Evasive Manoeuvres":
+            global evasive_manoeuvres_requirements
+            if evasive_manoeuvres_requirements[1] == 0:
                 for character in CHAMPION_LIST:
                     if character == MASTER_FENCER.title:
                         if counter == 1:
-                            if elusive_measures_requirements[0] <= champion1_rp:
-                                champion1_rp = champion1_rp - elusive_measures_requirements[0]
-                                elusive_measures_requirements[1] = elusive_measures_requirements[2]
-                                champion1_rp = champion1_rp + elusive_measures_requirements[3]
-                                ability_data = ["Elusive Measures", "self"]
+                            if evasive_manoeuvres_requirements[0] <= champion1_rp:
+                                champion1_rp = champion1_rp - evasive_manoeuvres_requirements[0]
+                                evasive_manoeuvres_requirements[1] = evasive_manoeuvres_requirements[2]
+                                champion1_rp = champion1_rp + evasive_manoeuvres_requirements[3]
+                                ability_data = ["Evasive Manoeuvres", "self"]
                             else:
                                 return
                         if counter == 2:
-                            if elusive_measures_requirements[0] <= champion2_rp:
-                                champion2_rp = champion2_rp - elusive_measures_requirements[0]
-                                elusive_measures_requirements[1] = elusive_measures_requirements[2]
-                                champion2_rp = champion2_rp + elusive_measures_requirements[3]
-                                ability_data = ["Elusive Measures", "self"]
+                            if evasive_manoeuvres_requirements[0] <= champion2_rp:
+                                champion2_rp = champion2_rp - evasive_manoeuvres_requirements[0]
+                                evasive_manoeuvres_requirements[1] = evasive_manoeuvres_requirements[2]
+                                champion2_rp = champion2_rp + evasive_manoeuvres_requirements[3]
+                                ability_data = ["Evasive Manoeuvres", "self"]
                             else:
                                 return
                         if counter == 3:
-                            if elusive_measures_requirements[0] <= champion3_rp:
-                                champion3_rp = champion3_rp - elusive_measures_requirements[0]
-                                elusive_measures_requirements[1] = elusive_measures_requirements[2]
-                                champion3_rp = champion3_rp + elusive_measures_requirements[3]
-                                ability_data = ["Elusive Measures", "self"]
+                            if evasive_manoeuvres_requirements[0] <= champion3_rp:
+                                champion3_rp = champion3_rp - evasive_manoeuvres_requirements[0]
+                                evasive_manoeuvres_requirements[1] = evasive_manoeuvres_requirements[2]
+                                champion3_rp = champion3_rp + evasive_manoeuvres_requirements[3]
+                                ability_data = ["Evasive Manoeuvres", "self"]
                             else:
                                 return
                         if counter == 4:
-                            if elusive_measures_requirements[0] <= champion4_rp:
-                                champion4_rp = champion4_rp - elusive_measures_requirements[0]
-                                elusive_measures_requirements[1] = elusive_measures_requirements[2]
-                                champion4_rp = champion4_rp + elusive_measures_requirements[3]
-                                ability_data = ["Elusive Measures", "self"]
+                            if evasive_manoeuvres_requirements[0] <= champion4_rp:
+                                champion4_rp = champion4_rp - evasive_manoeuvres_requirements[0]
+                                evasive_manoeuvres_requirements[1] = evasive_manoeuvres_requirements[2]
+                                champion4_rp = champion4_rp + evasive_manoeuvres_requirements[3]
+                                ability_data = ["Evasive Manoeuvres", "self"]
                             else:
                                 return
                         if counter == 5:
-                            if elusive_measures_requirements[0] <= champion5_rp:
-                                champion5_rp = champion5_rp - elusive_measures_requirements[0]
-                                elusive_measures_requirements[1] = elusive_measures_requirements[2]
-                                champion5_rp = champion5_rp + elusive_measures_requirements[3]
-                                ability_data = ["Elusive Measures", "self"]
+                            if evasive_manoeuvres_requirements[0] <= champion5_rp:
+                                champion5_rp = champion5_rp - evasive_manoeuvres_requirements[0]
+                                evasive_manoeuvres_requirements[1] = evasive_manoeuvres_requirements[2]
+                                champion5_rp = champion5_rp + evasive_manoeuvres_requirements[3]
+                                ability_data = ["Evasive Manoeuvres", "self"]
                             else:
                                 return
                     counter += 1
@@ -15138,107 +15226,107 @@ class GameFrame(tk.Frame):
                     counter += 1
             else:
                 return
-        elif ability_name == "Thorns":
-            global thorns_requirements
-            if thorns_requirements[1] == 0:
+        elif ability_name == "Barbed Bush Armour":
+            global barbed_bush_armour_requirements
+            if barbed_bush_armour_requirements[1] == 0:
                 for character in CHAMPION_LIST:
                     if character == DRUID.title:
                         if counter == 1:
-                            if thorns_requirements[0] <= champion1_rp:
-                                champion1_rp = champion1_rp - thorns_requirements[0]
-                                thorns_requirements[1] = thorns_requirements[2]
-                                champion1_rp = champion1_rp + thorns_requirements[3]
-                                ability_data = ["Thorns", "ally", "1T"]
+                            if barbed_bush_armour_requirements[0] <= champion1_rp:
+                                champion1_rp = champion1_rp - barbed_bush_armour_requirements[0]
+                                barbed_bush_armour_requirements[1] = barbed_bush_armour_requirements[2]
+                                champion1_rp = champion1_rp + barbed_bush_armour_requirements[3]
+                                ability_data = ["Barbed Bush Armour", "ally", "1T"]
                             else:
                                 return
                         if counter == 2:
-                            if thorns_requirements[0] <= champion2_rp:
-                                champion2_rp = champion2_rp - thorns_requirements[0]
-                                thorns_requirements[1] = thorns_requirements[2]
-                                champion2_rp = champion2_rp + thorns_requirements[3]
-                                ability_data = ["Thorns", "ally", "1T"]
+                            if barbed_bush_armour_requirements[0] <= champion2_rp:
+                                champion2_rp = champion2_rp - barbed_bush_armour_requirements[0]
+                                barbed_bush_armour_requirements[1] = barbed_bush_armour_requirements[2]
+                                champion2_rp = champion2_rp + barbed_bush_armour_requirements[3]
+                                ability_data = ["Barbed Bush Armour", "ally", "1T"]
                             else:
                                 return
                         if counter == 3:
-                            if thorns_requirements[0] <= champion3_rp:
-                                champion3_rp = champion3_rp - thorns_requirements[0]
-                                thorns_requirements[1] = thorns_requirements[2]
-                                champion3_rp = champion3_rp + thorns_requirements[3]
-                                ability_data = ["Thorns", "ally", "1T"]
+                            if barbed_bush_armour_requirements[0] <= champion3_rp:
+                                champion3_rp = champion3_rp - barbed_bush_armour_requirements[0]
+                                barbed_bush_armour_requirements[1] = barbed_bush_armour_requirements[2]
+                                champion3_rp = champion3_rp + barbed_bush_armour_requirements[3]
+                                ability_data = ["Barbed Bush Armour", "ally", "1T"]
                             else:
                                 return
                         if counter == 4:
-                            if thorns_requirements[0] <= champion4_rp:
-                                champion4_rp = champion4_rp - thorns_requirements[0]
-                                thorns_requirements[1] = thorns_requirements[2]
-                                champion4_rp = champion4_rp + thorns_requirements[3]
-                                ability_data = ["Thorns", "ally", "1T"]
+                            if barbed_bush_armour_requirements[0] <= champion4_rp:
+                                champion4_rp = champion4_rp - barbed_bush_armour_requirements[0]
+                                barbed_bush_armour_requirements[1] = barbed_bush_armour_requirements[2]
+                                champion4_rp = champion4_rp + barbed_bush_armour_requirements[3]
+                                ability_data = ["Barbed Bush Armour", "ally", "1T"]
                             else:
                                 return
                         if counter == 5:
-                            if thorns_requirements[0] <= champion5_rp:
-                                champion5_rp = champion5_rp - thorns_requirements[0]
-                                thorns_requirements[1] = thorns_requirements[2]
-                                champion5_rp = champion5_rp + thorns_requirements[3]
-                                ability_data = ["Thorns", "ally", "1T"]
+                            if barbed_bush_armour_requirements[0] <= champion5_rp:
+                                champion5_rp = champion5_rp - barbed_bush_armour_requirements[0]
+                                barbed_bush_armour_requirements[1] = barbed_bush_armour_requirements[2]
+                                champion5_rp = champion5_rp + barbed_bush_armour_requirements[3]
+                                ability_data = ["Barbed Bush Armour", "ally", "1T"]
                             else:
                                 return
                     counter += 1
             else:
                 return
-        elif ability_name == "Prickle Arena":
-            global prickle_arena_requirements
-            if prickle_arena_requirements[1] == 0:
+        elif ability_name == "Burst N Bloom":
+            global burst_n_bloom_requirements
+            if burst_n_bloom_requirements[1] == 0:
                 for character in CHAMPION_LIST:
                     if character == DRUID.title:
                         if counter == 1:
-                            if prickle_arena_requirements[0] <= champion1_rp:
-                                champion1_rp = champion1_rp - prickle_arena_requirements[0]
-                                prickle_arena_requirements[1] = prickle_arena_requirements[2]
-                                champion1_rp = champion1_rp + prickle_arena_requirements[3]
+                            if burst_n_bloom_requirements[0] <= champion1_rp:
+                                champion1_rp = champion1_rp - burst_n_bloom_requirements[0]
+                                burst_n_bloom_requirements[1] = burst_n_bloom_requirements[2]
+                                champion1_rp = champion1_rp + burst_n_bloom_requirements[3]
                                 damage_done = math.ceil(DRUID.ap * self.calculate_champion_damage(1))
                                 damage_done = math.ceil(DRUID.ap * self.calculate_champion_damage(1))
-                                ability_data = ["Prickle Arena", "enemy", "AOE", damage_done]
+                                ability_data = ["Burst N Bloom", "enemy", "AOE", damage_done]
                             else:
                                 return
                         if counter == 2:
-                            if prickle_arena_requirements[0] <= champion2_rp:
-                                champion2_rp = champion2_rp - prickle_arena_requirements[0]
-                                prickle_arena_requirements[1] = prickle_arena_requirements[2]
-                                champion2_rp = champion2_rp + prickle_arena_requirements[3]
+                            if burst_n_bloom_requirements[0] <= champion2_rp:
+                                champion2_rp = champion2_rp - burst_n_bloom_requirements[0]
+                                burst_n_bloom_requirements[1] = burst_n_bloom_requirements[2]
+                                champion2_rp = champion2_rp + burst_n_bloom_requirements[3]
                                 damage_done = math.ceil(DRUID.ap * self.calculate_champion_damage(2))
                                 damage_done = math.ceil(DRUID.ap * self.calculate_champion_damage(2))
-                                ability_data = ["Prickle Arena", "enemy", "AOE", damage_done]
+                                ability_data = ["Burst N Bloom", "enemy", "AOE", damage_done]
                             else:
                                 return
                         if counter == 3:
-                            if prickle_arena_requirements[0] <= champion3_rp:
-                                champion3_rp = champion3_rp - prickle_arena_requirements[0]
-                                prickle_arena_requirements[1] = prickle_arena_requirements[2]
-                                champion3_rp = champion3_rp + prickle_arena_requirements[3]
+                            if burst_n_bloom_requirements[0] <= champion3_rp:
+                                champion3_rp = champion3_rp - burst_n_bloom_requirements[0]
+                                burst_n_bloom_requirements[1] = burst_n_bloom_requirements[2]
+                                champion3_rp = champion3_rp + burst_n_bloom_requirements[3]
                                 damage_done = math.ceil(DRUID.ap * self.calculate_champion_damage(3))
                                 damage_done = math.ceil(DRUID.ap * self.calculate_champion_damage(3))
-                                ability_data = ["Prickle Arena", "enemy", "AOE", damage_done]
+                                ability_data = ["Burst N Bloom", "enemy", "AOE", damage_done]
                             else:
                                 return
                         if counter == 4:
-                            if prickle_arena_requirements[0] <= champion4_rp:
-                                champion4_rp = champion4_rp - prickle_arena_requirements[0]
-                                prickle_arena_requirements[1] = prickle_arena_requirements[2]
-                                champion4_rp = champion4_rp + prickle_arena_requirements[3]
+                            if burst_n_bloom_requirements[0] <= champion4_rp:
+                                champion4_rp = champion4_rp - burst_n_bloom_requirements[0]
+                                burst_n_bloom_requirements[1] = burst_n_bloom_requirements[2]
+                                champion4_rp = champion4_rp + burst_n_bloom_requirements[3]
                                 damage_done = math.ceil(DRUID.ap * self.calculate_champion_damage(4))
                                 damage_done = math.ceil(DRUID.ap * self.calculate_champion_damage(4))
-                                ability_data = ["Prickle Arena", "enemy", "AOE", damage_done]
+                                ability_data = ["Burst N Bloom", "enemy", "AOE", damage_done]
                             else:
                                 return
                         if counter == 5:
-                            if prickle_arena_requirements[0] <= champion5_rp:
-                                champion5_rp = champion5_rp - prickle_arena_requirements[0]
-                                prickle_arena_requirements[1] = prickle_arena_requirements[2]
-                                champion5_rp = champion5_rp + prickle_arena_requirements[3]
+                            if burst_n_bloom_requirements[0] <= champion5_rp:
+                                champion5_rp = champion5_rp - burst_n_bloom_requirements[0]
+                                burst_n_bloom_requirements[1] = burst_n_bloom_requirements[2]
+                                champion5_rp = champion5_rp + burst_n_bloom_requirements[3]
                                 damage_done = math.ceil(DRUID.ap * self.calculate_champion_damage(5))
                                 damage_done = math.ceil(DRUID.ap * self.calculate_champion_damage(5))
-                                ability_data = ["Prickle Arena", "enemy", "AOE", damage_done]
+                                ability_data = ["Burst N Bloom", "enemy", "AOE", damage_done]
                             else:
                                 return
                     counter += 1
@@ -15436,105 +15524,105 @@ class GameFrame(tk.Frame):
                     counter += 1
             else:
                 return
-        elif ability_name == "Aura of Power":
-            if aura_of_power_requirements[1] == 0:
+        elif ability_name == "Crusade":
+            if crusade_requirements[1] == 0:
                 for character in CHAMPION_LIST:
                     if character == PALADIN.title:
                         if counter == 1:
-                            if aura_of_power_requirements[0] <= champion1_rp:
-                                champion1_rp = champion1_rp - aura_of_power_requirements[0]
-                                aura_of_power_requirements[1] = aura_of_power_requirements[2]
-                                aura_of_protection_requirements[1] = aura_of_power_requirements[2]
-                                champion1_rp = champion1_rp + aura_of_power_requirements[3]
-                                ability_data = ["Aura of Power", "ally", "AOE"]
+                            if crusade_requirements[0] <= champion1_rp:
+                                champion1_rp = champion1_rp - crusade_requirements[0]
+                                crusade_requirements[1] = crusade_requirements[2]
+                                damnation_requirements[1] = crusade_requirements[2]
+                                champion1_rp = champion1_rp + crusade_requirements[3]
+                                ability_data = ["Crusade", "ally", "AOE"]
                             else:
                                 return
                         if counter == 2:
-                            if aura_of_power_requirements[0] <= champion2_rp:
-                                champion2_rp = champion2_rp - aura_of_power_requirements[0]
-                                aura_of_power_requirements[1] = aura_of_power_requirements[2]
-                                aura_of_protection_requirements[1] = aura_of_power_requirements[2]
-                                champion2_rp = champion2_rp + aura_of_power_requirements[3]
-                                ability_data = ["Aura of Power", "ally", "AOE"]
+                            if crusade_requirements[0] <= champion2_rp:
+                                champion2_rp = champion2_rp - crusade_requirements[0]
+                                crusade_requirements[1] = crusade_requirements[2]
+                                damnation_requirements[1] = crusade_requirements[2]
+                                champion2_rp = champion2_rp + crusade_requirements[3]
+                                ability_data = ["Crusade", "ally", "AOE"]
                             else:
                                 return
                         if counter == 3:
-                            if aura_of_power_requirements[0] <= champion3_rp:
-                                champion3_rp = champion3_rp - aura_of_power_requirements[0]
-                                aura_of_power_requirements[1] = aura_of_power_requirements[2]
-                                aura_of_protection_requirements[1] = aura_of_power_requirements[2]
-                                champion3_rp = champion3_rp + aura_of_power_requirements[3]
-                                ability_data = ["Aura of Power", "ally", "AOE"]
+                            if crusade_requirements[0] <= champion3_rp:
+                                champion3_rp = champion3_rp - crusade_requirements[0]
+                                crusade_requirements[1] = crusade_requirements[2]
+                                damnation_requirements[1] = crusade_requirements[2]
+                                champion3_rp = champion3_rp + crusade_requirements[3]
+                                ability_data = ["Crusade", "ally", "AOE"]
                             else:
                                 return
                         if counter == 4:
-                            if aura_of_power_requirements[0] <= champion4_rp:
-                                champion4_rp = champion4_rp - aura_of_power_requirements[0]
-                                aura_of_power_requirements[1] = aura_of_power_requirements[2]
-                                aura_of_protection_requirements[1] = aura_of_power_requirements[2]
-                                champion4_rp = champion4_rp + aura_of_power_requirements[3]
-                                ability_data = ["Aura of Power", "ally", "AOE"]
+                            if crusade_requirements[0] <= champion4_rp:
+                                champion4_rp = champion4_rp - crusade_requirements[0]
+                                crusade_requirements[1] = crusade_requirements[2]
+                                damnation_requirements[1] = crusade_requirements[2]
+                                champion4_rp = champion4_rp + crusade_requirements[3]
+                                ability_data = ["Crusade", "ally", "AOE"]
                             else:
                                 return
                         if counter == 5:
-                            if aura_of_power_requirements[0] <= champion5_rp:
-                                champion5_rp = champion5_rp - aura_of_power_requirements[0]
-                                aura_of_power_requirements[1] = aura_of_power_requirements[2]
-                                aura_of_protection_requirements[1] = aura_of_power_requirements[2]
-                                champion5_rp = champion5_rp + aura_of_power_requirements[3]
-                                ability_data = ["Aura of Power", "ally", "AOE"]
+                            if crusade_requirements[0] <= champion5_rp:
+                                champion5_rp = champion5_rp - crusade_requirements[0]
+                                crusade_requirements[1] = crusade_requirements[2]
+                                damnation_requirements[1] = crusade_requirements[2]
+                                champion5_rp = champion5_rp + crusade_requirements[3]
+                                ability_data = ["Crusade", "ally", "AOE"]
                             else:
                                 return
                     counter += 1
             else:
                 return
-        elif ability_name == "Aura of Protection":
-            if aura_of_protection_requirements[1] == 0:
+        elif ability_name == "Damnation":
+            if damnation_requirements[1] == 0:
                 for character in CHAMPION_LIST:
                     if character == PALADIN.title:
                         if counter == 1:
-                            if aura_of_protection_requirements[0] <= champion1_rp:
-                                champion1_rp = champion1_rp - aura_of_protection_requirements[0]
-                                aura_of_protection_requirements[1] = aura_of_protection_requirements[2]
-                                aura_of_power_requirements[1] = aura_of_protection_requirements[2]
-                                champion1_rp = champion1_rp + aura_of_protection_requirements[3]
-                                ability_data = ["Aura of Protection", "ally", "AOE"]
+                            if damnation_requirements[0] <= champion1_rp:
+                                champion1_rp = champion1_rp - damnation_requirements[0]
+                                damnation_requirements[1] = damnation_requirements[2]
+                                crusade_requirements[1] = damnation_requirements[2]
+                                champion1_rp = champion1_rp + damnation_requirements[3]
+                                ability_data = ["Damnation", "ally", "AOE"]
                             else:
                                 return
                         if counter == 2:
-                            if aura_of_protection_requirements[0] <= champion2_rp:
-                                champion2_rp = champion2_rp - aura_of_protection_requirements[0]
-                                aura_of_protection_requirements[1] = aura_of_protection_requirements[2]
-                                aura_of_power_requirements[1] = aura_of_protection_requirements[2]
-                                champion2_rp = champion2_rp + aura_of_protection_requirements[3]
-                                ability_data = ["Aura of Protection", "ally", "AOE"]
+                            if damnation_requirements[0] <= champion2_rp:
+                                champion2_rp = champion2_rp - damnation_requirements[0]
+                                damnation_requirements[1] = damnation_requirements[2]
+                                crusade_requirements[1] = damnation_requirements[2]
+                                champion2_rp = champion2_rp + damnation_requirements[3]
+                                ability_data = ["Damnation", "ally", "AOE"]
                             else:
                                 return
                         if counter == 3:
-                            if aura_of_protection_requirements[0] <= champion3_rp:
-                                champion3_rp = champion3_rp - aura_of_protection_requirements[0]
-                                aura_of_protection_requirements[1] = aura_of_protection_requirements[2]
-                                aura_of_power_requirements[1] = aura_of_protection_requirements[2]
-                                champion3_rp = champion3_rp + aura_of_protection_requirements[3]
-                                ability_data = ["Aura of Protection", "ally", "AOE"]
+                            if damnation_requirements[0] <= champion3_rp:
+                                champion3_rp = champion3_rp - damnation_requirements[0]
+                                damnation_requirements[1] = damnation_requirements[2]
+                                crusade_requirements[1] = damnation_requirements[2]
+                                champion3_rp = champion3_rp + damnation_requirements[3]
+                                ability_data = ["Damnation", "ally", "AOE"]
                             else:
                                 return
                         if counter == 4:
-                            if aura_of_protection_requirements[0] <= champion4_rp:
-                                champion4_rp = champion4_rp - aura_of_protection_requirements[0]
-                                aura_of_protection_requirements[1] = aura_of_protection_requirements[2]
-                                aura_of_power_requirements[1] = aura_of_protection_requirements[2]
-                                champion4_rp = champion4_rp + aura_of_protection_requirements[3]
-                                ability_data = ["Aura of Protection", "ally", "AOE"]
+                            if damnation_requirements[0] <= champion4_rp:
+                                champion4_rp = champion4_rp - damnation_requirements[0]
+                                damnation_requirements[1] = damnation_requirements[2]
+                                crusade_requirements[1] = damnation_requirements[2]
+                                champion4_rp = champion4_rp + damnation_requirements[3]
+                                ability_data = ["Damnation", "ally", "AOE"]
                             else:
                                 return
                         if counter == 5:
-                            if aura_of_protection_requirements[0] <= champion5_rp:
-                                champion5_rp = champion5_rp - aura_of_protection_requirements[0]
-                                aura_of_protection_requirements[1] = aura_of_protection_requirements[2]
-                                aura_of_power_requirements[1] = aura_of_protection_requirements[2]
-                                champion5_rp = champion5_rp + aura_of_protection_requirements[3]
-                                ability_data = ["Aura of Protection", "ally", "AOE"]
+                            if damnation_requirements[0] <= champion5_rp:
+                                champion5_rp = champion5_rp - damnation_requirements[0]
+                                damnation_requirements[1] = damnation_requirements[2]
+                                crusade_requirements[1] = damnation_requirements[2]
+                                champion5_rp = champion5_rp + damnation_requirements[3]
+                                ability_data = ["Damnation", "ally", "AOE"]
                             else:
                                 return
                     counter += 1
@@ -15544,7 +15632,7 @@ class GameFrame(tk.Frame):
             global equip_iron_cast_arrows_requirements
             if equip_iron_cast_arrows_requirements[1] == 0:
                 for character in CHAMPION_LIST:
-                    if character == CASTLE_RANGER.title:
+                    if character == LEGION_RANGER.title:
                         if counter == 1:
                             if equip_iron_cast_arrows_requirements[0] <= champion1_rp:
                                 champion1_rp = champion1_rp - equip_iron_cast_arrows_requirements[0]
@@ -15592,7 +15680,7 @@ class GameFrame(tk.Frame):
             global equip_tracker_tipped_arrows_requirements
             if equip_tracker_tipped_arrows_requirements[1] == 0:
                 for character in CHAMPION_LIST:
-                    if character == CASTLE_RANGER.title:
+                    if character == LEGION_RANGER.title:
                         if counter == 1:
                             if equip_tracker_tipped_arrows_requirements[0] <= champion1_rp:
                                 champion1_rp = champion1_rp - equip_tracker_tipped_arrows_requirements[0]
@@ -15636,97 +15724,97 @@ class GameFrame(tk.Frame):
                     counter += 1
             else:
                 return
-        elif ability_name == "Crashing Boom":
-            global crashing_boom_requirements
-            if crashing_boom_requirements[1] == 0:
+        elif ability_name == "Energise":
+            global energise_requirements
+            if energise_requirements[1] == 0:
                 for character in CHAMPION_LIST:
-                    if character == THUNDER_APPRENTICE.title:
+                    if character == MAGNETIMANCER.title:
                         if counter == 1:
-                            if crashing_boom_requirements[0] <= champion1_rp:
-                                champion1_rp = champion1_rp - crashing_boom_requirements[0]
-                                crashing_boom_requirements[1] = crashing_boom_requirements[2]
-                                champion1_rp = champion1_rp + crashing_boom_requirements[3]
-                                ability_data = ["Crashing Boom", "enemy", "AOE"]
+                            if energise_requirements[0] <= champion1_rp:
+                                champion1_rp = champion1_rp - energise_requirements[0]
+                                energise_requirements[1] = energise_requirements[2]
+                                champion1_rp = champion1_rp + energise_requirements[3]
+                                ability_data = ["Energise", "enemy", "AOE"]
                             else:
                                 return
                         if counter == 2:
-                            if crashing_boom_requirements[0] <= champion2_rp:
-                                champion2_rp = champion2_rp - crashing_boom_requirements[0]
-                                crashing_boom_requirements[1] = crashing_boom_requirements[2]
-                                champion2_rp = champion2_rp + crashing_boom_requirements[3]
-                                ability_data = ["Crashing Boom", "enemy", "AOE"]
+                            if energise_requirements[0] <= champion2_rp:
+                                champion2_rp = champion2_rp - energise_requirements[0]
+                                energise_requirements[1] = energise_requirements[2]
+                                champion2_rp = champion2_rp + energise_requirements[3]
+                                ability_data = ["Energise", "enemy", "AOE"]
                             else:
                                 return
                         if counter == 3:
-                            if crashing_boom_requirements[0] <= champion3_rp:
-                                champion3_rp = champion3_rp - crashing_boom_requirements[0]
-                                crashing_boom_requirements[1] = crashing_boom_requirements[2]
-                                champion3_rp = champion3_rp + crashing_boom_requirements[3]
-                                ability_data = ["Crashing Boom", "enemy", "AOE"]
+                            if energise_requirements[0] <= champion3_rp:
+                                champion3_rp = champion3_rp - energise_requirements[0]
+                                energise_requirements[1] = energise_requirements[2]
+                                champion3_rp = champion3_rp + energise_requirements[3]
+                                ability_data = ["Energise", "enemy", "AOE"]
                             else:
                                 return
                         if counter == 4:
-                            if crashing_boom_requirements[0] <= champion4_rp:
-                                champion4_rp = champion4_rp - crashing_boom_requirements[0]
-                                crashing_boom_requirements[1] = crashing_boom_requirements[2]
-                                champion4_rp = champion4_rp + crashing_boom_requirements[3]
-                                ability_data = ["Crashing Boom", "enemy", "AOE"]
+                            if energise_requirements[0] <= champion4_rp:
+                                champion4_rp = champion4_rp - energise_requirements[0]
+                                energise_requirements[1] = energise_requirements[2]
+                                champion4_rp = champion4_rp + energise_requirements[3]
+                                ability_data = ["Energise", "enemy", "AOE"]
                             else:
                                 return
                         if counter == 5:
-                            if crashing_boom_requirements[0] <= champion5_rp:
-                                champion5_rp = champion5_rp - crashing_boom_requirements[0]
-                                crashing_boom_requirements[1] = crashing_boom_requirements[2]
-                                champion5_rp = champion5_rp + crashing_boom_requirements[3]
-                                ability_data = ["Crashing Boom", "enemy", "AOE"]
+                            if energise_requirements[0] <= champion5_rp:
+                                champion5_rp = champion5_rp - energise_requirements[0]
+                                energise_requirements[1] = energise_requirements[2]
+                                champion5_rp = champion5_rp + energise_requirements[3]
+                                ability_data = ["Energise", "enemy", "AOE"]
                             else:
                                 return
                     counter += 1
             else:
                 return
-        elif ability_name == "Thunderous Vigor":
-            global thunderous_vigor_requirements
-            if thunderous_vigor_requirements[1] == 0:
+        elif ability_name == "Superconductor":
+            global superconductor_requirements
+            if superconductor_requirements[1] == 0:
                 for character in CHAMPION_LIST:
-                    if character == THUNDER_APPRENTICE.title:
+                    if character == MAGNETIMANCER.title:
                         if counter == 1:
-                            if thunderous_vigor_requirements[0] <= champion1_rp:
-                                champion1_rp = champion1_rp - thunderous_vigor_requirements[0]
-                                thunderous_vigor_requirements[1] = thunderous_vigor_requirements[2]
-                                champion1_rp = champion1_rp + thunderous_vigor_requirements[3]
-                                ability_data = ["Thunderous Vigor", "self"]
+                            if superconductor_requirements[0] <= champion1_rp:
+                                champion1_rp = champion1_rp - superconductor_requirements[0]
+                                superconductor_requirements[1] = superconductor_requirements[2]
+                                champion1_rp = champion1_rp + superconductor_requirements[3]
+                                ability_data = ["Superconductor", "self"]
                             else:
                                 return
                         if counter == 2:
-                            if thunderous_vigor_requirements[0] <= champion2_rp:
-                                champion2_rp = champion2_rp - thunderous_vigor_requirements[0]
-                                thunderous_vigor_requirements[1] = thunderous_vigor_requirements[2]
-                                champion2_rp = champion2_rp + thunderous_vigor_requirements[3]
-                                ability_data = ["Thunderous Vigor", "self"]
+                            if superconductor_requirements[0] <= champion2_rp:
+                                champion2_rp = champion2_rp - superconductor_requirements[0]
+                                superconductor_requirements[1] = superconductor_requirements[2]
+                                champion2_rp = champion2_rp + superconductor_requirements[3]
+                                ability_data = ["Superconductor", "self"]
                             else:
                                 return
                         if counter == 3:
-                            if thunderous_vigor_requirements[0] <= champion3_rp:
-                                champion3_rp = champion3_rp - thunderous_vigor_requirements[0]
-                                thunderous_vigor_requirements[1] = thunderous_vigor_requirements[2]
-                                champion3_rp = champion3_rp + thunderous_vigor_requirements[3]
-                                ability_data = ["Thunderous Vigor", "self"]
+                            if superconductor_requirements[0] <= champion3_rp:
+                                champion3_rp = champion3_rp - superconductor_requirements[0]
+                                superconductor_requirements[1] = superconductor_requirements[2]
+                                champion3_rp = champion3_rp + superconductor_requirements[3]
+                                ability_data = ["Superconductor", "self"]
                             else:
                                 return
                         if counter == 4:
-                            if thunderous_vigor_requirements[0] <= champion4_rp:
-                                champion4_rp = champion4_rp - thunderous_vigor_requirements[0]
-                                thunderous_vigor_requirements[1] = thunderous_vigor_requirements[2]
-                                champion4_rp = champion4_rp + thunderous_vigor_requirements[3]
-                                ability_data = ["Thunderous Vigor", "self"]
+                            if superconductor_requirements[0] <= champion4_rp:
+                                champion4_rp = champion4_rp - superconductor_requirements[0]
+                                superconductor_requirements[1] = superconductor_requirements[2]
+                                champion4_rp = champion4_rp + superconductor_requirements[3]
+                                ability_data = ["Superconductor", "self"]
                             else:
                                 return
                         if counter == 5:
-                            if thunderous_vigor_requirements[0] <= champion5_rp:
-                                champion5_rp = champion5_rp - thunderous_vigor_requirements[0]
-                                thunderous_vigor_requirements[1] = thunderous_vigor_requirements[2]
-                                champion5_rp = champion5_rp + thunderous_vigor_requirements[3]
-                                ability_data = ["Thunderous Vigor", "self"]
+                            if superconductor_requirements[0] <= champion5_rp:
+                                champion5_rp = champion5_rp - superconductor_requirements[0]
+                                superconductor_requirements[1] = superconductor_requirements[2]
+                                champion5_rp = champion5_rp + superconductor_requirements[3]
+                                ability_data = ["Superconductor", "self"]
                             else:
                                 return
                     counter += 1
@@ -15944,117 +16032,117 @@ class GameFrame(tk.Frame):
                     counter += 1
             else:
                 return
-        elif ability_name == "Healing Surge":
-            global healing_surge_requirements
-            if healing_surge_requirements[1] == 0:
+        elif ability_name == "Spring Waters":
+            global spring_waters_requirements
+            if spring_waters_requirements[1] == 0:
                 for character in CHAMPION_LIST:
                     if character == EARTH_SPEAKER.title:
                         if counter == 1:
-                            if healing_surge_requirements[0] <= champion1_rp:
-                                champion1_rp = champion1_rp - healing_surge_requirements[0]
-                                healing_surge_requirements[1] = healing_surge_requirements[2]
-                                champion1_rp = champion1_rp + healing_surge_requirements[3]
+                            if spring_waters_requirements[0] <= champion1_rp:
+                                champion1_rp = champion1_rp - spring_waters_requirements[0]
+                                spring_waters_requirements[1] = spring_waters_requirements[2]
+                                champion1_rp = champion1_rp + spring_waters_requirements[3]
                                 healing_done = math.ceil(300 * self.calculate_champion_damage(1))
                                 healing_done = math.ceil(300 * self.calculate_champion_damage(1))
-                                ability_data = ["Healing Surge", "ally", "1T", healing_done]
+                                ability_data = ["Spring Waters", "ally", "1T", healing_done]
                             else:
                                 return
                         if counter == 2:
-                            if healing_surge_requirements[0] <= champion2_rp:
-                                champion2_rp = champion2_rp - healing_surge_requirements[0]
-                                healing_surge_requirements[1] = healing_surge_requirements[2]
-                                champion2_rp = champion2_rp + healing_surge_requirements[3]
+                            if spring_waters_requirements[0] <= champion2_rp:
+                                champion2_rp = champion2_rp - spring_waters_requirements[0]
+                                spring_waters_requirements[1] = spring_waters_requirements[2]
+                                champion2_rp = champion2_rp + spring_waters_requirements[3]
                                 healing_done = math.ceil(300 * self.calculate_champion_damage(2))
                                 healing_done = math.ceil(300 * self.calculate_champion_damage(2))
-                                ability_data = ["Healing Surge", "ally", "1T", healing_done]
+                                ability_data = ["Spring Waters", "ally", "1T", healing_done]
                             else:
                                 return
                         if counter == 3:
-                            if healing_surge_requirements[0] <= champion3_rp:
-                                champion3_rp = champion3_rp - healing_surge_requirements[0]
-                                healing_surge_requirements[1] = healing_surge_requirements[2]
-                                champion3_rp = champion3_rp + healing_surge_requirements[3]
+                            if spring_waters_requirements[0] <= champion3_rp:
+                                champion3_rp = champion3_rp - spring_waters_requirements[0]
+                                spring_waters_requirements[1] = spring_waters_requirements[2]
+                                champion3_rp = champion3_rp + spring_waters_requirements[3]
                                 healing_done = math.ceil(300 * self.calculate_champion_damage(3))
                                 healing_done = math.ceil(300 * self.calculate_champion_damage(3))
-                                ability_data = ["Healing Surge", "ally", "1T", healing_done]
+                                ability_data = ["Spring Waters", "ally", "1T", healing_done]
                             else:
                                 return
                         if counter == 4:
-                            if healing_surge_requirements[0] <= champion4_rp:
-                                champion4_rp = champion4_rp - healing_surge_requirements[0]
-                                healing_surge_requirements[1] = healing_surge_requirements[2]
-                                champion4_rp = champion4_rp + healing_surge_requirements[3]
+                            if spring_waters_requirements[0] <= champion4_rp:
+                                champion4_rp = champion4_rp - spring_waters_requirements[0]
+                                spring_waters_requirements[1] = spring_waters_requirements[2]
+                                champion4_rp = champion4_rp + spring_waters_requirements[3]
                                 healing_done = math.ceil(300 * self.calculate_champion_damage(4))
                                 healing_done = math.ceil(300 * self.calculate_champion_damage(4))
-                                ability_data = ["Healing Surge", "ally", "1T", healing_done]
+                                ability_data = ["Spring Waters", "ally", "1T", healing_done]
                             else:
                                 return
                         if counter == 5:
-                            if healing_surge_requirements[0] <= champion5_rp:
-                                champion5_rp = champion5_rp - healing_surge_requirements[0]
-                                healing_surge_requirements[1] = healing_surge_requirements[2]
-                                champion5_rp = champion5_rp + healing_surge_requirements[3]
+                            if spring_waters_requirements[0] <= champion5_rp:
+                                champion5_rp = champion5_rp - spring_waters_requirements[0]
+                                spring_waters_requirements[1] = spring_waters_requirements[2]
+                                champion5_rp = champion5_rp + spring_waters_requirements[3]
                                 healing_done = math.ceil(300 * self.calculate_champion_damage(5))
                                 healing_done = math.ceil(300 * self.calculate_champion_damage(5))
-                                ability_data = ["Healing Surge", "ally", "1T", healing_done]
+                                ability_data = ["Spring Waters", "ally", "1T", healing_done]
                             else:
                                 return
                     counter += 1
             else:
                 return
-        elif ability_name == "Rejuvenating Whirlpool":
-            global rejuvenating_whirlpool_requirements
-            if rejuvenating_whirlpool_requirements[1] == 0:
+        elif ability_name == "Ocean Tides":
+            global ocean_tides_requirements
+            if ocean_tides_requirements[1] == 0:
                 for character in CHAMPION_LIST:
                     if character == EARTH_SPEAKER.title:
                         if counter == 1:
-                            if rejuvenating_whirlpool_requirements[0] <= champion1_rp:
-                                champion1_rp = champion1_rp - rejuvenating_whirlpool_requirements[0]
-                                rejuvenating_whirlpool_requirements[1] = rejuvenating_whirlpool_requirements[2]
-                                champion1_rp = champion1_rp + rejuvenating_whirlpool_requirements[3]
+                            if ocean_tides_requirements[0] <= champion1_rp:
+                                champion1_rp = champion1_rp - ocean_tides_requirements[0]
+                                ocean_tides_requirements[1] = ocean_tides_requirements[2]
+                                champion1_rp = champion1_rp + ocean_tides_requirements[3]
                                 healing_done = math.ceil(300 * self.calculate_champion_damage(1))
                                 healing_done = math.ceil(300 * self.calculate_champion_damage(1))
-                                ability_data = ["Rejuvenating Whirlpool", "ally", "AOE", healing_done]
+                                ability_data = ["Ocean Tides", "ally", "AOE", healing_done]
                             else:
                                 return
                         if counter == 2:
-                            if rejuvenating_whirlpool_requirements[0] <= champion2_rp:
-                                champion2_rp = champion2_rp - rejuvenating_whirlpool_requirements[0]
-                                rejuvenating_whirlpool_requirements[1] = rejuvenating_whirlpool_requirements[2]
-                                champion2_rp = champion2_rp + rejuvenating_whirlpool_requirements[3]
+                            if ocean_tides_requirements[0] <= champion2_rp:
+                                champion2_rp = champion2_rp - ocean_tides_requirements[0]
+                                ocean_tides_requirements[1] = ocean_tides_requirements[2]
+                                champion2_rp = champion2_rp + ocean_tides_requirements[3]
                                 healing_done = math.ceil(300 * self.calculate_champion_damage(2))
                                 healing_done = math.ceil(300 * self.calculate_champion_damage(2))
-                                ability_data = ["Rejuvenating Whirlpool", "ally", "AOE", healing_done]
+                                ability_data = ["Ocean Tides", "ally", "AOE", healing_done]
                             else:
                                 return
                         if counter == 3:
-                            if rejuvenating_whirlpool_requirements[0] <= champion3_rp:
-                                champion3_rp = champion3_rp - rejuvenating_whirlpool_requirements[0]
-                                rejuvenating_whirlpool_requirements[1] = rejuvenating_whirlpool_requirements[2]
-                                champion3_rp = champion3_rp + rejuvenating_whirlpool_requirements[3]
+                            if ocean_tides_requirements[0] <= champion3_rp:
+                                champion3_rp = champion3_rp - ocean_tides_requirements[0]
+                                ocean_tides_requirements[1] = ocean_tides_requirements[2]
+                                champion3_rp = champion3_rp + ocean_tides_requirements[3]
                                 healing_done = math.ceil(300 * self.calculate_champion_damage(3))
                                 healing_done = math.ceil(300 * self.calculate_champion_damage(3))
-                                ability_data = ["Rejuvenating Whirlpool", "ally", "AOE", healing_done]
+                                ability_data = ["Ocean Tides", "ally", "AOE", healing_done]
                             else:
                                 return
                         if counter == 4:
-                            if rejuvenating_whirlpool_requirements[0] <= champion4_rp:
-                                champion4_rp = champion4_rp - rejuvenating_whirlpool_requirements[0]
-                                rejuvenating_whirlpool_requirements[1] = rejuvenating_whirlpool_requirements[2]
-                                champion4_rp = champion4_rp + rejuvenating_whirlpool_requirements[3]
+                            if ocean_tides_requirements[0] <= champion4_rp:
+                                champion4_rp = champion4_rp - ocean_tides_requirements[0]
+                                ocean_tides_requirements[1] = ocean_tides_requirements[2]
+                                champion4_rp = champion4_rp + ocean_tides_requirements[3]
                                 healing_done = math.ceil(300 * self.calculate_champion_damage(4))
                                 healing_done = math.ceil(300 * self.calculate_champion_damage(4))
-                                ability_data = ["Rejuvenating Whirlpool", "ally", "AOE", healing_done]
+                                ability_data = ["Ocean Tides", "ally", "AOE", healing_done]
                             else:
                                 return
                         if counter == 5:
-                            if rejuvenating_whirlpool_requirements[0] <= champion5_rp:
-                                champion5_rp = champion5_rp - rejuvenating_whirlpool_requirements[0]
-                                rejuvenating_whirlpool_requirements[1] = rejuvenating_whirlpool_requirements[2]
-                                champion5_rp = champion5_rp + rejuvenating_whirlpool_requirements[3]
+                            if ocean_tides_requirements[0] <= champion5_rp:
+                                champion5_rp = champion5_rp - ocean_tides_requirements[0]
+                                ocean_tides_requirements[1] = ocean_tides_requirements[2]
+                                champion5_rp = champion5_rp + ocean_tides_requirements[3]
                                 healing_done = math.ceil(300 * self.calculate_champion_damage(5))
                                 healing_done = math.ceil(300 * self.calculate_champion_damage(5))
-                                ability_data = ["Rejuvenating Whirlpool", "ally", "AOE", healing_done]
+                                ability_data = ["Ocean Tides", "ally", "AOE", healing_done]
                             else:
                                 return
                     counter += 1
@@ -16224,59 +16312,59 @@ class GameFrame(tk.Frame):
                     counter += 1
             else:
                 return
-        elif ability_name == "Nanoheal Bots":
-            global nanoheal_bots_requirements
-            if nanoheal_bots_requirements[1] == 0:
+        elif ability_name == "Overclock Nanobots":
+            global overclock_nanobots_requirements
+            if overclock_nanobots_requirements[1] == 0:
                 for character in CHAMPION_LIST:
                     if character == TIME_WALKER.title:
                         if counter == 1:
-                            if nanoheal_bots_requirements[0] <= champion1_rp:
-                                champion1_rp = champion1_rp - nanoheal_bots_requirements[0]
-                                nanoheal_bots_requirements[1] = nanoheal_bots_requirements[2]
-                                champion1_rp = champion1_rp + nanoheal_bots_requirements[3]
+                            if overclock_nanobots_requirements[0] <= champion1_rp:
+                                champion1_rp = champion1_rp - overclock_nanobots_requirements[0]
+                                overclock_nanobots_requirements[1] = overclock_nanobots_requirements[2]
+                                champion1_rp = champion1_rp + overclock_nanobots_requirements[3]
                                 healing_done = math.ceil(300 * self.calculate_champion_damage(1))
                                 healing_done = math.ceil(300 * self.calculate_champion_damage(1))
-                                ability_data = ["Nanoheal Bots", "ally", "AOE", healing_done]
+                                ability_data = ["Overclock Nanobots", "ally", "AOE", healing_done]
                             else:
                                 return
                         if counter == 2:
-                            if nanoheal_bots_requirements[0] <= champion2_rp:
-                                champion2_rp = champion2_rp - nanoheal_bots_requirements[0]
-                                nanoheal_bots_requirements[1] = nanoheal_bots_requirements[2]
-                                champion2_rp = champion2_rp + nanoheal_bots_requirements[3]
+                            if overclock_nanobots_requirements[0] <= champion2_rp:
+                                champion2_rp = champion2_rp - overclock_nanobots_requirements[0]
+                                overclock_nanobots_requirements[1] = overclock_nanobots_requirements[2]
+                                champion2_rp = champion2_rp + overclock_nanobots_requirements[3]
                                 healing_done = math.ceil(300 * self.calculate_champion_damage(2))
                                 healing_done = math.ceil(300 * self.calculate_champion_damage(2))
-                                ability_data = ["Nanoheal Bots", "ally", "AOE", healing_done]
+                                ability_data = ["Overclock Nanobots", "ally", "AOE", healing_done]
                             else:
                                 return
                         if counter == 3:
-                            if nanoheal_bots_requirements[0] <= champion3_rp:
-                                champion3_rp = champion3_rp - nanoheal_bots_requirements[0]
-                                nanoheal_bots_requirements[1] = nanoheal_bots_requirements[2]
-                                champion3_rp = champion3_rp + nanoheal_bots_requirements[3]
+                            if overclock_nanobots_requirements[0] <= champion3_rp:
+                                champion3_rp = champion3_rp - overclock_nanobots_requirements[0]
+                                overclock_nanobots_requirements[1] = overclock_nanobots_requirements[2]
+                                champion3_rp = champion3_rp + overclock_nanobots_requirements[3]
                                 healing_done = math.ceil(300 * self.calculate_champion_damage(3))
                                 healing_done = math.ceil(300 * self.calculate_champion_damage(3))
-                                ability_data = ["Nanoheal Bots", "ally", "AOE", healing_done]
+                                ability_data = ["Overclock Nanobots", "ally", "AOE", healing_done]
                             else:
                                 return
                         if counter == 4:
-                            if nanoheal_bots_requirements[0] <= champion4_rp:
-                                champion4_rp = champion4_rp - nanoheal_bots_requirements[0]
-                                nanoheal_bots_requirements[1] = nanoheal_bots_requirements[2]
-                                champion4_rp = champion4_rp + nanoheal_bots_requirements[3]
+                            if overclock_nanobots_requirements[0] <= champion4_rp:
+                                champion4_rp = champion4_rp - overclock_nanobots_requirements[0]
+                                overclock_nanobots_requirements[1] = overclock_nanobots_requirements[2]
+                                champion4_rp = champion4_rp + overclock_nanobots_requirements[3]
                                 healing_done = math.ceil(300 * self.calculate_champion_damage(4))
                                 healing_done = math.ceil(300 * self.calculate_champion_damage(4))
-                                ability_data = ["Nanoheal Bots", "ally", "AOE", healing_done]
+                                ability_data = ["Overclock Nanobots", "ally", "AOE", healing_done]
                             else:
                                 return
                         if counter == 5:
-                            if nanoheal_bots_requirements[0] <= champion5_rp:
-                                champion5_rp = champion5_rp - nanoheal_bots_requirements[0]
-                                nanoheal_bots_requirements[1] = nanoheal_bots_requirements[2]
-                                champion5_rp = champion5_rp + nanoheal_bots_requirements[3]
+                            if overclock_nanobots_requirements[0] <= champion5_rp:
+                                champion5_rp = champion5_rp - overclock_nanobots_requirements[0]
+                                overclock_nanobots_requirements[1] = overclock_nanobots_requirements[2]
+                                champion5_rp = champion5_rp + overclock_nanobots_requirements[3]
                                 healing_done = math.ceil(300 * self.calculate_champion_damage(5))
                                 healing_done = math.ceil(300 * self.calculate_champion_damage(5))
-                                ability_data = ["Nanoheal Bots", "ally", "AOE", healing_done]
+                                ability_data = ["Overclock Nanobots", "ally", "AOE", healing_done]
                             else:
                                 return
                     counter += 1
@@ -16378,165 +16466,165 @@ class GameFrame(tk.Frame):
                     counter += 1
             else:
                 return
-        elif ability_name == "Bandage Wound":
-            global bandage_wound_requirements
-            if bandage_wound_requirements[1] == 0:
+        elif ability_name == "Bandages":
+            global bandages_requirements
+            if bandages_requirements[1] == 0:
                 for character in CHAMPION_LIST:
-                    if character == CHILD_OF_MEDICINE.title:
+                    if character == FIELD_MEDIC.title:
                         if counter == 1:
-                            if bandage_wound_requirements[0] <= champion1_rp:
-                                champion1_rp = champion1_rp - bandage_wound_requirements[0]
-                                bandage_wound_requirements[1] = bandage_wound_requirements[2]
-                                champion1_rp = champion1_rp + bandage_wound_requirements[3]
-                                healing_done = math.ceil(CHILD_OF_MEDICINE.ap * self.calculate_champion_damage(1))
-                                healing_done = math.ceil(CHILD_OF_MEDICINE.ap * self.calculate_champion_damage(1))
-                                ability_data = ["Bandage Wound", "ally", "1T", healing_done]
+                            if bandages_requirements[0] <= champion1_rp:
+                                champion1_rp = champion1_rp - bandages_requirements[0]
+                                bandages_requirements[1] = bandages_requirements[2]
+                                champion1_rp = champion1_rp + bandages_requirements[3]
+                                healing_done = math.ceil(FIELD_MEDIC.ap * self.calculate_champion_damage(1))
+                                healing_done = math.ceil(FIELD_MEDIC.ap * self.calculate_champion_damage(1))
+                                ability_data = ["Bandages", "ally", "1T", healing_done]
                             else:
                                 return
                         if counter == 2:
-                            if bandage_wound_requirements[0] <= champion2_rp:
-                                champion2_rp = champion2_rp - bandage_wound_requirements[0]
-                                bandage_wound_requirements[1] = bandage_wound_requirements[2]
-                                champion2_rp = champion2_rp + bandage_wound_requirements[3]
-                                healing_done = math.ceil(CHILD_OF_MEDICINE.ap * self.calculate_champion_damage(2))
-                                healing_done = math.ceil(CHILD_OF_MEDICINE.ap * self.calculate_champion_damage(2))
-                                ability_data = ["Bandage Wound", "ally", "1T", healing_done]
+                            if bandages_requirements[0] <= champion2_rp:
+                                champion2_rp = champion2_rp - bandages_requirements[0]
+                                bandages_requirements[1] = bandages_requirements[2]
+                                champion2_rp = champion2_rp + bandages_requirements[3]
+                                healing_done = math.ceil(FIELD_MEDIC.ap * self.calculate_champion_damage(2))
+                                healing_done = math.ceil(FIELD_MEDIC.ap * self.calculate_champion_damage(2))
+                                ability_data = ["Bandages", "ally", "1T", healing_done]
                             else:
                                 return
                         if counter == 3:
-                            if bandage_wound_requirements[0] <= champion3_rp:
-                                champion3_rp = champion3_rp - bandage_wound_requirements[0]
-                                bandage_wound_requirements[1] = bandage_wound_requirements[2]
-                                champion3_rp = champion3_rp + bandage_wound_requirements[3]
-                                healing_done = math.ceil(CHILD_OF_MEDICINE.ap * self.calculate_champion_damage(3))
-                                healing_done = math.ceil(CHILD_OF_MEDICINE.ap * self.calculate_champion_damage(3))
-                                ability_data = ["Bandage Wound", "ally", "1T", healing_done]
+                            if bandages_requirements[0] <= champion3_rp:
+                                champion3_rp = champion3_rp - bandages_requirements[0]
+                                bandages_requirements[1] = bandages_requirements[2]
+                                champion3_rp = champion3_rp + bandages_requirements[3]
+                                healing_done = math.ceil(FIELD_MEDIC.ap * self.calculate_champion_damage(3))
+                                healing_done = math.ceil(FIELD_MEDIC.ap * self.calculate_champion_damage(3))
+                                ability_data = ["Bandages", "ally", "1T", healing_done]
                             else:
                                 return
                         if counter == 4:
-                            if bandage_wound_requirements[0] <= champion4_rp:
-                                champion4_rp = champion4_rp - bandage_wound_requirements[0]
-                                bandage_wound_requirements[1] = bandage_wound_requirements[2]
-                                champion4_rp = champion4_rp + bandage_wound_requirements[3]
-                                healing_done = math.ceil(CHILD_OF_MEDICINE.ap * self.calculate_champion_damage(4))
-                                healing_done = math.ceil(CHILD_OF_MEDICINE.ap * self.calculate_champion_damage(4))
-                                ability_data = ["Bandage Wound", "ally", "1T", healing_done]
+                            if bandages_requirements[0] <= champion4_rp:
+                                champion4_rp = champion4_rp - bandages_requirements[0]
+                                bandages_requirements[1] = bandages_requirements[2]
+                                champion4_rp = champion4_rp + bandages_requirements[3]
+                                healing_done = math.ceil(FIELD_MEDIC.ap * self.calculate_champion_damage(4))
+                                healing_done = math.ceil(FIELD_MEDIC.ap * self.calculate_champion_damage(4))
+                                ability_data = ["Bandages", "ally", "1T", healing_done]
                             else:
                                 return
                         if counter == 5:
-                            if bandage_wound_requirements[0] <= champion5_rp:
-                                champion5_rp = champion5_rp - bandage_wound_requirements[0]
-                                bandage_wound_requirements[1] = bandage_wound_requirements[2]
-                                champion5_rp = champion5_rp + bandage_wound_requirements[3]
-                                healing_done = math.ceil(CHILD_OF_MEDICINE.ap * self.calculate_champion_damage(5))
-                                healing_done = math.ceil(CHILD_OF_MEDICINE.ap * self.calculate_champion_damage(5))
-                                ability_data = ["Bandage Wound", "ally", "1T", healing_done]
+                            if bandages_requirements[0] <= champion5_rp:
+                                champion5_rp = champion5_rp - bandages_requirements[0]
+                                bandages_requirements[1] = bandages_requirements[2]
+                                champion5_rp = champion5_rp + bandages_requirements[3]
+                                healing_done = math.ceil(FIELD_MEDIC.ap * self.calculate_champion_damage(5))
+                                healing_done = math.ceil(FIELD_MEDIC.ap * self.calculate_champion_damage(5))
+                                ability_data = ["Bandages", "ally", "1T", healing_done]
                             else:
                                 return
                     counter += 1
             else:
                 return
-        elif ability_name == "Perfected Herbal Tea":
-            global perfected_herbal_tea_requirements
-            if perfected_herbal_tea_requirements[1] == 0:
+        elif ability_name == "Tight Tourniquet":
+            global tight_tourniquet_requirements
+            if tight_tourniquet_requirements[1] == 0:
                 for character in CHAMPION_LIST:
-                    if character == CHILD_OF_MEDICINE.title:
+                    if character == FIELD_MEDIC.title:
                         if counter == 1:
-                            if perfected_herbal_tea_requirements[0] <= champion1_rp:
-                                champion1_rp = champion1_rp - perfected_herbal_tea_requirements[0]
-                                perfected_herbal_tea_requirements[1] = perfected_herbal_tea_requirements[2]
-                                champion1_rp = champion1_rp + perfected_herbal_tea_requirements[3]
-                                healing_done = math.ceil(CHILD_OF_MEDICINE.ap * self.calculate_champion_damage(1))
-                                healing_done = math.ceil(CHILD_OF_MEDICINE.ap * self.calculate_champion_damage(1))
-                                ability_data = ["Perfected Herbal Tea", "ally", "1T", healing_done]
+                            if tight_tourniquet_requirements[0] <= champion1_rp:
+                                champion1_rp = champion1_rp - tight_tourniquet_requirements[0]
+                                tight_tourniquet_requirements[1] = tight_tourniquet_requirements[2]
+                                champion1_rp = champion1_rp + tight_tourniquet_requirements[3]
+                                healing_done = math.ceil(FIELD_MEDIC.ap * self.calculate_champion_damage(1))
+                                healing_done = math.ceil(FIELD_MEDIC.ap * self.calculate_champion_damage(1))
+                                ability_data = ["Tight Tourniquet", "ally", "1T", healing_done]
                             else:
                                 return
                         if counter == 2:
-                            if perfected_herbal_tea_requirements[0] <= champion2_rp:
-                                champion2_rp = champion2_rp - perfected_herbal_tea_requirements[0]
-                                perfected_herbal_tea_requirements[1] = perfected_herbal_tea_requirements[2]
-                                champion2_rp = champion2_rp + perfected_herbal_tea_requirements[3]
-                                healing_done = math.ceil(CHILD_OF_MEDICINE.ap * self.calculate_champion_damage(2))
-                                healing_done = math.ceil(CHILD_OF_MEDICINE.ap * self.calculate_champion_damage(2))
-                                ability_data = ["Perfected Herbal Tea", "ally", "1T", healing_done]
+                            if tight_tourniquet_requirements[0] <= champion2_rp:
+                                champion2_rp = champion2_rp - tight_tourniquet_requirements[0]
+                                tight_tourniquet_requirements[1] = tight_tourniquet_requirements[2]
+                                champion2_rp = champion2_rp + tight_tourniquet_requirements[3]
+                                healing_done = math.ceil(FIELD_MEDIC.ap * self.calculate_champion_damage(2))
+                                healing_done = math.ceil(FIELD_MEDIC.ap * self.calculate_champion_damage(2))
+                                ability_data = ["Tight Tourniquet", "ally", "1T", healing_done]
                             else:
                                 return
                         if counter == 3:
-                            if perfected_herbal_tea_requirements[0] <= champion3_rp:
-                                champion3_rp = champion3_rp - perfected_herbal_tea_requirements[0]
-                                perfected_herbal_tea_requirements[1] = perfected_herbal_tea_requirements[2]
-                                champion3_rp = champion3_rp + perfected_herbal_tea_requirements[3]
-                                healing_done = math.ceil(CHILD_OF_MEDICINE.ap * self.calculate_champion_damage(3))
-                                healing_done = math.ceil(CHILD_OF_MEDICINE.ap * self.calculate_champion_damage(3))
-                                ability_data = ["Perfected Herbal Tea", "ally", "1T", healing_done]
+                            if tight_tourniquet_requirements[0] <= champion3_rp:
+                                champion3_rp = champion3_rp - tight_tourniquet_requirements[0]
+                                tight_tourniquet_requirements[1] = tight_tourniquet_requirements[2]
+                                champion3_rp = champion3_rp + tight_tourniquet_requirements[3]
+                                healing_done = math.ceil(FIELD_MEDIC.ap * self.calculate_champion_damage(3))
+                                healing_done = math.ceil(FIELD_MEDIC.ap * self.calculate_champion_damage(3))
+                                ability_data = ["Tight Tourniquet", "ally", "1T", healing_done]
                             else:
                                 return
                         if counter == 4:
-                            if perfected_herbal_tea_requirements[0] <= champion4_rp:
-                                champion4_rp = champion4_rp - perfected_herbal_tea_requirements[0]
-                                perfected_herbal_tea_requirements[1] = perfected_herbal_tea_requirements[2]
-                                champion4_rp = champion4_rp + perfected_herbal_tea_requirements[3]
-                                healing_done = math.ceil(CHILD_OF_MEDICINE.ap * self.calculate_champion_damage(4))
-                                healing_done = math.ceil(CHILD_OF_MEDICINE.ap * self.calculate_champion_damage(4))
-                                ability_data = ["Perfected Herbal Tea", "ally", "1T", healing_done]
+                            if tight_tourniquet_requirements[0] <= champion4_rp:
+                                champion4_rp = champion4_rp - tight_tourniquet_requirements[0]
+                                tight_tourniquet_requirements[1] = tight_tourniquet_requirements[2]
+                                champion4_rp = champion4_rp + tight_tourniquet_requirements[3]
+                                healing_done = math.ceil(FIELD_MEDIC.ap * self.calculate_champion_damage(4))
+                                healing_done = math.ceil(FIELD_MEDIC.ap * self.calculate_champion_damage(4))
+                                ability_data = ["Tight Tourniquet", "ally", "1T", healing_done]
                             else:
                                 return
                         if counter == 5:
-                            if perfected_herbal_tea_requirements[0] <= champion5_rp:
-                                champion5_rp = champion5_rp - perfected_herbal_tea_requirements[0]
-                                perfected_herbal_tea_requirements[1] = perfected_herbal_tea_requirements[2]
-                                champion5_rp = champion5_rp + perfected_herbal_tea_requirements[3]
-                                healing_done = math.ceil(CHILD_OF_MEDICINE.ap * self.calculate_champion_damage(5))
-                                healing_done = math.ceil(CHILD_OF_MEDICINE.ap * self.calculate_champion_damage(5))
-                                ability_data = ["Perfected Herbal Tea", "ally", "1T", healing_done]
+                            if tight_tourniquet_requirements[0] <= champion5_rp:
+                                champion5_rp = champion5_rp - tight_tourniquet_requirements[0]
+                                tight_tourniquet_requirements[1] = tight_tourniquet_requirements[2]
+                                champion5_rp = champion5_rp + tight_tourniquet_requirements[3]
+                                healing_done = math.ceil(FIELD_MEDIC.ap * self.calculate_champion_damage(5))
+                                healing_done = math.ceil(FIELD_MEDIC.ap * self.calculate_champion_damage(5))
+                                ability_data = ["Tight Tourniquet", "ally", "1T", healing_done]
                             else:
                                 return
                     counter += 1
             else:
                 return
-        elif ability_name == "G.3.T J.A.X.D":
-            global g3t_jaxd_requirements
-            if g3t_jaxd_requirements[1] == 0:
+        elif ability_name == "Secret Remedy":
+            global secret_remedy_requirements
+            if secret_remedy_requirements[1] == 0:
                 for character in CHAMPION_LIST:
-                    if character == CHILD_OF_MEDICINE.title:
+                    if character == FIELD_MEDIC.title:
                         if counter == 1:
-                            if g3t_jaxd_requirements[0] <= champion1_rp:
-                                champion1_rp = champion1_rp - g3t_jaxd_requirements[0]
-                                g3t_jaxd_requirements[1] = g3t_jaxd_requirements[2]
-                                champion1_rp = champion1_rp + g3t_jaxd_requirements[3]
-                                ability_data = ["G.3.T J.A.X.D", "ally", "1T"]
+                            if secret_remedy_requirements[0] <= champion1_rp:
+                                champion1_rp = champion1_rp - secret_remedy_requirements[0]
+                                secret_remedy_requirements[1] = secret_remedy_requirements[2]
+                                champion1_rp = champion1_rp + secret_remedy_requirements[3]
+                                ability_data = ["Secret Remedy", "ally", "1T"]
                             else:
                                 return
                         if counter == 2:
-                            if g3t_jaxd_requirements[0] <= champion2_rp:
-                                champion2_rp = champion2_rp - g3t_jaxd_requirements[0]
-                                g3t_jaxd_requirements[1] = g3t_jaxd_requirements[2]
-                                champion2_rp = champion2_rp + g3t_jaxd_requirements[3]
-                                ability_data = ["G.3.T J.A.X.D", "ally", "1T"]
+                            if secret_remedy_requirements[0] <= champion2_rp:
+                                champion2_rp = champion2_rp - secret_remedy_requirements[0]
+                                secret_remedy_requirements[1] = secret_remedy_requirements[2]
+                                champion2_rp = champion2_rp + secret_remedy_requirements[3]
+                                ability_data = ["Secret Remedy", "ally", "1T"]
                             else:
                                 return
                         if counter == 3:
-                            if g3t_jaxd_requirements[0] <= champion3_rp:
-                                champion3_rp = champion3_rp - g3t_jaxd_requirements[0]
-                                g3t_jaxd_requirements[1] = g3t_jaxd_requirements[2]
-                                champion3_rp = champion3_rp + g3t_jaxd_requirements[3]
-                                ability_data = ["G.3.T J.A.X.D", "ally", "1T"]
+                            if secret_remedy_requirements[0] <= champion3_rp:
+                                champion3_rp = champion3_rp - secret_remedy_requirements[0]
+                                secret_remedy_requirements[1] = secret_remedy_requirements[2]
+                                champion3_rp = champion3_rp + secret_remedy_requirements[3]
+                                ability_data = ["Secret Remedy", "ally", "1T"]
                             else:
                                 return
                         if counter == 4:
-                            if g3t_jaxd_requirements[0] <= champion4_rp:
-                                champion4_rp = champion4_rp - g3t_jaxd_requirements[0]
-                                g3t_jaxd_requirements[1] = g3t_jaxd_requirements[2]
-                                champion4_rp = champion4_rp + g3t_jaxd_requirements[3]
-                                ability_data = ["G.3.T J.A.X.D", "ally", "1T"]
+                            if secret_remedy_requirements[0] <= champion4_rp:
+                                champion4_rp = champion4_rp - secret_remedy_requirements[0]
+                                secret_remedy_requirements[1] = secret_remedy_requirements[2]
+                                champion4_rp = champion4_rp + secret_remedy_requirements[3]
+                                ability_data = ["Secret Remedy", "ally", "1T"]
                             else:
                                 return
                         if counter == 5:
-                            if g3t_jaxd_requirements[0] <= champion5_rp:
-                                champion5_rp = champion5_rp - g3t_jaxd_requirements[0]
-                                g3t_jaxd_requirements[1] = g3t_jaxd_requirements[2]
-                                champion5_rp = champion5_rp + g3t_jaxd_requirements[3]
-                                ability_data = ["G.3.T J.A.X.D", "ally", "1T"]
+                            if secret_remedy_requirements[0] <= champion5_rp:
+                                champion5_rp = champion5_rp - secret_remedy_requirements[0]
+                                secret_remedy_requirements[1] = secret_remedy_requirements[2]
+                                champion5_rp = champion5_rp + secret_remedy_requirements[3]
+                                ability_data = ["Secret Remedy", "ally", "1T"]
                             else:
                                 return
                     counter += 1
@@ -16677,7 +16765,6 @@ class GameFrame(tk.Frame):
             attack3_button_details.destroy()
             attack4_button.destroy()
             attack4_button_details.destroy()
-            back_button.destroy()
             attack_to_target = 0
         if special_to_target == 1:
             special1_button.destroy()
@@ -16688,7 +16775,6 @@ class GameFrame(tk.Frame):
             special3_button_details.destroy()
             special4_button.destroy()
             special4_button_details.destroy()
-            back_button.destroy()
             special_to_target = 0
         if ability_data[1] == "enemy":
             if ability_data[2] == "AOE":
@@ -16698,6 +16784,7 @@ class GameFrame(tk.Frame):
                     ai1_attacktarget_frame = tk.Button(dungeon_game_frame, text=self.target_frame_ai_champion_text("ai", 1),
                                                        command=lambda: self.multi_target_check(1))
                     ai1_attacktarget_frame.grid(row=19, column=2)
+                    back_button
                 elif AI_SPAWNED == 2:
                     ai1_attacktarget_frame = tk.Button(dungeon_game_frame, text=self.target_frame_ai_champion_text("ai", 1),
                                                        command=lambda: self.multi_target_check(1))
@@ -17095,19 +17182,19 @@ class GameFrame(tk.Frame):
         elif ability_data[0] == "Pulverize":
             if 1 in target_list:
                 ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1))
-                self.apply_taunt(1, BARBARIAN.title, 2)
+                self.apply_taunt(1, BARBARIAN.title, 1)
             if 2 in target_list:
                 ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2))
-                self.apply_taunt(2, BARBARIAN.title, 2)
+                self.apply_taunt(2, BARBARIAN.title, 1)
             if 3 in target_list:
                 ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3))
-                self.apply_taunt(3, BARBARIAN.title, 2)
+                self.apply_taunt(3, BARBARIAN.title, 1)
             if 4 in target_list:
                 ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4))
-                self.apply_taunt(4, BARBARIAN.title, 2)
+                self.apply_taunt(4, BARBARIAN.title, 1)
             if 5 in target_list:
                 ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5))
-                self.apply_taunt(5, BARBARIAN.title, 2)
+                self.apply_taunt(5, BARBARIAN.title, 1)
         elif ability_data[0] == "Shield Bash":
             if 1 in target_list:
                 ai1_hp = ai1_hp -math.ceil(ability_data[3] * self.check_brittle(1))
@@ -17135,7 +17222,7 @@ class GameFrame(tk.Frame):
                 ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4)) * 3
             if 5 in target_list:
                 ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5)) * 3
-        elif ability_data[0] == "Pierce":
+        elif ability_data[0] == "Flanking Strikes":
             if 1 in target_list:
                 ai1_hp = ai1_hp -math.ceil(ability_data[3] * self.check_brittle(1))
             if 2 in target_list:
@@ -17146,7 +17233,7 @@ class GameFrame(tk.Frame):
                 ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4))
             if 5 in target_list:
                 ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5))
-        elif ability_data[0] == "Disruptive Slash":
+        elif ability_data[0] == "Riposte":
             if 1 in target_list:
                 ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1))
                 self.apply_stun(1, 1)
@@ -17632,7 +17719,7 @@ class GameFrame(tk.Frame):
                         if attacks[0] == "Fireball":
                             ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5))
                             self.apply_burnDot(5, 2)
-        elif ability_data[0] == "Venus-fly Snap":
+        elif ability_data[0] == "Invigorate Thorns":
             if 1 in target_list:
                 ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1)) * 1.3
             if 2 in target_list:
@@ -17654,7 +17741,7 @@ class GameFrame(tk.Frame):
                 ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4))
             if 5 in target_list:
                 ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5))
-        elif ability_data[0] == "Prickle Arena":
+        elif ability_data[0] == "Burst N Bloom":
             if AI_SPAWNED == 1:
                 self.apply_prickedDot(1)
             if AI_SPAWNED == 2:
@@ -18435,7 +18522,7 @@ class GameFrame(tk.Frame):
                         if champion5_hp > CHAMPION5_HP:
                             champion5_hp = CHAMPION5_HP
             blood_boil_buff = 0
-        elif ability_data[0] == "Overhand Justice":
+        elif ability_data[0] == "Holy Wrath":
             if 1 in target_list:
                 ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1)) * 1.3
             if 2 in target_list:
@@ -18477,7 +18564,7 @@ class GameFrame(tk.Frame):
             if current_arrow_type == "Tracker-tipped":
                 if AI_SPAWNED == 1:
                     ai1_hp = ai1_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(1)) * 0.65)
-                if AI_SPAWNED == 3:
+                if AI_SPAWNED == 2:
                     ai1_hp = ai1_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(1)) * 0.65)
                     ai2_hp = ai2_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(2)) * 0.65)
                 if AI_SPAWNED == 3:
@@ -18510,7 +18597,7 @@ class GameFrame(tk.Frame):
             if current_arrow_type == "Tracker-tipped":
                 if AI_SPAWNED == 1:
                     ai1_hp = ai1_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(1)) * 1.25)
-                if AI_SPAWNED == 3:
+                if AI_SPAWNED == 2:
                     ai1_hp = ai1_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(1)) * 1.25)
                     ai2_hp = ai2_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(2)) * 1.25)
                 if AI_SPAWNED == 3:
@@ -18528,7 +18615,7 @@ class GameFrame(tk.Frame):
                     ai3_hp = ai3_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(3)) * 1.25)
                     ai4_hp = ai4_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(4)) * 1.25)
                     ai5_hp = ai5_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(5)) * 1.25)
-        elif ability_data[0] == "Lightning Bolt":
+        elif ability_data[0] == "Chain Bolts":
             if 1 in target_list:
                 ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1)) * 1.2
             if 2 in target_list:
@@ -18539,7 +18626,7 @@ class GameFrame(tk.Frame):
                 ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4)) * 1.2
             if 5 in target_list:
                 ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5)) * 1.2
-        elif ability_data[0] == "Chain Lightning":
+        elif ability_data[0] == "Electrical Expulsion":
             if AI_SPAWNED == 1:
                 ai1_hp = ai1_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(1)) * 0.75)
             if AI_SPAWNED == 3:
@@ -18560,7 +18647,7 @@ class GameFrame(tk.Frame):
                 ai3_hp = ai3_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(3)) * 0.75)
                 ai4_hp = ai4_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(4)) * 0.75)
                 ai5_hp = ai5_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(5)) * 0.75)
-        elif ability_data[0] == "Crashing Boom":
+        elif ability_data[0] == "Energise":
             if AI_SPAWNED == 1:
                 self.apply_stun(1, 1)
             if AI_SPAWNED == 2:
@@ -18898,23 +18985,23 @@ class GameFrame(tk.Frame):
             if 5 in target_list:
                 champion5_immunity.append("Block")
                 champion5_statuses.append("Immunity: Block")
-        elif ability_data[0] == "Parry":
+        elif ability_data[0] == "Magic Reflection":
             if 1 in target_list:
-                champion1_immunity.append("Parry")
-                champion1_statuses.append("Immunity: Parry")
+                champion1_immunity.append("Magic Reflection")
+                champion1_statuses.append("Immunity: Magic Reflection")
             if 2 in target_list:
-                champion2_immunity.append("Parry")
-                champion2_statuses.append("Immunity: Parry")
+                champion2_immunity.append("Magic Reflection")
+                champion2_statuses.append("Immunity: Magic Reflection")
             if 3 in target_list:
-                champion3_immunity.append("Parry")
-                champion3_statuses.append("Immunity: Parry")
+                champion3_immunity.append("Magic Reflection")
+                champion3_statuses.append("Immunity: Magic Reflection")
             if 4 in target_list:
-                champion4_immunity.append("Parry")
-                champion4_statuses.append("Immunity: Parry")
+                champion4_immunity.append("Magic Reflection")
+                champion4_statuses.append("Immunity: Magic Reflection")
             if 5 in target_list:
-                champion5_immunity.append("Parry")
-                champion5_statuses.append("Immunity: Parry")
-        elif ability_data[0] == "Thorns":
+                champion5_immunity.append("Magic Reflection")
+                champion5_statuses.append("Immunity: Magic Reflection")
+        elif ability_data[0] == "Barbed Bush Armour":
             global champion1_thorns, champion2_thorns, champion3_thorns, champion4_thorns, champion5_thorns
             if 1 in target_list:
                 champion1_thorns = 5
@@ -18936,49 +19023,49 @@ class GameFrame(tk.Frame):
                 champion5_thorns = 5
                 if "Thorned" not in champion5_statuses:
                     champion5_statuses.append("Thorned")
-        elif ability_data[0] == "Aura of Power":
+        elif ability_data[0] == "Crusade":
             global champion1_aura, champion2_aura, champion3_aura, champion4_aura, champion5_aura
             champion1_aura = 1
-            if "Aura of Protection" in champion1_statuses:
-                champion1_statuses.remove("Aura of Protection")
-                champion1_statuses.append("Aura of Power")
+            if "Damnation" in champion1_statuses:
+                champion1_statuses.remove("Damnation")
+                champion1_statuses.append("Crusade")
             champion2_aura = 1
-            if "Aura of Protection" in champion2_statuses:
-                champion2_statuses.remove("Aura of Protection")
-                champion2_statuses.append("Aura of Power")
+            if "Damnation" in champion2_statuses:
+                champion2_statuses.remove("Damnation")
+                champion2_statuses.append("Crusade")
             champion3_aura = 1
-            if "Aura of Protection" in champion3_statuses:
-                champion3_statuses.remove("Aura of Protection")
-                champion3_statuses.append("Aura of Power")
+            if "Damnation" in champion3_statuses:
+                champion3_statuses.remove("Damnation")
+                champion3_statuses.append("Crusade")
             champion4_aura = 1
-            if "Aura of Protection" in champion4_statuses:
-                champion4_statuses.remove("Aura of Protection")
-                champion4_statuses.append("Aura of Power")
+            if "Damnation" in champion4_statuses:
+                champion4_statuses.remove("Damnation")
+                champion4_statuses.append("Crusade")
             champion5_aura = 1
-            if "Aura of Protection" in champion5_statuses:
-                champion5_statuses.remove("Aura of Protection")
-                champion5_statuses.append("Aura of Power")
-        elif ability_data[0] == "Aura of Protection":
+            if "Damnation" in champion5_statuses:
+                champion5_statuses.remove("Damnation")
+                champion5_statuses.append("Crusade")
+        elif ability_data[0] == "Damnation":
             champion1_aura = 2
-            if "Aura of Power" in champion1_statuses:
-                champion1_statuses.remove("Aura of Power")
-                champion1_statuses.append("Aura of Protection")
+            if "Crusade" in champion1_statuses:
+                champion1_statuses.remove("Crusade")
+                champion1_statuses.append("Damnation")
             champion2_aura = 2
-            if "Aura of Power" in champion2_statuses:
-                champion2_statuses.remove("Aura of Power")
-                champion2_statuses.append("Aura of Protection")
+            if "Crusade" in champion2_statuses:
+                champion2_statuses.remove("Crusade")
+                champion2_statuses.append("Damnation")
             champion3_aura = 2
-            if "Aura of Power" in champion3_statuses:
-                champion3_statuses.remove("Aura of Power")
-                champion3_statuses.append("Aura of Protection")
+            if "Crusade" in champion3_statuses:
+                champion3_statuses.remove("Crusade")
+                champion3_statuses.append("Damnation")
             champion4_aura = 2
-            if "Aura of Power" in champion4_statuses:
-                champion4_statuses.remove("Aura of Power")
-                champion4_statuses.append("Aura of Protection")
+            if "Crusade" in champion4_statuses:
+                champion4_statuses.remove("Crusade")
+                champion4_statuses.append("Damnation")
             champion5_aura = 2
-            if "Aura of Power" in champion5_statuses:
-                champion5_statuses.remove("Aura of Power")
-                champion5_statuses.append("Aura of Protection")
+            if "Crusade" in champion5_statuses:
+                champion5_statuses.remove("Crusade")
+                champion5_statuses.append("Damnation")
         elif ability_data[0] == "Muscle Enlarger":
             global champion1_muscleEnlarger, champion2_muscleEnlarger, champion3_muscleEnlarger, \
                 champion4_muscleEnlarger, champion5_muscleEnlarger
@@ -19041,7 +19128,7 @@ class GameFrame(tk.Frame):
             if 5 in target_list:
                 champion5_fullPotential = 3
                 champion5_statuses.append("Fullest Potential")
-        elif ability_data[0] == "Healing Surge":
+        elif ability_data[0] == "Spring Waters":
             if 1 in target_list:
                 champion1_hp = champion1_hp + ability_data[3]
                 if champion1_hp > CHAMPION1_HP:
@@ -19062,7 +19149,7 @@ class GameFrame(tk.Frame):
                 champion5_hp = champion5_hp + ability_data[3]
                 if champion5_hp > CHAMPION5_HP:
                     champion5_hp = CHAMPION5_HP
-        elif ability_data[0] == "Rejuvenating Whirlpool":
+        elif ability_data[0] == "Ocean Tides":
             if champion1_hp != 0:
                 champion1_hp = champion1_hp + ability_data[3]
                 if champion1_hp > CHAMPION1_HP:
@@ -19125,7 +19212,7 @@ class GameFrame(tk.Frame):
                 if champion5_hp > CHAMPION5_HP:
                     champion5_hp = CHAMPION5_HP
                 self.grant_champion_blessing(5)
-        elif ability_data[0] == "Nanoheal Bots":
+        elif ability_data[0] == "Overclock Nanobots":
             if 1 in target_list:
                 champion1_hp = champion1_hp + ability_data[3]
                 if champion1_hp > CHAMPION1_HP:
@@ -19146,7 +19233,7 @@ class GameFrame(tk.Frame):
                 champion5_hp = champion5_hp + ability_data[3]
                 if champion5_hp > CHAMPION5_HP:
                     champion5_hp = CHAMPION5_HP
-            self.apply_nanoheal_bots(3)
+            self.apply_overclock_nanobots(3)
         elif ability_data[0] == "Reverse Wounds":
             if 1 in target_list:
                 for damage in champion1_lastRoundDamageTaken_list:
@@ -19184,7 +19271,7 @@ class GameFrame(tk.Frame):
                 champion4_hp = CHAMPION4_HP
             if champion5_hp != 0:
                 champion5_hp = CHAMPION5_HP
-        elif ability_data[0] == "Bandage Wound":
+        elif ability_data[0] == "Bandages":
             if 1 in target_list:
                 champion1_hp = champion1_hp + ability_data[3]
                 if champion1_hp > CHAMPION1_HP:
@@ -19205,7 +19292,7 @@ class GameFrame(tk.Frame):
                 champion5_hp = champion5_hp + ability_data[3]
                 if champion5_hp > CHAMPION5_HP:
                     champion5_hp = CHAMPION5_HP
-        elif ability_data[0] == "Perfected Herbal Tea":
+        elif ability_data[0] == "Tight Tourniquet":
             if 1 in target_list:
                 champion1_hp = champion1_hp + ability_data[3]
                 if champion1_hp > CHAMPION1_HP:
@@ -19231,7 +19318,7 @@ class GameFrame(tk.Frame):
                 if champion5_hp > CHAMPION5_HP:
                     champion5_hp = CHAMPION5_HP
                 self.apply_herbal_tea(5, 2)
-        elif ability_data[0] == "G.3.T J.A.X.D":
+        elif ability_data[0] == "Secret Remedy":
             global champion1_JAXD, champion2_JAXD, champion3_JAXD, \
                 champion4_JAXD, champion5_JAXD
             if 1 in target_list:
@@ -19373,28 +19460,28 @@ class GameFrame(tk.Frame):
                         if champion5_hp > CHAMPION5_HP:
                             champion5_hp = CHAMPION5_HP
                         break
-        elif ability_data[0] == "Elusive Measures":
+        elif ability_data[0] == "Evasive Manoeuvres":
             for character in CHAMPION_LIST:
                 counter += 1
                 if character == MASTER_FENCER.title:
                     if counter == 1:
-                        champion1_immunity.append("Elusive Measures")
+                        champion1_immunity.append("Evasive Manoeuvres")
                         champion1_statuses.append("Immunity: Evasion")
                         break
                     if counter == 2:
-                        champion2_immunity.append("Elusive Measures")
+                        champion2_immunity.append("Evasive Manoeuvres")
                         champion2_statuses.append("Immunity: Evasion")
                         break
                     if counter == 3:
-                        champion3_immunity.append("Elusive Measures")
+                        champion3_immunity.append("Evasive Manoeuvres")
                         champion3_statuses.append("Immunity: Evasion")
                         break
                     if counter == 4:
-                        champion4_immunity.append("Elusive Measures")
+                        champion4_immunity.append("Evasive Manoeuvres")
                         champion4_statuses.append("Immunity: Evasion")
                         break
                     if counter == 5:
-                        champion5_immunity.append("Elusive Measures")
+                        champion5_immunity.append("Evasive Manoeuvres")
                         champion5_statuses.append("Immunity: Evasion")
                         break
         elif ability_data[0] == "Enrage":
@@ -19604,9 +19691,9 @@ class GameFrame(tk.Frame):
             current_arrow_type = "Iron-cast"
         elif ability_data[0] == "Equip Tracker-tipped Arrows":
             current_arrow_type = "Tracker-tipped"
-        elif ability_data[0] == "Thunderous Vigor":
-            global crashing_boom_requirements
-            crashing_boom_requirements[1] = 0
+        elif ability_data[0] == "Superconductor":
+            global energise_requirements
+            energise_requirements[1] = 0
 
     def grant_champion_blessing(self, champion_position):
         global champion1_blessing, champion2_blessing, champion3_blessing, champion4_blessing, champion5_blessing, \
@@ -19660,7 +19747,7 @@ class GameFrame(tk.Frame):
                 if champion5_hp > CHAMPION5_HP:
                     champion5_hp = CHAMPION5_HP
 
-    def apply_nanoheal_bots(self, length):
+    def apply_overclock_nanobots(self, length):
         global champion1_nanobot, champion2_nanobot, champion3_nanobot, champion4_nanobot, champion5_nanobot, \
             champion1_statuses, champion2_statuses, champion3_statuses, champion4_statuses, champion5_statuses
         nanobotHealHOT = math.ceil(ability_data[3] * 0.66)
@@ -20064,7 +20151,7 @@ class GameFrame(tk.Frame):
     def apply_corruptionDot(self, ai_target, length, stacks_level):
         global ai1_corruptionDot, ai2_corruptionDot, ai3_corruptionDot, ai4_corruptionDot, ai5_corruptionDot, \
             ai1_statuses, ai2_statuses, ai3_statuses, ai4_statuses, ai5_statuses
-        corruptionDotTick = math.ceil(300 * stacks_level)
+        corruptionDotTick = math.ceil(600 * stacks_level)
         if ai_target == 1:
             if stacks_level > ai1_corruptionDot[2]:
                 ai1_corruptionDot = [corruptionDotTick, length, stacks_level]
@@ -20368,30 +20455,30 @@ class GameFrame(tk.Frame):
                 if trainwreck_requirements[0] > 0:
                     if trainwreck_requirements[1] > 0:
                         attack_text = "Trainwreck ({})\n{} {}".format(trainwreck_requirements[1],
-                                                                      VETERAN_BODYGUARD.rp_name,
+                                                                      KINGS_GUARD.rp_name,
                                                                       trainwreck_requirements[0])
                         attack_button_text_list.append(attack_text)
                     else:
-                        attack_text = "Trainwreck\n{} {}".format(VETERAN_BODYGUARD.rp_name, trainwreck_requirements[0])
+                        attack_text = "Trainwreck\n{} {}".format(KINGS_GUARD.rp_name, trainwreck_requirements[0])
                         attack_button_text_list.append(attack_text)
                 elif trainwreck_requirements[1] > 0:
                     attack_text = "Trainwreck ({})".format(trainwreck_requirements[1])
                     attack_button_text_list.append(attack_text)
                 else:
                     attack_button_text_list.append(attack_name)
-            elif attack_name == "Disruptive Slash":
-                if disruptive_slash_requirements[0] > 0:
-                    if disruptive_slash_requirements[1] > 0:
-                        attack_text = "Disruptive Slash ({})\n{} {}".format(disruptive_slash_requirements[1],
+            elif attack_name == "Riposte":
+                if riposte_requirements[0] > 0:
+                    if riposte_requirements[1] > 0:
+                        attack_text = "Riposte ({})\n{} {}".format(riposte_requirements[1],
                                                                             MASTER_FENCER.rp_name,
-                                                                            disruptive_slash_requirements[0])
+                                                                            riposte_requirements[0])
                         attack_button_text_list.append(attack_text)
                     else:
-                        attack_text = "Disruptive Slash\n{} {}".format(MASTER_FENCER.rp_name,
-                                                                       disruptive_slash_requirements[0])
+                        attack_text = "Riposte\n{} {}".format(MASTER_FENCER.rp_name,
+                                                                       riposte_requirements[0])
                         attack_button_text_list.append(attack_text)
-                elif disruptive_slash_requirements[1] > 0:
-                    attack_text = "Disruptive Slash ({})".format(disruptive_slash_requirements[1])
+                elif riposte_requirements[1] > 0:
+                    attack_text = "Riposte ({})".format(riposte_requirements[1])
                     attack_button_text_list.append(attack_text)
                 else:
                     attack_button_text_list.append(attack_name)
@@ -20484,19 +20571,19 @@ class GameFrame(tk.Frame):
                     attack_button_text_list.append(attack_text)
                 else:
                     attack_button_text_list.append(attack_name)
-            elif attack_name == "Venus-fly Snap":
-                if venusfly_snap_requirements[0] > 0:
-                    if venusfly_snap_requirements[1] > 0:
-                        attack_text = "Venus-fly Snap ({})\n{} {}".format(venusfly_snap_requirements[1], DRUID.rp_name,
-                                                                          venusfly_snap_requirements[
+            elif attack_name == "Invigorate Thorns":
+                if invigorate_thorns_requirements[0] > 0:
+                    if invigorate_thorns_requirements[1] > 0:
+                        attack_text = "Invigorate Thorns ({})\n{} {}".format(invigorate_thorns_requirements[1], DRUID.rp_name,
+                                                                          invigorate_thorns_requirements[
                                                                               0])
                         attack_button_text_list.append(attack_text)
                     else:
-                        attack_text = "Venus-fly Snap\n{} {}".format(DRUID.rp_name, venusfly_snap_requirements[0])
+                        attack_text = "Invigorate Thorns\n{} {}".format(DRUID.rp_name, invigorate_thorns_requirements[0])
                         attack_button_text_list.append(attack_text)
-                elif venusfly_snap_requirements[1] > 0:
+                elif invigorate_thorns_requirements[1] > 0:
 
-                    attack_text = "Venus-fly Snap ({})".format(venusfly_snap_requirements[1])
+                    attack_text = "Invigorate Thorns ({})".format(invigorate_thorns_requirements[1])
                     attack_button_text_list.append(attack_text)
                 else:
                     attack_button_text_list.append(attack_name)
@@ -20567,12 +20654,12 @@ class GameFrame(tk.Frame):
             elif attack_name == "Power Opt":
                 if power_opt_requirements[0] > 0:
                     if power_opt_requirements[1] > 0:
-                        attack_text = "Power Opt ({})\n{} {}".format(power_opt_requirements[1], CASTLE_RANGER.rp_name,
+                        attack_text = "Power Opt ({})\n{} {}".format(power_opt_requirements[1], LEGION_RANGER.rp_name,
                                                                      power_opt_requirements[
                                                                          0])
                         attack_button_text_list.append(attack_text)
                     else:
-                        attack_text = "Power Opt\n{} {}".format(CASTLE_RANGER.rp_name, power_opt_requirements[0])
+                        attack_text = "Power Opt\n{} {}".format(LEGION_RANGER.rp_name, power_opt_requirements[0])
                         attack_button_text_list.append(attack_text)
                 elif power_opt_requirements[1] > 0:
                     attack_text = "Power Opt ({})".format(power_opt_requirements[1])
@@ -20664,10 +20751,10 @@ class GameFrame(tk.Frame):
                 if fortification_requirements[0] > 0:
                     if fortification_requirements[1] > 0:
                         special_text = "Fortification", "Fortification ({})\n{} {}".format(
-                            fortification_requirements[1], VETERAN_BODYGUARD.rp_name, fortification_requirements[0])
+                            fortification_requirements[1], KINGS_GUARD.rp_name, fortification_requirements[0])
                         special_button_text_list.append(special_text)
                     else:
-                        special_text = "Fortification", "Fortification\n{} {}".format(VETERAN_BODYGUARD.rp_name,
+                        special_text = "Fortification", "Fortification\n{} {}".format(KINGS_GUARD.rp_name,
                                                                                       fortification_requirements[0])
                         special_button_text_list.append(special_text)
                 elif fortification_requirements[1] > 0:
@@ -20675,33 +20762,33 @@ class GameFrame(tk.Frame):
                     special_button_text_list.append(special_text)
                 else:
                     special_button_text_list.append(special_name)
-            elif special_name == "Parry":
-                if parry_requirements[0] > 0:
-                    if parry_requirements[1] > 0:
-                        special_text = "Parry ({})\n{} {}".format(parry_requirements[1], MASTER_FENCER.rp_name,
-                                                                  parry_requirements[0])
+            elif special_name == "Magic Reflection":
+                if magic_reflection_requirements[0] > 0:
+                    if magic_reflection_requirements[1] > 0:
+                        special_text = "Magic Reflection ({})\n{} {}".format(magic_reflection_requirements[1], MASTER_FENCER.rp_name,
+                                                                  magic_reflection_requirements[0])
                         special_button_text_list.append(special_text)
                     else:
-                        special_text = "Parry\n{} {}".format(MASTER_FENCER.rp_name, parry_requirements[0])
+                        special_text = "Magic Reflection\n{} {}".format(MASTER_FENCER.rp_name, magic_reflection_requirements[0])
                         special_button_text_list.append(special_text)
-                elif parry_requirements[1] > 0:
-                    special_text = "Parry ({})".format(parry_requirements[1])
+                elif magic_reflection_requirements[1] > 0:
+                    special_text = "Magic Reflection ({})".format(magic_reflection_requirements[1])
                     special_button_text_list.append(special_text)
                 else:
                     special_button_text_list.append(special_name)
-            elif special_name == "Elusive Measures":
-                if elusive_measures_requirements[0] > 0:
-                    if elusive_measures_requirements[1] > 0:
-                        special_text = "Elusive Measures ({})\n{} {}".format(elusive_measures_requirements[1],
+            elif special_name == "Evasive Manoeuvres":
+                if evasive_manoeuvres_requirements[0] > 0:
+                    if evasive_manoeuvres_requirements[1] > 0:
+                        special_text = "Evasive Manoeuvres ({})\n{} {}".format(evasive_manoeuvres_requirements[1],
                                                                              MASTER_FENCER.rp_name,
-                                                                             elusive_measures_requirements[0])
+                                                                             evasive_manoeuvres_requirements[0])
                         special_button_text_list.append(special_text)
                     else:
-                        special_text = "Elusive Measures\n{} {}".format(MASTER_FENCER.rp_name,
-                                                                        elusive_measures_requirements[0])
+                        special_text = "Evasive Manoeuvres\n{} {}".format(MASTER_FENCER.rp_name,
+                                                                        evasive_manoeuvres_requirements[0])
                         special_button_text_list.append(special_text)
-                elif elusive_measures_requirements[1] > 0:
-                    special_text = "Elusive Measures ({})".format(elusive_measures_requirements[1])
+                elif evasive_manoeuvres_requirements[1] > 0:
+                    special_text = "Evasive Manoeuvres ({})".format(evasive_manoeuvres_requirements[1])
                     special_button_text_list.append(special_text)
                 else:
                     special_button_text_list.append(special_name)
@@ -20833,33 +20920,33 @@ class GameFrame(tk.Frame):
                     special_button_text_list.append(special_text)
                 else:
                     special_button_text_list.append(special_name)
-            elif special_name == "Thorns":
-                if thorns_requirements[0] > 0:
-                    if thorns_requirements[1] > 0:
-                        special_text = "Thorns ({})\n{} {}".format(thorns_requirements[1], DRUID.rp_name,
-                                                                   thorns_requirements[
+            elif special_name == "Barbed Bush Armour":
+                if barbed_bush_armour_requirements[0] > 0:
+                    if barbed_bush_armour_requirements[1] > 0:
+                        special_text = "Barbed Bush Armour ({})\n{} {}".format(thorns_requirements[1], DRUID.rp_name,
+                                                                   barbed_bush_armour_requirements[
                                                                        0])
                         special_button_text_list.append(special_text)
                     else:
-                        special_text = "Thorns\n{} {}".format(DRUID.rp_name, thorns_requirements[0])
+                        special_text = "Barbed Bush Armour\n{} {}".format(DRUID.rp_name, barbed_bush_armour_requirements[0])
                         special_button_text_list.append(special_text)
-                elif thorns_requirements[1] > 0:
-                    special_text = "Thorns ({})".format(thorns_requirements[1])
+                elif barbed_bush_armour_requirements[1] > 0:
+                    special_text = "Barbed Bush Armour ({})".format(thorns_requirements[1])
                     special_button_text_list.append(special_text)
                 else:
                     special_button_text_list.append(special_name)
-            elif special_name == "Prickle Arena":
-                if prickle_arena_requirements[0] > 0:
-                    if prickle_arena_requirements[1] > 0:
-                        special_text = "Prickle Arena ({})\n{} {}".format(prickle_arena_requirements[1], DRUID.rp_name,
-                                                                          prickle_arena_requirements[
+            elif special_name == "Burst N Bloom":
+                if burst_n_bloom_requirements[0] > 0:
+                    if burst_n_bloom_requirements[1] > 0:
+                        special_text = "Burst N Bloom ({})\n{} {}".format(burst_n_bloom_requirements[1], DRUID.rp_name,
+                                                                          burst_n_bloom_requirements[
                                                                               0])
                         special_button_text_list.append(special_text)
                     else:
-                        special_text = "Prickle Arena\n{} {}".format(DRUID.rp_name, prickle_arena_requirements[0])
+                        special_text = "Burst N Bloom\n{} {}".format(DRUID.rp_name, burst_n_bloom_requirements[0])
                         special_button_text_list.append(special_text)
-                elif prickle_arena_requirements[1] > 0:
-                    special_text = "Prickle Arena ({})".format(prickle_arena_requirements[1])
+                elif burst_n_bloom_requirements[1] > 0:
+                    special_text = "Burst N Bloom ({})".format(burst_n_bloom_requirements[1])
                     special_button_text_list.append(special_text)
                 else:
                     special_button_text_list.append(special_name)
@@ -20925,35 +21012,35 @@ class GameFrame(tk.Frame):
                     special_button_text_list.append(special_text)
                 else:
                     special_button_text_list.append(special_name)
-            elif special_name == "Aura of Power":
-                if aura_of_power_requirements[0] > 0:
-                    if aura_of_power_requirements[1] > 0:
-                        special_text = "Aura of Power ({})\n{} {}".format(aura_of_power_requirements[1],
-                                                                          PALADIN.rp_name, aura_of_power_requirements[
+            elif special_name == "Crusade":
+                if crusade_requirements[0] > 0:
+                    if crusade_requirements[1] > 0:
+                        special_text = "Crusade ({})\n{} {}".format(crusade_requirements[1],
+                                                                          PALADIN.rp_name, crusade_requirements[
                                                                               0])
                         special_button_text_list.append(special_text)
                     else:
-                        special_text = "Aura of Power\n{} {}".format(PALADIN.rp_name, aura_of_power_requirements[0])
+                        special_text = "Crusade\n{} {}".format(PALADIN.rp_name, crusade_requirements[0])
                         special_button_text_list.append(special_text)
-                elif aura_of_power_requirements[1] > 0:
-                    special_text = "Aura of Power ({})".format(aura_of_power_requirements[1])
+                elif crusade_requirements[1] > 0:
+                    special_text = "Crusade ({})".format(crusade_requirements[1])
                     special_button_text_list.append(special_text)
                 else:
                     special_button_text_list.append(special_name)
-            elif special_name == "Aura of Protection":
-                if aura_of_protection_requirements[0] > 0:
-                    if aura_of_protection_requirements[1] > 0:
-                        special_text = "Aura of Protection ({})\n{} {}".format(aura_of_protection_requirements[1],
+            elif special_name == "Damnation":
+                if damnation_requirements[0] > 0:
+                    if damnation_requirements[1] > 0:
+                        special_text = "Damnation ({})\n{} {}".format(damnation_requirements[1],
                                                                                PALADIN.rp_name,
-                                                                               aura_of_protection_requirements[
+                                                                               damnation_requirements[
                                                                                    0])
                         special_button_text_list.append(special_text)
                     else:
-                        special_text = "Aura of Protection\n{} {}".format(PALADIN.rp_name,
-                                                                          aura_of_protection_requirements[0])
+                        special_text = "Damnation\n{} {}".format(PALADIN.rp_name,
+                                                                          damnation_requirements[0])
                         special_button_text_list.append(special_text)
-                elif aura_of_protection_requirements[1] > 0:
-                    special_text = "Aura of Protection ({})".format(aura_of_protection_requirements[1])
+                elif damnation_requirements[1] > 0:
+                    special_text = "Damnation ({})".format(damnation_requirements[1])
                     special_button_text_list.append(special_text)
                 else:
                     special_button_text_list.append(special_name)
@@ -20961,12 +21048,12 @@ class GameFrame(tk.Frame):
                 if equip_iron_cast_arrows_requirements[0] > 0:
                     if equip_iron_cast_arrows_requirements[1] > 0:
                         special_text = "Equip Iron-cast Arrows ({})\n{} {}".format(
-                            equip_iron_cast_arrows_requirements[1], CASTLE_RANGER.rp_name,
+                            equip_iron_cast_arrows_requirements[1], LEGION_RANGER.rp_name,
                             equip_iron_cast_arrows_requirements[
                                 0])
                         special_button_text_list.append(special_text)
                     else:
-                        special_text = "Equip Iron-cast Arrows\n{} {}".format(CASTLE_RANGER.rp_name,
+                        special_text = "Equip Iron-cast Arrows\n{} {}".format(LEGION_RANGER.rp_name,
                                                                               equip_iron_cast_arrows_requirements[0])
                         special_button_text_list.append(special_text)
                 elif equip_iron_cast_arrows_requirements[1] > 0:
@@ -20978,12 +21065,12 @@ class GameFrame(tk.Frame):
                 if equip_tracker_tipped_arrows_requirements[0] > 0:
                     if equip_tracker_tipped_arrows_requirements[1] > 0:
                         special_text = "Equip Tracker-tipped Arrows ({})\n{} {}".format(
-                            equip_tracker_tipped_arrows_requirements[1], CASTLE_RANGER.rp_name,
+                            equip_tracker_tipped_arrows_requirements[1], LEGION_RANGER.rp_name,
                             equip_tracker_tipped_arrows_requirements[
                                 0])
                         special_button_text_list.append(special_text)
                     else:
-                        special_text = "Equip Tracker-tipped Arrows\n{} {}".format(CASTLE_RANGER.rp_name,
+                        special_text = "Equip Tracker-tipped Arrows\n{} {}".format(LEGION_RANGER.rp_name,
                                                                                    equip_tracker_tipped_arrows_requirements[
                                                                                        0])
                         special_button_text_list.append(special_text)
@@ -20993,37 +21080,37 @@ class GameFrame(tk.Frame):
                     special_button_text_list.append(special_text)
                 else:
                     special_button_text_list.append(special_name)
-            elif special_name == "Crashing Boom":
-                if crashing_boom_requirements[0] > 0:
-                    if crashing_boom_requirements[1] > 0:
-                        special_text = "Crashing Boom ({})\n{} {}".format(crashing_boom_requirements[1],
-                                                                          THUNDER_APPRENTICE.rp_name,
-                                                                          crashing_boom_requirements[
+            elif special_name == "Energise":
+                if energise_requirements[0] > 0:
+                    if energise_requirements[1] > 0:
+                        special_text = "Energise ({})\n{} {}".format(energise_requirements[1],
+                                                                          MAGNETIMANCER.rp_name,
+                                                                          energise_requirements[
                                                                               0])
                         special_button_text_list.append(special_text)
                     else:
-                        special_text = "Crashing Boom\n{} {}".format(THUNDER_APPRENTICE.rp_name,
-                                                                     crashing_boom_requirements[0])
+                        special_text = "Energise\n{} {}".format(MAGNETIMANCER.rp_name,
+                                                                     energise_requirements[0])
                         special_button_text_list.append(special_text)
-                elif crashing_boom_requirements[1] > 0:
-                    special_text = "Crashing Boom ({})".format(crashing_boom_requirements[1])
+                elif energise_requirements[1] > 0:
+                    special_text = "Energise ({})".format(energise_requirements[1])
                     special_button_text_list.append(special_text)
                 else:
                     special_button_text_list.append(special_name)
-            elif special_name == "Thunderous Vigor":
-                if thunderous_vigor_requirements[0] > 0:
-                    if thunderous_vigor_requirements[1] > 0:
-                        special_text = "Thunderous Vigor ({})\n{} {}".format(thunderous_vigor_requirements[1],
-                                                                          THUNDER_APPRENTICE.rp_name,
-                                                                          thunderous_vigor_requirements[
+            elif special_name == "Superconductor":
+                if superconductor_requirements[0] > 0:
+                    if superconductor_requirements[1] > 0:
+                        special_text = "Superconductor ({})\n{} {}".format(superconductor_requirements[1],
+                                                                          MAGNETIMANCER.rp_name,
+                                                                          superconductor_requirements[
                                                                               0])
                         special_button_text_list.append(special_text)
                     else:
-                        special_text = "Thunderous Vigor\n{} {}".format(THUNDER_APPRENTICE.rp_name,
-                                                                     thunderous_vigor_requirements[0])
+                        special_text = "Superconductor\n{} {}".format(MAGNETIMANCER.rp_name,
+                                                                     superconductor_requirements[0])
                         special_button_text_list.append(special_text)
-                elif thunderous_vigor_requirements[1] > 0:
-                    special_text = "Thunderous Vigor ({})".format(thunderous_vigor_requirements[1])
+                elif superconductor_requirements[1] > 0:
+                    special_text = "Superconductor ({})".format(superconductor_requirements[1])
                     special_button_text_list.append(special_text)
                 else:
                     special_button_text_list.append(special_name)
@@ -21059,37 +21146,37 @@ class GameFrame(tk.Frame):
                     special_button_text_list.append(special_text)
                 else:
                     special_button_text_list.append(special_name)
-            elif special_name == "Healing Surge":
-                if healing_surge_requirements[0] > 0:
-                    if healing_surge_requirements[1] > 0:
-                        special_text = "Healing Surge ({})\n{} {}".format(healing_surge_requirements[1],
+            elif special_name == "Spring Waters":
+                if spring_waters_requirements[0] > 0:
+                    if spring_waters_requirements[1] > 0:
+                        special_text = "Spring Waters ({})\n{} {}".format(spring_waters_requirements[1],
                                                                           EARTH_SPEAKER.rp_name,
-                                                                          healing_surge_requirements[
+                                                                          spring_waters_requirements[
                                                                               0])
                         special_button_text_list.append(special_text)
                     else:
-                        special_text = "Healing Surge\n{} {}".format(EARTH_SPEAKER.rp_name,
-                                                                     healing_surge_requirements[0])
+                        special_text = "Spring Waters\n{} {}".format(EARTH_SPEAKER.rp_name,
+                                                                     spring_waters_requirements[0])
                         special_button_text_list.append(special_text)
-                elif healing_surge_requirements[1] > 0:
-                    special_text = "Healing Surge ({})".format(healing_surge_requirements[1])
+                elif spring_waters_requirements[1] > 0:
+                    special_text = "Spring Waters ({})".format(spring_waters_requirements[1])
                     special_button_text_list.append(special_text)
                 else:
                     special_button_text_list.append(special_name)
-            elif special_name == "Rejuvenating Whirlpool":
-                if rejuvenating_whirlpool_requirements[0] > 0:
-                    if rejuvenating_whirlpool_requirements[1] > 0:
-                        special_text = "Rejuvenating Whirlpool ({})\n{} {}".format(
-                            rejuvenating_whirlpool_requirements[1], EARTH_SPEAKER.rp_name,
-                            rejuvenating_whirlpool_requirements[
+            elif special_name == "Ocean Tides":
+                if ocean_tides_requirements[0] > 0:
+                    if ocean_tides_requirements[1] > 0:
+                        special_text = "Ocean Tides ({})\n{} {}".format(
+                            ocean_tides_requirements[1], EARTH_SPEAKER.rp_name,
+                            ocean_tides_requirements[
                                 0])
                         special_button_text_list.append(special_text)
                     else:
-                        special_text = "Rejuvenating Whirlpool\n{} {}".format(EARTH_SPEAKER.rp_name,
-                                                                              rejuvenating_whirlpool_requirements[0])
+                        special_text = "Ocean Tides\n{} {}".format(EARTH_SPEAKER.rp_name,
+                                                                              ocean_tides_requirements[0])
                         special_button_text_list.append(special_text)
-                elif rejuvenating_whirlpool_requirements[1] > 0:
-                    special_text = "Rejuvenating Whirlpool ({})".format(rejuvenating_whirlpool_requirements[1])
+                elif ocean_tides_requirements[1] > 0:
+                    special_text = "Ocean Tides ({})".format(ocean_tides_requirements[1])
                     special_button_text_list.append(special_text)
                 else:
                     special_button_text_list.append(special_name)
@@ -21144,19 +21231,19 @@ class GameFrame(tk.Frame):
                     special_button_text_list.append(special_text)
                 else:
                     special_button_text_list.append(special_name)
-            elif special_name == "Nanoheal Bots":
-                if nanoheal_bots_requirements[0] > 0:
-                    if nanoheal_bots_requirements[1] > 0:
-                        special_text = "Nanoheal Bots ({})\n{} {}".format(nanoheal_bots_requirements[1],
+            elif special_name == "Overclock Nanobots":
+                if overclock_nanobots_requirements[0] > 0:
+                    if overclock_nanobots_requirements[1] > 0:
+                        special_text = "Overclock Nanobots ({})\n{} {}".format(overclock_nanobots_requirements[1],
                                                                           TIME_WALKER.rp_name,
-                                                                          nanoheal_bots_requirements[
+                                                                          overclock_nanobots_requirements[
                                                                               0])
                         special_button_text_list.append(special_text)
                     else:
-                        special_text = "Nanoheal Bots\n{} {}".format(TIME_WALKER.rp_name, nanoheal_bots_requirements[0])
+                        special_text = "Overclock Nanobots\n{} {}".format(TIME_WALKER.rp_name, overclock_nanobots_requirements[0])
                         special_button_text_list.append(special_text)
-                elif nanoheal_bots_requirements[1] > 0:
-                    special_text = "Nanoheal Bots ({})".format(nanoheal_bots_requirements[1])
+                elif overclock_nanobots_requirements[1] > 0:
+                    special_text = "Overclock Nanobots ({})".format(overclock_nanobots_requirements[1])
                     special_button_text_list.append(special_text)
                 else:
                     special_button_text_list.append(special_name)
@@ -21192,37 +21279,37 @@ class GameFrame(tk.Frame):
                     special_button_text_list.append(special_text)
                 else:
                     special_button_text_list.append(special_name)
-            elif special_name == "Perfected Herbal Tea":
-                if perfected_herbal_tea_requirements[0] > 0:
-                    if perfected_herbal_tea_requirements[1] > 0:
-                        special_text = "Perfected Herbal Tea ({})\n{} {}".format(perfected_herbal_tea_requirements[1],
-                                                                                 CHILD_OF_MEDICINE.rp_name,
-                                                                                 perfected_herbal_tea_requirements[
+            elif special_name == "Tight Tourniquet":
+                if tight_tourniquet_requirements[0] > 0:
+                    if tight_tourniquet_requirements[1] > 0:
+                        special_text = "Tight Tourniquet ({})\n{} {}".format(tight_tourniquet_requirements[1],
+                                                                                 FIELD_MEDIC.rp_name,
+                                                                                 tight_tourniquet_requirements[
                                                                                      0])
                         special_button_text_list.append(special_text)
                     else:
-                        special_text = "Perfected Herbal Tea\n{} {}".format(CHILD_OF_MEDICINE.rp_name,
-                                                                            perfected_herbal_tea_requirements[0])
+                        special_text = "Tight Tourniquet\n{} {}".format(FIELD_MEDIC.rp_name,
+                                                                            tight_tourniquet_requirements[0])
                         special_button_text_list.append(special_text)
-                elif perfected_herbal_tea_requirements[1] > 0:
-                    special_text = "Perfected Herbal Tea ({})".format(perfected_herbal_tea_requirements[1])
+                elif tight_tourniquet_requirements[1] > 0:
+                    special_text = "Tight Tourniquet ({})".format(tight_tourniquet_requirements[1])
                     special_button_text_list.append(special_text)
                 else:
                     special_button_text_list.append(special_name)
-            elif special_name == "G.3.T J.A.X.D":
-                if g3t_jaxd_requirements[0] > 0:
-                    if g3t_jaxd_requirements[1] > 0:
-                        special_text = "G.3.T J.A.X.D ({})\n{} {}".format(g3t_jaxd_requirements[1],
-                                                                          CHILD_OF_MEDICINE.rp_name,
-                                                                          g3t_jaxd_requirements[
+            elif special_name == "Secret Remedy":
+                if secret_remedy_requirements[0] > 0:
+                    if secret_remedy_requirements[1] > 0:
+                        special_text = "Secret Remedy ({})\n{} {}".format(secret_remedy_requirements[1],
+                                                                          FIELD_MEDIC.rp_name,
+                                                                          secret_remedy_requirements[
                                                                               0])
                         special_button_text_list.append(special_text)
                     else:
-                        special_text = "G.3.T J.A.X.D\n{} {}".format(CHILD_OF_MEDICINE.rp_name,
-                                                                     g3t_jaxd_requirements[0])
+                        special_text = "Secret Remedy\n{} {}".format(FIELD_MEDIC.rp_name,
+                                                                     secret_remedy_requirements[0])
                         special_button_text_list.append(special_text)
-                elif g3t_jaxd_requirements[1] > 0:
-                    special_text = "G.3.T J.A.X.D ({})".format(g3t_jaxd_requirements[1])
+                elif secret_remedy_requirements[1] > 0:
+                    special_text = "Secret Remedy ({})".format(secret_remedy_requirements[1])
                     special_button_text_list.append(special_text)
                 else:
                     special_button_text_list.append(special_name)
@@ -21301,8 +21388,8 @@ class CreateTeamPage(tk.Frame):
         label = tk.Label(self, text="Champion Camp", font=controller.title_font)
         team_1_button = tk.Button(self, text=team_1_button_text,
                                   command=lambda: controller.show_frame("Team1SelectionPage"))
-        team_2_button = tk.Button(self, text="NYI")
-        team_3_button = tk.Button(self, text="NYI")
+        team_2_button = tk.Button(self, text="Team 2: NYI")
+        team_3_button = tk.Button(self, text="Team 3: NYI")
         update_page_button_2 = tk.Button(self, text="Refresh Team Page", command=self.update_variables)
         update_page_button_2.grid(row=8, column=2)
         buttonReturn = tk.Button(self, text="Return to Menu",
@@ -21373,30 +21460,30 @@ class CreateTeamPage(tk.Frame):
         text = ""
         for character in decoded_dungeoneer_team1:
             if character == "Empty":
-                text = "Create"
+                text = "Team 1: Create"
                 return text
             else:
-                text = "Edit"
+                text = "Team 1: Edit"
         return text
 
     def team_2_button_message(self, decoded_dungeoneer_team2):
         text = ""
         for character in decoded_dungeoneer_team2:
             if character == "Empty":
-                text = "Create"
+                text = "Team 2: Create"
                 return text
             else:
-                text = "Edit"
+                text = "Team 2: Edit"
         return text
 
     def team_3_button_message(self, decoded_dungeoneer_team3):
         text = ""
         for character in decoded_dungeoneer_team3:
             if character == "Empty":
-                text = "Create"
+                text = "Team 3: Create"
                 return text
             else:
-                text = "Edit"
+                text = "Team 3: Edit"
         return text
 
     def team_1_decode(self, team_1_list_data):
@@ -21411,8 +21498,8 @@ class CreateTeamPage(tk.Frame):
                         decoded_dungeoneer_team1.append(MONK.title)
                     if character == BARBARIAN.code:
                         decoded_dungeoneer_team1.append(BARBARIAN.title)
-                    if character == VETERAN_BODYGUARD.code:
-                        decoded_dungeoneer_team1.append(VETERAN_BODYGUARD.title)
+                    if character == KINGS_GUARD.code:
+                        decoded_dungeoneer_team1.append(KINGS_GUARD.title)
                     if character == MASTER_FENCER.code:
                         decoded_dungeoneer_team1.append(MASTER_FENCER.title)
                     if character == BERSERKER.code:
@@ -21433,10 +21520,10 @@ class CreateTeamPage(tk.Frame):
                         decoded_dungeoneer_team1.append(BLOODMANCER.title)
                     if character == PALADIN.code:
                         decoded_dungeoneer_team1.append(PALADIN.title)
-                    if character == CASTLE_RANGER.code:
-                        decoded_dungeoneer_team1.append(CASTLE_RANGER.title)
-                    if character == THUNDER_APPRENTICE.code:
-                        decoded_dungeoneer_team1.append(THUNDER_APPRENTICE.title)
+                    if character == LEGION_RANGER.code:
+                        decoded_dungeoneer_team1.append(LEGION_RANGER.title)
+                    if character == MAGNETIMANCER.code:
+                        decoded_dungeoneer_team1.append(MAGNETIMANCER.title)
                     if character == POWER_CONDUIT.code:
                         decoded_dungeoneer_team1.append(POWER_CONDUIT.title)
                     if character == EARTH_SPEAKER.code:
@@ -21445,8 +21532,8 @@ class CreateTeamPage(tk.Frame):
                         decoded_dungeoneer_team1.append(PRIEST_OF_THE_DEVOTED.title)
                     if character == TIME_WALKER.code:
                         decoded_dungeoneer_team1.append(TIME_WALKER.title)
-                    if character == CHILD_OF_MEDICINE.code:
-                        decoded_dungeoneer_team1.append(CHILD_OF_MEDICINE.title)
+                    if character == FIELD_MEDIC.code:
+                        decoded_dungeoneer_team1.append(FIELD_MEDIC.title)
                     if not character:
                         break
             else:
@@ -21455,8 +21542,8 @@ class CreateTeamPage(tk.Frame):
                         decoded_dungeoneer_team1.append(MONK.title)
                     if character == BARBARIAN.code:
                         decoded_dungeoneer_team1.append(BARBARIAN.title)
-                    if character == VETERAN_BODYGUARD.code:
-                        decoded_dungeoneer_team1.append(VETERAN_BODYGUARD.title)
+                    if character == KINGS_GUARD.code:
+                        decoded_dungeoneer_team1.append(KINGS_GUARD.title)
                     if character == MASTER_FENCER.code:
                         decoded_dungeoneer_team1.append(MASTER_FENCER.title)
                     if character == BERSERKER.code:
@@ -21477,10 +21564,10 @@ class CreateTeamPage(tk.Frame):
                         decoded_dungeoneer_team1.append(BLOODMANCER.title)
                     if character == PALADIN.code:
                         decoded_dungeoneer_team1.append(PALADIN.title)
-                    if character == CASTLE_RANGER.code:
-                        decoded_dungeoneer_team1.append(CASTLE_RANGER.title)
-                    if character == THUNDER_APPRENTICE.code:
-                        decoded_dungeoneer_team1.append(THUNDER_APPRENTICE.title)
+                    if character == LEGION_RANGER.code:
+                        decoded_dungeoneer_team1.append(LEGION_RANGER.title)
+                    if character == MAGNETIMANCER.code:
+                        decoded_dungeoneer_team1.append(MAGNETIMANCER.title)
                     if character == POWER_CONDUIT.code:
                         decoded_dungeoneer_team1.append(POWER_CONDUIT.title)
                     if character == EARTH_SPEAKER.code:
@@ -21489,8 +21576,8 @@ class CreateTeamPage(tk.Frame):
                         decoded_dungeoneer_team1.append(PRIEST_OF_THE_DEVOTED.title)
                     if character == TIME_WALKER.code:
                         decoded_dungeoneer_team1.append(TIME_WALKER.title)
-                    if character == CHILD_OF_MEDICINE.code:
-                        decoded_dungeoneer_team1.append(CHILD_OF_MEDICINE.title)
+                    if character == FIELD_MEDIC.code:
+                        decoded_dungeoneer_team1.append(FIELD_MEDIC.title)
                 return decoded_dungeoneer_team1
         if len(decoded_dungeoneer_team1) < 5:
             while len(decoded_dungeoneer_team1) < 5:
@@ -21509,8 +21596,8 @@ class CreateTeamPage(tk.Frame):
                         decoded_dungeoneer_team2.append(MONK.title)
                     if character == BARBARIAN.code:
                         decoded_dungeoneer_team2.append(BARBARIAN.title)
-                    if character == VETERAN_BODYGUARD.code:
-                        decoded_dungeoneer_team2.append(VETERAN_BODYGUARD.title)
+                    if character == KINGS_GUARD.code:
+                        decoded_dungeoneer_team2.append(KINGS_GUARD.title)
                     if character == MASTER_FENCER.code:
                         decoded_dungeoneer_team2.append(MASTER_FENCER.title)
                     if character == BERSERKER.code:
@@ -21531,10 +21618,10 @@ class CreateTeamPage(tk.Frame):
                         decoded_dungeoneer_team2.append(BLOODMANCER.title)
                     if character == PALADIN.code:
                         decoded_dungeoneer_team2.append(PALADIN.title)
-                    if character == CASTLE_RANGER.code:
-                        decoded_dungeoneer_team2.append(CASTLE_RANGER.title)
-                    if character == THUNDER_APPRENTICE.code:
-                        decoded_dungeoneer_team2.append(THUNDER_APPRENTICE.title)
+                    if character == LEGION_RANGER.code:
+                        decoded_dungeoneer_team2.append(LEGION_RANGER.title)
+                    if character == MAGNETIMANCER.code:
+                        decoded_dungeoneer_team2.append(MAGNETIMANCER.title)
                     if character == POWER_CONDUIT.code:
                         decoded_dungeoneer_team2.append(POWER_CONDUIT.title)
                     if character == EARTH_SPEAKER.code:
@@ -21543,8 +21630,8 @@ class CreateTeamPage(tk.Frame):
                         decoded_dungeoneer_team2.append(PRIEST_OF_THE_DEVOTED.title)
                     if character == TIME_WALKER.code:
                         decoded_dungeoneer_team2.append(TIME_WALKER.title)
-                    if character == CHILD_OF_MEDICINE.code:
-                        decoded_dungeoneer_team2.append(CHILD_OF_MEDICINE.title)
+                    if character == FIELD_MEDIC.code:
+                        decoded_dungeoneer_team2.append(FIELD_MEDIC.title)
                     if not character:
                         break
             else:
@@ -21553,8 +21640,8 @@ class CreateTeamPage(tk.Frame):
                         decoded_dungeoneer_team2.append(MONK.title)
                     if character == BARBARIAN.code:
                         decoded_dungeoneer_team2.append(BARBARIAN.title)
-                    if character == VETERAN_BODYGUARD.code:
-                        decoded_dungeoneer_team2.append(VETERAN_BODYGUARD.title)
+                    if character == KINGS_GUARD.code:
+                        decoded_dungeoneer_team2.append(KINGS_GUARD.title)
                     if character == MASTER_FENCER.code:
                         decoded_dungeoneer_team2.append(MASTER_FENCER.title)
                     if character == BERSERKER.code:
@@ -21575,10 +21662,10 @@ class CreateTeamPage(tk.Frame):
                         decoded_dungeoneer_team2.append(BLOODMANCER.title)
                     if character == PALADIN.code:
                         decoded_dungeoneer_team2.append(PALADIN.title)
-                    if character == CASTLE_RANGER.code:
-                        decoded_dungeoneer_team2.append(CASTLE_RANGER.title)
-                    if character == THUNDER_APPRENTICE.code:
-                        decoded_dungeoneer_team2.append(THUNDER_APPRENTICE.title)
+                    if character == LEGION_RANGER.code:
+                        decoded_dungeoneer_team2.append(LEGION_RANGER.title)
+                    if character == MAGNETIMANCER.code:
+                        decoded_dungeoneer_team2.append(MAGNETIMANCER.title)
                     if character == POWER_CONDUIT.code:
                         decoded_dungeoneer_team2.append(POWER_CONDUIT.title)
                     if character == EARTH_SPEAKER.code:
@@ -21587,8 +21674,8 @@ class CreateTeamPage(tk.Frame):
                         decoded_dungeoneer_team2.append(PRIEST_OF_THE_DEVOTED.title)
                     if character == TIME_WALKER.code:
                         decoded_dungeoneer_team2.append(TIME_WALKER.title)
-                    if character == CHILD_OF_MEDICINE.code:
-                        decoded_dungeoneer_team2.append(CHILD_OF_MEDICINE.title)
+                    if character == FIELD_MEDIC.code:
+                        decoded_dungeoneer_team2.append(FIELD_MEDIC.title)
                 return decoded_dungeoneer_team2
         if len(decoded_dungeoneer_team2) < 5:
             while len(decoded_dungeoneer_team2) < 5:
@@ -21607,8 +21694,8 @@ class CreateTeamPage(tk.Frame):
                         decoded_dungeoneer_team3.append(MONK.title)
                     if character == BARBARIAN.code:
                         decoded_dungeoneer_team3.append(BARBARIAN.title)
-                    if character == VETERAN_BODYGUARD.code:
-                        decoded_dungeoneer_team3.append(VETERAN_BODYGUARD.title)
+                    if character == KINGS_GUARD.code:
+                        decoded_dungeoneer_team3.append(KINGS_GUARD.title)
                     if character == MASTER_FENCER.code:
                         decoded_dungeoneer_team3.append(MASTER_FENCER.title)
                     if character == BERSERKER.code:
@@ -21629,10 +21716,10 @@ class CreateTeamPage(tk.Frame):
                         decoded_dungeoneer_team3.append(BLOODMANCER.title)
                     if character == PALADIN.code:
                         decoded_dungeoneer_team3.append(PALADIN.title)
-                    if character == CASTLE_RANGER.code:
-                        decoded_dungeoneer_team3.append(CASTLE_RANGER.title)
-                    if character == THUNDER_APPRENTICE.code:
-                        decoded_dungeoneer_team3.append(THUNDER_APPRENTICE.title)
+                    if character == LEGION_RANGER.code:
+                        decoded_dungeoneer_team3.append(LEGION_RANGER.title)
+                    if character == MAGNETIMANCER.code:
+                        decoded_dungeoneer_team3.append(MAGNETIMANCER.title)
                     if character == POWER_CONDUIT.code:
                         decoded_dungeoneer_team3.append(POWER_CONDUIT.title)
                     if character == EARTH_SPEAKER.code:
@@ -21641,8 +21728,8 @@ class CreateTeamPage(tk.Frame):
                         decoded_dungeoneer_team3.append(PRIEST_OF_THE_DEVOTED.title)
                     if character == TIME_WALKER.code:
                         decoded_dungeoneer_team3.append(TIME_WALKER.title)
-                    if character == CHILD_OF_MEDICINE.code:
-                        decoded_dungeoneer_team3.append(CHILD_OF_MEDICINE.title)
+                    if character == FIELD_MEDIC.code:
+                        decoded_dungeoneer_team3.append(FIELD_MEDIC.title)
                     if not character:
                         break
             else:
@@ -21651,8 +21738,8 @@ class CreateTeamPage(tk.Frame):
                         decoded_dungeoneer_team3.append(MONK.title)
                     if character == BARBARIAN.code:
                         decoded_dungeoneer_team3.append(BARBARIAN.title)
-                    if character == VETERAN_BODYGUARD.code:
-                        decoded_dungeoneer_team3.append(VETERAN_BODYGUARD.title)
+                    if character == KINGS_GUARD.code:
+                        decoded_dungeoneer_team3.append(KINGS_GUARD.title)
                     if character == MASTER_FENCER.code:
                         decoded_dungeoneer_team3.append(MASTER_FENCER.title)
                     if character == BERSERKER.code:
@@ -21673,10 +21760,10 @@ class CreateTeamPage(tk.Frame):
                         decoded_dungeoneer_team3.append(BLOODMANCER.title)
                     if character == PALADIN.code:
                         decoded_dungeoneer_team3.append(PALADIN.title)
-                    if character == CASTLE_RANGER.code:
-                        decoded_dungeoneer_team3.append(CASTLE_RANGER.title)
-                    if character == THUNDER_APPRENTICE.code:
-                        decoded_dungeoneer_team3.append(THUNDER_APPRENTICE.title)
+                    if character == LEGION_RANGER.code:
+                        decoded_dungeoneer_team3.append(LEGION_RANGER.title)
+                    if character == MAGNETIMANCER.code:
+                        decoded_dungeoneer_team3.append(MAGNETIMANCER.title)
                     if character == POWER_CONDUIT.code:
                         decoded_dungeoneer_team3.append(POWER_CONDUIT.title)
                     if character == EARTH_SPEAKER.code:
@@ -21685,8 +21772,8 @@ class CreateTeamPage(tk.Frame):
                         decoded_dungeoneer_team3.append(PRIEST_OF_THE_DEVOTED.title)
                     if character == TIME_WALKER.code:
                         decoded_dungeoneer_team3.append(TIME_WALKER.title)
-                    if character == CHILD_OF_MEDICINE.code:
-                        decoded_dungeoneer_team3.append(CHILD_OF_MEDICINE.title)
+                    if character == FIELD_MEDIC.code:
+                        decoded_dungeoneer_team3.append(FIELD_MEDIC.title)
                 return decoded_dungeoneer_team3
         if len(decoded_dungeoneer_team3) < 5:
             while len(decoded_dungeoneer_team3) < 5:
@@ -21808,12 +21895,12 @@ class Team1SelectionPage(tk.Frame):
                 PALADIN_label.destroy()
                 PALADIN_button_add.destroy()
                 PALADIN_button_details.destroy()
-                CASTLE_RANGER_label.destroy()
-                CASTLE_RANGER_button_add.destroy()
-                CASTLE_RANGER_button_details.destroy()
-                THUNDER_APPRENTICE_label.destroy()
-                THUNDER_APPRENTICE_button_add.destroy()
-                THUNDER_APPRENTICE_button_details.destroy()
+                LEGION_RANGER_label.destroy()
+                LEGION_RANGER_button_add.destroy()
+                LEGION_RANGER_button_details.destroy()
+                MAGNETIMANCER_label.destroy()
+                MAGNETIMANCER_button_add.destroy()
+                MAGNETIMANCER_button_details.destroy()
                 POWER_CONDUIT_label.destroy()
                 POWER_CONDUIT_button_add.destroy()
                 POWER_CONDUIT_button_details.destroy()
@@ -21833,9 +21920,9 @@ class Team1SelectionPage(tk.Frame):
                 TIME_WALKER_label.destroy()
                 TIME_WALKER_button_add.destroy()
                 TIME_WALKER_button_details.destroy()
-                CHILD_OF_MEDICINE_label.destroy()
-                CHILD_OF_MEDICINE_button_add.destroy()
-                CHILD_OF_MEDICINE_button_details.destroy()
+                FIELD_MEDIC_label.destroy()
+                FIELD_MEDIC_button_add.destroy()
+                FIELD_MEDIC_button_details.destroy()
                 invis_label3.destroy()
                 invis_label4.destroy()
                 healer = False
@@ -21852,9 +21939,9 @@ class Team1SelectionPage(tk.Frame):
             BARBARIAN_button_add = tk.Button(self, text="Add to Team",
                                              command=lambda: self.check_temp_party1(BARBARIAN.title, "tank"))
             BARBARIAN_button_details = tk.Button(self, text="View Details (NYI)")
-            bodyguard_label = tk.Label(self, text=VETERAN_BODYGUARD.name, font=self.menu_button_font)
+            bodyguard_label = tk.Label(self, text=KINGS_GUARD.name, font=self.menu_button_font)
             bodyguard_button_add = tk.Button(self, text="Add to Team",
-                                             command=lambda: self.check_temp_party1(VETERAN_BODYGUARD.title, "tank"))
+                                             command=lambda: self.check_temp_party1(KINGS_GUARD.title, "tank"))
             bodyguard_button_details = tk.Button(self, text="View Details (NYI)")
             fencer_label = tk.Label(self, text=MASTER_FENCER.name, font=self.menu_button_font)
             fencer_button_add = tk.Button(self, text="Add to Team",
@@ -21881,7 +21968,7 @@ class Team1SelectionPage(tk.Frame):
             BRAWLIST_label, BRAWLIST_button_add, BRAWLIST_button_details, ACADEMIC_MAGE_label, ACADEMIC_MAGE_button_add, ACADEMIC_MAGE_button_details, \
             jungle_DRUID_label, jungle_DRUID_button_add, jungle_DRUID_button_details, WARLOCK_label, WARLOCK_button_add, WARLOCK_button_details, \
             BLOODMANCER_label, BLOODMANCER_button_add, BLOODMANCER_button_details, PALADIN_label, PALADIN_button_add, PALADIN_button_details, \
-            CASTLE_RANGER_label, CASTLE_RANGER_button_add, CASTLE_RANGER_button_details, THUNDER_APPRENTICE_label, THUNDER_APPRENTICE_button_add, THUNDER_APPRENTICE_button_details, \
+            LEGION_RANGER_label, LEGION_RANGER_button_add, LEGION_RANGER_button_details, MAGNETIMANCER_label, MAGNETIMANCER_button_add, MAGNETIMANCER_button_details, \
             POWER_CONDUIT_label, POWER_CONDUIT_button_add, POWER_CONDUIT_button_details, tank, dps, healer
         if dps == True:
             return
@@ -21914,9 +22001,9 @@ class Team1SelectionPage(tk.Frame):
                 TIME_WALKER_label.destroy()
                 TIME_WALKER_button_add.destroy()
                 TIME_WALKER_button_details.destroy()
-                CHILD_OF_MEDICINE_label.destroy()
-                CHILD_OF_MEDICINE_button_add.destroy()
-                CHILD_OF_MEDICINE_button_details.destroy()
+                FIELD_MEDIC_label.destroy()
+                FIELD_MEDIC_button_add.destroy()
+                FIELD_MEDIC_button_details.destroy()
                 invis_label3.destroy()
                 invis_label4.destroy()
                 healer = False
@@ -21962,15 +22049,15 @@ class Team1SelectionPage(tk.Frame):
             PALADIN_button_add = tk.Button(self, text="Add to Team",
                                            command=lambda: self.check_temp_party1(PALADIN.title, "mixed"))
             PALADIN_button_details = tk.Button(self, text="View Details (NYI)")
-            CASTLE_RANGER_label = tk.Label(self, text=CASTLE_RANGER.name)
-            CASTLE_RANGER_button_add = tk.Button(self, text="Add to Team",
-                                                 command=lambda: self.check_temp_party1(CASTLE_RANGER.title, "mixed"))
-            CASTLE_RANGER_button_details = tk.Button(self, text="View Details (NYI)")
-            THUNDER_APPRENTICE_label = tk.Label(self, text=THUNDER_APPRENTICE.name)
-            THUNDER_APPRENTICE_button_add = tk.Button(self, text="Add to Team",
-                                                      command=lambda: self.check_temp_party1(THUNDER_APPRENTICE.title,
+            LEGION_RANGER_label = tk.Label(self, text=LEGION_RANGER.name)
+            LEGION_RANGER_button_add = tk.Button(self, text="Add to Team",
+                                                 command=lambda: self.check_temp_party1(LEGION_RANGER.title, "mixed"))
+            LEGION_RANGER_button_details = tk.Button(self, text="View Details (NYI)")
+            MAGNETIMANCER_label = tk.Label(self, text=MAGNETIMANCER.name)
+            MAGNETIMANCER_button_add = tk.Button(self, text="Add to Team",
+                                                      command=lambda: self.check_temp_party1(MAGNETIMANCER.title,
                                                                                              "mixed"))
-            THUNDER_APPRENTICE_button_details = tk.Button(self, text="View Details (NYI)")
+            MAGNETIMANCER_button_details = tk.Button(self, text="View Details (NYI)")
             POWER_CONDUIT_label = tk.Label(self, text=POWER_CONDUIT.name)
             POWER_CONDUIT_button_add = tk.Button(self, text="Add to Team",
                                                  command=lambda: self.check_temp_party1(POWER_CONDUIT.title, "mixed"))
@@ -22005,12 +22092,12 @@ class Team1SelectionPage(tk.Frame):
             PALADIN_label.grid(row=5, column=3, sticky="w", padx=10)
             PALADIN_button_add.grid(row=6, column=3, sticky="w", padx=10)
             PALADIN_button_details.grid(row=6, column=3, sticky="w", padx=90)
-            CASTLE_RANGER_label.grid(row=8, column=3, sticky="w", padx=10)
-            CASTLE_RANGER_button_add.grid(row=9, column=3, sticky="w", padx=10)
-            CASTLE_RANGER_button_details.grid(row=9, column=3, sticky="w", padx=90)
-            THUNDER_APPRENTICE_label.grid(row=5, column=3, sticky="e")
-            THUNDER_APPRENTICE_button_add.grid(row=6, column=3, sticky="e", padx=105)
-            THUNDER_APPRENTICE_button_details.grid(row=6, column=3, sticky="e")
+            LEGION_RANGER_label.grid(row=8, column=3, sticky="w", padx=10)
+            LEGION_RANGER_button_add.grid(row=9, column=3, sticky="w", padx=10)
+            LEGION_RANGER_button_details.grid(row=9, column=3, sticky="w", padx=90)
+            MAGNETIMANCER_label.grid(row=5, column=3, sticky="e")
+            MAGNETIMANCER_button_add.grid(row=6, column=3, sticky="e", padx=105)
+            MAGNETIMANCER_button_details.grid(row=6, column=3, sticky="e")
             POWER_CONDUIT_label.grid(row=8, column=3, sticky="e")
             POWER_CONDUIT_button_add.grid(row=9, column=3, sticky="e", padx=105)
             POWER_CONDUIT_button_details.grid(row=9, column=3, sticky="e")
@@ -22018,7 +22105,7 @@ class Team1SelectionPage(tk.Frame):
     def view_healer1(self):
         global EARTH_SPEAKER_label, EARTH_SPEAKER_button_add, EARTH_SPEAKER_button_details, PRIEST_OF_THE_DEVOTED_label, PRIEST_OF_THE_DEVOTED_button_add, \
             PRIEST_OF_THE_DEVOTED_button_details, TIME_WALKER_label, TIME_WALKER_button_add, TIME_WALKER_button_details, \
-            CHILD_OF_MEDICINE_label, CHILD_OF_MEDICINE_button_add, CHILD_OF_MEDICINE_button_details, invis_label3, invis_label4, tank, dps, healer
+            FIELD_MEDIC_label, FIELD_MEDIC_button_add, FIELD_MEDIC_button_details, invis_label3, invis_label4, tank, dps, healer
         if healer == True:
             return
         else:
@@ -22070,12 +22157,12 @@ class Team1SelectionPage(tk.Frame):
                 PALADIN_label.destroy()
                 PALADIN_button_add.destroy()
                 PALADIN_button_details.destroy()
-                CASTLE_RANGER_label.destroy()
-                CASTLE_RANGER_button_add.destroy()
-                CASTLE_RANGER_button_details.destroy()
-                THUNDER_APPRENTICE_label.destroy()
-                THUNDER_APPRENTICE_button_add.destroy()
-                THUNDER_APPRENTICE_button_details.destroy()
+                LEGION_RANGER_label.destroy()
+                LEGION_RANGER_button_add.destroy()
+                LEGION_RANGER_button_details.destroy()
+                MAGNETIMANCER_label.destroy()
+                MAGNETIMANCER_button_add.destroy()
+                MAGNETIMANCER_button_details.destroy()
                 POWER_CONDUIT_label.destroy()
                 POWER_CONDUIT_button_add.destroy()
                 POWER_CONDUIT_button_details.destroy()
@@ -22099,11 +22186,11 @@ class Team1SelectionPage(tk.Frame):
             TIME_WALKER_button_add = tk.Button(self, text="Add to Team",
                                                command=lambda: self.check_temp_party1(TIME_WALKER.title, "healer"))
             TIME_WALKER_button_details = tk.Button(self, text="View Details (NYI)")
-            CHILD_OF_MEDICINE_label = tk.Label(self, text=CHILD_OF_MEDICINE.name, font=self.menu_button_font)
-            CHILD_OF_MEDICINE_button_add = tk.Button(self, text="Add to Team",
-                                                     command=lambda: self.check_temp_party1(CHILD_OF_MEDICINE.title,
+            FIELD_MEDIC_label = tk.Label(self, text=FIELD_MEDIC.name, font=self.menu_button_font)
+            FIELD_MEDIC_button_add = tk.Button(self, text="Add to Team",
+                                                     command=lambda: self.check_temp_party1(FIELD_MEDIC.title,
                                                                                             "healer"))
-            CHILD_OF_MEDICINE_button_details = tk.Button(self, text="View Details (NYI)")
+            FIELD_MEDIC_button_details = tk.Button(self, text="View Details (NYI)")
             EARTH_SPEAKER_label.grid(row=4, column=1, sticky="e")
             EARTH_SPEAKER_button_add.grid(row=5, column=1, sticky="e", padx=105)
             EARTH_SPEAKER_button_details.grid(row=5, column=1, sticky="e")
@@ -22113,9 +22200,9 @@ class Team1SelectionPage(tk.Frame):
             TIME_WALKER_label.grid(row=7, column=1, sticky="e")
             TIME_WALKER_button_add.grid(row=8, column=1, sticky="e", padx=105)
             TIME_WALKER_button_details.grid(row=8, column=1, sticky="e")
-            CHILD_OF_MEDICINE_label.grid(row=7, column=3, sticky="w")
-            CHILD_OF_MEDICINE_button_add.grid(row=8, column=3, sticky="w")
-            CHILD_OF_MEDICINE_button_details.grid(row=8, column=3, sticky="w", padx=80)
+            FIELD_MEDIC_label.grid(row=7, column=3, sticky="w")
+            FIELD_MEDIC_button_add.grid(row=8, column=3, sticky="w")
+            FIELD_MEDIC_button_details.grid(row=8, column=3, sticky="w", padx=80)
             invis_label3.grid(row=3, column=1, columnspan=3, pady=50)
             invis_label4.grid(row=6, column=1, columnspan=3, pady=50)
 
@@ -22144,7 +22231,7 @@ class Team1SelectionPage(tk.Frame):
                         tank_temp_party.append(character)
                     if character == BARBARIAN.title:
                         tank_temp_party.append(character)
-                    if character == VETERAN_BODYGUARD.title:
+                    if character == KINGS_GUARD.title:
                         tank_temp_party.append(character)
                     if character == MASTER_FENCER.title:
                         tank_temp_party.append(character)
@@ -22166,9 +22253,9 @@ class Team1SelectionPage(tk.Frame):
                         magic_temp_party.append(character)
                     if character == PALADIN.title:
                         mixed_temp_party.append(character)
-                    if character == CASTLE_RANGER.title:
+                    if character == LEGION_RANGER.title:
                         mixed_temp_party.append(character)
-                    if character == THUNDER_APPRENTICE.title:
+                    if character == MAGNETIMANCER.title:
                         mixed_temp_party.append(character)
                     if character == POWER_CONDUIT.title:
                         mixed_temp_party.append(character)
@@ -22178,7 +22265,7 @@ class Team1SelectionPage(tk.Frame):
                         healer_temp_party.append(character)
                     if character == TIME_WALKER.title:
                         healer_temp_party.append(character)
-                    if character == CHILD_OF_MEDICINE.title:
+                    if character == FIELD_MEDIC.title:
                         healer_temp_party.append(character)
                     if character == "Empty":
                         p = 0
@@ -22290,7 +22377,7 @@ class Team1SelectionPage(tk.Frame):
                 tank_temp_party.append(character)
             if character == BARBARIAN.title:
                 tank_temp_party.append(character)
-            if character == VETERAN_BODYGUARD.title:
+            if character == KINGS_GUARD.title:
                 tank_temp_party.append(character)
             if character == MASTER_FENCER.title:
                 tank_temp_party.append(character)
@@ -22312,9 +22399,9 @@ class Team1SelectionPage(tk.Frame):
                 magic_temp_party.append(character)
             if character == PALADIN.title:
                 mixed_temp_party.append(character)
-            if character == CASTLE_RANGER.title:
+            if character == LEGION_RANGER.title:
                 mixed_temp_party.append(character)
-            if character == THUNDER_APPRENTICE.title:
+            if character == MAGNETIMANCER.title:
                 mixed_temp_party.append(character)
             if character == POWER_CONDUIT.title:
                 mixed_temp_party.append(character)
@@ -22324,7 +22411,7 @@ class Team1SelectionPage(tk.Frame):
                 healer_temp_party.append(character)
             if character == TIME_WALKER.title:
                 healer_temp_party.append(character)
-            if character == CHILD_OF_MEDICINE.title:
+            if character == FIELD_MEDIC.title:
                 healer_temp_party.append(character)
         temp_party = []
         if tank_temp_party == []:
@@ -22400,8 +22487,8 @@ class Team1SelectionPage(tk.Frame):
                 coded_temp_party += MONK.code
             if character == BARBARIAN.title:
                 coded_temp_party += BARBARIAN.code
-            if character == VETERAN_BODYGUARD.title:
-                coded_temp_party += VETERAN_BODYGUARD.code
+            if character == KINGS_GUARD.title:
+                coded_temp_party += KINGS_GUARD.code
             if character == MASTER_FENCER.title:
                 coded_temp_party += MASTER_FENCER.code
             if character == BERSERKER.title:
@@ -22422,10 +22509,10 @@ class Team1SelectionPage(tk.Frame):
                 coded_temp_party += BLOODMANCER.code
             if character == PALADIN.title:
                 coded_temp_party += PALADIN.code
-            if character == CASTLE_RANGER.title:
-                coded_temp_party += CASTLE_RANGER.code
-            if character == THUNDER_APPRENTICE.title:
-                coded_temp_party += THUNDER_APPRENTICE.code
+            if character == LEGION_RANGER.title:
+                coded_temp_party += LEGION_RANGER.code
+            if character == MAGNETIMANCER.title:
+                coded_temp_party += MAGNETIMANCER.code
             if character == POWER_CONDUIT.title:
                 coded_temp_party += POWER_CONDUIT.code
             if character == EARTH_SPEAKER.title:
@@ -22434,8 +22521,8 @@ class Team1SelectionPage(tk.Frame):
                 coded_temp_party += PRIEST_OF_THE_DEVOTED.code
             if character == TIME_WALKER.title:
                 coded_temp_party += TIME_WALKER.code
-            if character == CHILD_OF_MEDICINE.title:
-                coded_temp_party += CHILD_OF_MEDICINE.code
+            if character == FIELD_MEDIC.title:
+                coded_temp_party += FIELD_MEDIC.code
             if character == "Empty":
                 break
             i += 1
