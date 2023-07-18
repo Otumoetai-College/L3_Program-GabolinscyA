@@ -49,7 +49,7 @@ BARBARIAN = Champions(2250, 100, 150, 'Baralor, the Barbarian', "Barbarian", "BB
 #KGG
 KINGS_GUARD = Champions(2000, 0, 150, 'Hecutis, the Kings-Guard', "Kings-Guard", "KGG", "null", ["Shield Bash", "Trainwreck"], ["Fortification", "Block"], ["Self-Sacrificing"])
 #MTF
-MASTER_FENCER = Champions(2000, 0, 150, 'Lorelai, the Master Fencer', "Fencer", "MTF", "null", ["Flanking Strikes", "Riposte"], ["Magic Reflection", "Evasive Manoeuvres"], ["Quick Reflexes"])
+MASTER_FENCER = Champions(2000, 0, 150, 'Lorelai, the Master Fencer', "Fencer", "MTF", "null", ["Flanking Strikes", "Riposte"], ["Magic Reflection", "Evasive Manueuvres"], ["Quick Reflexes"])
 
 #DPS:
 
@@ -1295,7 +1295,7 @@ class GameFrame(tk.Frame):
             bloodthirst_requirements, pulverize_requirements, challenging_shout_requirements, impactful_boast_requirements, \
             shield_bash_requirements, trainwreck_requirements, fortification_requirements, block_requirements, \
             champion1_fortification, champion2_fortification, champion3_fortification, champion4_fortification, champion5_fortification, \
-            flanking_strikes_requirements, riposte_requirements, magic_reflection_requirements, evasive_manoeuvres_requirements
+            flanking_strikes_requirements, riposte_requirements, magic_reflection_requirements, evasive_manueuvres_requirements
         # Monk Abilities:
         palm_strike_requirements = [0, 0, 0, 20]
         leg_sweep_requirements = [30, 0, 3, 0]
@@ -1323,7 +1323,7 @@ class GameFrame(tk.Frame):
         flanking_strikes_requirements = [0, 0, 0, 0]
         riposte_requirements = [0, 0, 2, 0]
         magic_reflection_requirements = [0, 0, 3, 0]
-        evasive_manoeuvres_requirements = [0, 0, 3, 0]
+        evasive_manueuvres_requirements = [0, 0, 3, 0]
         global raging_blow_requirements, rampage_requirements, enrage_requirements, reckless_flurry_requirements, \
             champion1_enrage, champion2_enrage, champion3_enrage, champion4_enrage, champion5_enrage, reckless_flurry_buff, \
             serrated_slash_requirements, eviscerate_requirements, garrote_requirements, exploit_weakness_requirements, \
@@ -1807,7 +1807,7 @@ class GameFrame(tk.Frame):
                     attack.append("Club Slam")
             random.shuffle(attack)
             if attack[0] == "Club Slam":
-                attack = ["Club Slam", math.ceil(club_slam_damage), "1T"]
+                attack = ["Club Slam", math.ceil(club_slam_damage), "1T", "Melee"]
         if AI_NAME == "Wormpulp Brothers":
             # Violent Thrash
             violent_thrash_basenumber = [1, 1.1, 1.2]
@@ -1818,7 +1818,7 @@ class GameFrame(tk.Frame):
                     attack.append("Violent Thrash")
             random.shuffle(attack)
             if attack[0] == "Violent Thrash":
-                attack = ["Violent Thrash", math.ceil(violent_thrash_damage), "2T"]
+                attack = ["Violent Thrash", math.ceil(violent_thrash_damage), "2T", "Melee"]
         if AI_NAME == "Siren Triplets":
             # Twilight Beam
             twilight_beam_basenumber = [1.2, 1.4, 1.6]
@@ -1829,7 +1829,7 @@ class GameFrame(tk.Frame):
                     attack.append("Twilight Beam")
             random.shuffle(attack)
             if attack[0] == "Twilight Beam":
-                attack = ["Twilight Beam", math.ceil(twilight_beam_damage), "1T"]
+                attack = ["Twilight Beam", math.ceil(twilight_beam_damage), "1T", "Magic"]
         if AI_NAME == "Venomskin Troggies":
             # Spear Thrust
             spear_thrust_basenumber = [1.2, 1.4, 1.6]
@@ -1840,7 +1840,7 @@ class GameFrame(tk.Frame):
                     attack.append("Spear Thrust")
             random.shuffle(attack)
             if attack[0] == "Spear Thrust":
-                attack = ["Spear Thrust", math.ceil(spear_thrust_damage), "1T"]
+                attack = ["Spear Thrust", math.ceil(spear_thrust_damage), "1T", "Melee"]
         if AI_NAME == "Giant Locust Swarm":
             # Bite
             bite_basenumber = [1.2, 1.4, 1.6]
@@ -1851,7 +1851,7 @@ class GameFrame(tk.Frame):
                     attack.append("Bite")
             random.shuffle(attack)
             if attack[0] == "Bite":
-                attack = ["Bite", math.ceil(bite_damage), "1T"]
+                attack = ["Bite", math.ceil(bite_damage), "1T", "Melee"]
         return attack
 
     def combat_setup(self):
@@ -4140,11 +4140,9 @@ class GameFrame(tk.Frame):
                                 for guards in champion1_immunity:
                                     if guards == "Block":
                                         immune_list.append(99)
-                                    if guards == "Magic Reflection":
-                                        immune_list.append(101)
                                     if guards == "Cocoon":
                                         immune_list.append(100)
-                                    if guards == "Evasive Manoeuvres":
+                                    if guards == "Evasive Manueuvres":
                                         immune_list.append(100)
                                     immune_list = sorted(immune_list, reverse=True)
                                     if immune_list[0] == 101:
@@ -4227,11 +4225,9 @@ class GameFrame(tk.Frame):
                                 for guards in champion2_immunity:
                                     if guards == "Block":
                                         immune_list.append(99)
-                                    if guards == "Magic Reflection":
-                                        immune_list.append(101)
                                     if guards == "Cocoon":
                                         immune_list.append(100)
-                                    if guards == "Evasive Manoeuvres":
+                                    if guards == "Evasive Manueuvres":
                                         immune_list.append(100)
                                     immune_list = sorted(immune_list, reverse=True)
                                     if immune_list[0] == 101:
@@ -4312,11 +4308,9 @@ class GameFrame(tk.Frame):
                                 for guards in champion3_immunity:
                                     if guards == "Block":
                                         immune_list.append(99)
-                                    if guards == "Magic Reflection":
-                                        immune_list.append(101)
                                     if guards == "Cocoon":
                                         immune_list.append(100)
-                                    if guards == "Evasive Manoeuvres":
+                                    if guards == "Evasive Manueuvres":
                                         immune_list.append(100)
                                     immune_list = sorted(immune_list, reverse=True)
                                     if immune_list[0] == 101:
@@ -4397,11 +4391,9 @@ class GameFrame(tk.Frame):
                                 for guards in champion4_immunity:
                                     if guards == "Block":
                                         immune_list.append(99)
-                                    if guards == "Magic Reflection":
-                                        immune_list.append(101)
                                     if guards == "Cocoon":
                                         immune_list.append(100)
-                                    if guards == "Evasive Manoeuvres":
+                                    if guards == "Evasive Manueuvres":
                                         immune_list.append(100)
                                     immune_list = sorted(immune_list, reverse=True)
                                     if immune_list[0] == 101:
@@ -4482,11 +4474,9 @@ class GameFrame(tk.Frame):
                                 for guards in champion5_immunity:
                                     if guards == "Block":
                                         immune_list.append(99)
-                                    if guards == "Magic Reflection":
-                                        immune_list.append(101)
                                     if guards == "Cocoon":
                                         immune_list.append(100)
-                                    if guards == "Evasive Manoeuvres":
+                                    if guards == "Evasive Manueuvres":
                                         immune_list.append(100)
                                     immune_list = sorted(immune_list, reverse=True)
                                     if immune_list[0] == 101:
@@ -4565,11 +4555,9 @@ class GameFrame(tk.Frame):
                                     for guards in champion1_immunity:
                                         if guards == "Block":
                                             immune_list.append(99)
-                                        if guards == "Magic Reflection":
-                                            immune_list.append(101)
                                         if guards == "Cocoon":
                                             immune_list.append(100)
-                                        if guards == "Evasive Manoeuvres":
+                                        if guards == "Evasive Manueuvres":
                                             immune_list.append(100)
                                         immune_list = sorted(immune_list, reverse=True)
                                         if immune_list[0] == 101:
@@ -4646,11 +4634,9 @@ class GameFrame(tk.Frame):
                                     for guards in champion2_immunity:
                                         if guards == "Block":
                                             immune_list.append(99)
-                                        if guards == "Magic Reflection":
-                                            immune_list.append(101)
                                         if guards == "Cocoon":
                                             immune_list.append(100)
-                                        if guards == "Evasive Manoeuvres":
+                                        if guards == "Evasive Manueuvres":
                                             immune_list.append(100)
                                         immune_list = sorted(immune_list, reverse=True)
                                         if immune_list[0] == 101:
@@ -4727,11 +4713,9 @@ class GameFrame(tk.Frame):
                                     for guards in champion3_immunity:
                                         if guards == "Block":
                                             immune_list.append(99)
-                                        if guards == "Magic Reflection":
-                                            immune_list.append(101)
                                         if guards == "Cocoon":
                                             immune_list.append(100)
-                                        if guards == "Evasive Manoeuvres":
+                                        if guards == "Evasive Manueuvres":
                                             immune_list.append(100)
                                         immune_list = sorted(immune_list, reverse=True)
                                         if immune_list[0] == 101:
@@ -4808,11 +4792,9 @@ class GameFrame(tk.Frame):
                                     for guards in champion4_immunity:
                                         if guards == "Block":
                                             immune_list.append(99)
-                                        if guards == "Magic Reflection":
-                                            immune_list.append(101)
                                         if guards == "Cocoon":
                                             immune_list.append(100)
-                                        if guards == "Evasive Manoeuvres":
+                                        if guards == "Evasive Manueuvres":
                                             immune_list.append(100)
                                         immune_list = sorted(immune_list, reverse=True)
                                         if immune_list[0] == 101:
@@ -4893,11 +4875,9 @@ class GameFrame(tk.Frame):
                                     for guards in champion5_immunity:
                                         if guards == "Block":
                                             immune_list.append(99)
-                                        if guards == "Magic Reflection":
-                                            immune_list.append(101)
                                         if guards == "Cocoon":
                                             immune_list.append(100)
-                                        if guards == "Evasive Manoeuvres":
+                                        if guards == "Evasive Manueuvres":
                                             immune_list.append(100)
                                         immune_list = sorted(immune_list, reverse=True)
                                         if immune_list[0] == 101:
@@ -4982,11 +4962,9 @@ class GameFrame(tk.Frame):
                                             for guards in champion1_immunity:
                                                 if guards == "Block":
                                                     immune_list.append(99)
-                                                if guards == "Magic Reflection":
-                                                    immune_list.append(101)
                                                 if guards == "Cocoon":
                                                     immune_list.append(100)
-                                                if guards == "Evasive Manoeuvres":
+                                                if guards == "Evasive Manueuvres":
                                                     immune_list.append(100)
                                                 immune_list = sorted(immune_list, reverse=True)
                                                 if immune_list[0] == 101:
@@ -5063,11 +5041,9 @@ class GameFrame(tk.Frame):
                                             for guards in champion2_immunity:
                                                 if guards == "Block":
                                                     immune_list.append(99)
-                                                if guards == "Magic Reflection":
-                                                    immune_list.append(101)
                                                 if guards == "Cocoon":
                                                     immune_list.append(100)
-                                                if guards == "Evasive Manoeuvres":
+                                                if guards == "Evasive Manueuvres":
                                                     immune_list.append(100)
                                                 immune_list = sorted(immune_list, reverse=True)
                                                 if immune_list[0] == 101:
@@ -5144,11 +5120,9 @@ class GameFrame(tk.Frame):
                                             for guards in champion3_immunity:
                                                 if guards == "Block":
                                                     immune_list.append(99)
-                                                if guards == "Magic Reflection":
-                                                    immune_list.append(101)
                                                 if guards == "Cocoon":
                                                     immune_list.append(100)
-                                                if guards == "Evasive Manoeuvres":
+                                                if guards == "Evasive Manueuvres":
                                                     immune_list.append(100)
                                                 immune_list = sorted(immune_list, reverse=True)
                                                 if immune_list[0] == 101:
@@ -5225,11 +5199,10 @@ class GameFrame(tk.Frame):
                                             for guards in champion4_immunity:
                                                 if guards == "Block":
                                                     immune_list.append(99)
-                                                if guards == "Magic Reflection":
-                                                    immune_list.append(101)
+
                                                 if guards == "Cocoon":
                                                     immune_list.append(100)
-                                                if guards == "Evasive Manoeuvres":
+                                                if guards == "Evasive Manueuvres":
                                                     immune_list.append(100)
                                                 immune_list = sorted(immune_list, reverse=True)
                                                 if immune_list[0] == 101:
@@ -5306,11 +5279,9 @@ class GameFrame(tk.Frame):
                                             for guards in champion5_immunity:
                                                 if guards == "Block":
                                                     immune_list.append(99)
-                                                if guards == "Magic Reflection":
-                                                    immune_list.append(101)
                                                 if guards == "Cocoon":
                                                     immune_list.append(100)
-                                                if guards == "Evasive Manoeuvres":
+                                                if guards == "Evasive Manueuvres":
                                                     immune_list.append(100)
                                                 immune_list = sorted(immune_list, reverse=True)
                                                 if immune_list[0] == 101:
@@ -5433,11 +5404,9 @@ class GameFrame(tk.Frame):
                                 for guards in champion1_immunity:
                                     if guards == "Block":
                                         immune_list.append(99)
-                                    if guards == "Magic Reflection":
-                                        immune_list.append(101)
                                     if guards == "Cocoon":
                                         immune_list.append(100)
-                                    if guards == "Evasive Manoeuvres":
+                                    if guards == "Evasive Manueuvres":
                                         immune_list.append(100)
                                     immune_list = sorted(immune_list, reverse=True)
                                     if immune_list[0] == 101:
@@ -5514,11 +5483,9 @@ class GameFrame(tk.Frame):
                                 for guards in champion2_immunity:
                                     if guards == "Block":
                                         immune_list.append(99)
-                                    if guards == "Magic Reflection":
-                                        immune_list.append(101)
                                     if guards == "Cocoon":
                                         immune_list.append(100)
-                                    if guards == "Evasive Manoeuvres":
+                                    if guards == "Evasive Manueuvres":
                                         immune_list.append(100)
                                     immune_list = sorted(immune_list, reverse=True)
                                     if immune_list[0] == 101:
@@ -5599,11 +5566,9 @@ class GameFrame(tk.Frame):
                                 for guards in champion3_immunity:
                                     if guards == "Block":
                                         immune_list.append(99)
-                                    if guards == "Magic Reflection":
-                                        immune_list.append(101)
                                     if guards == "Cocoon":
                                         immune_list.append(100)
-                                    if guards == "Evasive Manoeuvres":
+                                    if guards == "Evasive Manueuvres":
                                         immune_list.append(100)
                                     immune_list = sorted(immune_list, reverse=True)
                                     if immune_list[0] == 101:
@@ -5684,11 +5649,9 @@ class GameFrame(tk.Frame):
                                 for guards in champion4_immunity:
                                     if guards == "Block":
                                         immune_list.append(99)
-                                    if guards == "Magic Reflection":
-                                        immune_list.append(101)
                                     if guards == "Cocoon":
                                         immune_list.append(100)
-                                    if guards == "Evasive Manoeuvres":
+                                    if guards == "Evasive Manueuvres":
                                         immune_list.append(100)
                                     immune_list = sorted(immune_list, reverse=True)
                                     if immune_list[0] == 101:
@@ -5769,11 +5732,9 @@ class GameFrame(tk.Frame):
                                 for guards in champion5_immunity:
                                     if guards == "Block":
                                         immune_list.append(99)
-                                    if guards == "Magic Reflection":
-                                        immune_list.append(101)
                                     if guards == "Cocoon":
                                         immune_list.append(100)
-                                    if guards == "Evasive Manoeuvres":
+                                    if guards == "Evasive Manueuvres":
                                         immune_list.append(100)
                                     immune_list = sorted(immune_list, reverse=True)
                                     if immune_list[0] == 101:
@@ -5852,11 +5813,9 @@ class GameFrame(tk.Frame):
                                     for guards in champion1_immunity:
                                         if guards == "Block":
                                             immune_list.append(99)
-                                        if guards == "Magic Reflection":
-                                            immune_list.append(101)
                                         if guards == "Cocoon":
                                             immune_list.append(100)
-                                        if guards == "Evasive Manoeuvres":
+                                        if guards == "Evasive Manueuvres":
                                             immune_list.append(100)
                                         immune_list = sorted(immune_list, reverse=True)
                                         if immune_list[0] == 101:
@@ -5933,11 +5892,10 @@ class GameFrame(tk.Frame):
                                     for guards in champion2_immunity:
                                         if guards == "Block":
                                             immune_list.append(99)
-                                        if guards == "Magic Reflection":
-                                            immune_list.append(101)
+
                                         if guards == "Cocoon":
                                             immune_list.append(100)
-                                        if guards == "Evasive Manoeuvres":
+                                        if guards == "Evasive Manueuvres":
                                             immune_list.append(100)
                                         immune_list = sorted(immune_list, reverse=True)
                                         if immune_list[0] == 101:
@@ -6014,11 +5972,10 @@ class GameFrame(tk.Frame):
                                     for guards in champion3_immunity:
                                         if guards == "Block":
                                             immune_list.append(99)
-                                        if guards == "Magic Reflection":
-                                            immune_list.append(101)
+
                                         if guards == "Cocoon":
                                             immune_list.append(100)
-                                        if guards == "Evasive Manoeuvres":
+                                        if guards == "Evasive Manueuvres":
                                             immune_list.append(100)
                                         immune_list = sorted(immune_list, reverse=True)
                                         if immune_list[0] == 101:
@@ -6095,11 +6052,10 @@ class GameFrame(tk.Frame):
                                     for guards in champion4_immunity:
                                         if guards == "Block":
                                             immune_list.append(99)
-                                        if guards == "Magic Reflection":
-                                            immune_list.append(101)
+
                                         if guards == "Cocoon":
                                             immune_list.append(100)
-                                        if guards == "Evasive Manoeuvres":
+                                        if guards == "Evasive Manueuvres":
                                             immune_list.append(100)
                                         immune_list = sorted(immune_list, reverse=True)
                                         if immune_list[0] == 101:
@@ -6180,11 +6136,10 @@ class GameFrame(tk.Frame):
                                     for guards in champion5_immunity:
                                         if guards == "Block":
                                             immune_list.append(99)
-                                        if guards == "Magic Reflection":
-                                            immune_list.append(101)
+
                                         if guards == "Cocoon":
                                             immune_list.append(100)
-                                        if guards == "Evasive Manoeuvres":
+                                        if guards == "Evasive Manueuvres":
                                             immune_list.append(100)
                                         immune_list = sorted(immune_list, reverse=True)
                                         if immune_list[0] == 101:
@@ -6269,11 +6224,10 @@ class GameFrame(tk.Frame):
                                             for guards in champion1_immunity:
                                                 if guards == "Block":
                                                     immune_list.append(99)
-                                                if guards == "Magic Reflection":
-                                                    immune_list.append(101)
+
                                                 if guards == "Cocoon":
                                                     immune_list.append(100)
-                                                if guards == "Evasive Manoeuvres":
+                                                if guards == "Evasive Manueuvres":
                                                     immune_list.append(100)
                                                 immune_list = sorted(immune_list, reverse=True)
                                                 if immune_list[0] == 101:
@@ -6350,11 +6304,10 @@ class GameFrame(tk.Frame):
                                             for guards in champion2_immunity:
                                                 if guards == "Block":
                                                     immune_list.append(99)
-                                                if guards == "Magic Reflection":
-                                                    immune_list.append(101)
+
                                                 if guards == "Cocoon":
                                                     immune_list.append(100)
-                                                if guards == "Evasive Manoeuvres":
+                                                if guards == "Evasive Manueuvres":
                                                     immune_list.append(100)
                                                 immune_list = sorted(immune_list, reverse=True)
                                                 if immune_list[0] == 101:
@@ -6431,11 +6384,10 @@ class GameFrame(tk.Frame):
                                             for guards in champion3_immunity:
                                                 if guards == "Block":
                                                     immune_list.append(99)
-                                                if guards == "Magic Reflection":
-                                                    immune_list.append(101)
+
                                                 if guards == "Cocoon":
                                                     immune_list.append(100)
-                                                if guards == "Evasive Manoeuvres":
+                                                if guards == "Evasive Manueuvres":
                                                     immune_list.append(100)
                                                 immune_list = sorted(immune_list, reverse=True)
                                                 if immune_list[0] == 101:
@@ -6512,11 +6464,10 @@ class GameFrame(tk.Frame):
                                             for guards in champion4_immunity:
                                                 if guards == "Block":
                                                     immune_list.append(99)
-                                                if guards == "Magic Reflection":
-                                                    immune_list.append(101)
+
                                                 if guards == "Cocoon":
                                                     immune_list.append(100)
-                                                if guards == "Evasive Manoeuvres":
+                                                if guards == "Evasive Manueuvres":
                                                     immune_list.append(100)
                                                 immune_list = sorted(immune_list, reverse=True)
                                                 if immune_list[0] == 101:
@@ -6593,11 +6544,10 @@ class GameFrame(tk.Frame):
                                             for guards in champion5_immunity:
                                                 if guards == "Block":
                                                     immune_list.append(99)
-                                                if guards == "Magic Reflection":
-                                                    immune_list.append(101)
+
                                                 if guards == "Cocoon":
                                                     immune_list.append(100)
-                                                if guards == "Evasive Manoeuvres":
+                                                if guards == "Evasive Manueuvres":
                                                     immune_list.append(100)
                                                 immune_list = sorted(immune_list, reverse=True)
                                                 if immune_list[0] == 101:
@@ -6720,11 +6670,10 @@ class GameFrame(tk.Frame):
                                 for guards in champion1_immunity:
                                     if guards == "Block":
                                         immune_list.append(99)
-                                    if guards == "Magic Reflection":
-                                        immune_list.append(101)
+
                                     if guards == "Cocoon":
                                         immune_list.append(100)
-                                    if guards == "Evasive Manoeuvres":
+                                    if guards == "Evasive Manueuvres":
                                         immune_list.append(100)
                                     immune_list = sorted(immune_list, reverse=True)
                                     if immune_list[0] == 101:
@@ -6801,11 +6750,10 @@ class GameFrame(tk.Frame):
                                 for guards in champion2_immunity:
                                     if guards == "Block":
                                         immune_list.append(99)
-                                    if guards == "Magic Reflection":
-                                        immune_list.append(101)
+
                                     if guards == "Cocoon":
                                         immune_list.append(100)
-                                    if guards == "Evasive Manoeuvres":
+                                    if guards == "Evasive Manueuvres":
                                         immune_list.append(100)
                                     immune_list = sorted(immune_list, reverse=True)
                                     if immune_list[0] == 101:
@@ -6886,11 +6834,10 @@ class GameFrame(tk.Frame):
                                 for guards in champion3_immunity:
                                     if guards == "Block":
                                         immune_list.append(99)
-                                    if guards == "Magic Reflection":
-                                        immune_list.append(101)
+
                                     if guards == "Cocoon":
                                         immune_list.append(100)
-                                    if guards == "Evasive Manoeuvres":
+                                    if guards == "Evasive Manueuvres":
                                         immune_list.append(100)
                                     immune_list = sorted(immune_list, reverse=True)
                                     if immune_list[0] == 101:
@@ -6971,11 +6918,10 @@ class GameFrame(tk.Frame):
                                 for guards in champion4_immunity:
                                     if guards == "Block":
                                         immune_list.append(99)
-                                    if guards == "Magic Reflection":
-                                        immune_list.append(101)
+
                                     if guards == "Cocoon":
                                         immune_list.append(100)
-                                    if guards == "Evasive Manoeuvres":
+                                    if guards == "Evasive Manueuvres":
                                         immune_list.append(100)
                                     immune_list = sorted(immune_list, reverse=True)
                                     if immune_list[0] == 101:
@@ -7056,11 +7002,10 @@ class GameFrame(tk.Frame):
                                 for guards in champion5_immunity:
                                     if guards == "Block":
                                         immune_list.append(99)
-                                    if guards == "Magic Reflection":
-                                        immune_list.append(101)
+
                                     if guards == "Cocoon":
                                         immune_list.append(100)
-                                    if guards == "Evasive Manoeuvres":
+                                    if guards == "Evasive Manueuvres":
                                         immune_list.append(100)
                                     immune_list = sorted(immune_list, reverse=True)
                                     if immune_list[0] == 101:
@@ -7139,11 +7084,10 @@ class GameFrame(tk.Frame):
                                     for guards in champion1_immunity:
                                         if guards == "Block":
                                             immune_list.append(99)
-                                        if guards == "Magic Reflection":
-                                            immune_list.append(101)
+
                                         if guards == "Cocoon":
                                             immune_list.append(100)
-                                        if guards == "Evasive Manoeuvres":
+                                        if guards == "Evasive Manueuvres":
                                             immune_list.append(100)
                                         immune_list = sorted(immune_list, reverse=True)
                                         if immune_list[0] == 101:
@@ -7220,11 +7164,10 @@ class GameFrame(tk.Frame):
                                     for guards in champion2_immunity:
                                         if guards == "Block":
                                             immune_list.append(99)
-                                        if guards == "Magic Reflection":
-                                            immune_list.append(101)
+
                                         if guards == "Cocoon":
                                             immune_list.append(100)
-                                        if guards == "Evasive Manoeuvres":
+                                        if guards == "Evasive Manueuvres":
                                             immune_list.append(100)
                                         immune_list = sorted(immune_list, reverse=True)
                                         if immune_list[0] == 101:
@@ -7301,11 +7244,10 @@ class GameFrame(tk.Frame):
                                     for guards in champion3_immunity:
                                         if guards == "Block":
                                             immune_list.append(99)
-                                        if guards == "Magic Reflection":
-                                            immune_list.append(101)
+
                                         if guards == "Cocoon":
                                             immune_list.append(100)
-                                        if guards == "Evasive Manoeuvres":
+                                        if guards == "Evasive Manueuvres":
                                             immune_list.append(100)
                                         immune_list = sorted(immune_list, reverse=True)
                                         if immune_list[0] == 101:
@@ -7382,11 +7324,10 @@ class GameFrame(tk.Frame):
                                     for guards in champion4_immunity:
                                         if guards == "Block":
                                             immune_list.append(99)
-                                        if guards == "Magic Reflection":
-                                            immune_list.append(101)
+
                                         if guards == "Cocoon":
                                             immune_list.append(100)
-                                        if guards == "Evasive Manoeuvres":
+                                        if guards == "Evasive Manueuvres":
                                             immune_list.append(100)
                                         immune_list = sorted(immune_list, reverse=True)
                                         if immune_list[0] == 101:
@@ -7467,11 +7408,10 @@ class GameFrame(tk.Frame):
                                     for guards in champion5_immunity:
                                         if guards == "Block":
                                             immune_list.append(99)
-                                        if guards == "Magic Reflection":
-                                            immune_list.append(101)
+
                                         if guards == "Cocoon":
                                             immune_list.append(100)
-                                        if guards == "Evasive Manoeuvres":
+                                        if guards == "Evasive Manueuvres":
                                             immune_list.append(100)
                                         immune_list = sorted(immune_list, reverse=True)
                                         if immune_list[0] == 101:
@@ -7556,11 +7496,10 @@ class GameFrame(tk.Frame):
                                             for guards in champion1_immunity:
                                                 if guards == "Block":
                                                     immune_list.append(99)
-                                                if guards == "Magic Reflection":
-                                                    immune_list.append(101)
+
                                                 if guards == "Cocoon":
                                                     immune_list.append(100)
-                                                if guards == "Evasive Manoeuvres":
+                                                if guards == "Evasive Manueuvres":
                                                     immune_list.append(100)
                                                 immune_list = sorted(immune_list, reverse=True)
                                                 if immune_list[0] == 101:
@@ -7637,11 +7576,10 @@ class GameFrame(tk.Frame):
                                             for guards in champion2_immunity:
                                                 if guards == "Block":
                                                     immune_list.append(99)
-                                                if guards == "Magic Reflection":
-                                                    immune_list.append(101)
+
                                                 if guards == "Cocoon":
                                                     immune_list.append(100)
-                                                if guards == "Evasive Manoeuvres":
+                                                if guards == "Evasive Manueuvres":
                                                     immune_list.append(100)
                                                 immune_list = sorted(immune_list, reverse=True)
                                                 if immune_list[0] == 101:
@@ -7718,11 +7656,10 @@ class GameFrame(tk.Frame):
                                             for guards in champion3_immunity:
                                                 if guards == "Block":
                                                     immune_list.append(99)
-                                                if guards == "Magic Reflection":
-                                                    immune_list.append(101)
+
                                                 if guards == "Cocoon":
                                                     immune_list.append(100)
-                                                if guards == "Evasive Manoeuvres":
+                                                if guards == "Evasive Manueuvres":
                                                     immune_list.append(100)
                                                 immune_list = sorted(immune_list, reverse=True)
                                                 if immune_list[0] == 101:
@@ -7799,11 +7736,10 @@ class GameFrame(tk.Frame):
                                             for guards in champion4_immunity:
                                                 if guards == "Block":
                                                     immune_list.append(99)
-                                                if guards == "Magic Reflection":
-                                                    immune_list.append(101)
+
                                                 if guards == "Cocoon":
                                                     immune_list.append(100)
-                                                if guards == "Evasive Manoeuvres":
+                                                if guards == "Evasive Manueuvres":
                                                     immune_list.append(100)
                                                 immune_list = sorted(immune_list, reverse=True)
                                                 if immune_list[0] == 101:
@@ -7880,11 +7816,10 @@ class GameFrame(tk.Frame):
                                             for guards in champion5_immunity:
                                                 if guards == "Block":
                                                     immune_list.append(99)
-                                                if guards == "Magic Reflection":
-                                                    immune_list.append(101)
+
                                                 if guards == "Cocoon":
                                                     immune_list.append(100)
-                                                if guards == "Evasive Manoeuvres":
+                                                if guards == "Evasive Manueuvres":
                                                     immune_list.append(100)
                                                 immune_list = sorted(immune_list, reverse=True)
                                                 if immune_list[0] == 101:
@@ -8007,11 +7942,10 @@ class GameFrame(tk.Frame):
                                 for guards in champion1_immunity:
                                     if guards == "Block":
                                         immune_list.append(99)
-                                    if guards == "Magic Reflection":
-                                        immune_list.append(101)
+
                                     if guards == "Cocoon":
                                         immune_list.append(100)
-                                    if guards == "Evasive Manoeuvres":
+                                    if guards == "Evasive Manueuvres":
                                         immune_list.append(100)
                                     immune_list = sorted(immune_list, reverse=True)
                                     if immune_list[0] == 101:
@@ -8088,11 +8022,10 @@ class GameFrame(tk.Frame):
                                 for guards in champion2_immunity:
                                     if guards == "Block":
                                         immune_list.append(99)
-                                    if guards == "Magic Reflection":
-                                        immune_list.append(101)
+
                                     if guards == "Cocoon":
                                         immune_list.append(100)
-                                    if guards == "Evasive Manoeuvres":
+                                    if guards == "Evasive Manueuvres":
                                         immune_list.append(100)
                                     immune_list = sorted(immune_list, reverse=True)
                                     if immune_list[0] == 101:
@@ -8173,11 +8106,10 @@ class GameFrame(tk.Frame):
                                 for guards in champion3_immunity:
                                     if guards == "Block":
                                         immune_list.append(99)
-                                    if guards == "Magic Reflection":
-                                        immune_list.append(101)
+
                                     if guards == "Cocoon":
                                         immune_list.append(100)
-                                    if guards == "Evasive Manoeuvres":
+                                    if guards == "Evasive Manueuvres":
                                         immune_list.append(100)
                                     immune_list = sorted(immune_list, reverse=True)
                                     if immune_list[0] == 101:
@@ -8258,11 +8190,10 @@ class GameFrame(tk.Frame):
                                 for guards in champion4_immunity:
                                     if guards == "Block":
                                         immune_list.append(99)
-                                    if guards == "Magic Reflection":
-                                        immune_list.append(101)
+
                                     if guards == "Cocoon":
                                         immune_list.append(100)
-                                    if guards == "Evasive Manoeuvres":
+                                    if guards == "Evasive Manueuvres":
                                         immune_list.append(100)
                                     immune_list = sorted(immune_list, reverse=True)
                                     if immune_list[0] == 101:
@@ -8343,11 +8274,10 @@ class GameFrame(tk.Frame):
                                 for guards in champion5_immunity:
                                     if guards == "Block":
                                         immune_list.append(99)
-                                    if guards == "Magic Reflection":
-                                        immune_list.append(101)
+
                                     if guards == "Cocoon":
                                         immune_list.append(100)
-                                    if guards == "Evasive Manoeuvres":
+                                    if guards == "Evasive Manueuvres":
                                         immune_list.append(100)
                                     immune_list = sorted(immune_list, reverse=True)
                                     if immune_list[0] == 101:
@@ -8426,11 +8356,10 @@ class GameFrame(tk.Frame):
                                     for guards in champion1_immunity:
                                         if guards == "Block":
                                             immune_list.append(99)
-                                        if guards == "Magic Reflection":
-                                            immune_list.append(101)
+
                                         if guards == "Cocoon":
                                             immune_list.append(100)
-                                        if guards == "Evasive Manoeuvres":
+                                        if guards == "Evasive Manueuvres":
                                             immune_list.append(100)
                                         immune_list = sorted(immune_list, reverse=True)
                                         if immune_list[0] == 101:
@@ -8507,11 +8436,10 @@ class GameFrame(tk.Frame):
                                     for guards in champion2_immunity:
                                         if guards == "Block":
                                             immune_list.append(99)
-                                        if guards == "Magic Reflection":
-                                            immune_list.append(101)
+
                                         if guards == "Cocoon":
                                             immune_list.append(100)
-                                        if guards == "Evasive Manoeuvres":
+                                        if guards == "Evasive Manueuvres":
                                             immune_list.append(100)
                                         immune_list = sorted(immune_list, reverse=True)
                                         if immune_list[0] == 101:
@@ -8588,11 +8516,10 @@ class GameFrame(tk.Frame):
                                     for guards in champion3_immunity:
                                         if guards == "Block":
                                             immune_list.append(99)
-                                        if guards == "Magic Reflection":
-                                            immune_list.append(101)
+
                                         if guards == "Cocoon":
                                             immune_list.append(100)
-                                        if guards == "Evasive Manoeuvres":
+                                        if guards == "Evasive Manueuvres":
                                             immune_list.append(100)
                                         immune_list = sorted(immune_list, reverse=True)
                                         if immune_list[0] == 101:
@@ -8669,11 +8596,10 @@ class GameFrame(tk.Frame):
                                     for guards in champion4_immunity:
                                         if guards == "Block":
                                             immune_list.append(99)
-                                        if guards == "Magic Reflection":
-                                            immune_list.append(101)
+
                                         if guards == "Cocoon":
                                             immune_list.append(100)
-                                        if guards == "Evasive Manoeuvres":
+                                        if guards == "Evasive Manueuvres":
                                             immune_list.append(100)
                                         immune_list = sorted(immune_list, reverse=True)
                                         if immune_list[0] == 101:
@@ -8754,11 +8680,10 @@ class GameFrame(tk.Frame):
                                     for guards in champion5_immunity:
                                         if guards == "Block":
                                             immune_list.append(99)
-                                        if guards == "Magic Reflection":
-                                            immune_list.append(101)
+
                                         if guards == "Cocoon":
                                             immune_list.append(100)
-                                        if guards == "Evasive Manoeuvres":
+                                        if guards == "Evasive Manueuvres":
                                             immune_list.append(100)
                                         immune_list = sorted(immune_list, reverse=True)
                                         if immune_list[0] == 101:
@@ -8843,11 +8768,10 @@ class GameFrame(tk.Frame):
                                             for guards in champion1_immunity:
                                                 if guards == "Block":
                                                     immune_list.append(99)
-                                                if guards == "Magic Reflection":
-                                                    immune_list.append(101)
+
                                                 if guards == "Cocoon":
                                                     immune_list.append(100)
-                                                if guards == "Evasive Manoeuvres":
+                                                if guards == "Evasive Manueuvres":
                                                     immune_list.append(100)
                                                 immune_list = sorted(immune_list, reverse=True)
                                                 if immune_list[0] == 101:
@@ -8924,11 +8848,10 @@ class GameFrame(tk.Frame):
                                             for guards in champion2_immunity:
                                                 if guards == "Block":
                                                     immune_list.append(99)
-                                                if guards == "Magic Reflection":
-                                                    immune_list.append(101)
+
                                                 if guards == "Cocoon":
                                                     immune_list.append(100)
-                                                if guards == "Evasive Manoeuvres":
+                                                if guards == "Evasive Manueuvres":
                                                     immune_list.append(100)
                                                 immune_list = sorted(immune_list, reverse=True)
                                                 if immune_list[0] == 101:
@@ -9005,11 +8928,10 @@ class GameFrame(tk.Frame):
                                             for guards in champion3_immunity:
                                                 if guards == "Block":
                                                     immune_list.append(99)
-                                                if guards == "Magic Reflection":
-                                                    immune_list.append(101)
+
                                                 if guards == "Cocoon":
                                                     immune_list.append(100)
-                                                if guards == "Evasive Manoeuvres":
+                                                if guards == "Evasive Manueuvres":
                                                     immune_list.append(100)
                                                 immune_list = sorted(immune_list, reverse=True)
                                                 if immune_list[0] == 101:
@@ -9086,11 +9008,10 @@ class GameFrame(tk.Frame):
                                             for guards in champion4_immunity:
                                                 if guards == "Block":
                                                     immune_list.append(99)
-                                                if guards == "Magic Reflection":
-                                                    immune_list.append(101)
+
                                                 if guards == "Cocoon":
                                                     immune_list.append(100)
-                                                if guards == "Evasive Manoeuvres":
+                                                if guards == "Evasive Manueuvres":
                                                     immune_list.append(100)
                                                 immune_list = sorted(immune_list, reverse=True)
                                                 if immune_list[0] == 101:
@@ -9167,11 +9088,10 @@ class GameFrame(tk.Frame):
                                             for guards in champion5_immunity:
                                                 if guards == "Block":
                                                     immune_list.append(99)
-                                                if guards == "Magic Reflection":
-                                                    immune_list.append(101)
+
                                                 if guards == "Cocoon":
                                                     immune_list.append(100)
-                                                if guards == "Evasive Manoeuvres":
+                                                if guards == "Evasive Manueuvres":
                                                     immune_list.append(100)
                                                 immune_list = sorted(immune_list, reverse=True)
                                                 if immune_list[0] == 101:
@@ -9294,11 +9214,10 @@ class GameFrame(tk.Frame):
                                 for guards in champion1_immunity:
                                     if guards == "Block":
                                         immune_list.append(99)
-                                    if guards == "Magic Reflection":
-                                        immune_list.append(101)
+
                                     if guards == "Cocoon":
                                         immune_list.append(100)
-                                    if guards == "Evasive Manoeuvres":
+                                    if guards == "Evasive Manueuvres":
                                         immune_list.append(100)
                                     immune_list = sorted(immune_list, reverse=True)
                                     if immune_list[0] == 101:
@@ -9375,11 +9294,10 @@ class GameFrame(tk.Frame):
                                 for guards in champion2_immunity:
                                     if guards == "Block":
                                         immune_list.append(99)
-                                    if guards == "Magic Reflection":
-                                        immune_list.append(101)
+
                                     if guards == "Cocoon":
                                         immune_list.append(100)
-                                    if guards == "Evasive Manoeuvres":
+                                    if guards == "Evasive Manueuvres":
                                         immune_list.append(100)
                                     immune_list = sorted(immune_list, reverse=True)
                                     if immune_list[0] == 101:
@@ -9460,11 +9378,10 @@ class GameFrame(tk.Frame):
                                 for guards in champion3_immunity:
                                     if guards == "Block":
                                         immune_list.append(99)
-                                    if guards == "Magic Reflection":
-                                        immune_list.append(101)
+
                                     if guards == "Cocoon":
                                         immune_list.append(100)
-                                    if guards == "Evasive Manoeuvres":
+                                    if guards == "Evasive Manueuvres":
                                         immune_list.append(100)
                                     immune_list = sorted(immune_list, reverse=True)
                                     if immune_list[0] == 101:
@@ -9545,11 +9462,10 @@ class GameFrame(tk.Frame):
                                 for guards in champion4_immunity:
                                     if guards == "Block":
                                         immune_list.append(99)
-                                    if guards == "Magic Reflection":
-                                        immune_list.append(101)
+
                                     if guards == "Cocoon":
                                         immune_list.append(100)
-                                    if guards == "Evasive Manoeuvres":
+                                    if guards == "Evasive Manueuvres":
                                         immune_list.append(100)
                                     immune_list = sorted(immune_list, reverse=True)
                                     if immune_list[0] == 101:
@@ -9630,11 +9546,10 @@ class GameFrame(tk.Frame):
                                 for guards in champion5_immunity:
                                     if guards == "Block":
                                         immune_list.append(99)
-                                    if guards == "Magic Reflection":
-                                        immune_list.append(101)
+
                                     if guards == "Cocoon":
                                         immune_list.append(100)
-                                    if guards == "Evasive Manoeuvres":
+                                    if guards == "Evasive Manueuvres":
                                         immune_list.append(100)
                                     immune_list = sorted(immune_list, reverse=True)
                                     if immune_list[0] == 101:
@@ -9713,11 +9628,10 @@ class GameFrame(tk.Frame):
                                     for guards in champion1_immunity:
                                         if guards == "Block":
                                             immune_list.append(99)
-                                        if guards == "Magic Reflection":
-                                            immune_list.append(101)
+
                                         if guards == "Cocoon":
                                             immune_list.append(100)
-                                        if guards == "Evasive Manoeuvres":
+                                        if guards == "Evasive Manueuvres":
                                             immune_list.append(100)
                                         immune_list = sorted(immune_list, reverse=True)
                                         if immune_list[0] == 101:
@@ -9794,11 +9708,10 @@ class GameFrame(tk.Frame):
                                     for guards in champion2_immunity:
                                         if guards == "Block":
                                             immune_list.append(99)
-                                        if guards == "Magic Reflection":
-                                            immune_list.append(101)
+
                                         if guards == "Cocoon":
                                             immune_list.append(100)
-                                        if guards == "Evasive Manoeuvres":
+                                        if guards == "Evasive Manueuvres":
                                             immune_list.append(100)
                                         immune_list = sorted(immune_list, reverse=True)
                                         if immune_list[0] == 101:
@@ -9875,11 +9788,10 @@ class GameFrame(tk.Frame):
                                     for guards in champion3_immunity:
                                         if guards == "Block":
                                             immune_list.append(99)
-                                        if guards == "Magic Reflection":
-                                            immune_list.append(101)
+
                                         if guards == "Cocoon":
                                             immune_list.append(100)
-                                        if guards == "Evasive Manoeuvres":
+                                        if guards == "Evasive Manueuvres":
                                             immune_list.append(100)
                                         immune_list = sorted(immune_list, reverse=True)
                                         if immune_list[0] == 101:
@@ -9956,11 +9868,10 @@ class GameFrame(tk.Frame):
                                     for guards in champion4_immunity:
                                         if guards == "Block":
                                             immune_list.append(99)
-                                        if guards == "Magic Reflection":
-                                            immune_list.append(101)
+
                                         if guards == "Cocoon":
                                             immune_list.append(100)
-                                        if guards == "Evasive Manoeuvres":
+                                        if guards == "Evasive Manueuvres":
                                             immune_list.append(100)
                                         immune_list = sorted(immune_list, reverse=True)
                                         if immune_list[0] == 101:
@@ -10041,11 +9952,10 @@ class GameFrame(tk.Frame):
                                     for guards in champion5_immunity:
                                         if guards == "Block":
                                             immune_list.append(99)
-                                        if guards == "Magic Reflection":
-                                            immune_list.append(101)
+
                                         if guards == "Cocoon":
                                             immune_list.append(100)
-                                        if guards == "Evasive Manoeuvres":
+                                        if guards == "Evasive Manueuvres":
                                             immune_list.append(100)
                                         immune_list = sorted(immune_list, reverse=True)
                                         if immune_list[0] == 101:
@@ -10130,11 +10040,10 @@ class GameFrame(tk.Frame):
                                             for guards in champion1_immunity:
                                                 if guards == "Block":
                                                     immune_list.append(99)
-                                                if guards == "Magic Reflection":
-                                                    immune_list.append(101)
+
                                                 if guards == "Cocoon":
                                                     immune_list.append(100)
-                                                if guards == "Evasive Manoeuvres":
+                                                if guards == "Evasive Manueuvres":
                                                     immune_list.append(100)
                                                 immune_list = sorted(immune_list, reverse=True)
                                                 if immune_list[0] == 101:
@@ -10211,11 +10120,10 @@ class GameFrame(tk.Frame):
                                             for guards in champion2_immunity:
                                                 if guards == "Block":
                                                     immune_list.append(99)
-                                                if guards == "Magic Reflection":
-                                                    immune_list.append(101)
+
                                                 if guards == "Cocoon":
                                                     immune_list.append(100)
-                                                if guards == "Evasive Manoeuvres":
+                                                if guards == "Evasive Manueuvres":
                                                     immune_list.append(100)
                                                 immune_list = sorted(immune_list, reverse=True)
                                                 if immune_list[0] == 101:
@@ -10292,11 +10200,10 @@ class GameFrame(tk.Frame):
                                             for guards in champion3_immunity:
                                                 if guards == "Block":
                                                     immune_list.append(99)
-                                                if guards == "Magic Reflection":
-                                                    immune_list.append(101)
+
                                                 if guards == "Cocoon":
                                                     immune_list.append(100)
-                                                if guards == "Evasive Manoeuvres":
+                                                if guards == "Evasive Manueuvres":
                                                     immune_list.append(100)
                                                 immune_list = sorted(immune_list, reverse=True)
                                                 if immune_list[0] == 101:
@@ -10373,11 +10280,10 @@ class GameFrame(tk.Frame):
                                             for guards in champion4_immunity:
                                                 if guards == "Block":
                                                     immune_list.append(99)
-                                                if guards == "Magic Reflection":
-                                                    immune_list.append(101)
+
                                                 if guards == "Cocoon":
                                                     immune_list.append(100)
-                                                if guards == "Evasive Manoeuvres":
+                                                if guards == "Evasive Manueuvres":
                                                     immune_list.append(100)
                                                 immune_list = sorted(immune_list, reverse=True)
                                                 if immune_list[0] == 101:
@@ -10454,11 +10360,10 @@ class GameFrame(tk.Frame):
                                             for guards in champion5_immunity:
                                                 if guards == "Block":
                                                     immune_list.append(99)
-                                                if guards == "Magic Reflection":
-                                                    immune_list.append(101)
+
                                                 if guards == "Cocoon":
                                                     immune_list.append(100)
-                                                if guards == "Evasive Manoeuvres":
+                                                if guards == "Evasive Manueuvres":
                                                     immune_list.append(100)
                                                 immune_list = sorted(immune_list, reverse=True)
                                                 if immune_list[0] == 101:
@@ -10711,8 +10616,6 @@ class GameFrame(tk.Frame):
             champion5_defensive = []
             if "Immunity: Block" in champion1_statuses:
                 champion1_statuses.remove("Immunity: Block")
-            if "Immunity: Magic Reflection" in champion1_statuses:
-                champion1_statuses.remove("Immunity: Magic Reflection")
             if "Immunity: Cocoon" in champion1_statuses:
                 champion1_statuses.remove("Immunity: Cocoon")
             if "Immunity: Evasion" in champion1_statuses:
@@ -10725,8 +10628,6 @@ class GameFrame(tk.Frame):
                 champion1_statuses.remove("Defensive: Enharden Nerves")
             if "Immunity: Block" in champion2_statuses:
                 champion2_statuses.remove("Immunity: Block")
-            if "Immunity: Magic Reflection" in champion2_statuses:
-                champion2_statuses.remove("Immunity: Magic Reflection")
             if "Immunity: Cocoon" in champion2_statuses:
                 champion2_statuses.remove("Immunity: Cocoon")
             if "Immunity: Evasion" in champion2_statuses:
@@ -10739,8 +10640,6 @@ class GameFrame(tk.Frame):
                 champion2_statuses.remove("Defensive: Enharden Nerves")
             if "Immunity: Block" in champion3_statuses:
                 champion3_statuses.remove("Immunity: Block")
-            if "Immunity: Magic Reflection" in champion3_statuses:
-                champion3_statuses.remove("Immunity: Magic Reflection")
             if "Immunity: Cocoon" in champion3_statuses:
                 champion3_statuses.remove("Immunity: Cocoon")
             if "Immunity: Evasion" in champion3_statuses:
@@ -10753,8 +10652,6 @@ class GameFrame(tk.Frame):
                 champion3_statuses.remove("Defensive: Enharden Nerves")
             if "Immunity: Block" in champion4_statuses:
                 champion4_statuses.remove("Immunity: Block")
-            if "Immunity: Magic Reflection" in champion4_statuses:
-                champion4_statuses.remove("Immunity: Magic Reflection")
             if "Immunity: Cocoon" in champion4_statuses:
                 champion4_statuses.remove("Immunity: Cocoon")
             if "Immunity: Evasion" in champion4_statuses:
@@ -10767,8 +10664,6 @@ class GameFrame(tk.Frame):
                 champion4_statuses.remove("Defensive: Enharden Nerves")
             if "Immunity: Block" in champion5_statuses:
                 champion5_statuses.remove("Immunity: Block")
-            if "Immunity: Magic Reflection" in champion5_statuses:
-                champion5_statuses.remove("Immunity: Magic Reflection")
             if "Immunity: Cocoon" in champion5_statuses:
                 champion5_statuses.remove("Immunity: Cocoon")
             if "Immunity: Evasion" in champion5_statuses:
@@ -11480,7 +11375,7 @@ class GameFrame(tk.Frame):
 
     def champion_turn_ticker(self, champion_position):
         global leg_sweep_requirements, pressure_points_requirements, challenging_shout_requirements, trainwreck_requirements, \
-            fortification_requirements, riposte_requirements, magic_reflection_requirements, evasive_manoeuvres_requirements, \
+            fortification_requirements, riposte_requirements, magic_reflection_requirements, evasive_manueuvres_requirements, \
             reckless_flurry_requirements, eviscerate_requirements, exploit_weakness_requirements, scrap_bomb_requirements, \
             play_dead_requirements, rushed_rest_requirements, uppercut_requirements, defensive_stance_requirements, \
             rushdown_requirements, arcane_brilliance_requirements, vine_swipe_requirements, burst_n_bloom_requirements, \
@@ -11507,8 +11402,8 @@ class GameFrame(tk.Frame):
                     riposte_requirements[1] = riposte_requirements[1] - 1
                 if magic_reflection_requirements[1] > 0:
                     magic_reflection_requirements[1] = magic_reflection_requirements[1] - 1
-                if evasive_manoeuvres_requirements[1] > 0:
-                    evasive_manoeuvres_requirements[1] = evasive_manoeuvres_requirements[1] - 1
+                if evasive_manueuvres_requirements[1] > 0:
+                    evasive_manueuvres_requirements[1] = evasive_manueuvres_requirements[1] - 1
             if CHAMPION_LIST[0] == "Berserker":
                 if reckless_flurry_requirements[1] > 0:
                     reckless_flurry_requirements[1] = reckless_flurry_requirements[1] - 1
@@ -11596,8 +11491,8 @@ class GameFrame(tk.Frame):
                     riposte_requirements[1] = riposte_requirements[1] - 1
                 if magic_reflection_requirements[1] > 0:
                     magic_reflection_requirements[1] = magic_reflection_requirements[1] - 1
-                if evasive_manoeuvres_requirements[1] > 0:
-                    evasive_manoeuvres_requirements[1] = evasive_manoeuvres_requirements[1] - 1
+                if evasive_manueuvres_requirements[1] > 0:
+                    evasive_manueuvres_requirements[1] = evasive_manueuvres_requirements[1] - 1
             if CHAMPION_LIST[1] == "Berserker":
                 if reckless_flurry_requirements[1] > 0:
                     reckless_flurry_requirements[1] = reckless_flurry_requirements[1] - 1
@@ -11685,8 +11580,8 @@ class GameFrame(tk.Frame):
                     riposte_requirements[1] = riposte_requirements[1] - 1
                 if magic_reflection_requirements[1] > 0:
                     magic_reflection_requirements[1] = magic_reflection_requirements[1] - 1
-                if evasive_manoeuvres_requirements[1] > 0:
-                    evasive_manoeuvres_requirements[1] = evasive_manoeuvres_requirements[1] - 1
+                if evasive_manueuvres_requirements[1] > 0:
+                    evasive_manueuvres_requirements[1] = evasive_manueuvres_requirements[1] - 1
             if CHAMPION_LIST[2] == "Berserker":
                 if reckless_flurry_requirements[1] > 0:
                     reckless_flurry_requirements[1] = reckless_flurry_requirements[1] - 1
@@ -11774,8 +11669,8 @@ class GameFrame(tk.Frame):
                     riposte_requirements[1] = riposte_requirements[1] - 1
                 if magic_reflection_requirements[1] > 0:
                     magic_reflection_requirements[1] = magic_reflection_requirements[1] - 1
-                if evasive_manoeuvres_requirements[1] > 0:
-                    evasive_manoeuvres_requirements[1] = evasive_manoeuvres_requirements[1] - 1
+                if evasive_manueuvres_requirements[1] > 0:
+                    evasive_manueuvres_requirements[1] = evasive_manueuvres_requirements[1] - 1
             if CHAMPION_LIST[3] == "Berserker":
                 if reckless_flurry_requirements[1] > 0:
                     reckless_flurry_requirements[1] = reckless_flurry_requirements[1] - 1
@@ -11863,8 +11758,8 @@ class GameFrame(tk.Frame):
                     riposte_requirements[1] = riposte_requirements[1] - 1
                 if magic_reflection_requirements[1] > 0:
                     magic_reflection_requirements[1] = magic_reflection_requirements[1] - 1
-                if evasive_manoeuvres_requirements[1] > 0:
-                    evasive_manoeuvres_requirements[1] = evasive_manoeuvres_requirements[1] - 1
+                if evasive_manueuvres_requirements[1] > 0:
+                    evasive_manueuvres_requirements[1] = evasive_manueuvres_requirements[1] - 1
             if CHAMPION_LIST[4] == "Berserker":
                 if reckless_flurry_requirements[1] > 0:
                     reckless_flurry_requirements[1] = reckless_flurry_requirements[1] - 1
@@ -12520,7 +12415,7 @@ class GameFrame(tk.Frame):
                                 champion1_rp = champion1_rp + riposte_requirements[3]
                                 damage_done = math.ceil(MASTER_FENCER.ap * self.calculate_champion_damage(1))
                                 damage_done = math.ceil(MASTER_FENCER.ap * self.calculate_champion_damage(1))
-                                ability_data = ["Riposte", "enemy", "1T", damage_done]
+                                ability_data = ["Riposte", "enemy", "2T", damage_done]
                             else:
                                 return
                         if counter == 2:
@@ -12530,7 +12425,7 @@ class GameFrame(tk.Frame):
                                 champion2_rp = champion2_rp + riposte_requirements[3]
                                 damage_done = math.ceil(MASTER_FENCER.ap * self.calculate_champion_damage(2))
                                 damage_done = math.ceil(MASTER_FENCER.ap * self.calculate_champion_damage(2))
-                                ability_data = ["Riposte", "enemy", "1T", damage_done]
+                                ability_data = ["Riposte", "enemy", "2T", damage_done]
                             else:
                                 return
                         if counter == 3:
@@ -12540,7 +12435,7 @@ class GameFrame(tk.Frame):
                                 champion3_rp = champion3_rp + riposte_requirements[3]
                                 damage_done = math.ceil(MASTER_FENCER.ap * self.calculate_champion_damage(3))
                                 damage_done = math.ceil(MASTER_FENCER.ap * self.calculate_champion_damage(3))
-                                ability_data = ["Riposte", "enemy", "1T", damage_done]
+                                ability_data = ["Riposte", "enemy", "2T", damage_done]
                             else:
                                 return
                         if counter == 4:
@@ -12550,7 +12445,7 @@ class GameFrame(tk.Frame):
                                 champion4_rp = champion4_rp + riposte_requirements[3]
                                 damage_done = math.ceil(MASTER_FENCER.ap * self.calculate_champion_damage(4))
                                 damage_done = math.ceil(MASTER_FENCER.ap * self.calculate_champion_damage(4))
-                                ability_data = ["Riposte", "enemy", "1T", damage_done]
+                                ability_data = ["Riposte", "enemy", "2T", damage_done]
                             else:
                                 return
                         if counter == 5:
@@ -12560,7 +12455,7 @@ class GameFrame(tk.Frame):
                                 champion5_rp = champion5_rp + riposte_requirements[3]
                                 damage_done = math.ceil(MASTER_FENCER.ap * self.calculate_champion_damage(5))
                                 damage_done = math.ceil(MASTER_FENCER.ap * self.calculate_champion_damage(5))
-                                ability_data = ["Riposte", "enemy", "1T", damage_done]
+                                ability_data = ["Riposte", "enemy", "2T", damage_done]
                             else:
                                 return
                     counter += 1
@@ -14620,7 +14515,7 @@ class GameFrame(tk.Frame):
                                 champion1_rp = champion1_rp - magic_reflection_requirements[0]
                                 magic_reflection_requirements[1] = magic_reflection_requirements[2]
                                 champion1_rp = champion1_rp + magic_reflection_requirements[3]
-                                ability_data = ["Magic Reflection", "ally", "1T"]
+                                ability_data = ["Magic Reflection", "enemy", "1T"]
                             else:
                                 return
                         if counter == 2:
@@ -14628,7 +14523,7 @@ class GameFrame(tk.Frame):
                                 champion2_rp = champion2_rp - magic_reflection_requirements[0]
                                 magic_reflection_requirements[1] = magic_reflection_requirements[2]
                                 champion2_rp = champion2_rp + magic_reflection_requirements[3]
-                                ability_data = ["Magic Reflection", "ally", "1T"]
+                                ability_data = ["Magic Reflection", "enemy", "1T"]
                             else:
                                 return
                         if counter == 3:
@@ -14636,7 +14531,7 @@ class GameFrame(tk.Frame):
                                 champion3_rp = champion3_rp - magic_reflection_requirements[0]
                                 magic_reflection_requirements[1] = magic_reflection_requirements[2]
                                 champion3_rp = champion3_rp + magic_reflection_requirements[3]
-                                ability_data = ["Magic Reflection", "ally", "1T"]
+                                ability_data = ["Magic Reflection", "enemy", "1T"]
                             else:
                                 return
                         if counter == 4:
@@ -14644,7 +14539,7 @@ class GameFrame(tk.Frame):
                                 champion4_rp = champion4_rp - magic_reflection_requirements[0]
                                 magic_reflection_requirements[1] = magic_reflection_requirements[2]
                                 champion4_rp = champion4_rp + magic_reflection_requirements[3]
-                                ability_data = ["Magic Reflection", "ally", "1T"]
+                                ability_data = ["Magic Reflection", "enemy", "1T"]
                             else:
                                 return
                         if counter == 5:
@@ -14652,55 +14547,55 @@ class GameFrame(tk.Frame):
                                 champion5_rp = champion5_rp - magic_reflection_requirements[0]
                                 magic_reflection_requirements[1] = magic_reflection_requirements[2]
                                 champion5_rp = champion5_rp + magic_reflection_requirements[3]
-                                ability_data = ["Magic Reflection", "ally", "1T"]
+                                ability_data = ["Magic Reflection", "enemy", "1T"]
                             else:
                                 return
                     counter += 1
             else:
                 return
-        elif ability_name == "Evasive Manoeuvres":
-            global evasive_manoeuvres_requirements
-            if evasive_manoeuvres_requirements[1] == 0:
+        elif ability_name == "Evasive Manueuvres":
+            global evasive_manueuvres_requirements
+            if evasive_manueuvres_requirements[1] == 0:
                 for character in CHAMPION_LIST:
                     if character == MASTER_FENCER.title:
                         if counter == 1:
-                            if evasive_manoeuvres_requirements[0] <= champion1_rp:
-                                champion1_rp = champion1_rp - evasive_manoeuvres_requirements[0]
-                                evasive_manoeuvres_requirements[1] = evasive_manoeuvres_requirements[2]
-                                champion1_rp = champion1_rp + evasive_manoeuvres_requirements[3]
-                                ability_data = ["Evasive Manoeuvres", "self"]
+                            if evasive_manueuvres_requirements[0] <= champion1_rp:
+                                champion1_rp = champion1_rp - evasive_manueuvres_requirements[0]
+                                evasive_manueuvres_requirements[1] = evasive_manueuvres_requirements[2]
+                                champion1_rp = champion1_rp + evasive_manueuvres_requirements[3]
+                                ability_data = ["Evasive Manueuvres", "self"]
                             else:
                                 return
                         if counter == 2:
-                            if evasive_manoeuvres_requirements[0] <= champion2_rp:
-                                champion2_rp = champion2_rp - evasive_manoeuvres_requirements[0]
-                                evasive_manoeuvres_requirements[1] = evasive_manoeuvres_requirements[2]
-                                champion2_rp = champion2_rp + evasive_manoeuvres_requirements[3]
-                                ability_data = ["Evasive Manoeuvres", "self"]
+                            if evasive_manueuvres_requirements[0] <= champion2_rp:
+                                champion2_rp = champion2_rp - evasive_manueuvres_requirements[0]
+                                evasive_manueuvres_requirements[1] = evasive_manueuvres_requirements[2]
+                                champion2_rp = champion2_rp + evasive_manueuvres_requirements[3]
+                                ability_data = ["Evasive Manueuvres", "self"]
                             else:
                                 return
                         if counter == 3:
-                            if evasive_manoeuvres_requirements[0] <= champion3_rp:
-                                champion3_rp = champion3_rp - evasive_manoeuvres_requirements[0]
-                                evasive_manoeuvres_requirements[1] = evasive_manoeuvres_requirements[2]
-                                champion3_rp = champion3_rp + evasive_manoeuvres_requirements[3]
-                                ability_data = ["Evasive Manoeuvres", "self"]
+                            if evasive_manueuvres_requirements[0] <= champion3_rp:
+                                champion3_rp = champion3_rp - evasive_manueuvres_requirements[0]
+                                evasive_manueuvres_requirements[1] = evasive_manueuvres_requirements[2]
+                                champion3_rp = champion3_rp + evasive_manueuvres_requirements[3]
+                                ability_data = ["Evasive Manueuvres", "self"]
                             else:
                                 return
                         if counter == 4:
-                            if evasive_manoeuvres_requirements[0] <= champion4_rp:
-                                champion4_rp = champion4_rp - evasive_manoeuvres_requirements[0]
-                                evasive_manoeuvres_requirements[1] = evasive_manoeuvres_requirements[2]
-                                champion4_rp = champion4_rp + evasive_manoeuvres_requirements[3]
-                                ability_data = ["Evasive Manoeuvres", "self"]
+                            if evasive_manueuvres_requirements[0] <= champion4_rp:
+                                champion4_rp = champion4_rp - evasive_manueuvres_requirements[0]
+                                evasive_manueuvres_requirements[1] = evasive_manueuvres_requirements[2]
+                                champion4_rp = champion4_rp + evasive_manueuvres_requirements[3]
+                                ability_data = ["Evasive Manueuvres", "self"]
                             else:
                                 return
                         if counter == 5:
-                            if evasive_manoeuvres_requirements[0] <= champion5_rp:
-                                champion5_rp = champion5_rp - evasive_manoeuvres_requirements[0]
-                                evasive_manoeuvres_requirements[1] = evasive_manoeuvres_requirements[2]
-                                champion5_rp = champion5_rp + evasive_manoeuvres_requirements[3]
-                                ability_data = ["Evasive Manoeuvres", "self"]
+                            if evasive_manueuvres_requirements[0] <= champion5_rp:
+                                champion5_rp = champion5_rp - evasive_manueuvres_requirements[0]
+                                evasive_manueuvres_requirements[1] = evasive_manueuvres_requirements[2]
+                                champion5_rp = champion5_rp + evasive_manueuvres_requirements[3]
+                                ability_data = ["Evasive Manueuvres", "self"]
                             else:
                                 return
                     counter += 1
@@ -17054,6 +16949,47 @@ class GameFrame(tk.Frame):
                 else:
                     self.apply_stun(5, 3)
         elif ability_data[0] == "Bloodthirst":
+            temp_ability_data = ability_data[3]
+            point = 0
+            if AI_SPAWNED == 1:
+                if BARBARIAN.title in ai1_attack_intention:
+                    point += 1
+            if AI_SPAWNED == 2:
+                if BARBARIAN.title in ai1_attack_intention:
+                    point += 1
+                if BARBARIAN.title in ai2_attack_intention:
+                    point += 1
+            if AI_SPAWNED == 3:
+                if BARBARIAN.title in ai1_attack_intention:
+                    point += 1
+                if BARBARIAN.title in ai2_attack_intention:
+                    point += 1
+                if BARBARIAN.title in ai3_attack_intention:
+                    point += 1
+            if AI_SPAWNED == 4:
+                if BARBARIAN.title in ai1_attack_intention:
+                    point += 1
+                if BARBARIAN.title in ai2_attack_intention:
+                    point += 1
+                if BARBARIAN.title in ai3_attack_intention:
+                    point += 1
+                if BARBARIAN.title in ai4_attack_intention:
+                    point += 1
+            if AI_SPAWNED == 5:
+                if BARBARIAN.title in ai1_attack_intention:
+                    point += 1
+                if BARBARIAN.title in ai2_attack_intention:
+                    point += 1
+                if BARBARIAN.title in ai3_attack_intention:
+                    point += 1
+                if BARBARIAN.title in ai4_attack_intention:
+                    point += 1
+                if BARBARIAN.title in ai5_attack_intention:
+                    point += 1
+            if point > 0:
+                ability_data[3] = ability_data[3] * (1 +(0.2 * point))
+            else:
+                ability_data[3] = ability_data[3]
             if 1 in target_list:
                 ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1))
                 for champions in CHAMPION_LIST:
@@ -17179,7 +17115,49 @@ class GameFrame(tk.Frame):
                             champion5_hp = champion5_hp + math.ceil(math.ceil(ability_data[3] * self.check_brittle(5)) / 2)
                             if champion5_hp > CHAMPION5_HP:
                                 champion5_hp = CHAMPION5_HP
+            ability_data[3] = temp_ability_data
         elif ability_data[0] == "Pulverize":
+            temp_ability_data = ability_data[3]
+            point = 0
+            if AI_SPAWNED == 1:
+                if BARBARIAN.title in ai1_attack_intention:
+                    point += 1
+            if AI_SPAWNED == 2:
+                if BARBARIAN.title in ai1_attack_intention:
+                    point += 1
+                if BARBARIAN.title in ai2_attack_intention:
+                    point += 1
+            if AI_SPAWNED == 3:
+                if BARBARIAN.title in ai1_attack_intention:
+                    point += 1
+                if BARBARIAN.title in ai2_attack_intention:
+                    point += 1
+                if BARBARIAN.title in ai3_attack_intention:
+                    point += 1
+            if AI_SPAWNED == 4:
+                if BARBARIAN.title in ai1_attack_intention:
+                    point += 1
+                if BARBARIAN.title in ai2_attack_intention:
+                    point += 1
+                if BARBARIAN.title in ai3_attack_intention:
+                    point += 1
+                if BARBARIAN.title in ai4_attack_intention:
+                    point += 1
+            if AI_SPAWNED == 5:
+                if BARBARIAN.title in ai1_attack_intention:
+                    point += 1
+                if BARBARIAN.title in ai2_attack_intention:
+                    point += 1
+                if BARBARIAN.title in ai3_attack_intention:
+                    point += 1
+                if BARBARIAN.title in ai4_attack_intention:
+                    point += 1
+                if BARBARIAN.title in ai5_attack_intention:
+                    point += 1
+            if point > 0:
+                ability_data[3] = ability_data[3] * (1 +(0.2 * point))
+            else:
+                ability_data[3] = ability_data[3]
             if 1 in target_list:
                 ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1))
                 self.apply_taunt(1, BARBARIAN.title, 1)
@@ -17195,6 +17173,7 @@ class GameFrame(tk.Frame):
             if 5 in target_list:
                 ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5))
                 self.apply_taunt(5, BARBARIAN.title, 1)
+            ability_data[3] = temp_ability_data
         elif ability_data[0] == "Shield Bash":
             if 1 in target_list:
                 ai1_hp = ai1_hp -math.ceil(ability_data[3] * self.check_brittle(1))
@@ -17225,6 +17204,7 @@ class GameFrame(tk.Frame):
         elif ability_data[0] == "Flanking Strikes":
             if 1 in target_list:
                 ai1_hp = ai1_hp -math.ceil(ability_data[3] * self.check_brittle(1))
+                #Add dodge chance increase with a enemy attack intention tracker here
             if 2 in target_list:
                 ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2))
             if 3 in target_list:
@@ -17236,19 +17216,71 @@ class GameFrame(tk.Frame):
         elif ability_data[0] == "Riposte":
             if 1 in target_list:
                 ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1))
-                self.apply_stun(1, 1)
+                #Deal damage back to the enemy if Fencer is in their attack intention, then increase dodge chance
             if 2 in target_list:
                 ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2))
-                self.apply_stun(2, 1)
             if 3 in target_list:
                 ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3))
-                self.apply_stun(3, 1)
             if 4 in target_list:
                 ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4))
-                self.apply_stun(4, 1)
             if 5 in target_list:
                 ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5))
-                self.apply_stun(5, 1)
+        elif ability_data[0] == "Magic Reflection":
+            if 1 in target_list:
+                if ai1_attack_intention != "STUNNED":
+                    if ai1_attack[3] == "Magic":
+                        ai1_hp = ai1_hp - ai1_attack[1]
+                        if ai1_hp < 0:
+                            ai1_hp = 0
+                        self.apply_stun(1, 1)
+                    else:
+                        ai1_hp = ai1_hp
+                else:
+                    ai1_hp = ai1_hp
+            if 2 in target_list:
+                if ai2_attack_intention != "STUNNED":
+                    if ai2_attack[3] == "Magic":
+                        ai2_hp = ai2_hp - ai2_attack[1]
+                        if ai2_hp < 0:
+                            ai2_hp = 0
+                        self.apply_stun(2, 1)
+                    else:
+                        ai2_hp = ai2_hp
+                else:
+                    ai2_hp = ai2_hp
+            if 3 in target_list:
+                if ai3_attack_intention != "STUNNED":
+                    if ai3_attack[3] == "Magic":
+                        ai3_hp = ai3_hp - ai3_attack[1]
+                        if ai3_hp < 0:
+                            ai3_hp = 0
+                        self.apply_stun(3, 1)
+                    else:
+                        ai3_hp = ai3_hp
+                else:
+                    ai3_hp = ai3_hp
+            if 4 in target_list:
+                if ai4_attack_intention != "STUNNED":
+                    if ai4_attack[3] == "Magic":
+                        ai4_hp = ai4_hp - ai4_attack[1]
+                        if ai4_hp < 0:
+                            ai4_hp = 0
+                        self.apply_stun(4, 1)
+                    else:
+                        ai4_hp = ai4_hp
+                else:
+                    ai4_hp = ai4_hp
+            if 5 in target_list:
+                if ai5_attack_intention != "STUNNED":
+                    if ai5_attack[3] == "Magic":
+                        ai5_hp = ai5_hp - ai5_attack[1]
+                        if ai5_hp < 0:
+                            ai5_hp = 0
+                        self.apply_stun(5, 1)
+                    else:
+                        ai5_hp = ai5_hp
+                else:
+                    ai5_hp = ai5_hp
         elif ability_data[0] == "Raging Blow":
             if reckless_flurry_buff != 0:
                 if AI_SPAWNED == 1:
@@ -18985,22 +19017,6 @@ class GameFrame(tk.Frame):
             if 5 in target_list:
                 champion5_immunity.append("Block")
                 champion5_statuses.append("Immunity: Block")
-        elif ability_data[0] == "Magic Reflection":
-            if 1 in target_list:
-                champion1_immunity.append("Magic Reflection")
-                champion1_statuses.append("Immunity: Magic Reflection")
-            if 2 in target_list:
-                champion2_immunity.append("Magic Reflection")
-                champion2_statuses.append("Immunity: Magic Reflection")
-            if 3 in target_list:
-                champion3_immunity.append("Magic Reflection")
-                champion3_statuses.append("Immunity: Magic Reflection")
-            if 4 in target_list:
-                champion4_immunity.append("Magic Reflection")
-                champion4_statuses.append("Immunity: Magic Reflection")
-            if 5 in target_list:
-                champion5_immunity.append("Magic Reflection")
-                champion5_statuses.append("Immunity: Magic Reflection")
         elif ability_data[0] == "Barbed Bush Armour":
             global champion1_thorns, champion2_thorns, champion3_thorns, champion4_thorns, champion5_thorns
             if 1 in target_list:
@@ -19460,28 +19476,28 @@ class GameFrame(tk.Frame):
                         if champion5_hp > CHAMPION5_HP:
                             champion5_hp = CHAMPION5_HP
                         break
-        elif ability_data[0] == "Evasive Manoeuvres":
+        elif ability_data[0] == "Evasive Manueuvres":
             for character in CHAMPION_LIST:
                 counter += 1
                 if character == MASTER_FENCER.title:
                     if counter == 1:
-                        champion1_immunity.append("Evasive Manoeuvres")
+                        champion1_immunity.append("Evasive Manueuvres")
                         champion1_statuses.append("Immunity: Evasion")
                         break
                     if counter == 2:
-                        champion2_immunity.append("Evasive Manoeuvres")
+                        champion2_immunity.append("Evasive Manueuvres")
                         champion2_statuses.append("Immunity: Evasion")
                         break
                     if counter == 3:
-                        champion3_immunity.append("Evasive Manoeuvres")
+                        champion3_immunity.append("Evasive Manueuvres")
                         champion3_statuses.append("Immunity: Evasion")
                         break
                     if counter == 4:
-                        champion4_immunity.append("Evasive Manoeuvres")
+                        champion4_immunity.append("Evasive Manueuvres")
                         champion4_statuses.append("Immunity: Evasion")
                         break
                     if counter == 5:
-                        champion5_immunity.append("Evasive Manoeuvres")
+                        champion5_immunity.append("Evasive Manueuvres")
                         champion5_statuses.append("Immunity: Evasion")
                         break
         elif ability_data[0] == "Enrage":
@@ -20776,19 +20792,19 @@ class GameFrame(tk.Frame):
                     special_button_text_list.append(special_text)
                 else:
                     special_button_text_list.append(special_name)
-            elif special_name == "Evasive Manoeuvres":
-                if evasive_manoeuvres_requirements[0] > 0:
-                    if evasive_manoeuvres_requirements[1] > 0:
-                        special_text = "Evasive Manoeuvres ({})\n{} {}".format(evasive_manoeuvres_requirements[1],
+            elif special_name == "Evasive Manueuvres":
+                if evasive_manueuvres_requirements[0] > 0:
+                    if evasive_manueuvres_requirements[1] > 0:
+                        special_text = "Evasive Manueuvres ({})\n{} {}".format(evasive_manueuvres_requirements[1],
                                                                              MASTER_FENCER.rp_name,
-                                                                             evasive_manoeuvres_requirements[0])
+                                                                             evasive_manueuvres_requirements[0])
                         special_button_text_list.append(special_text)
                     else:
-                        special_text = "Evasive Manoeuvres\n{} {}".format(MASTER_FENCER.rp_name,
-                                                                        evasive_manoeuvres_requirements[0])
+                        special_text = "Evasive Manueuvres\n{} {}".format(MASTER_FENCER.rp_name,
+                                                                        evasive_manueuvres_requirements[0])
                         special_button_text_list.append(special_text)
-                elif evasive_manoeuvres_requirements[1] > 0:
-                    special_text = "Evasive Manoeuvres ({})".format(evasive_manoeuvres_requirements[1])
+                elif evasive_manueuvres_requirements[1] > 0:
+                    special_text = "Evasive Manueuvres ({})".format(evasive_manueuvres_requirements[1])
                     special_button_text_list.append(special_text)
                 else:
                     special_button_text_list.append(special_name)
