@@ -75,9 +75,9 @@ BLOODMANCER = Champions(1000, 0, 400, 'Flynn, the Bloodmancer', "Bloodmancer", "
 
 #Mixed
 #PLD
-PALADIN = Champions(1000, 0, 400, 'Olig, the Paladin', "Paladin", "PLD", "null", ["Holy Wrath", "Righteous Blow"], ["Crusade", "Damnation"], "Holy Auras")
+PALADIN = Champions(1000, 0, 400, 'Olig, the Paladin', "Paladin", "PLD", "null", ["Holy Wrath", "Righteous Blow", "Crusade"], ["Damnation"], "Holy Auras")
 #LGR
-LEGION_RANGER = Champions(1000, 0, 400, 'Brad, the Legion Ranger', "Ranger", "LGR", "null", ["Steady Shot", "Power Opt"], ["Equip Iron-cast Arrows", "Equip Tracker-tipped Arrows"], "Arrow Tips")
+LEGION_RANGER = Champions(1000, 0, 400, 'Brad, the Legion Ranger', "Ranger", "LGR", "null", ["Steady Aim", "Power shot", "Multi-shot", "Ricochet Shot"], ["Multi-shot", "Ricochet Shot"], "Arrow Tips")
 #MGM
 MAGNETIMANCER = Champions(1000, 0, 400, "Kel'ther, the Magnetimancer ", "Magnetimancer", "MGM", "null", ["Chain Bolts", "Electrical Expulsion"], ["Energise", "Superconductor"], "Polarisation")
 #PWC
@@ -1411,14 +1411,15 @@ class GameFrame(tk.Frame):
         champion3_enhardened_nerves = 0
         champion4_enhardened_nerves = 0
         champion5_enhardened_nerves = 0
-        global holy_wrath_requirements, righteous_blow_requirements, crusade_requirements, damnation_requirements, paladin_aura, \
-            steady_shot_requirements, power_opt_requirements, equip_iron_cast_arrows_requirements, equip_tracker_tipped_arrows_requirements, current_arrow_type, \
+        global holy_wrath_requirements, righteous_blow_requirements, crusade_requirements, damnation_requirements, paladin_aura, holywrath_multiplier, \
+            steady_aim_requirements, power_shot_requirements, multi_shot_requirements, ricochet_shot_requirements, current_arrow_type, \
             chain_bolts_requirements, electrical_expulsion_requirements, energise_requirements, superconductor_requirements, energised, \
             muscle_enlarger_requirements, mistic_bloom_requirements, power_surge_requirements, full_potential_requirements, \
             champion1_muscleEnlarger, champion2_muscleEnlarger, champion3_muscleEnlarger, champion4_muscleEnlarger, champion5_muscleEnlarger, \
             champion1_fullPotential, champion2_fullPotential, champion3_fullPotential, champion4_fullPotential, champion5_fullPotential
         # Paladin Abilities
         holy_wrath_requirements = [0, 0, 0, 0]
+        holywrath_multiplier = 1
         righteous_blow_requirements = [0, 0, 2, 0]
         crusade_requirements = [0, 0, 2, 0]
         damnation_requirements = [0, 0, 2, 0]
@@ -1427,10 +1428,10 @@ class GameFrame(tk.Frame):
         # 2 = Protection
         paladin_aura = 1
         # Legion Ranger Abilitites
-        steady_shot_requirements = [0, 0, 0, 0]
-        power_opt_requirements = [0, 0, 2, 0]
-        equip_iron_cast_arrows_requirements = [0, 0, 2, 0]
-        equip_tracker_tipped_arrows_requirements = [0, 0, 2, 0]
+        steady_aim_requirements = [0, 0, 0, 0]
+        power_shot_requirements = [0, 0, 2, 0]
+        multi_shot_requirements = [0, 0, 4, 0]
+        ricochet_shot_requirements = [0, 0, 6, 0]
         current_arrow_type = "Iron-cast"
         # Magnetimancer Abilities
         chain_bolts_requirements = [0, 0, 0, 0]
@@ -1693,16 +1694,17 @@ class GameFrame(tk.Frame):
         global new_round, new_game, from_attack_button, from_special_button, from_turn_choice, from_end_of_turn, combat_results, current_floor_label, teams_current_condition_label, floor_room_modifiers_label, \
             damage_modifier, health_modifier, current_turn, ai1_stun, ai2_stun, ai3_stun, ai4_stun, ai5_stun, ai1_taunt, ai2_taunt, ai3_taunt, ai4_taunt, ai5_taunt, \
             ai1_brittle, ai2_brittle, ai3_brittle, ai4_brittle, ai5_brittle, ai1_weakness, ai2_weakness, ai3_weakness, ai4_weakness, ai5_weakness, \
-            ai1_burnDot, ai2_burnDot, ai3_burnDot, ai4_burnDot, ai5_burnDot, ai1_SerraSlashDot, ai2_SerraSlashDot, ai3_SerraSlashDot, \
-            ai4_SerraSlashDot, ai5_SerraSlashDot, ai1_garroteDot, ai2_garroteDot, ai3_garroteDot, ai4_garroteDot, ai5_garroteDot, \
-            ai1_eviscerDot, ai2_EviscerDot, ai3_EviscerDot, ai4_EviscerDot, ai5_EviscerDot, \
+            ai1_burnDot, ai2_burnDot, ai3_burnDot, ai4_burnDot, ai5_burnDot, ai1_serraSlashDot, ai2_serraSlashDot, ai3_serraSlashDot, \
+            ai4_serraSlashDot, ai5_serraSlashDot, ai1_garroteDot, ai2_garroteDot, ai3_garroteDot, ai4_garroteDot, ai5_garroteDot, \
+            ai1_eviscerDot, ai2_eviscerDot, ai3_eviscerDot, ai4_eviscerDot, ai5_eviscerDot, \
             ai1_statuses, ai2_statuses, ai3_statuses, ai4_statuses, ai5_statuses, \
             ai1_thornsDot, ai2_thornsDot, ai3_thornsDot, ai4_thornsDot, ai5_thornsDot, \
             ai1_rottingDot, ai2_rottingDot, ai3_rottingDot, ai4_rottingDot, ai5_rottingDot, \
+            ai1_damnation, ai2_damnation, ai3_damnation, ai4_damnation, ai5_damnation, \
+            ai1_charged, ai2_charged, ai3_charged, ai4_charged, ai5_charged, \
+            ai1_superconducted, ai2_superconducted, ai3_superconducted, ai4_superconducted, ai5_superconducted, \
             ai1_shimmerDot, ai2_shimmerDot, ai3_shimmerDot, ai4_shimmerDot, ai5_shimmerDot, \
             ai1_divineDot, ai2_divineDot, ai3_divineDot, ai4_divineDot, ai5_divineDot, \
-            ai1_charged, ai2_charged, ai3_charged, ai4_charged, ai5_charged, \
-            ai1_superconductor, ai2_superconductor, ai3_superconductor, ai4_superconductor, ai5_superconductor, \
             ai1_attack_intention, ai2_attack_intention, ai3_attack_intention, ai4_attack_intention, ai5_attack_intention, \
             champion1_turnover, champion2_turnover, champion3_turnover, champion4_turnover, champion5_turnover, target_to_attack, target_to_special
         new_round = 1
@@ -1761,16 +1763,16 @@ class GameFrame(tk.Frame):
         ai3_burnDot = [0, 0]
         ai4_burnDot = [0, 0]
         ai5_burnDot = [0, 0]
-        ai1_SerraSlashDot = [0, 0]
-        ai2_SerraSlashDot = [0, 0]
-        ai3_SerraSlashDot = [0, 0]
-        ai4_SerraSlashDot = [0, 0]
-        ai5_SerraSlashDot = [0, 0]
+        ai1_serraSlashDot = [0, 0]
+        ai2_serraSlashDot = [0, 0]
+        ai3_serraSlashDot = [0, 0]
+        ai4_serraSlashDot = [0, 0]
+        ai5_serraSlashDot = [0, 0]
         ai1_eviscerDot = [0, 0]
-        ai2_EviscerDot = [0, 0]
-        ai3_EviscerDot = [0, 0]
-        ai4_EviscerDot = [0, 0]
-        ai5_EviscerDot = [0, 0]
+        ai2_eviscerDot = [0, 0]
+        ai3_eviscerDot = [0, 0]
+        ai4_eviscerDot = [0, 0]
+        ai5_eviscerDot = [0, 0]
         ai1_garroteDot = [0, 0]
         ai2_garroteDot = [0, 0]
         ai3_garroteDot = [0, 0]
@@ -1791,16 +1793,21 @@ class GameFrame(tk.Frame):
         ai3_divineDot = [0, 0]
         ai4_divineDot = [0, 0]
         ai5_divineDot = [0, 0]
+        ai1_damnation = [0, 0]
+        ai2_damnation = [0, 0]
+        ai3_damnation = [0, 0]
+        ai4_damnation = [0, 0]
+        ai5_damnation = [0, 0]
         ai1_charged = [0, 0]
         ai2_charged = [0, 0]
         ai3_charged = [0, 0]
         ai4_charged = [0, 0]
         ai5_charged = [0, 0]
-        ai1_superconductor = 0
-        ai2_superconductor = 0
-        ai3_superconductor = 0
-        ai4_superconductor = 0
-        ai5_superconductor = 0
+        ai1_superconducted = 0
+        ai2_superconducted = 0
+        ai3_superconducted = 0
+        ai4_superconducted = 0
+        ai5_superconducted = 0
         ai1_statuses = []
         ai2_statuses = []
         ai3_statuses = []
@@ -2264,6 +2271,8 @@ class GameFrame(tk.Frame):
                         dab_display_trigger = 1
                     if paladin_aura == 2:
                         deb_display_trigger = 1
+                    if holywrath_multiplier != 0:
+                        ca_display_trigger = 1
                 if CHAMPION_LIST[0] == LEGION_RANGER.title:
                     effects_list.append(LEGION_RANGER.passive)
                     ca_display_trigger = 1
@@ -2325,6 +2334,9 @@ class GameFrame(tk.Frame):
                             effects_list.append("Blood Boil")
                         if channelling_strength == 1:
                             effects_list.append("Channelling Strength")
+                    if CHAMPION_LIST[0] == PALADIN.title:
+                        if holywrath_multiplier != 0:
+                            effects_list.append("Next Holy Wrath [+{}%]".format(holywrath_multiplier*20))
                     if CHAMPION_LIST[0] == LEGION_RANGER.title:
                         effects_list.append("{}".format(current_arrow_type))
                     if CHAMPION_LIST[0] == SURVIVALIST.title:
@@ -2443,6 +2455,8 @@ class GameFrame(tk.Frame):
                         dab_display_trigger = 1
                     if paladin_aura == 2:
                         deb_display_trigger = 1
+                    if holywrath_multiplier != 0:
+                        ca_display_trigger = 1
                 if CHAMPION_LIST[1] == LEGION_RANGER.title:
                     effects_list.append(LEGION_RANGER.passive)
                     ca_display_trigger = 1
@@ -2504,6 +2518,9 @@ class GameFrame(tk.Frame):
                             effects_list.append("Blood Boil")
                         if channelling_strength == 1:
                             effects_list.append("Channelling Strength")
+                    if CHAMPION_LIST[1] == PALADIN.title:
+                        if holywrath_multiplier != 0:
+                            effects_list.append("Next Holy Wrath [+{}%]".format(holywrath_multiplier*20))
                     if CHAMPION_LIST[1] == LEGION_RANGER.title:
                         effects_list.append("{}".format(current_arrow_type))
                     if CHAMPION_LIST[1] == SURVIVALIST.title:
@@ -2622,6 +2639,8 @@ class GameFrame(tk.Frame):
                         dab_display_trigger = 1
                     if paladin_aura == 2:
                         deb_display_trigger = 1
+                    if holywrath_multiplier != 0:
+                        ca_display_trigger = 1
                 if CHAMPION_LIST[2] == LEGION_RANGER.title:
                     effects_list.append(LEGION_RANGER.passive)
                     ca_display_trigger = 1
@@ -2683,6 +2702,9 @@ class GameFrame(tk.Frame):
                             effects_list.append("Blood Boil")
                         if channelling_strength == 1:
                             effects_list.append("Channelling Strength")
+                    if CHAMPION_LIST[2] == PALADIN.title:
+                        if holywrath_multiplier != 0:
+                            effects_list.append("Next Holy Wrath [+{}%]".format(holywrath_multiplier*20))
                     if CHAMPION_LIST[2] == LEGION_RANGER.title:
                         effects_list.append("{}".format(current_arrow_type))
                     if CHAMPION_LIST[2] == SURVIVALIST.title:
@@ -2801,6 +2823,8 @@ class GameFrame(tk.Frame):
                         dab_display_trigger = 1
                     if paladin_aura == 2:
                         deb_display_trigger = 1
+                    if holywrath_multiplier != 0:
+                        ca_display_trigger = 1
                 if CHAMPION_LIST[3] == LEGION_RANGER.title:
                     effects_list.append(LEGION_RANGER.passive)
                     ca_display_trigger = 1
@@ -2862,6 +2886,9 @@ class GameFrame(tk.Frame):
                             effects_list.append("Blood Boil")
                         if channelling_strength == 1:
                             effects_list.append("Channelling Strength")
+                    if CHAMPION_LIST[3] == PALADIN.title:
+                        if holywrath_multiplier != 0:
+                            effects_list.append("Next Holy Wrath [+{}%]".format(holywrath_multiplier*20))
                     if CHAMPION_LIST[3] == LEGION_RANGER.title:
                         effects_list.append("{}".format(current_arrow_type))
                     if CHAMPION_LIST[3] == SURVIVALIST.title:
@@ -2980,6 +3007,8 @@ class GameFrame(tk.Frame):
                         dab_display_trigger = 1
                     if paladin_aura == 2:
                         deb_display_trigger = 1
+                    if holywrath_multiplier != 0:
+                        ca_display_trigger = 1
                 if CHAMPION_LIST[4] == LEGION_RANGER.title:
                     effects_list.append(LEGION_RANGER.passive)
                     ca_display_trigger = 1
@@ -3041,6 +3070,9 @@ class GameFrame(tk.Frame):
                             effects_list.append("Blood Boil")
                         if channelling_strength == 1:
                             effects_list.append("Channelling Strength")
+                    if CHAMPION_LIST[4] == PALADIN.title:
+                        if holywrath_multiplier != 0:
+                            effects_list.append("Next Holy Wrath [+{}%]".format(holywrath_multiplier*20))
                     if CHAMPION_LIST[4] == LEGION_RANGER.title:
                         effects_list.append("{}".format(current_arrow_type))
                     if CHAMPION_LIST[4] == SURVIVALIST.title:
@@ -3115,7 +3147,7 @@ class GameFrame(tk.Frame):
                     db_display_trigger = 1
                 elif ai1_charged[1] != 0:
                     db_display_trigger = 1
-                if ai1_SerraSlashDot[1] != 0:
+                if ai1_serraSlashDot[1] != 0:
                     dot_display_trigger = 1
                 if ai1_eviscerDot[1] != 0:
                     dot_display_trigger = 1
@@ -3144,8 +3176,6 @@ class GameFrame(tk.Frame):
                     dtd_display_trigger = 1
                 if ai1_uc_db != 0:
                     dtd_display_trigger = 1
-                if ai1_holywrath_db != 0:
-                    dtd_display_trigger = 1
                 if ai1_superconducted != 0:
                     dtd_display_trigger = 1
                 if ai1_weakness != 0:
@@ -3161,17 +3191,19 @@ class GameFrame(tk.Frame):
                             effects_list.append("Stunned ({})".format(ai1_stun))
                         if status_effect == "Taunted":
                             effects_list.append("Taunted: {} ({})".format(ai1_taunt[0], ai1_taunt[1]))
-                        if status_effect == "Charged: Positive":
-                            effects_list.append("Charged: Positive ({})".format(ai1_charged[0]))
-                        if status_effect == "Charged: Negative":
-                            effects_list.append("Charged: Negative ({})".format(ai1_charged[1]))
+                    if ai1_charged[0] != 0:
+                        effects_list.append("Charged: Positive ({})".format(ai1_charged[0]))
+                    if ai1_charged[1] != 0:
+                        effects_list.append("Charged: Negative ({})".format(ai1_charged[1]))
                 if dot_display_trigger == 1:
                     effects_list.append(":Damage Overtime:")
                     for status_effect in ai1_statuses:
+                        if status_effect == "Exploding":
+                            effects_list.append("Damnation Explosion[{}] Detonation in {}".format(ai1_damnation[0], ai1_damnation[1]))
                         if status_effect == "Thorns":
                             effects_list.append("Thorns[{}] [#{}]".format(ai1_thornsDot[0]*ai1_thornsDot[1], ai1_thornsDot[1]))
                         if status_effect == "Serrated":
-                            effects_list.append("Serrated[{}] ({})".format(ai1_SerraSlashDot[0], ai1_SerraSlashDot[1]))
+                            effects_list.append("Serrated[{}] ({})".format(ai1_serraSlashDot[0], ai1_serraSlashDot[1]))
                         if status_effect == "Eviscerated":
                             effects_list.append("Eviscerated[{}] ({})".format(ai1_eviscerDot[0], ai1_eviscerDot[1]))
                         if status_effect == "Garroted":
@@ -3197,8 +3229,6 @@ class GameFrame(tk.Frame):
                             effects_list.append("Next Hard Hitter or Upper Cut [+25%]")
                         if status_effect == "UpperCutDB":
                             effects_list.append("Next Hard Hitter or Wide Swip [+50%]")
-                        if status_effect == "HolyWrathDB":
-                            effects_list.append("Next Holy Wrath [+20%]")
                         if status_effect == "SuperConducted":
                             effects_list.append("Charge Explosions [+100%] ({})".format(ai1_superconducted))
                 if ddd_display_trigger == 1:
@@ -3219,7 +3249,7 @@ class GameFrame(tk.Frame):
                     db_display_trigger = 1
                 elif ai2_charged[1] != 0:
                     db_display_trigger = 1
-                if ai2_SerraSlashDot[1] != 0:
+                if ai2_serraSlashDot[1] != 0:
                     dot_display_trigger = 1
                 if ai2_eviscerDot[1] != 0:
                     dot_display_trigger = 1
@@ -3248,8 +3278,6 @@ class GameFrame(tk.Frame):
                     dtd_display_trigger = 1
                 if ai2_uc_db != 0:
                     dtd_display_trigger = 1
-                if ai2_holywrath_db != 0:
-                    dtd_display_trigger = 1
                 if ai2_superconducted != 0:
                     dtd_display_trigger = 1
                 if ai2_weakness != 0:
@@ -3265,17 +3293,19 @@ class GameFrame(tk.Frame):
                             effects_list.append("Stunned ({})".format(ai2_stun))
                         if status_effect == "Taunted":
                             effects_list.append("Taunted: {} ({})".format(ai2_taunt[0], ai2_taunt[1]))
-                        if status_effect == "Charged: Positive":
-                            effects_list.append("Charged: Positive ({})".format(ai2_charged[0]))
-                        if status_effect == "Charged: Negative":
-                            effects_list.append("Charged: Negative ({})".format(ai2_charged[1]))
+                    if ai2_charged[0] != 0:
+                        effects_list.append("Charged: Positive ({})".format(ai2_charged[0]))
+                    if ai2_charged[1] != 0:
+                        effects_list.append("Charged: Negative ({})".format(ai2_charged[1]))
                 if dot_display_trigger == 1:
                     effects_list.append(":Damage Overtime:")
                     for status_effect in ai2_statuses:
+                        if status_effect == "Exploding":
+                            effects_list.append("Damnation Explosion[{}] Detonation in {}".format(ai2_damnation[0], ai2_damnation[1]))
                         if status_effect == "Thorns":
                             effects_list.append("Thorns[{}] [#{}]".format(ai2_thornsDot[0]*ai2_thornsDot[1], ai2_thornsDot[1]))
                         if status_effect == "Serrated":
-                            effects_list.append("Serrated[{}] ({})".format(ai2_SerraSlashDot[0], ai2_SerraSlashDot[1]))
+                            effects_list.append("Serrated[{}] ({})".format(ai2_serraSlashDot[0], ai2_serraSlashDot[1]))
                         if status_effect == "Eviscerated":
                             effects_list.append("Eviscerated[{}] ({})".format(ai2_eviscerDot[0], ai2_eviscerDot[1]))
                         if status_effect == "Garroted":
@@ -3301,8 +3331,6 @@ class GameFrame(tk.Frame):
                             effects_list.append("Next Hard Hitter or Upper Cut [+25%]")
                         if status_effect == "UpperCutDB":
                             effects_list.append("Next Hard Hitter or Wide Swip [+25%]")
-                        if status_effect == "HolyWrathDB":
-                            effects_list.append("Next Holy Wrath [+20%]")
                         if status_effect == "SuperConducted":
                             effects_list.append("Charge Explosions [+100%] ({})".format(ai2_superconducted))
                 if ddd_display_trigger == 1:
@@ -3323,7 +3351,7 @@ class GameFrame(tk.Frame):
                     db_display_trigger = 1
                 elif ai3_charged[1] != 0:
                     db_display_trigger = 1
-                if ai3_SerraSlashDot[1] != 0:
+                if ai3_serraSlashDot[1] != 0:
                     dot_display_trigger = 1
                 if ai3_eviscerDot[1] != 0:
                     dot_display_trigger = 1
@@ -3352,8 +3380,6 @@ class GameFrame(tk.Frame):
                     dtd_display_trigger = 1
                 if ai3_uc_db != 0:
                     dtd_display_trigger = 1
-                if ai3_holywrath_db != 0:
-                    dtd_display_trigger = 1
                 if ai3_superconducted != 0:
                     dtd_display_trigger = 1
                 if ai3_weakness != 0:
@@ -3369,17 +3395,19 @@ class GameFrame(tk.Frame):
                             effects_list.append("Stunned ({})".format(ai3_stun))
                         if status_effect == "Taunted":
                             effects_list.append("Taunted: {} ({})".format(ai3_taunt[0], ai3_taunt[1]))
-                        if status_effect == "Charged: Positive":
-                            effects_list.append("Charged: Positive ({})".format(ai3_charged[0]))
-                        if status_effect == "Charged: Negative":
-                            effects_list.append("Charged: Negative ({})".format(ai3_charged[1]))
+                    if ai3_charged[0] != 0:
+                        effects_list.append("Charged: Positive ({})".format(ai3_charged[0]))
+                    if ai3_charged[1] != 0:
+                        effects_list.append("Charged: Negative ({})".format(ai3_charged[1]))
                 if dot_display_trigger == 1:
                     effects_list.append(":Damage Overtime:")
                     for status_effect in ai3_statuses:
+                        if status_effect == "Exploding":
+                            effects_list.append("Damnation Explosion[{}] Detonation in {}".format(ai3_damnation[0], ai3_damnation[1]))
                         if status_effect == "Thorns":
                             effects_list.append("Thorns[{}] [#{}]".format(ai3_thornsDot[0]*ai3_thornsDot[1], ai3_thornsDot[1]))
                         if status_effect == "Serrated":
-                            effects_list.append("Serrated[{}] ({})".format(ai3_SerraSlashDot[0], ai3_SerraSlashDot[1]))
+                            effects_list.append("Serrated[{}] ({})".format(ai3_serraSlashDot[0], ai3_serraSlashDot[1]))
                         if status_effect == "Eviscerated":
                             effects_list.append("Eviscerated[{}] ({})".format(ai3_eviscerDot[0], ai3_eviscerDot[1]))
                         if status_effect == "Garroted":
@@ -3405,8 +3433,6 @@ class GameFrame(tk.Frame):
                             effects_list.append("Next Hard Hitter or Upper Cut [+25%]")
                         if status_effect == "UpperCutDB":
                             effects_list.append("Next Hard Hitter or Wide Swip [+25%]")
-                        if status_effect == "HolyWrathDB":
-                            effects_list.append("Next Holy Wrath [+20%]")
                         if status_effect == "SuperConducted":
                             effects_list.append("Charge Explosions [+100%] ({})".format(ai3_superconducted))
                 if ddd_display_trigger == 1:
@@ -3427,7 +3453,7 @@ class GameFrame(tk.Frame):
                     db_display_trigger = 1
                 elif ai4_charged[1] != 0:
                     db_display_trigger = 1
-                if ai4_SerraSlashDot[1] != 0:
+                if ai4_serraSlashDot[1] != 0:
                     dot_display_trigger = 1
                 if ai4_eviscerDot[1] != 0:
                     dot_display_trigger = 1
@@ -3456,8 +3482,6 @@ class GameFrame(tk.Frame):
                     dtd_display_trigger = 1
                 if ai4_uc_db != 0:
                     dtd_display_trigger = 1
-                if ai4_holywrath_db != 0:
-                    dtd_display_trigger = 1
                 if ai4_superconducted != 0:
                     dtd_display_trigger = 1
                 if ai4_weakness != 0:
@@ -3473,17 +3497,19 @@ class GameFrame(tk.Frame):
                             effects_list.append("Stunned ({})".format(ai4_stun))
                         if status_effect == "Taunted":
                             effects_list.append("Taunted: {} ({})".format(ai4_taunt[0], ai4_taunt[1]))
-                        if status_effect == "Charged: Positive":
-                            effects_list.append("Charged: Positive ({})".format(ai4_charged[0]))
-                        if status_effect == "Charged: Negative":
-                            effects_list.append("Charged: Negative ({})".format(ai4_charged[1]))
+                    if ai4_charged[0] != 0:
+                        effects_list.append("Charged: Positive ({})".format(ai4_charged[0]))
+                    if ai4_charged[1] != 0:
+                        effects_list.append("Charged: Negative ({})".format(ai4_charged[1]))
                 if dot_display_trigger == 1:
                     effects_list.append(":Damage Overtime:")
                     for status_effect in ai4_statuses:
+                        if status_effect == "Exploding":
+                            effects_list.append("Damnation Explosion[{}] Detonation in {}".format(ai4_damnation[0], ai4_damnation[1]))
                         if status_effect == "Thorns":
                             effects_list.append("Thorns[{}] [#{}]".format(ai4_thornsDot[0]*ai4_thornsDot[1], ai4_thornsDot[1]))
                         if status_effect == "Serrated":
-                            effects_list.append("Serrated[{}] ({})".format(ai4_SerraSlashDot[0], ai4_SerraSlashDot[1]))
+                            effects_list.append("Serrated[{}] ({})".format(ai4_serraSlashDot[0], ai4_serraSlashDot[1]))
                         if status_effect == "Eviscerated":
                             effects_list.append("Eviscerated[{}] ({})".format(ai4_eviscerDot[0], ai4_eviscerDot[1]))
                         if status_effect == "Garroted":
@@ -3509,8 +3535,6 @@ class GameFrame(tk.Frame):
                             effects_list.append("Next Hard Hitter or Upper Cut [+25%]")
                         if status_effect == "UpperCutDB":
                             effects_list.append("Next Hard Hitter or Wide Swip [+25%]")
-                        if status_effect == "HolyWrathDB":
-                            effects_list.append("Next Holy Wrath [+20%]")
                         if status_effect == "SuperConducted":
                             effects_list.append("Charge Explosions [+100%] ({})".format(ai4_superconducted))
                 if ddd_display_trigger == 1:
@@ -3531,7 +3555,7 @@ class GameFrame(tk.Frame):
                     db_display_trigger = 1
                 elif ai5_charged[1] != 0:
                     db_display_trigger = 1
-                if ai5_SerraSlashDot[1] != 0:
+                if ai5_serraSlashDot[1] != 0:
                     dot_display_trigger = 1
                 if ai5_eviscerDot[1] != 0:
                     dot_display_trigger = 1
@@ -3560,8 +3584,6 @@ class GameFrame(tk.Frame):
                     dtd_display_trigger = 1
                 if ai5_uc_db != 0:
                     dtd_display_trigger = 1
-                if ai5_holywrath_db != 0:
-                    dtd_display_trigger = 1
                 if ai5_superconducted != 0:
                     dtd_display_trigger = 1
                 if ai5_weakness != 0:
@@ -3577,17 +3599,19 @@ class GameFrame(tk.Frame):
                             effects_list.append("Stunned ({})".format(ai5_stun))
                         if status_effect == "Taunted":
                             effects_list.append("Taunted: {} ({})".format(ai5_taunt[0], ai5_taunt[1]))
-                        if status_effect == "Charged: Positive":
-                            effects_list.append("Charged: Positive ({})".format(ai5_charged[0]))
-                        if status_effect == "Charged: Negative":
-                            effects_list.append("Charged: Negative ({})".format(ai5_charged[1]))
+                    if ai5_charged[0] != 0:
+                        effects_list.append("Charged: Positive ({})".format(ai5_charged[0]))
+                    if ai5_charged[1] != 0:
+                        effects_list.append("Charged: Negative ({})".format(ai5_charged[1]))
                 if dot_display_trigger == 1:
                     effects_list.append(":Damage Overtime:")
                     for status_effect in ai5_statuses:
+                        if status_effect == "Exploding":
+                            effects_list.append("Damnation Explosion[{}] Detonation in {}".format(ai5_damnation[0], ai5_damnation[1]))
                         if status_effect == "Thorns":
                             effects_list.append("Thorns[{}] [#{}]".format(ai5_thornsDot[0]*ai5_thornsDot[1], ai5_thornsDot[1]))
                         if status_effect == "Serrated":
-                            effects_list.append("Serrated[{}] ({})".format(ai5_SerraSlashDot[0], ai5_SerraSlashDot[1]))
+                            effects_list.append("Serrated[{}] ({})".format(ai5_serraSlashDot[0], ai5_serraSlashDot[1]))
                         if status_effect == "Eviscerated":
                             effects_list.append("Eviscerated[{}] ({})".format(ai5_eviscerDot[0], ai5_eviscerDot[1]))
                         if status_effect == "Garroted":
@@ -3613,8 +3637,6 @@ class GameFrame(tk.Frame):
                             effects_list.append("Next Hard Hitter or Upper Cut [+25%]")
                         if status_effect == "UpperCutDB":
                             effects_list.append("Next Hard Hitter or Wide Swip [+25%]")
-                        if status_effect == "HolyWrathDB":
-                            effects_list.append("Next Holy Wrath [+20%]")
                         if status_effect == "SuperConducted":
                             effects_list.append("Charge Explosions [+100%] ({})".format(ai5_superconducted))
                 if ddd_display_trigger == 1:
@@ -4911,6 +4933,7 @@ class GameFrame(tk.Frame):
             self.repeating_combatUI_refresh_function()
             if new_game == 1:
                 new_game = 0
+                self.before_round_choices()
                 self.player_combat_champion1()
             elif current_turn == "MN":
                 champion1_turnover = 0
@@ -4924,6 +4947,7 @@ class GameFrame(tk.Frame):
                 self.champion_turn_ticker(3)
                 self.champion_turn_ticker(4)
                 self.champion_turn_ticker(5)
+                self.before_round_choices()
                 self.turn_choice()
             else:
                 new_round = 0
@@ -4943,8 +4967,79 @@ class GameFrame(tk.Frame):
                         self.turn_choice()
                 else:
                     self.turn_choice()
-            
-
+    def before_round_choices(self):
+        counter = 1
+        while counter != 0:
+            if LEGION_RANGER in CHAMPION_LIST:
+                ARROW_TYPES = ["Heavy Iron Tip", "Serrated Tip", "Shrapnel Tip", "Venom Tip", "Bola Tip", "Vein Sensitizer Tip"]
+                if legion_ranger_roundtracker < 3:
+                    legion_ranger_roundtracker = legion_ranger_roundtracker + 1
+                else:
+                    global ranger_arrow_choice_label, arrow_choice_button1, arrow_choice_button2, arrow_choice_button3
+                    random.shuffle(ARROW_TYPES)
+                    if current_arrow_type == ARROW_TYPES[0]:
+                        arrow_choice = [ARROW_TYPES[1], ARROW_TYPES[2], ARROW_TYPES[3]]
+                    elif current_arrow_type == ARROW_TYPES[1]:
+                        arrow_choice = [ARROW_TYPES[0], ARROW_TYPES[2], ARROW_TYPES[3]]
+                    elif current_arrow_type == [2]:
+                        arrow_choice = [ARROW_TYPES[0], ARROW_TYPES[1], ARROW_TYPES[3]]
+                    else:
+                        arrow_choice = [ARROW_TYPES[0], ARROW_TYPES[1], ARROW_TYPES[2]]
+                    legion_ranger_roundtracker = 0
+                    ranger_arrow_choice_label = tk.Label(dungeon_game_frame, text="Choose a new arrow for Legion Ranger to equip")
+                    ranger_arrow_choice_label.grid(row=18, column=1)
+                    arrow_choice_button1 = tk.Button(dungeon_game_frame, text="{} n\ {}".format(arrow_choice[0], self.arrow_information(arrow_choice[0])), \
+                                                     command=lambda: self.apply_before_round_choices("LEGION-RANGER", arrow_choice[0]))
+                    arrow_choice_button2 = tk.Button(dungeon_game_frame, text="{} n\ {}".format(arrow_choice[1], self.arrow_information(arrow_choice[1])), \
+                                                     command=lambda: self.apply_before_round_choices("LEGION-RANGER", arrow_choice[1]))
+                    arrow_choice_button3 = tk.Button(dungeon_game_frame, text="{} n\ {}".format(arrow_choice[2], self.arrow_information(arrow_choice[2])), \
+                                                     command=lambda: self.apply_before_round_choices("LEGION-RANGER", arrow_choice[2]))
+                    arrow_choice_button1.grid(row=19, column=0)
+                    arrow_choice_button2.grid(row=19, column=1)
+                    arrow_choice_button3.grid(row=19, column=2)
+            if PALADIN in CHAMPION_LIST:
+                AURAS = ["Power Aura", "Protection Aura"]
+                if paladin_roundtracker < 2:
+                    paladin_roundtracker = paladin_roundtracker + 1
+                else:
+                    global paladin_aura_choice_label, aura_choice_button1, aura_choice_button2
+                    paladin_roundtracker = 0
+                    paladin_aura_choice_label = tk.Label(dungeon_game_frame, text="Choose your Paladin's Aura")
+                    paladin_aura_choice_label.grid(row=18, column=1)
+                    aura_choice_button1 = tk.Button(dungeon_game_frame, text="{}".format(AURAS[0]), command=lambda: self.apply_before_round_choices("PALADIN", AURAS[0]))
+                    aura_choice_button2 = tk.Button(dungeon_game_frame, text="{}".format(AURAS[1]), command=lambda: self.apply_before_round_choices("PALAIDN", AURAS[1]))
+                    aura_choice_button1.grid(row=19, column=1, sticky="w")
+                    aura_choice_button2.grid(row=19, column=1, sticky="e")
+            counter = 0
+    def arrow_information(self, name):
+        if name == "Heavy Iron Tip":
+            text = "Deals 1.5x Damage"
+        if name == "Serrated Tip":
+            text = "Applies a Bleed effect to damaged enemies"
+        if name == "Shrapnel Tip":
+            text = "Damaged enemies explode for extra damage to other enemies"
+        if name == "Venom Tip":
+            text = "Applies the Weakness debuff to damaged enemies"
+        if name == "Bola Tip":
+            text = "Damaged enemies are stunned"
+        if name == "Vein Sensitizer Tip":
+            text = "Applies the Brittle debuff to damaged enemies"
+        return text
+    def apply_before_round_choices(self, champion_identifier, choice):
+        global current_arrow_type, paladin_aura
+        if champion_identifier == "LEGION-RANGER":
+            current_arrow_type = choice
+            ranger_arrow_choice_label.destroy()
+            arrow_choice_button1.destroy()
+            arrow_choice_button2.destroy()
+            arrow_choice_button3.destroy()
+        if champion_identifier == "PALDIN":
+            paladin_aura = choice
+            paladin_aura_choice_label.destroy()
+            aura_choice_button1.destroy()
+            aura_choice_button2.destroy()
+        
+        self.turn_choice()
     def player_combat_champion2(self):
         global attack_button_champion2, special_button_champion2, turn_choice_champion2, current_turn, new_round, from_attack_button, from_special_button, \
             roomLevel, floorLevel, from_turn_choice
@@ -5148,9 +5243,9 @@ class GameFrame(tk.Frame):
     def monsters_turn(self):
             global combat_results, current_turn, ai1_stun, ai2_stun, ai3_stun, ai4_stun, ai5_stun, ai1_taunt, ai2_taunt, ai3_taunt, ai4_taunt, ai5_taunt, \
                 ai1_brittle, ai2_brittle, ai3_brittle, ai4_brittle, ai5_brittle, ai1_weakness, ai2_weakness, ai3_weakness, ai4_weakness, ai5_weakness, \
-                ai1_burnDot, ai2_burnDot, ai3_burnDot, ai4_burnDot, ai5_burnDot, ai1_SerraSlashDot, ai2_SerraSlashDot, ai3_SerraSlashDot, \
-                ai4_SerraSlashDot, ai5_SerraSlashDot, ai1_garroteDot, ai2_garroteDot, ai3_garroteDot, ai4_garroteDot, ai5_garroteDot, \
-                ai1_eviscerDot, ai2_EviscerDot, ai3_EviscerDot, ai4_EviscerDot, ai5_EviscerDot, \
+                ai1_burnDot, ai2_burnDot, ai3_burnDot, ai4_burnDot, ai5_burnDot, ai1_serraSlashDot, ai2_serraSlashDot, ai3_serraSlashDot, \
+                ai4_serraSlashDot, ai5_serraSlashDot, ai1_garroteDot, ai2_garroteDot, ai3_garroteDot, ai4_garroteDot, ai5_garroteDot, \
+                ai1_eviscerDot, ai2_eviscerDot, ai3_eviscerDot, ai4_eviscerDot, ai5_eviscerDot, \
                 ai1_shimmerDot, ai2_shimmerDot, ai3_shimmerDot, ai4_shimmerDot, ai5_shimmerDot, \
                 ai1_divineDot, ai2_divineDot, ai3_divineDot, ai4_divineDot, ai1_divineDot, \
                 ai1_statuses, ai2_statuses, ai3_statuses, ai4_statuses, ai5_statuses, \
@@ -5200,9 +5295,9 @@ class GameFrame(tk.Frame):
                         if ai1_hp < 0:
                             ai1_hp = 0
                             continue
-                    if ai1_SerraSlashDot[1] != 0:
-                        ai1_hp = ai1_hp - ai1_SerraSlashDot[0]
-                        ai1_SerraSlashDot[1] = ai1_SerraSlashDot[1] - 1
+                    if ai1_serraSlashDot[1] != 0:
+                        ai1_hp = ai1_hp - ai1_serraSlashDot[0]
+                        ai1_serraSlashDot[1] = ai1_serraSlashDot[1] - 1
                         if ai1_hp < 0:
                             ai1_hp = 0
                             continue
@@ -5256,6 +5351,7 @@ class GameFrame(tk.Frame):
                         if ai1_hp < 0:
                             ai1_hp = 0
                             continue
+                    #HERE update all the damage overtime stuff
                     if ai1_stun != 0:
                         continue
                     elif ai1_taunt[1] != 0:
@@ -6496,15 +6592,15 @@ class GameFrame(tk.Frame):
                         if ai2_hp < 0:
                             ai2_hp = 0
                             continue
-                    if ai2_SerraSlashDot[1] != 0:
-                        ai2_hp = ai2_hp - ai2_SerraSlashDot[0]
-                        ai2_SerraSlashDot[1] = ai2_SerraSlashDot[1] - 1
+                    if ai2_serraSlashDot[1] != 0:
+                        ai2_hp = ai2_hp - ai2_serraSlashDot[0]
+                        ai2_serraSlashDot[1] = ai2_serraSlashDot[1] - 1
                         if ai2_hp < 0:
                             ai2_hp = 0
                             continue
-                    if ai2_EviscerDot[1] != 0:
-                        ai2_hp = ai2_hp - ai2_EviscerDot[0]
-                        ai2_EviscerDot[1] = ai2_EviscerDot[1] - 1
+                    if ai2_eviscerDot[1] != 0:
+                        ai2_hp = ai2_hp - ai2_eviscerDot[0]
+                        ai2_eviscerDot[1] = ai2_eviscerDot[1] - 1
                         if ai2_hp < 0:
                             ai2_hp = 0
                             continue
@@ -7794,15 +7890,15 @@ class GameFrame(tk.Frame):
                         if ai3_hp < 0:
                             ai3_hp = 0
                             continue
-                    if ai3_SerraSlashDot[1] != 0:
-                        ai3_hp = ai3_hp - ai3_SerraSlashDot[0]
-                        ai3_SerraSlashDot[1] = ai3_SerraSlashDot[1] - 1
+                    if ai3_serraSlashDot[1] != 0:
+                        ai3_hp = ai3_hp - ai3_serraSlashDot[0]
+                        ai3_serraSlashDot[1] = ai3_serraSlashDot[1] - 1
                         if ai3_hp < 0:
                             ai3_hp = 0
                             continue
-                    if ai3_EviscerDot[1] != 0:
-                        ai3_hp = ai3_hp - ai3_EviscerDot[0]
-                        ai3_EviscerDot[1] = ai3_EviscerDot[1] - 1
+                    if ai3_eviscerDot[1] != 0:
+                        ai3_hp = ai3_hp - ai3_eviscerDot[0]
+                        ai3_eviscerDot[1] = ai3_eviscerDot[1] - 1
                         if ai3_hp < 0:
                             ai3_hp = 0
                             continue
@@ -9098,15 +9194,15 @@ class GameFrame(tk.Frame):
                         if ai4_hp < 0:
                             ai4_hp = 0
                             continue
-                    if ai4_SerraSlashDot[1] != 0:
-                        ai4_hp = ai4_hp - ai4_SerraSlashDot[0]
-                        ai4_SerraSlashDot[1] = ai4_SerraSlashDot[1] - 1
+                    if ai4_serraSlashDot[1] != 0:
+                        ai4_hp = ai4_hp - ai4_serraSlashDot[0]
+                        ai4_serraSlashDot[1] = ai4_serraSlashDot[1] - 1
                         if ai4_hp < 0:
                             ai4_hp = 0
                             continue
-                    if ai4_EviscerDot[1] != 0:
-                        ai4_hp = ai4_hp - ai4_EviscerDot[0]
-                        ai4_EviscerDot[1] = ai4_EviscerDot[1] - 1
+                    if ai4_eviscerDot[1] != 0:
+                        ai4_hp = ai4_hp - ai4_eviscerDot[0]
+                        ai4_eviscerDot[1] = ai4_eviscerDot[1] - 1
                         if ai4_hp < 0:
                             ai4_hp = 0
                             continue
@@ -10402,15 +10498,15 @@ class GameFrame(tk.Frame):
                         if ai5_hp < 0:
                             ai5_hp = 0
                             continue
-                    if ai5_SerraSlashDot[1] != 0:
-                        ai5_hp = ai5_hp - ai5_SerraSlashDot[0]
-                        ai5_SerraSlashDot[1] = ai5_SerraSlashDot[1] - 1
+                    if ai5_serraSlashDot[1] != 0:
+                        ai5_hp = ai5_hp - ai5_serraSlashDot[0]
+                        ai5_serraSlashDot[1] = ai5_serraSlashDot[1] - 1
                         if ai5_hp < 0:
                             ai5_hp = 0
                             continue
-                    if ai5_EviscerDot[1] != 0:
-                        ai5_hp = ai5_hp - ai5_EviscerDot[0]
-                        ai5_EviscerDot[1] = ai5_EviscerDot[1] - 1
+                    if ai5_eviscerDot[1] != 0:
+                        ai5_hp = ai5_hp - ai5_eviscerDot[0]
+                        ai5_eviscerDot[1] = ai5_eviscerDot[1] - 1
                         if ai5_hp < 0:
                             ai5_hp = 0
                             continue
@@ -11740,31 +11836,31 @@ class GameFrame(tk.Frame):
             if ai1_eviscerDot[1] == 0:
                 if "Eviscerated" in ai1_statuses:
                     ai1_statuses.remove("Eviscerated")
-            if ai2_EviscerDot[1] == 0:
+            if ai2_eviscerDot[1] == 0:
                 if "Eviscerated" in ai2_statuses:
                     ai2_statuses.remove("Eviscerated")
-            if ai3_EviscerDot[1] == 0:
+            if ai3_eviscerDot[1] == 0:
                 if "Eviscerated" in ai3_statuses:
                     ai3_statuses.remove("Eviscerated")
-            if ai4_EviscerDot[1] == 0:
+            if ai4_eviscerDot[1] == 0:
                 if "Eviscerated" in ai4_statuses:
                     ai4_statuses.remove("Eviscerated")
-            if ai5_EviscerDot[1] == 0:
+            if ai5_eviscerDot[1] == 0:
                 if "Eviscerated" in ai5_statuses:
                     ai5_statuses.remove("Eviscerated")
-            if ai1_SerraSlashDot[1] == 0:
+            if ai1_serraSlashDot[1] == 0:
                 if "Serrated" in ai1_statuses:
                     ai1_statuses.remove("Serrated")
-            if ai2_SerraSlashDot[1] == 0:
+            if ai2_serraSlashDot[1] == 0:
                 if "Serrated" in ai2_statuses:
                     ai2_statuses.remove("Serrated")
-            if ai3_SerraSlashDot[1] == 0:
+            if ai3_serraSlashDot[1] == 0:
                 if "Serrated" in ai3_statuses:
                     ai3_statuses.remove("Serrated")
-            if ai4_SerraSlashDot[1] == 0:
+            if ai4_serraSlashDot[1] == 0:
                 if "Serrated" in ai4_statuses:
                     ai4_statuses.remove("Serrated")
-            if ai5_SerraSlashDot[1] == 0:
+            if ai5_serraSlashDot[1] == 0:
                 if "Serrated" in ai5_statuses:
                     ai5_statuses.remove("Serrated")
             if ai1_rottingDot[1] == 0:
@@ -12370,8 +12466,8 @@ class GameFrame(tk.Frame):
             play_dead_requirements, survival_kit_requirements, uppercut_requirements, knock_out_requirements, \
             wide_swing_requirements, arcane_brilliance_requirements, vine_swipe_requirements, burst_n_bloom_requirements, \
             wound_fissure_requirements, blood_boil_requirements, enharden_nerves_requirements, righteous_blow_requirements, \
-            crusade_requirements, damnation_requirements, power_opt_requirements, equip_iron_cast_arrows_requirements, \
-            equip_tracker_tipped_arrows_requirements, energise_requirements, superconductor_requirements, ocean_tides_requirements, \
+            crusade_requirements, damnation_requirements, power_shot_requirements, multi_shot_requirements, \
+            ricochet_shot_requirements, energise_requirements, superconductor_requirements, ocean_tides_requirements, \
             alter_time_requirements, tight_tourniquet_requirements, secret_remedy_requirements, \
             champion1_immunity, champion2_immunity, champion3_immunity, champion4_immunity, champion5_immunity, \
             champion1_defensive, champion2_defensive, champion3_defensive, champion4_defensive, champion5_defensive, \
@@ -12454,12 +12550,12 @@ class GameFrame(tk.Frame):
                 if damnation_requirements[3] > 0:
                     damnation_requirements[3] = damnation_requirements[3] - 1
             if CHAMPION_LIST[0] == "Ranger":
-                if power_opt_requirements[3] > 0:
-                    power_opt_requirements[3] = power_opt_requirements[3] - 1
-                if equip_iron_cast_arrows_requirements[3] > 0:
-                    equip_iron_cast_arrows_requirements[3] = equip_iron_cast_arrows_requirements[3] - 1
-                if equip_tracker_tipped_arrows_requirements[3] > 0:
-                    equip_tracker_tipped_arrows_requirements[3] = equip_tracker_tipped_arrows_requirements[3] - 1
+                if power_shot_requirements[3] > 0:
+                    power_shot_requirements[3] = power_shot_requirements[3] - 1
+                if multi_shot_requirements[3] > 0:
+                    multi_shot_requirements[3] = multi_shot_requirements[3] - 1
+                if ricochet_shot_requirements[3] > 0:
+                    ricochet_shot_requirements[3] = ricochet_shot_requirements[3] - 1
             if CHAMPION_LIST[0] == "Magnetimancer":
                 if energise_requirements[3] > 0:
                     energise_requirements[3] = energise_requirements[3] - 1
@@ -12616,12 +12712,12 @@ class GameFrame(tk.Frame):
                 if damnation_requirements[3] > 0:
                     damnation_requirements[3] = damnation_requirements[3] - 1
             if CHAMPION_LIST[1] == "Ranger":
-                if power_opt_requirements[3] > 0:
-                    power_opt_requirements[3] = power_opt_requirements[3] - 1
-                if equip_iron_cast_arrows_requirements[3] > 0:
-                    equip_iron_cast_arrows_requirements[3] = equip_iron_cast_arrows_requirements[3] - 1
-                if equip_tracker_tipped_arrows_requirements[3] > 0:
-                    equip_tracker_tipped_arrows_requirements[3] = equip_tracker_tipped_arrows_requirements[3] - 1
+                if power_shot_requirements[3] > 0:
+                    power_shot_requirements[3] = power_shot_requirements[3] - 1
+                if multi_shot_requirements[3] > 0:
+                    multi_shot_requirements[3] = multi_shot_requirements[3] - 1
+                if ricochet_shot_requirements[3] > 0:
+                    ricochet_shot_requirements[3] = ricochet_shot_requirements[3] - 1
             if CHAMPION_LIST[1] == "Magnetimancer":
                 if energise_requirements[3] > 0:
                     energise_requirements[3] = energise_requirements[3] - 1
@@ -12740,12 +12836,12 @@ class GameFrame(tk.Frame):
                 if damnation_requirements[3] > 0:
                     damnation_requirements[3] = damnation_requirements[3] - 1
             if CHAMPION_LIST[2] == "Ranger":
-                if power_opt_requirements[3] > 0:
-                    power_opt_requirements[3] = power_opt_requirements[3] - 1
-                if equip_iron_cast_arrows_requirements[3] > 0:
-                    equip_iron_cast_arrows_requirements[3] = equip_iron_cast_arrows_requirements[3] - 1
-                if equip_tracker_tipped_arrows_requirements[3] > 0:
-                    equip_tracker_tipped_arrows_requirements[3] = equip_tracker_tipped_arrows_requirements[3] - 1
+                if power_shot_requirements[3] > 0:
+                    power_shot_requirements[3] = power_shot_requirements[3] - 1
+                if multi_shot_requirements[3] > 0:
+                    multi_shot_requirements[3] = multi_shot_requirements[3] - 1
+                if ricochet_shot_requirements[3] > 0:
+                    ricochet_shot_requirements[3] = ricochet_shot_requirements[3] - 1
             if CHAMPION_LIST[2] == "Magnetimancer":
                 if energise_requirements[3] > 0:
                     energise_requirements[3] = energise_requirements[3] - 1
@@ -12864,12 +12960,12 @@ class GameFrame(tk.Frame):
                 if damnation_requirements[3] > 0:
                     damnation_requirements[3] = damnation_requirements[3] - 1
             if CHAMPION_LIST[3] == "Ranger":
-                if power_opt_requirements[3] > 0:
-                    power_opt_requirements[3] = power_opt_requirements[3] - 1
-                if equip_iron_cast_arrows_requirements[3] > 0:
-                    equip_iron_cast_arrows_requirements[3] = equip_iron_cast_arrows_requirements[3] - 1
-                if equip_tracker_tipped_arrows_requirements[3] > 0:
-                    equip_tracker_tipped_arrows_requirements[3] = equip_tracker_tipped_arrows_requirements[3] - 1
+                if power_shot_requirements[3] > 0:
+                    power_shot_requirements[3] = power_shot_requirements[3] - 1
+                if multi_shot_requirements[3] > 0:
+                    multi_shot_requirements[3] = multi_shot_requirements[3] - 1
+                if ricochet_shot_requirements[3] > 0:
+                    ricochet_shot_requirements[3] = ricochet_shot_requirements[3] - 1
             if CHAMPION_LIST[3] == "Magnetimancer":
                 if energise_requirements[3] > 0:
                     energise_requirements[3] = energise_requirements[3] - 1
@@ -12988,12 +13084,12 @@ class GameFrame(tk.Frame):
                 if damnation_requirements[3] > 0:
                     damnation_requirements[3] = damnation_requirements[3] - 1
             if CHAMPION_LIST[4] == "Ranger":
-                if power_opt_requirements[3] > 0:
-                    power_opt_requirements[3] = power_opt_requirements[3] - 1
-                if equip_iron_cast_arrows_requirements[3] > 0:
-                    equip_iron_cast_arrows_requirements[3] = equip_iron_cast_arrows_requirements[3] - 1
-                if equip_tracker_tipped_arrows_requirements[3] > 0:
-                    equip_tracker_tipped_arrows_requirements[3] = equip_tracker_tipped_arrows_requirements[3] - 1
+                if power_shot_requirements[3] > 0:
+                    power_shot_requirements[3] = power_shot_requirements[3] - 1
+                if multi_shot_requirements[3] > 0:
+                    multi_shot_requirements[3] = multi_shot_requirements[3] - 1
+                if ricochet_shot_requirements[3] > 0:
+                    ricochet_shot_requirements[3] = ricochet_shot_requirements[3] - 1
             if CHAMPION_LIST[4] == "Magnetimancer":
                 if energise_requirements[3] > 0:
                     energise_requirements[3] = energise_requirements[3] - 1
@@ -15048,7 +15144,6 @@ class GameFrame(tk.Frame):
                                 holy_wrath_requirements[3] = holy_wrath_requirements[2]
                                 champion1_rp = champion1_rp + holy_wrath_requirements[1]
                                 damage_done = math.ceil(PALADIN.ap * self.calculate_champion_damage(1))
-                                damage_done = math.ceil(     PALADIN.ap * self.calculate_champion_damage(1))
                                 ability_data = ["Holy Wrath", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -15058,7 +15153,6 @@ class GameFrame(tk.Frame):
                                 holy_wrath_requirements[3] = holy_wrath_requirements[2]
                                 champion2_rp = champion2_rp + holy_wrath_requirements[1]
                                 damage_done = math.ceil(PALADIN.ap * self.calculate_champion_damage(2))
-                                damage_done = math.ceil(     PALADIN.ap * self.calculate_champion_damage(2))
                                 ability_data = ["Holy Wrath", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -15068,7 +15162,6 @@ class GameFrame(tk.Frame):
                                 holy_wrath_requirements[3] = holy_wrath_requirements[2]
                                 champion3_rp = champion3_rp + holy_wrath_requirements[1]
                                 damage_done = math.ceil(PALADIN.ap * self.calculate_champion_damage(3))
-                                damage_done = math.ceil(     PALADIN.ap * self.calculate_champion_damage(3))
                                 ability_data = ["Holy Wrath", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -15078,7 +15171,6 @@ class GameFrame(tk.Frame):
                                 holy_wrath_requirements[3] = holy_wrath_requirements[2]
                                 champion4_rp = champion4_rp + holy_wrath_requirements[1]
                                 damage_done = math.ceil(PALADIN.ap * self.calculate_champion_damage(4))
-                                damage_done = math.ceil(     PALADIN.ap * self.calculate_champion_damage(4))
                                 ability_data = ["Holy Wrath", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -15088,7 +15180,6 @@ class GameFrame(tk.Frame):
                                 holy_wrath_requirements[3] = holy_wrath_requirements[2]
                                 champion5_rp = champion5_rp + holy_wrath_requirements[1]
                                 damage_done = math.ceil(PALADIN.ap * self.calculate_champion_damage(5))
-                                damage_done = math.ceil(     PALADIN.ap * self.calculate_champion_damage(5))
                                 ability_data = ["Holy Wrath", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -15106,7 +15197,6 @@ class GameFrame(tk.Frame):
                                 righteous_blow_requirements[3] = righteous_blow_requirements[2]
                                 champion1_rp = champion1_rp + righteous_blow_requirements[1]
                                 damage_done = math.ceil(PALADIN.ap * self.calculate_champion_damage(1))
-                                damage_done = math.ceil(     PALADIN.ap * self.calculate_champion_damage(1))
                                 ability_data = ["Righteous Blow", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -15116,7 +15206,6 @@ class GameFrame(tk.Frame):
                                 righteous_blow_requirements[3] = righteous_blow_requirements[2]
                                 champion2_rp = champion2_rp + righteous_blow_requirements[1]
                                 damage_done = math.ceil(PALADIN.ap * self.calculate_champion_damage(2))
-                                damage_done = math.ceil(     PALADIN.ap * self.calculate_champion_damage(2))
                                 ability_data = ["Righteous Blow", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -15126,7 +15215,6 @@ class GameFrame(tk.Frame):
                                 righteous_blow_requirements[3] = righteous_blow_requirements[2]
                                 champion3_rp = champion3_rp + righteous_blow_requirements[1]
                                 damage_done = math.ceil(PALADIN.ap * self.calculate_champion_damage(3))
-                                damage_done = math.ceil(     PALADIN.ap * self.calculate_champion_damage(3))
                                 ability_data = ["Righteous Blow", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -15136,7 +15224,6 @@ class GameFrame(tk.Frame):
                                 righteous_blow_requirements[3] = righteous_blow_requirements[2]
                                 champion4_rp = champion4_rp + righteous_blow_requirements[1]
                                 damage_done = math.ceil(PALADIN.ap * self.calculate_champion_damage(4))
-                                damage_done = math.ceil(     PALADIN.ap * self.calculate_champion_damage(4))
                                 ability_data = ["Righteous Blow", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -15146,124 +15233,171 @@ class GameFrame(tk.Frame):
                                 righteous_blow_requirements[3] = righteous_blow_requirements[2]
                                 champion5_rp = champion5_rp + righteous_blow_requirements[1]
                                 damage_done = math.ceil(PALADIN.ap * self.calculate_champion_damage(5))
-                                damage_done = math.ceil(     PALADIN.ap * self.calculate_champion_damage(5))
                                 ability_data = ["Righteous Blow", "enemy", "1T", damage_done]
                             else:
                                 return
                     counter += 1
             else:
                 return
-        elif ability_name == "Steady Shot":
-            global steady_shot_requirements
-            if steady_shot_requirements[3] == 0:
+        elif ability_name == "Crusade":
+            global crusade_requirements
+            if crusade_requirements[3] == 0:
                 for character in CHAMPION_LIST:
-                    if character == LEGION_RANGER.title:
+                    if character == PALADIN.title:
                         if counter == 1:
-                            if steady_shot_requirements[0] <= champion1_rp:
-                                champion1_rp = champion1_rp - steady_shot_requirements[0]
-                                steady_shot_requirements[3] = steady_shot_requirements[2]
-                                champion1_rp = champion1_rp + steady_shot_requirements[1]
-                                damage_done = math.ceil(LEGION_RANGER.ap * self.calculate_champion_damage(1))
-                                damage_done = math.ceil(     LEGION_RANGER.ap * self.calculate_champion_damage(1))
-                                ability_data = ["Steady Shot", "enemy", "1T", damage_done]
+                            if crusade_requirements[0] <= champion1_rp:
+                                champion1_rp = champion1_rp - crusade_requirements[0]
+                                crusade_requirements[3] = crusade_requirements[2]
+                                champion1_rp = champion1_rp + crusade_requirements[1]
+                                damage_done = math.ceil(PALADIN.ap * self.calculate_champion_damage(1))
+                                ability_data = ["Crusade", "enemy", "1T", damage_done]
                             else:
                                 return
                         if counter == 2:
-                            if steady_shot_requirements[0] <= champion2_rp:
-                                champion2_rp = champion2_rp - steady_shot_requirements[0]
-                                steady_shot_requirements[3] = steady_shot_requirements[2]
-                                champion2_rp = champion2_rp + steady_shot_requirements[1]
-                                damage_done = math.ceil(LEGION_RANGER.ap * self.calculate_champion_damage(2))
-                                damage_done = math.ceil(     LEGION_RANGER.ap * self.calculate_champion_damage(2))
-                                ability_data = ["Steady Shot", "enemy", "1T", damage_done]
+                            if crusade_requirements[0] <= champion2_rp:
+                                champion2_rp = champion2_rp - crusade_requirements[0]
+                                crusade_requirements[3] = crusade_requirements[2]
+                                champion2_rp = champion2_rp + crusade_requirements[1]
+                                damage_done = math.ceil(PALADIN.ap * self.calculate_champion_damage(2))
+                                ability_data = ["Crusade", "enemy", "1T", damage_done]
                             else:
                                 return
                         if counter == 3:
-                            if steady_shot_requirements[0] <= champion3_rp:
-                                champion3_rp = champion3_rp - steady_shot_requirements[0]
-                                steady_shot_requirements[3] = steady_shot_requirements[2]
-                                champion3_rp = champion3_rp + steady_shot_requirements[1]
-                                damage_done = math.ceil(LEGION_RANGER.ap * self.calculate_champion_damage(3))
-                                damage_done = math.ceil(     LEGION_RANGER.ap * self.calculate_champion_damage(3))
-                                ability_data = ["Steady Shot", "enemy", "1T", damage_done]
+                            if crusade_requirements[0] <= champion3_rp:
+                                champion3_rp = champion3_rp - crusade_requirements[0]
+                                crusade_requirements[3] = crusade_requirements[2]
+                                champion3_rp = champion3_rp + crusade_requirements[1]
+                                damage_done = math.ceil(PALADIN.ap * self.calculate_champion_damage(3))
+                                ability_data = ["Crusade", "enemy", "1T", damage_done]
                             else:
                                 return
                         if counter == 4:
-                            if steady_shot_requirements[0] <= champion4_rp:
-                                champion4_rp = champion4_rp - steady_shot_requirements[0]
-                                steady_shot_requirements[3] = steady_shot_requirements[2]
-                                champion4_rp = champion4_rp + steady_shot_requirements[1]
-                                damage_done = math.ceil(LEGION_RANGER.ap * self.calculate_champion_damage(4))
-                                damage_done = math.ceil(     LEGION_RANGER.ap * self.calculate_champion_damage(4))
-                                ability_data = ["Steady Shot", "enemy", "1T", damage_done]
+                            if crusade_requirements[0] <= champion4_rp:
+                                champion4_rp = champion4_rp - crusade_requirements[0]
+                                crusade_requirements[3] = crusade_requirements[2]
+                                champion4_rp = champion4_rp + crusade_requirements[1]
+                                damage_done = math.ceil(PALADIN.ap * self.calculate_champion_damage(4))
+                                ability_data = ["Crusade", "enemy", "1T", damage_done]
                             else:
                                 return
                         if counter == 5:
-                            if steady_shot_requirements[0] <= champion5_rp:
-                                champion5_rp = champion5_rp - steady_shot_requirements[0]
-                                steady_shot_requirements[3] = steady_shot_requirements[2]
-                                champion5_rp = champion5_rp + steady_shot_requirements[1]
-                                damage_done = math.ceil(LEGION_RANGER.ap * self.calculate_champion_damage(5))
-                                damage_done = math.ceil(     LEGION_RANGER.ap * self.calculate_champion_damage(5))
-                                ability_data = ["Steady Shot", "enemy", "1T", damage_done]
+                            if crusade_requirements[0] <= champion5_rp:
+                                champion5_rp = champion5_rp - crusade_requirements[0]
+                                crusade_requirements[3] = crusade_requirements[2]
+                                champion5_rp = champion5_rp + crusade_requirements[1]
+                                damage_done = math.ceil(PALADIN.ap * self.calculate_champion_damage(5))
+                                ability_data = ["Crusade", "enemy", "1T", damage_done]
                             else:
                                 return
                     counter += 1
             else:
                 return
-        elif ability_name == "Power Opt":
-            global power_opt_requirements
-            if power_opt_requirements[3] == 0:
+        elif ability_name == "Steady Aim":
+            global steady_aim_requirements
+            if steady_aim_requirements[3] == 0:
                 for character in CHAMPION_LIST:
                     if character == LEGION_RANGER.title:
                         if counter == 1:
-                            if power_opt_requirements[0] <= champion1_rp:
-                                champion1_rp = champion1_rp - power_opt_requirements[0]
-                                power_opt_requirements[3] = power_opt_requirements[2]
-                                champion1_rp = champion1_rp + power_opt_requirements[1]
+                            if steady_aim_requirements[0] <= champion1_rp:
+                                champion1_rp = champion1_rp - steady_aim_requirements[0]
+                                steady_aim_requirements[3] = steady_aim_requirements[2]
+                                champion1_rp = champion1_rp + steady_aim_requirements[1]
                                 damage_done = math.ceil(LEGION_RANGER.ap * self.calculate_champion_damage(1))
-                                damage_done = math.ceil(     LEGION_RANGER.ap * self.calculate_champion_damage(1))
-                                ability_data = ["Power Opt", "enemy", "1T", damage_done]
+                                ability_data = ["Steady Aim", "enemy", "1T", damage_done]
                             else:
                                 return
                         if counter == 2:
-                            if power_opt_requirements[0] <= champion2_rp:
-                                champion2_rp = champion2_rp - power_opt_requirements[0]
-                                power_opt_requirements[3] = power_opt_requirements[2]
-                                champion2_rp = champion2_rp + power_opt_requirements[1]
+                            if steady_aim_requirements[0] <= champion2_rp:
+                                champion2_rp = champion2_rp - steady_aim_requirements[0]
+                                steady_aim_requirements[3] = steady_aim_requirements[2]
+                                champion2_rp = champion2_rp + steady_aim_requirements[1]
                                 damage_done = math.ceil(LEGION_RANGER.ap * self.calculate_champion_damage(2))
-                                damage_done = math.ceil(     LEGION_RANGER.ap * self.calculate_champion_damage(2))
-                                ability_data = ["Power Opt", "enemy", "1T", damage_done]
+                                ability_data = ["Steady Aim", "enemy", "1T", damage_done]
                             else:
                                 return
                         if counter == 3:
-                            if power_opt_requirements[0] <= champion3_rp:
-                                champion3_rp = champion3_rp - power_opt_requirements[0]
-                                power_opt_requirements[3] = power_opt_requirements[2]
-                                champion3_rp = champion3_rp + power_opt_requirements[1]
+                            if steady_aim_requirements[0] <= champion3_rp:
+                                champion3_rp = champion3_rp - steady_aim_requirements[0]
+                                steady_aim_requirements[3] = steady_aim_requirements[2]
+                                champion3_rp = champion3_rp + steady_aim_requirements[1]
                                 damage_done = math.ceil(LEGION_RANGER.ap * self.calculate_champion_damage(3))
-                                damage_done = math.ceil(     LEGION_RANGER.ap * self.calculate_champion_damage(3))
-                                ability_data = ["Power Opt", "enemy", "1T", damage_done]
+                                ability_data = ["Steady Aim", "enemy", "1T", damage_done]
                             else:
                                 return
                         if counter == 4:
-                            if power_opt_requirements[0] <= champion4_rp:
-                                champion4_rp = champion4_rp - power_opt_requirements[0]
-                                power_opt_requirements[3] = power_opt_requirements[2]
-                                champion4_rp = champion4_rp + power_opt_requirements[1]
+                            if steady_aim_requirements[0] <= champion4_rp:
+                                champion4_rp = champion4_rp - steady_aim_requirements[0]
+                                steady_aim_requirements[3] = steady_aim_requirements[2]
+                                champion4_rp = champion4_rp + steady_aim_requirements[1]
                                 damage_done = math.ceil(LEGION_RANGER.ap * self.calculate_champion_damage(4))
-                                damage_done = math.ceil(     LEGION_RANGER.ap * self.calculate_champion_damage(4))
-                                ability_data = ["Power Opt", "enemy", "1T", damage_done]
+                                ability_data = ["Steady Aim", "enemy", "1T", damage_done]
                             else:
                                 return
                         if counter == 5:
-                            if power_opt_requirements[0] <= champion5_rp:
-                                champion5_rp = champion5_rp - power_opt_requirements[0]
-                                power_opt_requirements[3] = power_opt_requirements[2]
-                                champion5_rp = champion5_rp + power_opt_requirements[1]
+                            if steady_aim_requirements[0] <= champion5_rp:
+                                champion5_rp = champion5_rp - steady_aim_requirements[0]
+                                steady_aim_requirements[3] = steady_aim_requirements[2]
+                                champion5_rp = champion5_rp + steady_aim_requirements[1]
+                                damage_done = math.ceil(LEGION_RANGER.ap * self.calculate_champion_damage(5))
+                                ability_data = ["Steady Aim", "enemy", "1T", damage_done]
+                            else:
+                                return
+                    counter += 1
+            else:
+                return
+        elif ability_name == "Power Shot":
+            global power_shot_requirements
+            if power_shot_requirements[3] == 0:
+                for character in CHAMPION_LIST:
+                    if character == LEGION_RANGER.title:
+                        if counter == 1:
+                            if power_shot_requirements[0] <= champion1_rp:
+                                champion1_rp = champion1_rp - power_shot_requirements[0]
+                                power_shot_requirements[3] = power_shot_requirements[2]
+                                champion1_rp = champion1_rp + power_shot_requirements[1]
+                                damage_done = math.ceil(LEGION_RANGER.ap * self.calculate_champion_damage(1))
+                                damage_done = math.ceil(     LEGION_RANGER.ap * self.calculate_champion_damage(1))
+                                ability_data = ["Power Shot", "enemy", "1T", damage_done]
+                            else:
+                                return
+                        if counter == 2:
+                            if power_shot_requirements[0] <= champion2_rp:
+                                champion2_rp = champion2_rp - power_shot_requirements[0]
+                                power_shot_requirements[3] = power_shot_requirements[2]
+                                champion2_rp = champion2_rp + power_shot_requirements[1]
+                                damage_done = math.ceil(LEGION_RANGER.ap * self.calculate_champion_damage(2))
+                                damage_done = math.ceil(     LEGION_RANGER.ap * self.calculate_champion_damage(2))
+                                ability_data = ["Power Shot", "enemy", "1T", damage_done]
+                            else:
+                                return
+                        if counter == 3:
+                            if power_shot_requirements[0] <= champion3_rp:
+                                champion3_rp = champion3_rp - power_shot_requirements[0]
+                                power_shot_requirements[3] = power_shot_requirements[2]
+                                champion3_rp = champion3_rp + power_shot_requirements[1]
+                                damage_done = math.ceil(LEGION_RANGER.ap * self.calculate_champion_damage(3))
+                                damage_done = math.ceil(     LEGION_RANGER.ap * self.calculate_champion_damage(3))
+                                ability_data = ["Power Shot", "enemy", "1T", damage_done]
+                            else:
+                                return
+                        if counter == 4:
+                            if power_shot_requirements[0] <= champion4_rp:
+                                champion4_rp = champion4_rp - power_shot_requirements[0]
+                                power_shot_requirements[3] = power_shot_requirements[2]
+                                champion4_rp = champion4_rp + power_shot_requirements[1]
+                                damage_done = math.ceil(LEGION_RANGER.ap * self.calculate_champion_damage(4))
+                                damage_done = math.ceil(     LEGION_RANGER.ap * self.calculate_champion_damage(4))
+                                ability_data = ["Power Shot", "enemy", "1T", damage_done]
+                            else:
+                                return
+                        if counter == 5:
+                            if power_shot_requirements[0] <= champion5_rp:
+                                champion5_rp = champion5_rp - power_shot_requirements[0]
+                                power_shot_requirements[3] = power_shot_requirements[2]
+                                champion5_rp = champion5_rp + power_shot_requirements[1]
                                 damage_done = math.ceil(LEGION_RANGER.ap * self.calculate_champion_damage(5))
                                 damage_done = math.ceil(     LEGION_RANGER.ap * self.calculate_champion_damage(5))
-                                ability_data = ["Power Opt", "enemy", "1T", damage_done]
+                                ability_data = ["Power Shot", "enemy", "1T", damage_done]
                             else:
                                 return
                     counter += 1
@@ -15281,7 +15415,7 @@ class GameFrame(tk.Frame):
                                 champion1_rp = champion1_rp + chain_bolts_requirements[1]
                                 damage_done = math.ceil(MAGNETIMANCER.ap * self.calculate_champion_damage(1))
                                 damage_done = math.ceil(     MAGNETIMANCER.ap * self.calculate_champion_damage(1))
-                                ability_data = ["Chain Bolts", "enemy", "1T", damage_done]
+                                ability_data = ["Chain Bolts", "enemy", "2T", damage_done]
                             else:
                                 return
                         if counter == 2:
@@ -15291,7 +15425,7 @@ class GameFrame(tk.Frame):
                                 champion2_rp = champion2_rp + chain_bolts_requirements[1]
                                 damage_done = math.ceil(MAGNETIMANCER.ap * self.calculate_champion_damage(2))
                                 damage_done = math.ceil(     MAGNETIMANCER.ap * self.calculate_champion_damage(2))
-                                ability_data = ["Chain Bolts", "enemy", "1T", damage_done]
+                                ability_data = ["Chain Bolts", "enemy", "2T", damage_done]
                             else:
                                 return
                         if counter == 3:
@@ -15301,7 +15435,7 @@ class GameFrame(tk.Frame):
                                 champion3_rp = champion3_rp + chain_bolts_requirements[1]
                                 damage_done = math.ceil(MAGNETIMANCER.ap * self.calculate_champion_damage(3))
                                 damage_done = math.ceil(     MAGNETIMANCER.ap * self.calculate_champion_damage(3))
-                                ability_data = ["Chain Bolts", "enemy", "1T", damage_done]
+                                ability_data = ["Chain Bolts", "enemy", "2T", damage_done]
                             else:
                                 return
                         if counter == 4:
@@ -15311,7 +15445,7 @@ class GameFrame(tk.Frame):
                                 champion4_rp = champion4_rp + chain_bolts_requirements[1]
                                 damage_done = math.ceil(MAGNETIMANCER.ap * self.calculate_champion_damage(4))
                                 damage_done = math.ceil(     MAGNETIMANCER.ap * self.calculate_champion_damage(4))
-                                ability_data = ["Chain Bolts", "enemy", "1T", damage_done]
+                                ability_data = ["Chain Bolts", "enemy", "2T", damage_done]
                             else:
                                 return
                         if counter == 5:
@@ -15321,7 +15455,7 @@ class GameFrame(tk.Frame):
                                 champion5_rp = champion5_rp + chain_bolts_requirements[1]
                                 damage_done = math.ceil(MAGNETIMANCER.ap * self.calculate_champion_damage(5))
                                 damage_done = math.ceil(     MAGNETIMANCER.ap * self.calculate_champion_damage(5))
-                                ability_data = ["Chain Bolts", "enemy", "1T", damage_done]
+                                ability_data = ["Chain Bolts", "enemy", "2T", damage_done]
                             else:
                                 return
                     counter += 1
@@ -16961,59 +17095,8 @@ class GameFrame(tk.Frame):
                     counter += 1
             else:
                 return
-        elif ability_name == "Crusade":
-            if crusade_requirements[3] == 0:
-                for character in CHAMPION_LIST:
-                    if character == PALADIN.title:
-                        if counter == 1:
-                            if crusade_requirements[0] <= champion1_rp:
-                                champion1_rp = champion1_rp - crusade_requirements[0]
-                                crusade_requirements[3] = crusade_requirements[2]
-                                damnation_requirements[3] = crusade_requirements[2]
-                                champion1_rp = champion1_rp + crusade_requirements[1]
-                                ability_data = ["Crusade", "ally", "AOE"]
-                            else:
-                                return
-                        if counter == 2:
-                            if crusade_requirements[0] <= champion2_rp:
-                                champion2_rp = champion2_rp - crusade_requirements[0]
-                                crusade_requirements[3] = crusade_requirements[2]
-                                damnation_requirements[3] = crusade_requirements[2]
-                                champion2_rp = champion2_rp + crusade_requirements[1]
-                                ability_data = ["Crusade", "ally", "AOE"]
-                            else:
-                                return
-                        if counter == 3:
-                            if crusade_requirements[0] <= champion3_rp:
-                                champion3_rp = champion3_rp - crusade_requirements[0]
-                                crusade_requirements[3] = crusade_requirements[2]
-                                damnation_requirements[3] = crusade_requirements[2]
-                                champion3_rp = champion3_rp + crusade_requirements[1]
-                                ability_data = ["Crusade", "ally", "AOE"]
-                            else:
-                                return
-                        if counter == 4:
-                            if crusade_requirements[0] <= champion4_rp:
-                                champion4_rp = champion4_rp - crusade_requirements[0]
-                                crusade_requirements[3] = crusade_requirements[2]
-                                damnation_requirements[3] = crusade_requirements[2]
-                                champion4_rp = champion4_rp + crusade_requirements[1]
-                                ability_data = ["Crusade", "ally", "AOE"]
-                            else:
-                                return
-                        if counter == 5:
-                            if crusade_requirements[0] <= champion5_rp:
-                                champion5_rp = champion5_rp - crusade_requirements[0]
-                                crusade_requirements[3] = crusade_requirements[2]
-                                damnation_requirements[3] = crusade_requirements[2]
-                                champion5_rp = champion5_rp + crusade_requirements[1]
-                                ability_data = ["Crusade", "ally", "AOE"]
-                            else:
-                                return
-                    counter += 1
-            else:
-                return
         elif ability_name == "Damnation":
+            global damnation_requirements
             if damnation_requirements[3] == 0:
                 for character in CHAMPION_LIST:
                     if character == PALADIN.title:
@@ -17021,141 +17104,151 @@ class GameFrame(tk.Frame):
                             if damnation_requirements[0] <= champion1_rp:
                                 champion1_rp = champion1_rp - damnation_requirements[0]
                                 damnation_requirements[3] = damnation_requirements[2]
-                                crusade_requirements[3] = damnation_requirements[2]
                                 champion1_rp = champion1_rp + damnation_requirements[1]
-                                ability_data = ["Damnation", "ally", "AOE"]
+                                damage_done = math.ceil(PALADIN.ap * self.calculate_champion_damage(1))
+                                ability_data = ["Damnation", "enemy", "1T", damage_done]
                             else:
                                 return
                         if counter == 2:
                             if damnation_requirements[0] <= champion2_rp:
                                 champion2_rp = champion2_rp - damnation_requirements[0]
                                 damnation_requirements[3] = damnation_requirements[2]
-                                crusade_requirements[3] = damnation_requirements[2]
                                 champion2_rp = champion2_rp + damnation_requirements[1]
-                                ability_data = ["Damnation", "ally", "AOE"]
+                                damage_done = math.ceil(PALADIN.ap * self.calculate_champion_damage(2))
+                                ability_data = ["Damnation", "enemy", "1T", damage_done]
                             else:
                                 return
                         if counter == 3:
                             if damnation_requirements[0] <= champion3_rp:
                                 champion3_rp = champion3_rp - damnation_requirements[0]
                                 damnation_requirements[3] = damnation_requirements[2]
-                                crusade_requirements[3] = damnation_requirements[2]
                                 champion3_rp = champion3_rp + damnation_requirements[1]
-                                ability_data = ["Damnation", "ally", "AOE"]
+                                damage_done = math.ceil(PALADIN.ap * self.calculate_champion_damage(3))
+                                ability_data = ["Damnation", "enemy", "1T", damage_done]
                             else:
                                 return
                         if counter == 4:
                             if damnation_requirements[0] <= champion4_rp:
                                 champion4_rp = champion4_rp - damnation_requirements[0]
                                 damnation_requirements[3] = damnation_requirements[2]
-                                crusade_requirements[3] = damnation_requirements[2]
                                 champion4_rp = champion4_rp + damnation_requirements[1]
-                                ability_data = ["Damnation", "ally", "AOE"]
+                                damage_done = math.ceil(PALADIN.ap * self.calculate_champion_damage(4))
+                                ability_data = ["Damnation", "enemy", "1T", damage_done]
                             else:
                                 return
                         if counter == 5:
                             if damnation_requirements[0] <= champion5_rp:
                                 champion5_rp = champion5_rp - damnation_requirements[0]
                                 damnation_requirements[3] = damnation_requirements[2]
-                                crusade_requirements[3] = damnation_requirements[2]
                                 champion5_rp = champion5_rp + damnation_requirements[1]
-                                ability_data = ["Damnation", "ally", "AOE"]
+                                damage_done = math.ceil(PALADIN.ap * self.calculate_champion_damage(5))
+                                ability_data = ["Damnation", "enemy", "1T", damage_done]
                             else:
                                 return
                     counter += 1
             else:
                 return
-        elif ability_name == "Equip Iron-cast Arrows":
-            global equip_iron_cast_arrows_requirements
-            if equip_iron_cast_arrows_requirements[3] == 0:
+        elif ability_name == "Multi-shot":
+            global multi_shot_requirements
+            if multi_shot_requirements[3] == 0:
                 for character in CHAMPION_LIST:
                     if character == LEGION_RANGER.title:
                         if counter == 1:
-                            if equip_iron_cast_arrows_requirements[0] <= champion1_rp:
-                                champion1_rp = champion1_rp - equip_iron_cast_arrows_requirements[0]
-                                equip_iron_cast_arrows_requirements[3] = equip_iron_cast_arrows_requirements[2]
-                                champion1_rp = champion1_rp + equip_iron_cast_arrows_requirements[1]
-                                ability_data = ["Equip Iron-cast Arrows", "self"]
+                            if multi_shot_requirements[0] <= champion1_rp:
+                                champion1_rp = champion1_rp - multi_shot_requirements[0]
+                                multi_shot_requirements[3] = multi_shot_requirements[2]
+                                champion1_rp = champion1_rp + multi_shot_requirements[1]
+                                damage_done = math.ceil(LEGION_RANGER.ap * self.calculate_champion_damage(1))
+                                ability_data = ["Multi-shot", "enemy", "2T", damage_done]
                             else:
                                 return
                         if counter == 2:
-                            if equip_iron_cast_arrows_requirements[0] <= champion2_rp:
-                                champion2_rp = champion2_rp - equip_iron_cast_arrows_requirements[0]
-                                equip_iron_cast_arrows_requirements[3] = equip_iron_cast_arrows_requirements[2]
-                                champion2_rp = champion2_rp + equip_iron_cast_arrows_requirements[1]
-                                ability_data = ["Equip Iron-cast Arrows", "self"]
+                            if multi_shot_requirements[0] <= champion2_rp:
+                                champion2_rp = champion2_rp - multi_shot_requirements[0]
+                                multi_shot_requirements[3] = multi_shot_requirements[2]
+                                champion2_rp = champion2_rp + multi_shot_requirements[1]
+                                damage_done = math.ceil(LEGION_RANGER.ap * self.calculate_champion_damage(2))
+                                ability_data = ["Multi-shot", "enemy", "2T", damage_done]
                             else:
                                 return
                         if counter == 3:
-                            if equip_iron_cast_arrows_requirements[0] <= champion3_rp:
-                                champion3_rp = champion3_rp - equip_iron_cast_arrows_requirements[0]
-                                equip_iron_cast_arrows_requirements[3] = equip_iron_cast_arrows_requirements[2]
-                                champion3_rp = champion3_rp + equip_iron_cast_arrows_requirements[1]
-                                ability_data = ["Equip Iron-cast Arrows", "self"]
+                            if multi_shot_requirements[0] <= champion3_rp:
+                                champion3_rp = champion3_rp - multi_shot_requirements[0]
+                                multi_shot_requirements[3] = multi_shot_requirements[2]
+                                champion3_rp = champion3_rp + multi_shot_requirements[1]
+                                damage_done = math.ceil(LEGION_RANGER.ap * self.calculate_champion_damage(3))
+                                ability_data = ["Multi-shot", "enemy", "2T", damage_done]
                             else:
                                 return
                         if counter == 4:
-                            if equip_iron_cast_arrows_requirements[0] <= champion4_rp:
-                                champion4_rp = champion4_rp - equip_iron_cast_arrows_requirements[0]
-                                equip_iron_cast_arrows_requirements[3] = equip_iron_cast_arrows_requirements[2]
-                                champion4_rp = champion4_rp + equip_iron_cast_arrows_requirements[1]
-                                ability_data = ["Equip Iron-cast Arrows", "self"]
+                            if multi_shot_requirements[0] <= champion4_rp:
+                                champion4_rp = champion4_rp - multi_shot_requirements[0]
+                                multi_shot_requirements[3] = multi_shot_requirements[2]
+                                champion4_rp = champion4_rp + multi_shot_requirements[1]
+                                damage_done = math.ceil(LEGION_RANGER.ap * self.calculate_champion_damage(4))
+                                ability_data = ["Multi-shot", "enemy", "2T", damage_done]
                             else:
                                 return
                         if counter == 5:
-                            if equip_iron_cast_arrows_requirements[0] <= champion5_rp:
-                                champion5_rp = champion5_rp - equip_iron_cast_arrows_requirements[0]
-                                equip_iron_cast_arrows_requirements[3] = equip_iron_cast_arrows_requirements[2]
-                                champion5_rp = champion5_rp + equip_iron_cast_arrows_requirements[1]
-                                ability_data = ["Equip Iron-cast Arrows", "self"]
+                            if multi_shot_requirements[0] <= champion5_rp:
+                                champion5_rp = champion5_rp - multi_shot_requirements[0]
+                                multi_shot_requirements[3] = multi_shot_requirements[2]
+                                champion5_rp = champion5_rp + multi_shot_requirements[1]
+                                damage_done = math.ceil(LEGION_RANGER.ap * self.calculate_champion_damage(5))
+                                ability_data = ["Multi-shot", "enemy", "2T", damage_done]
                             else:
                                 return
                     counter += 1
             else:
                 return
-        elif ability_name == "Equip Tracker-tipped Arrows":
-            global equip_tracker_tipped_arrows_requirements
-            if equip_tracker_tipped_arrows_requirements[3] == 0:
+        elif ability_name == "Ricochet Shot":
+            global ricochet_shot_requirements
+            if ricochet_shot_requirements[3] == 0:
                 for character in CHAMPION_LIST:
                     if character == LEGION_RANGER.title:
                         if counter == 1:
-                            if equip_tracker_tipped_arrows_requirements[0] <= champion1_rp:
-                                champion1_rp = champion1_rp - equip_tracker_tipped_arrows_requirements[0]
-                                equip_tracker_tipped_arrows_requirements[3] = equip_tracker_tipped_arrows_requirements[2]
-                                champion1_rp = champion1_rp + equip_tracker_tipped_arrows_requirements[1]
-                                ability_data = ["Equip Tracker-tipped Arrows", "self"]
+                            if ricochet_shot_requirements[0] <= champion1_rp:
+                                champion1_rp = champion1_rp - ricochet_shot_requirements[0]
+                                ricochet_shot_requirements[3] = ricochet_shot_requirements[2]
+                                champion1_rp = champion1_rp + ricochet_shot_requirements[1]
+                                damage_done = math.ceil(LEGION_RANGER.ap * self.calculate_champion_damage(1))
+                                ability_data = ["Ricochet Shot", "enemy", "AOE", damage_done]
                             else:
                                 return
                         if counter == 2:
-                            if equip_tracker_tipped_arrows_requirements[0] <= champion2_rp:
-                                champion2_rp = champion2_rp - equip_tracker_tipped_arrows_requirements[0]
-                                equip_tracker_tipped_arrows_requirements[3] = equip_tracker_tipped_arrows_requirements[2]
-                                champion2_rp = champion2_rp + equip_tracker_tipped_arrows_requirements[1]
-                                ability_data = ["Equip Tracker-tipped Arrows", "self"]
+                            if ricochet_shot_requirements[0] <= champion2_rp:
+                                champion2_rp = champion2_rp - ricochet_shot_requirements[0]
+                                ricochet_shot_requirements[3] = ricochet_shot_requirements[2]
+                                champion2_rp = champion2_rp + ricochet_shot_requirements[1]
+                                damage_done = math.ceil(LEGION_RANGER.ap * self.calculate_champion_damage(2))
+                                ability_data = ["Ricochet Shot", "enemy", "AOE", damage_done]
                             else:
                                 return
                         if counter == 3:
-                            if equip_tracker_tipped_arrows_requirements[0] <= champion3_rp:
-                                champion3_rp = champion3_rp - equip_tracker_tipped_arrows_requirements[0]
-                                equip_tracker_tipped_arrows_requirements[3] = equip_tracker_tipped_arrows_requirements[2]
-                                champion3_rp = champion3_rp + equip_tracker_tipped_arrows_requirements[1]
-                                ability_data = ["Equip Tracker-tipped Arrows", "self"]
+                            if ricochet_shot_requirements[0] <= champion3_rp:
+                                champion3_rp = champion3_rp - ricochet_shot_requirements[0]
+                                ricochet_shot_requirements[3] = ricochet_shot_requirements[2]
+                                champion3_rp = champion3_rp + ricochet_shot_requirements[1]
+                                damage_done = math.ceil(LEGION_RANGER.ap * self.calculate_champion_damage(3))
+                                ability_data = ["Ricochet Shot", "enemy", "AOE", damage_done]
                             else:
                                 return
                         if counter == 4:
-                            if equip_tracker_tipped_arrows_requirements[0] <= champion4_rp:
-                                champion4_rp = champion4_rp - equip_tracker_tipped_arrows_requirements[0]
-                                equip_tracker_tipped_arrows_requirements[3] = equip_tracker_tipped_arrows_requirements[2]
-                                champion4_rp = champion4_rp + equip_tracker_tipped_arrows_requirements[1]
-                                ability_data = ["Equip Tracker-tipped Arrows", "self"]
+                            if ricochet_shot_requirements[0] <= champion4_rp:
+                                champion4_rp = champion4_rp - ricochet_shot_requirements[0]
+                                ricochet_shot_requirements[3] = ricochet_shot_requirements[2]
+                                champion4_rp = champion4_rp + ricochet_shot_requirements[1]
+                                damage_done = math.ceil(LEGION_RANGER.ap * self.calculate_champion_damage(4))
+                                ability_data = ["Ricochet Shot", "enemy", "AOE", damage_done]
                             else:
                                 return
                         if counter == 5:
-                            if equip_tracker_tipped_arrows_requirements[0] <= champion5_rp:
-                                champion5_rp = champion5_rp - equip_tracker_tipped_arrows_requirements[0]
-                                equip_tracker_tipped_arrows_requirements[3] = equip_tracker_tipped_arrows_requirements[2]
-                                champion5_rp = champion5_rp + equip_tracker_tipped_arrows_requirements[1]
-                                ability_data = ["Equip Tracker-tipped Arrows", "self"]
+                            if ricochet_shot_requirements[0] <= champion5_rp:
+                                champion5_rp = champion5_rp - ricochet_shot_requirements[0]
+                                ricochet_shot_requirements[3] = ricochet_shot_requirements[2]
+                                champion5_rp = champion5_rp + ricochet_shot_requirements[1]
+                                damage_done = math.ceil(LEGION_RANGER.ap * self.calculate_champion_damage(5))
+                                ability_data = ["Ricochet Shot", "enemy", "AOE", damage_done]
                             else:
                                 return
                     counter += 1
@@ -18433,17 +18526,21 @@ class GameFrame(tk.Frame):
         target_list.append(target)
         if ability_data[2] == "1T":
             self.complete_turn()
-        if ability_data[2] == "2T":
+        elif ability_data[2] == "2T" or "3T":
             self.clean_up()
             if ability_data[1] == "enemy":
+                if ability_data[2] == "3T":
+                    tt_confirmation_variable = 1
+                else:
+                    tt_confirmation_variable = 0
                 if AI_SPAWNED == 1:
                     self.complete_turn()
                 elif AI_SPAWNED == 2:
                     ai1_attacktarget_frame = tk.Button(dungeon_game_frame, text=self.target_frame_ai_champion_text("ai", 1),
-                                                    command=lambda: self.put_2nd_target_in_list(1))
+                                                    command=lambda: self.add_additonal_targets(1, tt_confirmation_variable))
                     ai1_attacktarget_frame.grid(row=19, column=2, sticky="w")
                     ai2_attacktarget_frame = tk.Button(dungeon_game_frame, text=self.target_frame_ai_champion_text("ai", 2),
-                                                    command=lambda: self.put_2nd_target_in_list(2))
+                                                    command=lambda: self.add_additonal_targets(2, tt_confirmation_variable))
                     ai2_attacktarget_frame.grid(row=19, column=2, sticky="e")
                     if ai1_hp == 0:
                         ai1_attacktarget_frame["state"] = 'disable'
@@ -18455,13 +18552,13 @@ class GameFrame(tk.Frame):
                         ai2_attacktarget_frame["state"] = 'disable'
                 elif AI_SPAWNED == 3:
                     ai1_attacktarget_frame = tk.Button(dungeon_game_frame, text=self.target_frame_ai_champion_text("ai", 1),
-                                                    command=lambda: self.put_2nd_target_in_list(1))
+                                                    command=lambda: self.add_additonal_targets(1, tt_confirmation_variable))
                     ai1_attacktarget_frame.grid(row=19, column=1)
                     ai2_attacktarget_frame = tk.Button(dungeon_game_frame, text=self.target_frame_ai_champion_text("ai", 2),
-                                                    command=lambda: self.put_2nd_target_in_list(2))
+                                                    command=lambda: self.add_additonal_targets(2, tt_confirmation_variable))
                     ai2_attacktarget_frame.grid(row=19, column=2)
                     ai3_attacktarget_frame = tk.Button(dungeon_game_frame, text=self.target_frame_ai_champion_text("ai", 3),
-                                                    command=lambda: self.put_2nd_target_in_list(3))
+                                                    command=lambda: self.add_additonal_targets(3, tt_confirmation_variable))
                     ai3_attacktarget_frame.grid(row=19, column=3)
                     if ai1_hp == 0:
                         ai1_attacktarget_frame["state"] = 'disable'
@@ -18477,16 +18574,16 @@ class GameFrame(tk.Frame):
                         ai3_attacktarget_frame["state"] = 'disable'
                 elif AI_SPAWNED == 4:
                     ai1_attacktarget_frame = tk.Button(dungeon_game_frame, text=self.target_frame_ai_champion_text("ai", 1),
-                                                    command=lambda: self.put_2nd_target_in_list(1))
+                                                    command=lambda: self.add_additonal_targets(1, tt_confirmation_variable))
                     ai1_attacktarget_frame.grid(row=19, column=1, sticky="e")
                     ai2_attacktarget_frame = tk.Button(dungeon_game_frame, text=self.target_frame_ai_champion_text("ai", 2),
-                                                    command=lambda: self.put_2nd_target_in_list(2))
+                                                    command=lambda: self.add_additonal_targets(2, tt_confirmation_variable))
                     ai2_attacktarget_frame.grid(row=19, column=3, sticky="w")
                     ai3_attacktarget_frame = tk.Button(dungeon_game_frame, text=self.target_frame_ai_champion_text("ai", 3),
-                                                    command=lambda: self.put_2nd_target_in_list(3))
+                                                    command=lambda: self.add_additonal_targets(3, tt_confirmation_variable))
                     ai3_attacktarget_frame.grid(row=20, column=1, sticky="e")
                     ai4_attacktarget_frame = tk.Button(dungeon_game_frame, text=self.target_frame_ai_champion_text("ai", 4),
-                                                    command=lambda: self.put_2nd_target_in_list(4))
+                                                    command=lambda: self.add_additonal_targets(4, tt_confirmation_variable))
                     ai4_attacktarget_frame.grid(row=20, column=3, sticky="w")
                     if ai1_hp == 0:
                         ai1_attacktarget_frame["state"] = 'disable'
@@ -18506,19 +18603,19 @@ class GameFrame(tk.Frame):
                         ai4_attacktarget_frame["state"] = 'disable'
                 elif AI_SPAWNED == 5:
                     ai1_attacktarget_frame = tk.Button(dungeon_game_frame, text=self.target_frame_ai_champion_text("ai", 1),
-                                                    command=lambda: self.put_2nd_target_in_list(1))
+                                                    command=lambda: self.add_additonal_targets(1, tt_confirmation_variable))
                     ai1_attacktarget_frame.grid(row=19, column=1)
                     ai2_attacktarget_frame = tk.Button(dungeon_game_frame, text=self.target_frame_ai_champion_text("ai", 2),
-                                                    command=lambda: self.put_2nd_target_in_list(2))
+                                                    command=lambda: self.add_additonal_targets(2, tt_confirmation_variable))
                     ai2_attacktarget_frame.grid(row=19, column=1, sticky="e")
                     ai3_attacktarget_frame = tk.Button(dungeon_game_frame, text=self.target_frame_ai_champion_text("ai", 3),
-                                                    command=lambda: self.put_2nd_target_in_list(3))
+                                                    command=lambda: self.add_additonal_targets(3, tt_confirmation_variable))
                     ai3_attacktarget_frame.grid(row=19, column=2)
                     ai4_attacktarget_frame = tk.Button(dungeon_game_frame, text=self.target_frame_ai_champion_text("ai", 4),
-                                                    command=lambda: self.put_2nd_target_in_list(4))
+                                                    command=lambda: self.add_additonal_targets(4, tt_confirmation_variable))
                     ai4_attacktarget_frame.grid(row=19, column=3, sticky="w")
                     ai5_attacktarget_frame = tk.Button(dungeon_game_frame, text=self.target_frame_ai_champion_text("ai", 5),
-                                                    command=lambda: self.put_2nd_target_in_list(5))
+                                                    command=lambda: self.add_additonal_targets(5, tt_confirmation_variable))
                     ai5_attacktarget_frame.grid(row=19, column=3)
                     if ai1_hp == 0:
                         ai1_attacktarget_frame["state"] = 'disable'
@@ -18553,19 +18650,19 @@ class GameFrame(tk.Frame):
                     self.complete_turn()
                 else:
                     champion1_supporttarget_frame = tk.Button(dungeon_game_frame,
-                                                            text=self.target_frame_ai_champion_text("champion", 1), command=lambda: self.put_2nd_target_in_list(1))
+                                                            text=self.target_frame_ai_champion_text("champion", 1), command=lambda: self.add_additonal_targets(1, 0))
                     champion1_supporttarget_frame.grid(row=19, column=1, sticky="e")
                     champion2_supporttarget_frame = tk.Button(dungeon_game_frame,
-                                                            text=self.target_frame_ai_champion_text("champion", 2), command=lambda: self.put_2nd_target_in_list(2))
+                                                            text=self.target_frame_ai_champion_text("champion", 2), command=lambda: self.add_additonal_targets(2, 0))
                     champion2_supporttarget_frame.grid(row=19, column=2, sticky="w")
                     champion3_supporttarget_frame = tk.Button(dungeon_game_frame,
-                                                            text=self.target_frame_ai_champion_text("champion", 3), command=lambda: self.put_2nd_target_in_list(3))
+                                                            text=self.target_frame_ai_champion_text("champion", 3), command=lambda: self.add_additonal_targets(3, 0))
                     champion3_supporttarget_frame.grid(row=19, column=2)
                     champion4_supporttarget_frame = tk.Button(dungeon_game_frame,
-                                                            text=self.target_frame_ai_champion_text("champion", 4), command=lambda: self.put_2nd_target_in_list(4))
+                                                            text=self.target_frame_ai_champion_text("champion", 4), command=lambda: self.add_additonal_targets(4, 0))
                     champion4_supporttarget_frame.grid(row=19, column=2, sticky="e")
                     champion5_supporttarget_frame = tk.Button(dungeon_game_frame,
-                                                            text=self.target_frame_ai_champion_text("champion", 5), command=lambda: self.put_2nd_target_in_list(5))
+                                                            text=self.target_frame_ai_champion_text("champion", 5), command=lambda: self.add_additonal_targets(5, 0))
                     champion5_supporttarget_frame.grid(row=19, column=3, sticky="w")
                     if champion1_hp == 0:
                         champion1_supporttarget_frame["state"] = 'disable'
@@ -18587,10 +18684,106 @@ class GameFrame(tk.Frame):
                         champion5_supporttarget_frame["state"] = 'disable'
                     elif target == 5:
                         champion5_supporttarget_frame["state"] = 'disable'
-    def put_2nd_target_in_list(self, target2):
+            
+    def add_additonal_targets(self, next_target, confirm_new_target):
         global target_list
-        target_list.append(target2)
-        self.complete_turn()
+        target_list.append(next_target)
+        if confirm_new_target == 0:
+            self.complete_turn()
+        if confirm_new_target == 1:
+            self.clean_up()
+            if AI_SPAWNED == 1:
+                self.complete_turn()
+            elif AI_SPAWNED == 2:
+                self.complete_turn()
+            elif AI_SPAWNED == 3:
+                    ai1_attacktarget_frame = tk.Button(dungeon_game_frame, text=self.target_frame_ai_champion_text("ai", 1),
+                                                    command=lambda: self.add_additonal_targets(1, 0))
+                    ai1_attacktarget_frame.grid(row=19, column=1)
+                    ai2_attacktarget_frame = tk.Button(dungeon_game_frame, text=self.target_frame_ai_champion_text("ai", 2),
+                                                    command=lambda: self.add_additonal_targets(2, 0))
+                    ai2_attacktarget_frame.grid(row=19, column=2)
+                    ai3_attacktarget_frame = tk.Button(dungeon_game_frame, text=self.target_frame_ai_champion_text("ai", 3),
+                                                    command=lambda: self.add_additonal_targets(3, 0))
+                    ai3_attacktarget_frame.grid(row=19, column=3)
+                    if ai1_hp == 0:
+                        ai1_attacktarget_frame["state"] = 'disable'
+                    elif 1 in target_list:
+                        ai1_attacktarget_frame["state"] = 'disable'
+                    if ai2_hp == 0:
+                        ai2_attacktarget_frame["state"] = 'disable'
+                    elif 2 in target_list:
+                        ai2_attacktarget_frame["state"] = 'disable'
+                    if ai3_hp == 0:
+                        ai3_attacktarget_frame["state"] = 'disable'
+                    elif 3 in target_list:
+                        ai3_attacktarget_frame["state"] = 'disable'
+            elif AI_SPAWNED == 4:
+                    ai1_attacktarget_frame = tk.Button(dungeon_game_frame, text=self.target_frame_ai_champion_text("ai", 1),
+                                                    command=lambda: self.add_additonal_targets(1, 0))
+                    ai1_attacktarget_frame.grid(row=19, column=1, sticky="e")
+                    ai2_attacktarget_frame = tk.Button(dungeon_game_frame, text=self.target_frame_ai_champion_text("ai", 2),
+                                                    command=lambda: self.add_additonal_targets(2, 0))
+                    ai2_attacktarget_frame.grid(row=19, column=3, sticky="w")
+                    ai3_attacktarget_frame = tk.Button(dungeon_game_frame, text=self.target_frame_ai_champion_text("ai", 3),
+                                                    command=lambda: self.add_additonal_targets(3, 0))
+                    ai3_attacktarget_frame.grid(row=20, column=1, sticky="e")
+                    ai4_attacktarget_frame = tk.Button(dungeon_game_frame, text=self.target_frame_ai_champion_text("ai", 4),
+                                                    command=lambda: self.add_additonal_targets(4, 0))
+                    ai4_attacktarget_frame.grid(row=20, column=3, sticky="w")
+                    if ai1_hp == 0:
+                        ai1_attacktarget_frame["state"] = 'disable'
+                    elif 1 in target_list:
+                        ai1_attacktarget_frame["state"] = 'disable'
+                    if ai2_hp == 0:
+                        ai2_attacktarget_frame["state"] = 'disable'
+                    elif 2 in target_list:
+                        ai2_attacktarget_frame["state"] = 'disable'
+                    if ai3_hp == 0:
+                        ai3_attacktarget_frame["state"] = 'disable'
+                    elif 3 in target_list:
+                        ai3_attacktarget_frame["state"] = 'disable'
+                    if ai4_hp == 0:
+                        ai4_attacktarget_frame["state"] = 'disable'
+                    elif 4 in target_list:
+                        ai4_attacktarget_frame["state"] = 'disable'
+            elif AI_SPAWNED == 5:
+                    ai1_attacktarget_frame = tk.Button(dungeon_game_frame, text=self.target_frame_ai_champion_text("ai", 1),
+                                                    command=lambda: self.add_additonal_targets(1, 0))
+                    ai1_attacktarget_frame.grid(row=19, column=1)
+                    ai2_attacktarget_frame = tk.Button(dungeon_game_frame, text=self.target_frame_ai_champion_text("ai", 2),
+                                                    command=lambda: self.add_additonal_targets(2, 0))
+                    ai2_attacktarget_frame.grid(row=19, column=1, sticky="e")
+                    ai3_attacktarget_frame = tk.Button(dungeon_game_frame, text=self.target_frame_ai_champion_text("ai", 3),
+                                                    command=lambda: self.add_additonal_targets(3, 0))
+                    ai3_attacktarget_frame.grid(row=19, column=2)
+                    ai4_attacktarget_frame = tk.Button(dungeon_game_frame, text=self.target_frame_ai_champion_text("ai", 4),
+                                                    command=lambda: self.add_additonal_targets(4, 0))
+                    ai4_attacktarget_frame.grid(row=19, column=3, sticky="w")
+                    ai5_attacktarget_frame = tk.Button(dungeon_game_frame, text=self.target_frame_ai_champion_text("ai", 5),
+                                                    command=lambda: self.add_additonal_targets(5, 0))
+                    ai5_attacktarget_frame.grid(row=19, column=3)
+                    if ai1_hp == 0:
+                        ai1_attacktarget_frame["state"] = 'disable'
+                    elif 1 in target_list:
+                        ai1_attacktarget_frame["state"] = 'disable'
+                    if ai2_hp == 0:
+                        ai2_attacktarget_frame["state"] = 'disable'
+                    elif 2 in target_list:
+                        ai2_attacktarget_frame["state"] = 'disable'
+                    if ai3_hp == 0:
+                        ai3_attacktarget_frame["state"] = 'disable'
+                    elif 3 in target_list:
+                        ai3_attacktarget_frame["state"] = 'disable'
+                    if ai4_hp == 0:
+                        ai4_attacktarget_frame["state"] = 'disable'
+                    elif 4 in target_list:
+                        ai4_attacktarget_frame["state"] = 'disable'
+                    if ai5_hp == 0:
+                        ai5_attacktarget_frame["state"] = 'disable'
+                    elif 5 in target_list:
+                        ai5_attacktarget_frame["state"] = 'disable'
+
     def complete_turn(self):
         global champion1_turnover, champion2_turnover, champion3_turnover, champion4_turnover, champion5_turnover, from_end_of_turn
         if ability_data[1] == "enemy":
@@ -18936,6 +19129,7 @@ class GameFrame(tk.Frame):
             if 1 in target_list:
                 ai1_hp = ai1_hp -math.ceil(ability_data[3] * self.check_brittle(1))
                 #Add dodge chance increase with a enemy attack intention tracker here
+                ai1_fencer_dodgechance = ai1_fencer_dodgechance + 40
             if 2 in target_list:
                 ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2))
             if 3 in target_list:
@@ -19885,8 +20079,8 @@ class GameFrame(tk.Frame):
             void_infusion_stacks = 0
         elif ability_data[0] == "Wound Fissure":
             global ai1_burnDot, ai2_burnDot, ai3_burnDot, ai4_burnDot, ai5_burnDot, \
-                ai1_SerraSlashDot, ai2_SerraSlashDot, ai3_SerraSlashDot, ai4_SerraSlashDot, ai5_SerraSlashDot, \
-                ai1_eviscerDot, ai2_EviscerDot, ai3_EviscerDot, ai4_EviscerDot, ai5_EviscerDot, \
+                ai1_serraSlashDot, ai2_serraSlashDot, ai3_serraSlashDot, ai4_serraSlashDot, ai5_serraSlashDot, \
+                ai1_eviscerDot, ai2_eviscerDot, ai3_eviscerDot, ai4_eviscerDot, ai5_eviscerDot, \
                 ai1_garroteDot, ai2_garroteDot, ai3_garroteDot, ai4_garroteDot, ai5_garroteDot, \
                 ai1_shimmerDot, ai2_shimmerDot, ai3_shimmerDot, ai4_shimmerDot, ai5_shimmerDot,\
                 ai1_divineDot, ai2_divineDot, ai3_divineDot, ai4_divineDot, ai5_divineDot
@@ -19903,14 +20097,14 @@ class GameFrame(tk.Frame):
                         ai1_burnDot[1] = ai1_burnDot[1] - 1
                         counter += 1
                     counter = 0
-                if ai1_SerraSlashDot[1] > 0:
-                    while ai1_SerraSlashDot[1] > 0:
+                if ai1_serraSlashDot[1] > 0:
+                    while ai1_serraSlashDot[1] > 0:
                         if ai1_hp <= 0:
                             break
                         if counter == 2:
                             break
-                        ai1_hp = ai1_hp - ai1_SerraSlashDot[0]
-                        ai1_SerraSlashDot[1] = ai1_SerraSlashDot[1] - 1
+                        ai1_hp = ai1_hp - ai1_serraSlashDot[0]
+                        ai1_serraSlashDot[1] = ai1_serraSlashDot[1] - 1
                         counter += 1
                     counter = 0
                 if ai1_eviscerDot[1] > 0:
@@ -19994,24 +20188,24 @@ class GameFrame(tk.Frame):
                         ai2_burnDot[1] = ai2_burnDot[1] - 1
                         counter += 1
                     counter = 0
-                if ai2_SerraSlashDot[1] > 0:
-                    while ai2_SerraSlashDot[1] > 0:
+                if ai2_serraSlashDot[1] > 0:
+                    while ai2_serraSlashDot[1] > 0:
                         if ai2_hp <= 0:
                             break
                         if counter == 2:
                             break
-                        ai2_hp = ai2_hp - ai2_SerraSlashDot[0]
-                        ai2_SerraSlashDot[1] = ai2_SerraSlashDot[1] - 1
+                        ai2_hp = ai2_hp - ai2_serraSlashDot[0]
+                        ai2_serraSlashDot[1] = ai2_serraSlashDot[1] - 1
                         counter += 1
                     counter = 0
-                if ai2_EviscerDot[1] > 0:
-                    while ai2_EviscerDot[1] > 0:
+                if ai2_eviscerDot[1] > 0:
+                    while ai2_eviscerDot[1] > 0:
                         if ai2_hp <= 0:
                             break
                         if counter == 2:
                             break
-                        ai2_hp = ai2_hp - ai2_EviscerDot[0]
-                        ai2_EviscerDot[1] = ai2_EviscerDot[1] - 1
+                        ai2_hp = ai2_hp - ai2_eviscerDot[0]
+                        ai2_eviscerDot[1] = ai2_eviscerDot[1] - 1
                         counter += 1
                     counter = 0
                 if ai2_garroteDot[1] > 0:
@@ -20085,24 +20279,24 @@ class GameFrame(tk.Frame):
                         ai3_burnDot[1] = ai3_burnDot[1] - 1
                         counter += 1
                     counter = 0
-                if ai3_SerraSlashDot[1] > 0:
-                    while ai3_SerraSlashDot[1] > 0:
+                if ai3_serraSlashDot[1] > 0:
+                    while ai3_serraSlashDot[1] > 0:
                         if ai3_hp <= 0:
                             break
                         if counter == 2:
                             break
-                        ai3_hp = ai3_hp - ai3_SerraSlashDot[0]
-                        ai3_SerraSlashDot[1] = ai3_SerraSlashDot[1] - 1
+                        ai3_hp = ai3_hp - ai3_serraSlashDot[0]
+                        ai3_serraSlashDot[1] = ai3_serraSlashDot[1] - 1
                         counter += 1
                     counter = 0
-                if ai3_EviscerDot[1] > 0:
-                    while ai3_EviscerDot[1] > 0:
+                if ai3_eviscerDot[1] > 0:
+                    while ai3_eviscerDot[1] > 0:
                         if ai3_hp <= 0:
                             break
                         if counter == 2:
                             break
-                        ai3_hp = ai3_hp - ai3_EviscerDot[0]
-                        ai3_EviscerDot[1] = ai3_EviscerDot[1] - 1
+                        ai3_hp = ai3_hp - ai3_eviscerDot[0]
+                        ai3_eviscerDot[1] = ai3_eviscerDot[1] - 1
                         counter += 1
                     counter = 0
                 if ai3_garroteDot[1] > 0:
@@ -20176,24 +20370,24 @@ class GameFrame(tk.Frame):
                         ai4_burnDot[1] = ai4_burnDot[1] - 1
                         counter += 1
                     counter = 0
-                if ai4_SerraSlashDot[1] > 0:
-                    while ai4_SerraSlashDot[1] > 0:
+                if ai4_serraSlashDot[1] > 0:
+                    while ai4_serraSlashDot[1] > 0:
                         if ai4_hp <= 0:
                             break
                         if counter == 2:
                             break
-                        ai4_hp = ai4_hp - ai4_SerraSlashDot[0]
-                        ai4_SerraSlashDot[1] = ai4_SerraSlashDot[1] - 1
+                        ai4_hp = ai4_hp - ai4_serraSlashDot[0]
+                        ai4_serraSlashDot[1] = ai4_serraSlashDot[1] - 1
                         counter += 1
                     counter = 0
-                if ai4_EviscerDot[1] > 0:
-                    while ai4_EviscerDot[1] > 0:
+                if ai4_eviscerDot[1] > 0:
+                    while ai4_eviscerDot[1] > 0:
                         if ai4_hp <= 0:
                             break
                         if counter == 2:
                             break
-                        ai4_hp = ai4_hp - ai4_EviscerDot[0]
-                        ai4_EviscerDot[1] = ai4_EviscerDot[1] - 1
+                        ai4_hp = ai4_hp - ai4_eviscerDot[0]
+                        ai4_eviscerDot[1] = ai4_eviscerDot[1] - 1
                         counter += 1
                     counter = 0
                 if ai4_garroteDot[1] > 0:
@@ -20267,24 +20461,24 @@ class GameFrame(tk.Frame):
                         ai5_burnDot[1] = ai5_burnDot[1] - 1
                         counter += 1
                     counter = 0
-                if ai5_SerraSlashDot[1] > 0:
-                    while ai5_SerraSlashDot[1] > 0:
+                if ai5_serraSlashDot[1] > 0:
+                    while ai5_serraSlashDot[1] > 0:
                         if ai5_hp <= 0:
                             break
                         if counter == 2:
                             break
-                        ai5_hp = ai5_hp - ai5_SerraSlashDot[0]
-                        ai5_SerraSlashDot[1] = ai5_SerraSlashDot[1] - 1
+                        ai5_hp = ai5_hp - ai5_serraSlashDot[0]
+                        ai5_serraSlashDot[1] = ai5_serraSlashDot[1] - 1
                         counter += 1
                     counter = 0
-                if ai5_EviscerDot[1] > 0:
-                    while ai5_EviscerDot[1] > 0:
+                if ai5_eviscerDot[1] > 0:
+                    while ai5_eviscerDot[1] > 0:
                         if ai5_hp <= 0:
                             break
                         if counter == 2:
                             break
-                        ai5_hp = ai5_hp - ai5_EviscerDot[0]
-                        ai5_EviscerDot[1] = ai5_EviscerDot[1] - 1
+                        ai5_hp = ai5_hp - ai5_eviscerDot[0]
+                        ai5_eviscerDot[1] = ai5_eviscerDot[1] - 1
                         counter += 1
                     counter = 0
                 if ai5_garroteDot[1] > 0:
@@ -20407,44 +20601,44 @@ class GameFrame(tk.Frame):
                 ai5_rottingDot[1] = 0
                 if "Rotting" in ai5_statuses:
                     ai5_statuses.remove("Rotting")
-            if ai1_SerraSlashDot[1] <= 0:
-                ai1_SerraSlashDot[1] = 0
+            if ai1_serraSlashDot[1] <= 0:
+                ai1_serraSlashDot[1] = 0
                 if "Serrated" in ai1_statuses:
                     ai1_statuses.remove("Serrated")
-            if ai2_SerraSlashDot[1] <= 0:
-                ai2_SerraSlashDot[1] = 0
+            if ai2_serraSlashDot[1] <= 0:
+                ai2_serraSlashDot[1] = 0
                 if "Serrated" in ai2_statuses:
                     ai2_statuses.remove("Serrated")
-            if ai3_SerraSlashDot[1] <= 0:
-                ai3_SerraSlashDot[1] = 0
+            if ai3_serraSlashDot[1] <= 0:
+                ai3_serraSlashDot[1] = 0
                 if "Serrated" in ai3_statuses:
                     ai3_statuses.remove("Serrated")
-            if ai4_SerraSlashDot[1] <= 0:
-                ai4_SerraSlashDot[1] = 0
+            if ai4_serraSlashDot[1] <= 0:
+                ai4_serraSlashDot[1] = 0
                 if "Serrated" in ai4_statuses:
                     ai4_statuses.remove("Serrated")
-            if ai5_SerraSlashDot[1] <= 0:
-                ai5_SerraSlashDot[1] = 0
+            if ai5_serraSlashDot[1] <= 0:
+                ai5_serraSlashDot[1] = 0
                 if "Serrated" in ai5_statuses:
                     ai5_statuses.remove("Serrated")
             if ai1_eviscerDot[1] <= 0:
                 ai1_eviscerDot[1] = 0
                 if "Eviscerated" in ai1_statuses:
                     ai1_statuses.remove("Eviscerated")
-            if ai2_EviscerDot[1] <= 0:
-                ai2_EviscerDot[1] = 0
+            if ai2_eviscerDot[1] <= 0:
+                ai2_eviscerDot[1] = 0
                 if "Eviscerated" in ai2_statuses:
                     ai2_statuses.remove("Eviscerated")
-            if ai3_EviscerDot[1] <= 0:
-                ai3_EviscerDot[1] = 0
+            if ai3_eviscerDot[1] <= 0:
+                ai3_eviscerDot[1] = 0
                 if "Eviscerated" in ai3_statuses:
                     ai3_statuses.remove("Eviscerated")
-            if ai4_EviscerDot[1] <= 0:
-                ai4_EviscerDot[1] = 0
+            if ai4_eviscerDot[1] <= 0:
+                ai4_eviscerDot[1] = 0
                 if "Eviscerated" in ai4_statuses:
                     ai4_statuses.remove("Eviscerated")
-            if ai5_EviscerDot[1] <= 0:
-                ai5_EviscerDot[1] = 0
+            if ai5_eviscerDot[1] <= 0:
+                ai5_eviscerDot[1] = 0
                 if "Eviscerated" in ai5_statuses:
                     ai5_statuses.remove("Eviscerated")
             if ai1_shimmerDot[1] <= 0:
@@ -20792,16 +20986,37 @@ class GameFrame(tk.Frame):
                             if champion5_hp < 0:
                                 champion5_hp = 0
         elif ability_data[0] == "Holy Wrath":
+            global holywrath_multiplier
             if 1 in target_list:
-                ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1)) * 1.3
+                ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1) * (1 + (0.2 * holywrath_multiplier)))
+                if holywrath_multiplier < 5:
+                    holywrath_multiplier = holywrath_multiplier + 1
+                else:
+                    holywrath_multiplier = 1
             if 2 in target_list:
-                ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2)) * 1.3
+                ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2) * (1 + (0.2 * holywrath_multiplier)))
+                if holywrath_multiplier < 5:
+                    holywrath_multiplier = holywrath_multiplier + 1
+                else:
+                    holywrath_multiplier = 1
             if 3 in target_list:
-                ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3)) * 1.3
+                ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3) * (1 + (0.2 * holywrath_multiplier)))
+                if holywrath_multiplier < 5:
+                    holywrath_multiplier = holywrath_multiplier + 1
+                else:
+                    holywrath_multiplier = 1
             if 4 in target_list:
-                ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4)) * 1.3
+                ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4) * (1 + (0.2 * holywrath_multiplier)))
+                if holywrath_multiplier < 5:
+                    holywrath_multiplier = holywrath_multiplier + 1
+                else:
+                    holywrath_multiplier = 1
             if 5 in target_list:
-                ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5)) * 1.3
+                ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5) * (1 + (0.2 * holywrath_multiplier)))
+                if holywrath_multiplier < 5:
+                    holywrath_multiplier = holywrath_multiplier + 1
+                else:
+                    holywrath_multiplier = 1
         elif ability_data[0] == "Righteous Blow":
             if 1 in target_list:
                 ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1))
@@ -20817,88 +21032,137 @@ class GameFrame(tk.Frame):
                 self.apply_stun(4, 2)
             if 5 in target_list:
                 ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5))
-                self.apply_stun(5, 2)
-        elif ability_data[0] == "Steady Shot":
-            if current_arrow_type == "Iron-cast":
-                if 1 in target_list:
-                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1))
-                if 2 in target_list:
-                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2))
-                if 3 in target_list:
-                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3))
-                if 4 in target_list:
-                    ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4))
-                if 5 in target_list:
-                    ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5))
-            if current_arrow_type == "Tracker-tipped":
-                if AI_SPAWNED == 1:
-                    ai1_hp = ai1_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(1)) * 0.65)
-                if AI_SPAWNED == 2:
-                    ai1_hp = ai1_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(1)) * 0.65)
-                    ai2_hp = ai2_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(2)) * 0.65)
-                if AI_SPAWNED == 3:
-                    ai1_hp = ai1_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(1)) * 0.65)
-                    ai2_hp = ai2_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(2)) * 0.65)
-                    ai3_hp = ai3_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(3)) * 0.65)
-                if AI_SPAWNED == 4:
-                    ai1_hp = ai1_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(1)) * 0.65)
-                    ai2_hp = ai2_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(2)) * 0.65)
-                    ai3_hp = ai3_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(3)) * 0.65)
-                    ai4_hp = ai4_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(4)) * 0.65)
-                if AI_SPAWNED == 5:
-                    ai1_hp = ai1_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(1)) * 0.65)
-                    ai2_hp = ai2_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(2)) * 0.65)
-                    ai3_hp = ai3_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(3)) * 0.65)
-                    ai4_hp = ai4_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(4)) * 0.65)
-                    ai5_hp = ai5_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(5)) * 0.65)
-        elif ability_data[0] == "Power Opt":
-            if current_arrow_type == "Iron-cast":
-                if 1 in target_list:
-                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1)) * 2
-                if 2 in target_list:
-                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2)) * 2
-                if 3 in target_list:
-                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3)) * 2
-                if 4 in target_list:
-                    ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4)) * 2
-                if 5 in target_list:
-                    ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5)) * 2
-            if current_arrow_type == "Tracker-tipped":
-                if AI_SPAWNED == 1:
-                    ai1_hp = ai1_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(1)) * 1.25)
-                if AI_SPAWNED == 2:
-                    ai1_hp = ai1_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(1)) * 1.25)
-                    ai2_hp = ai2_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(2)) * 1.25)
-                if AI_SPAWNED == 3:
-                    ai1_hp = ai1_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(1)) * 1.25)
-                    ai2_hp = ai2_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(2)) * 1.25)
-                    ai3_hp = ai3_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(3)) * 1.25)
-                if AI_SPAWNED == 4:
-                    ai1_hp = ai1_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(1)) * 1.25)
-                    ai2_hp = ai2_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(2)) * 1.25)
-                    ai3_hp = ai3_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(3)) * 1.25)
-                    ai4_hp = ai4_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(4)) * 1.25)
-                if AI_SPAWNED == 5:
-                    ai1_hp = ai1_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(1)) * 1.25)
-                    ai2_hp = ai2_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(2)) * 1.25)
-                    ai3_hp = ai3_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(3)) * 1.25)
-                    ai4_hp = ai4_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(4)) * 1.25)
-                    ai5_hp = ai5_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(5)) * 1.25)
-        elif ability_data[0] == "Chain Bolts":
+        elif ability_data[0] == "Crusade":
             if 1 in target_list:
-                ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1)) * 1.2
+                ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1))
+                if AI_SPAWNED == 2:
+                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2) * 0.3)
+                if AI_SPAWNED == 3:
+                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2) * 0.3)
+                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3) * 0.3)
+                if AI_SPAWNED == 4:
+                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2) * 0.3)
+                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3) * 0.3)
+                    ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4) * 0.3)
+                if AI_SPAWNED == 5:
+                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2) * 0.3)
+                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3) * 0.3)
+                    ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4) * 0.3)
+                    ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5) * 0.3)
             if 2 in target_list:
-                ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2)) * 1.2
+                ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2))
+                if AI_SPAWNED == 2:
+                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1) * 0.3)
+                if AI_SPAWNED == 3:
+                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1) * 0.3)
+                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3) * 0.3)
+                if AI_SPAWNED == 4:
+                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1) * 0.3)
+                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3) * 0.3)
+                    ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4) * 0.3)
+                if AI_SPAWNED == 5:
+                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1) * 0.3)
+                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3) * 0.3)
+                    ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4) * 0.3)
+                    ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5) * 0.3)
             if 3 in target_list:
-                ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3)) * 1.2
+                ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3))
+                if AI_SPAWNED == 3:
+                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1) * 0.3)
+                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2) * 0.3)
+                if AI_SPAWNED == 4:
+                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1) * 0.3)
+                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2) * 0.3)
+                    ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4) * 0.3)
+                if AI_SPAWNED == 5:
+                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1) * 0.3)
+                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2) * 0.3)
+                    ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4) * 0.3)
+                    ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5) * 0.3)
             if 4 in target_list:
-                ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4)) * 1.2
+                ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4))
+                if AI_SPAWNED == 4:
+                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1) * 0.3)
+                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2) * 0.3)
+                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3) * 0.3)
+                if AI_SPAWNED == 5:
+                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1) * 0.3)
+                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2) * 0.3)
+                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3) * 0.3)
+                    ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5) * 0.3)
             if 5 in target_list:
-                ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5)) * 1.2
-        elif ability_data[0] == "Electrical Expulsion":
+                ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1) * 0.3)
+                ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2) * 0.3)
+                ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3) * 0.3)
+                ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4) * 0.3)
+                ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5))
+        elif ability_data[0] == "Damnation":
+            global ai1_damnation, ai2_damnation, ai3_damnation, ai4_damnation, ai5_damnation
+            damnation_damage = ability_data[3] * 3
+            if 1 in target_list:
+                ai1_damnation = [damnation_damage, 3]
+                ai1_statuses.append("Exploding")
+            if 2 in target_list:
+                ai2_damnation = [damnation_damage, 3]
+                ai2_statuses.append("Exploding")
+            if 3 in target_list:
+                ai3_damnation = [damnation_damage, 3]
+                ai3_statuses.append("Exploding")
+            if 4 in target_list:
+                ai4_damnation = [damnation_damage, 3]
+                ai4_statuses.append("Exploding")
+            if 5 in target_list:
+                ai5_damnation = [damnation_damage, 3]
+                ai5_statuses.append("Exploding")
+        elif ability_data[0] == "Steady Aim":
+            if 1 in target_list:
+                ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1))
+            if 2 in target_list:
+                ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2))
+            if 3 in target_list:
+                ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3))
+            if 4 in target_list:
+                ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4))
+            if 5 in target_list:
+                ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5))
+            if power_shot_requirements[3] != 0:
+                power_shot_requirements[3] = power_shot_requirements[3] - 1
+            if ricochet_shot_requirements[3] != 0:
+                ricochet_shot_requirements[3] = ricochet_shot_requirements[3] - 1
+        elif ability_data[0] == "Power Shot":
+            if 1 in target_list:
+                ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1)) * 1.5
+            if 2 in target_list:
+                ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2)) * 1.5
+            if 3 in target_list:
+                ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3)) * 1.5
+            if 4 in target_list:
+                ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4)) * 1.5
+            if 5 in target_list:
+                ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5)) * 1.5
+            if multi_shot_requirements[3] != 0:
+                multi_shot_requirements[3] = multi_shot_requirements[3] - 2
+                if multi_shot_requirements[3] < 0:
+                    multi_shot_requirements[3] = 0
+        elif ability_data[0] == "Multi-shot":
+            if 1 in target_list:
+                ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1))
+            if 2 in target_list:
+                ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2))
+            if 3 in target_list:
+                ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3))
+            if 4 in target_list:
+                ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4))
+            if 5 in target_list:
+                ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5))
+            if ricochet_shot_requirements[3] != 0:
+                ricochet_shot_requirements[3] = ricochet_shot_requirements[3] - 3
+                if ricochet_shot_requirements[3] < 0:
+                    ricochet_shot_requirements[3] = 0
+        elif ability_data[0] == "Ricochet Shot":
             if AI_SPAWNED == 1:
                 ai1_hp = ai1_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(1)) * 0.75)
-            if AI_SPAWNED == 3:
+            if AI_SPAWNED == 2:
                 ai1_hp = ai1_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(1)) * 0.75)
                 ai2_hp = ai2_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(2)) * 0.75)
             if AI_SPAWNED == 3:
@@ -20916,11 +21180,60 @@ class GameFrame(tk.Frame):
                 ai3_hp = ai3_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(3)) * 0.75)
                 ai4_hp = ai4_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(4)) * 0.75)
                 ai5_hp = ai5_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(5)) * 0.75)
-        elif ability_data[0] == "Energise":
-            global energised
-            if electrical_expulsion_requirements[3] != 0:
-                electrical_expulsion_requirements[3] = 0
-            energised = 1
+        elif ability_data[0] == "Chain Bolts":
+            if 1 in target_list:
+                ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1)) * 1.2
+                self.apply_charges(1)
+            if 2 in target_list:
+                ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2)) * 1.2
+                self.apply_charges(2)
+            if 3 in target_list:
+                ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3)) * 1.2
+                self.apply_charges(3)
+            if 4 in target_list:
+                ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4)) * 1.2
+                self.apply_charges(4)
+            if 5 in target_list:
+                ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5)) * 1.2
+                self.apply_charges(5)
+        elif ability_data[0] == "Electrical Expulsion":
+            if AI_SPAWNED == 1:
+                ai1_hp = ai1_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(1)) * 0.5)
+                self.apply_charges(0)
+            if AI_SPAWNED == 3:
+                ai1_hp = ai1_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(1)) * 0.5)
+                ai2_hp = ai2_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(2)) * 0.5)
+                self.apply_charges(0)
+            if AI_SPAWNED == 3:
+                ai1_hp = ai1_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(1)) * 0.5)
+                ai2_hp = ai2_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(2)) * 0.5)
+                ai3_hp = ai3_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(3)) * 0.5)
+                self.apply_charges(0)
+            if AI_SPAWNED == 4:
+                ai1_hp = ai1_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(1)) * 0.5)
+                ai2_hp = ai2_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(2)) * 0.5)
+                ai3_hp = ai3_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(3)) * 0.5)
+                ai4_hp = ai4_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(4)) * 0.5)
+                self.apply_charges(0)
+            if AI_SPAWNED == 5:
+                ai1_hp = ai1_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(1)) * 0.5)
+                ai2_hp = ai2_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(2)) * 0.5)
+                ai3_hp = ai3_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(3)) * 0.5)
+                ai4_hp = ai4_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(4)) * 0.5)
+                ai5_hp = ai5_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(5)) * 0.5)
+                self.apply_charges(0)
+        elif ability_data[0] == "Superconductor":
+            global ai1_superconducted, ai2_superconducted, ai3_superconducted, ai4_superconducted, ai5_superconducted
+            if 1 in target_list:
+                ai1_superconducted = 2
+            if 2 in target_list:
+                ai2_superconducted = 2
+            if 3 in target_list:
+                ai3_superconducted = 2
+            if 4 in target_list:
+                ai4_superconducted = 2
+            if 5 in target_list:
+                ai5_superconducted = 2
         elif ability_data[0] == "Power Surge":
             if AI_SPAWNED == 1:
                 ai1_hp = ai1_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(1))) * 1.4
@@ -21331,49 +21644,6 @@ class GameFrame(tk.Frame):
                 champion5_barb_armour = 5
                 if "Barbed Armour" not in champion5_statuses:
                     champion5_statuses.append("Barbed Armour")
-        elif ability_data[0] == "Crusade":
-            global paladin_aura, paladin_aura, paladin_aura, paladin_aura, paladin_aura
-            paladin_aura = 1
-            if "Damnation" in champion1_statuses:
-                champion1_statuses.remove("Damnation")
-                champion1_statuses.append("Crusade")
-            paladin_aura = 1
-            if "Damnation" in champion2_statuses:
-                champion2_statuses.remove("Damnation")
-                champion2_statuses.append("Crusade")
-            paladin_aura = 1
-            if "Damnation" in champion3_statuses:
-                champion3_statuses.remove("Damnation")
-                champion3_statuses.append("Crusade")
-            paladin_aura = 1
-            if "Damnation" in champion4_statuses:
-                champion4_statuses.remove("Damnation")
-                champion4_statuses.append("Crusade")
-            paladin_aura = 1
-            if "Damnation" in champion5_statuses:
-                champion5_statuses.remove("Damnation")
-                champion5_statuses.append("Crusade")
-        elif ability_data[0] == "Damnation":
-            paladin_aura = 2
-            if "Crusade" in champion1_statuses:
-                champion1_statuses.remove("Crusade")
-                champion1_statuses.append("Damnation")
-            paladin_aura = 2
-            if "Crusade" in champion2_statuses:
-                champion2_statuses.remove("Crusade")
-                champion2_statuses.append("Damnation")
-            paladin_aura = 2
-            if "Crusade" in champion3_statuses:
-                champion3_statuses.remove("Crusade")
-                champion3_statuses.append("Damnation")
-            paladin_aura = 2
-            if "Crusade" in champion4_statuses:
-                champion4_statuses.remove("Crusade")
-                champion4_statuses.append("Damnation")
-            paladin_aura = 2
-            if "Crusade" in champion5_statuses:
-                champion5_statuses.remove("Crusade")
-                champion5_statuses.append("Damnation")
         elif ability_data[0] == "Muscle Enlarger":
             global champion1_muscleEnlarger, champion2_muscleEnlarger, champion3_muscleEnlarger, \
                 champion4_muscleEnlarger, champion5_muscleEnlarger
@@ -21966,14 +22236,11 @@ class GameFrame(tk.Frame):
                         if counter == 5:
                             champion5_statuses.append("Enharden Nerves")
                             break
-        elif ability_data[0] == "Equip Iron-cast Arrows":
-            current_arrow_type = "Iron-cast"
-        elif ability_data[0] == "Equip Tracker-tipped Arrows":
-            current_arrow_type = "Tracker-tipped"
-        elif ability_data[0] == "Superconductor":
-            global energise_requirements
-            energise_requirements[3] = 0
-
+        elif ability_data[0] == "Energise":
+            global energised, electrical_expulsion_requirements
+            if electrical_expulsion_requirements[3] != 0:
+                electrical_expulsion_requirements[3] = 0
+            energised = 1
     def grant_champion_blessing(self, target):
         global champion1_blessing, champion2_blessing, champion3_blessing, champion4_blessing, champion5_blessing, \
             champion1_statuses, champion2_statuses, champion3_statuses, champion4_statuses, champion5_statuses
@@ -22151,26 +22418,26 @@ class GameFrame(tk.Frame):
         if "Flowing Waters" in champion5_statuses:
             champion5_springwaters[1] = champion5_springwaters[1] + 1
     def apply_charges(self, target):
-        global ai1_charged
+        global ai1_charged, ai2_charged, ai3_charged, ai4_charged, ai5_charged
         charges2apply = 0
         CHARGELIST = ["POSITIVE", "NEGATIVE"]
-        if ai1_superconductor != 0:
+        if ai1_superconducted != 0:
             conducted1 = 2
         else:
             conducted1 = 1
-        if ai2_superconductor != 0:
+        if ai2_superconducted != 0:
             conducted2 = 2
         else:
             conducted2 = 1
-        if ai3_superconductor != 0:
+        if ai3_superconducted != 0:
             conducted3 = 2
         else:
             conducted3 = 1
-        if ai4_superconductor != 0:
+        if ai4_superconducted != 0:
             conducted4 = 2
         else:
             conducted4 = 1
-        if ai5_superconductor != 0:
+        if ai5_superconducted != 0:
             conducted5 = 2
         else:
             conducted5 = 1
@@ -22182,12 +22449,12 @@ class GameFrame(tk.Frame):
             if AI_SPAWNED == 1:
                 while charges2apply != 0:
                     appliedcharge = random.choice(CHARGELIST)
-                    if appliedcharge == "positive":
+                    if appliedcharge == "POSITIVE":
                         if ai1_charged[0] == 2:
                             ai1_charged[1] = ai1_charged[1] + 1
                         else:
                             ai1_charged[0] = ai1_charged[0] + 1
-                    if appliedcharge == "negative":
+                    if appliedcharge == "NEGATIVE":
                         if ai1_charged[1] == 2:
                             ai1_charged[0] = ai1_charged[1] + 1
                         else:
@@ -22203,12 +22470,12 @@ class GameFrame(tk.Frame):
                         chargetarget = random.choice(ai_list)
                         appliedcharge = random.choice(CHARGELIST)
                         if chargetarget == 1:
-                            if appliedcharge == "positive":
+                            if appliedcharge == "POSITIVE":
                                 if ai1_charged[0] == 2:
                                     ai1_charged[1] = ai1_charged[1] + 1
                                 else:
                                     ai1_charged[0] = ai1_charged[0] + 1
-                            if appliedcharge == "negative":
+                            if appliedcharge == "NEGATIVE":
                                 if ai1_charged[1] == 2:
                                     ai1_charged[0] = ai1_charged[1] + 1
                                 else:
@@ -22219,12 +22486,12 @@ class GameFrame(tk.Frame):
                                 ai1_hp = ai1_hp - ability_data[3] * conducted1
                                 ai2_hp = ai2_hp - ability_data[3] * conducted2 * 0.5
                         if chargetarget == 2:
-                            if appliedcharge == "positive":
+                            if appliedcharge == "POSITIVE":
                                 if ai2_charged[0] == 2:
                                     ai2_charged[1] = ai2_charged[1] + 1
                                 else:
                                     ai2_charged[0] = ai2_charged[0] + 1
-                            if appliedcharge == "negative":
+                            if appliedcharge == "NEGATIVE":
                                 if ai2_charged[1] == 2:
                                     ai2_charged[0] = ai2_charged[1] + 1
                                 else:
@@ -22241,12 +22508,12 @@ class GameFrame(tk.Frame):
                         chargetarget = random.choice(ai_list)
                         appliedcharge = random.choice(CHARGELIST)
                         if chargetarget == 1:
-                            if appliedcharge == "positive":
+                            if appliedcharge == "POSITIVE":
                                 if ai1_charged[0] == 2:
                                     ai1_charged[1] = ai1_charged[1] + 1
                                 else:
                                     ai1_charged[0] = ai1_charged[0] + 1
-                            if appliedcharge == "negative":
+                            if appliedcharge == "NEGATIVE":
                                 if ai1_charged[1] == 2:
                                     ai1_charged[0] = ai1_charged[1] + 1
                                 else:
@@ -22258,12 +22525,12 @@ class GameFrame(tk.Frame):
                                 ai2_hp = ai2_hp - ability_data[3] * conducted2 * 0.5
                                 ai3_hp = ai3_hp - ability_data[3] * conducted3 * 0.5
                         if chargetarget == 2:
-                            if appliedcharge == "positive":
+                            if appliedcharge == "POSITIVE":
                                 if ai2_charged[0] == 2:
                                     ai2_charged[1] = ai2_charged[1] + 1
                                 else:
                                     ai2_charged[0] = ai2_charged[0] + 1
-                            if appliedcharge == "negative":
+                            if appliedcharge == "NEGATIVE":
                                 if ai2_charged[1] == 2:
                                     ai2_charged[0] = ai2_charged[1] + 1
                                 else:
@@ -22275,12 +22542,12 @@ class GameFrame(tk.Frame):
                                 ai2_hp = ai2_hp - ability_data[3] * conducted2
                                 ai3_hp = ai3_hp - ability_data[3] * conducted3 * 0.5
                         if chargetarget == 3:
-                            if appliedcharge == "positive":
+                            if appliedcharge == "POSITIVE":
                                 if ai3_charged[0] == 2:
                                     ai3_charged[1] = ai3_charged[1] + 1
                                 else:
                                     ai3_charged[0] = ai3_charged[0] + 1
-                            if appliedcharge == "negative":
+                            if appliedcharge == "NEGATIVE":
                                 if ai3_charged[1] == 2:
                                     ai3_charged[0] = ai3_charged[1] + 1
                                 else:
@@ -22298,12 +22565,12 @@ class GameFrame(tk.Frame):
                         chargetarget = random.choice(ai_list)
                         appliedcharge = random.choice(CHARGELIST)
                         if chargetarget == 1:
-                            if appliedcharge == "positive":
+                            if appliedcharge == "POSITIVE":
                                 if ai1_charged[0] == 2:
                                     ai1_charged[1] = ai1_charged[1] + 1
                                 else:
                                     ai1_charged[0] = ai1_charged[0] + 1
-                            if appliedcharge == "negative":
+                            if appliedcharge == "NEGATIVE":
                                 if ai1_charged[1] == 2:
                                     ai1_charged[0] = ai1_charged[1] + 1
                                 else:
@@ -22316,12 +22583,12 @@ class GameFrame(tk.Frame):
                                 ai3_hp = ai3_hp - ability_data[3] * conducted3 * 0.5
                                 ai4_hp = ai4_hp - ability_data[3] * conducted4 * 0.5
                         if chargetarget == 2:
-                            if appliedcharge == "positive":
+                            if appliedcharge == "POSITIVE":
                                 if ai2_charged[0] == 2:
                                     ai2_charged[1] = ai2_charged[1] + 1
                                 else:
                                     ai2_charged[0] = ai2_charged[0] + 1
-                            if appliedcharge == "negative":
+                            if appliedcharge == "NEGATIVE":
                                 if ai2_charged[1] == 2:
                                     ai2_charged[0] = ai2_charged[1] + 1
                                 else:
@@ -22334,12 +22601,12 @@ class GameFrame(tk.Frame):
                                 ai3_hp = ai3_hp - ability_data[3] * conducted3 * 0.5
                                 ai4_hp = ai4_hp - ability_data[3] * conducted4 * 0.5
                         if chargetarget == 3:
-                            if appliedcharge == "positive":
+                            if appliedcharge == "POSITIVE":
                                 if ai3_charged[0] == 2:
                                     ai3_charged[1] = ai3_charged[1] + 1
                                 else:
                                     ai3_charged[0] = ai3_charged[0] + 1
-                            if appliedcharge == "negative":
+                            if appliedcharge == "NEGATIVE":
                                 if ai3_charged[1] == 2:
                                     ai3_charged[0] = ai3_charged[1] + 1
                                 else:
@@ -22352,12 +22619,12 @@ class GameFrame(tk.Frame):
                                 ai3_hp = ai3_hp - ability_data[3] * conducted3
                                 ai4_hp = ai4_hp - ability_data[3] * conducted4 * 0.5
                         if chargetarget == 4:
-                            if appliedcharge == "positive":
+                            if appliedcharge == "POSITIVE":
                                 if ai4_charged[0] == 2:
                                     ai4_charged[1] = ai4_charged[1] + 1
                                 else:
                                     ai4_charged[0] = ai4_charged[0] + 1
-                            if appliedcharge == "negative":
+                            if appliedcharge == "NEGATIVE":
                                 if ai4_charged[1] == 2:
                                     ai4_charged[0] = ai4_charged[1] + 1
                                 else:
@@ -22376,12 +22643,12 @@ class GameFrame(tk.Frame):
                         chargetarget = random.choice(ai_list)
                         appliedcharge = random.choice(CHARGELIST)
                         if chargetarget == 1:
-                            if appliedcharge == "positive":
+                            if appliedcharge == "POSITIVE":
                                 if ai1_charged[0] == 2:
                                     ai1_charged[1] = ai1_charged[1] + 1
                                 else:
                                     ai1_charged[0] = ai1_charged[0] + 1
-                            if appliedcharge == "negative":
+                            if appliedcharge == "NEGATIVE":
                                 if ai1_charged[1] == 2:
                                     ai1_charged[0] = ai1_charged[1] + 1
                                 else:
@@ -22395,12 +22662,12 @@ class GameFrame(tk.Frame):
                                 ai4_hp = ai4_hp - ability_data[3] * conducted4 * 0.5
                                 ai5_hp = ai5_hp - ability_data[3] * conducted5 * 0.5
                         if chargetarget == 2:
-                            if appliedcharge == "positive":
+                            if appliedcharge == "POSITIVE":
                                 if ai2_charged[0] == 2:
                                     ai2_charged[1] = ai2_charged[1] + 1
                                 else:
                                     ai2_charged[0] = ai2_charged[0] + 1
-                            if appliedcharge == "negative":
+                            if appliedcharge == "NEGATIVE":
                                 if ai2_charged[1] == 2:
                                     ai2_charged[0] = ai2_charged[1] + 1
                                 else:
@@ -22414,12 +22681,12 @@ class GameFrame(tk.Frame):
                                 ai4_hp = ai4_hp - ability_data[3] * conducted4 * 0.5
                                 ai5_hp = ai5_hp - ability_data[3] * conducted5 * 0.5
                         if chargetarget == 3:
-                            if appliedcharge == "positive":
+                            if appliedcharge == "POSITIVE":
                                 if ai3_charged[0] == 2:
                                     ai3_charged[1] = ai3_charged[1] + 1
                                 else:
                                     ai3_charged[0] = ai3_charged[0] + 1
-                            if appliedcharge == "negative":
+                            if appliedcharge == "NEGATIVE":
                                 if ai3_charged[1] == 2:
                                     ai3_charged[0] = ai3_charged[1] + 1
                                 else:
@@ -22433,12 +22700,12 @@ class GameFrame(tk.Frame):
                                 ai4_hp = ai4_hp - ability_data[3] * conducted4 * 0.5
                                 ai5_hp = ai5_hp - ability_data[3] * conducted5 * 0.5
                         if chargetarget == 4:
-                            if appliedcharge == "positive":
+                            if appliedcharge == "POSITIVE":
                                 if ai4_charged[0] == 2:
                                     ai4_charged[1] = ai4_charged[1] + 1
                                 else:
                                     ai4_charged[0] = ai4_charged[0] + 1
-                            if appliedcharge == "negative":
+                            if appliedcharge == "NEGATIVE":
                                 if ai4_charged[1] == 2:
                                     ai4_charged[0] = ai4_charged[1] + 1
                                 else:
@@ -22452,12 +22719,12 @@ class GameFrame(tk.Frame):
                                 ai4_hp = ai4_hp - ability_data[3] * conducted4
                                 ai5_hp = ai5_hp - ability_data[3] * conducted5 * 0.5
                         if chargetarget == 5:
-                            if appliedcharge == "positive":
+                            if appliedcharge == "POSITIVE":
                                 if ai5_charged[0] == 2:
                                     ai5_charged[1] = ai5_charged[1] + 1
                                 else:
                                     ai5_charged[0] = ai5_charged[0] + 1
-                            if appliedcharge == "negative":
+                            if appliedcharge == "NEGATIVE":
                                 if ai5_charged[1] == 2:
                                     ai5_charged[0] = ai5_charged[1] + 1
                                 else:
@@ -22473,12 +22740,12 @@ class GameFrame(tk.Frame):
                         charges2apply = charges2apply - 1
         if target == 1:
             appliedcharge = random.choice(CHARGELIST)
-            if appliedcharge == "positive":
+            if appliedcharge == "POSITIVE":
                 if ai1_charged[0] == 2:
                     ai1_charged[1] = ai1_charged[1] + 1
                 else:
                     ai1_charged[0] = ai1_charged[0] + 1
-            if appliedcharge == "negative":
+            if appliedcharge == "NEGATIVE":
                 if ai1_charged[1] == 2:
                     ai1_charged[0] = ai1_charged[1] + 1
                 else:
@@ -22503,12 +22770,12 @@ class GameFrame(tk.Frame):
                     ai5_hp = ai5_hp - ability_data[3] * conducted5 * 0.5
         if target == 2:
             appliedcharge = random.choice(CHARGELIST)
-            if appliedcharge == "positive":
+            if appliedcharge == "POSITIVE":
                 if ai2_charged[0] == 2:
                     ai2_charged[1] = ai2_charged[1] + 1
                 else:
                     ai2_charged[0] = ai2_charged[0] + 1
-            if appliedcharge == "negative":
+            if appliedcharge == "NEGATIVE":
                 if ai2_charged[1] == 2:
                     ai2_charged[0] = ai2_charged[1] + 1
                 else:
@@ -22533,12 +22800,12 @@ class GameFrame(tk.Frame):
                     ai5_hp = ai5_hp - ability_data[3] * conducted5 * 0.5
         if target == 3:
             appliedcharge = random.choice(CHARGELIST)
-            if appliedcharge == "positive":
+            if appliedcharge == "POSITIVE":
                 if ai3_charged[0] == 2:
                     ai3_charged[1] = ai3_charged[1] + 1
                 else:
                     ai3_charged[0] = ai3_charged[0] + 1
-            if appliedcharge == "negative":
+            if appliedcharge == "NEGATIVE":
                 if ai3_charged[1] == 2:
                     ai3_charged[0] = ai3_charged[1] + 1
                 else:
@@ -22561,12 +22828,12 @@ class GameFrame(tk.Frame):
                     ai5_hp = ai5_hp - ability_data[3] * conducted5 * 0.5
         if target == 4:
             appliedcharge = random.choice(CHARGELIST)
-            if appliedcharge == "positive":
+            if appliedcharge == "POSITIVE":
                 if ai4_charged[0] == 2:
                     ai4_charged[1] = ai4_charged[1] + 1
                 else:
                     ai4_charged[0] = ai4_charged[0] + 1
-            if appliedcharge == "negative":
+            if appliedcharge == "NEGATIVE":
                 if ai4_charged[1] == 2:
                     ai4_charged[0] = ai4_charged[1] + 1
                 else:
@@ -22586,12 +22853,12 @@ class GameFrame(tk.Frame):
                     ai5_hp = ai5_hp - ability_data[3] * conducted5 * 0.5
         if target == 5:
             appliedcharge = random.choice(CHARGELIST)
-            if appliedcharge == "positive":
+            if appliedcharge == "POSITIVE":
                 if ai5_charged[0] == 2:
                     ai5_charged[1] = ai5_charged[1] + 1
                 else:
                     ai5_charged[0] = ai5_charged[0] + 1
-            if appliedcharge == "negative":
+            if appliedcharge == "NEGATIVE":
                 if ai5_charged[1] == 2:
                     ai5_charged[0] = ai5_charged[1] + 1
                 else:
@@ -22967,46 +23234,46 @@ class GameFrame(tk.Frame):
             if "Thorns" not in ai5_statuses:
                 ai5_statuses.append("Thorns")
     def apply_serratedSlashDot(self, target, length):
-        global ai1_SerraSlashDot, ai2_SerraSlashDot, ai3_SerraSlashDot, ai4_SerraSlashDot, ai5_SerraSlashDot, \
+        global ai1_serraSlashDot, ai2_serraSlashDot, ai3_serraSlashDot, ai4_serraSlashDot, ai5_serraSlashDot, \
             ai1_statuses, ai2_statuses, ai3_statuses, ai4_statuses, ai5_statuses
         SerraSlashDotTick = math.ceil(ability_data[3] * 0.5)
         if target == 1:
-            if length > ai1_SerraSlashDot[1]:
-                ai1_SerraSlashDot = [SerraSlashDotTick, length]
+            if length > ai1_serraSlashDot[1]:
+                ai1_serraSlashDot = [SerraSlashDotTick, length]
                 if "Serrated" not in ai1_statuses:
                     ai1_statuses.append("Serrated")
             else:
                 return
         if target == 2:
-            if length > ai2_SerraSlashDot[1]:
-                ai2_SerraSlashDot = [SerraSlashDotTick, length]
+            if length > ai2_serraSlashDot[1]:
+                ai2_serraSlashDot = [SerraSlashDotTick, length]
                 if "Serrated" not in ai2_statuses:
                     ai2_statuses.append("Serrated")
             else:
                 return
         if target == 3:
-            if length > ai3_SerraSlashDot[1]:
-                ai3_SerraSlashDot = [SerraSlashDotTick, length]
+            if length > ai3_serraSlashDot[1]:
+                ai3_serraSlashDot = [SerraSlashDotTick, length]
                 if "Serrated" not in ai3_statuses:
                     ai3_statuses.append("Serrated")
             else:
                 return
         if target == 4:
-            if length > ai4_SerraSlashDot[1]:
-                ai4_SerraSlashDot = [SerraSlashDotTick, length]
+            if length > ai4_serraSlashDot[1]:
+                ai4_serraSlashDot = [SerraSlashDotTick, length]
                 if "Serrated" not in ai4_statuses:
                     ai4_statuses.append("Serrated")
             else:
                 return
         if target == 5:
-            if length > ai5_SerraSlashDot[1]:
-                ai5_SerraSlashDot = [SerraSlashDotTick, length]
+            if length > ai5_serraSlashDot[1]:
+                ai5_serraSlashDot = [SerraSlashDotTick, length]
                 if "Serrated" not in ai5_statuses:
                     ai5_statuses.append("Serrated")
             else:
                 return
     def apply_eviscerateDot(self, target, length):
-        global ai1_eviscerDot, ai2_EviscerDot, ai3_EviscerDot, ai4_EviscerDot, ai5_EviscerDot, \
+        global ai1_eviscerDot, ai2_eviscerDot, ai3_eviscerDot, ai4_eviscerDot, ai5_eviscerDot, \
             ai1_statuses, ai2_statuses, ai3_statuses, ai4_statuses, ai5_statuses
         EviscerDotTick = math.ceil(ability_data[3])
         if target == 1:
@@ -23017,29 +23284,29 @@ class GameFrame(tk.Frame):
             else:
                 return
         if target == 2:
-            if length > ai2_EviscerDot[1]:
-                ai2_EviscerDot = [EviscerDotTick, length]
+            if length > ai2_eviscerDot[1]:
+                ai2_eviscerDot = [EviscerDotTick, length]
                 if "Eviscerated" not in ai2_statuses:
                     ai2_statuses.append("Eviscerated")
             else:
                 return
         if target == 3:
-            if length > ai3_EviscerDot[1]:
-                ai3_EviscerDot = [EviscerDotTick, length]
+            if length > ai3_eviscerDot[1]:
+                ai3_eviscerDot = [EviscerDotTick, length]
                 if "Eviscerated" not in ai3_statuses:
                     ai3_statuses.append("Eviscerated")
             else:
                 return
         if target == 4:
-            if length > ai4_EviscerDot[1]:
-                ai4_EviscerDot = [EviscerDotTick, length]
+            if length > ai4_eviscerDot[1]:
+                ai4_eviscerDot = [EviscerDotTick, length]
                 if "Eviscerated" not in ai4_statuses:
                     ai4_statuses.append("Eviscerated")
             else:
                 return
         if target == 5:
-            if length > ai5_EviscerDot[1]:
-                ai5_EviscerDot = [EviscerDotTick, length]
+            if length > ai5_eviscerDot[1]:
+                ai5_eviscerDot = [EviscerDotTick, length]
                 if "Eviscerated" not in ai5_statuses:
                     ai5_statuses.append("Eviscerated")
             else:
@@ -23619,18 +23886,18 @@ class GameFrame(tk.Frame):
                     attack_button_text_list.append(attack_text)
                 else:
                     attack_button_text_list.append(attack_name)
-            elif attack_name == "Power Opt":
-                if power_opt_requirements[0] > 0:
-                    if power_opt_requirements[3] > 0:
-                        attack_text = "Power Opt ({})\n{} {}".format(power_opt_requirements[3], LEGION_RANGER.rp_name,
-                                                                     power_opt_requirements[
+            elif attack_name == "Power Shot":
+                if power_shot_requirements[0] > 0:
+                    if power_shot_requirements[3] > 0:
+                        attack_text = "Power Shot ({})\n{} {}".format(power_shot_requirements[3], LEGION_RANGER.rp_name,
+                                                                     power_shot_requirements[
                                                                          0])
                         attack_button_text_list.append(attack_text)
                     else:
-                        attack_text = "Power Opt\n{} {}".format(LEGION_RANGER.rp_name, power_opt_requirements[0])
+                        attack_text = "Power Shot\n{} {}".format(LEGION_RANGER.rp_name, power_shot_requirements[0])
                         attack_button_text_list.append(attack_text)
-                elif power_opt_requirements[3] > 0:
-                    attack_text = "Power Opt ({})".format(power_opt_requirements[3])
+                elif power_shot_requirements[3] > 0:
+                    attack_text = "Power Shot ({})".format(power_shot_requirements[3])
                     attack_button_text_list.append(attack_text)
                 else:
                     attack_button_text_list.append(attack_name)
@@ -24012,39 +24279,39 @@ class GameFrame(tk.Frame):
                     special_button_text_list.append(special_text)
                 else:
                     special_button_text_list.append(special_name)
-            elif special_name == "Equip Iron-cast Arrows":
-                if equip_iron_cast_arrows_requirements[0] > 0:
-                    if equip_iron_cast_arrows_requirements[3] > 0:
-                        special_text = "Equip Iron-cast Arrows ({})\n{} {}".format(
-                            equip_iron_cast_arrows_requirements[3], LEGION_RANGER.rp_name,
-                            equip_iron_cast_arrows_requirements[
+            elif special_name == "Multi-shot":
+                if multi_shot_requirements[0] > 0:
+                    if multi_shot_requirements[3] > 0:
+                        special_text = "Multi-shot ({})\n{} {}".format(
+                            multi_shot_requirements[3], LEGION_RANGER.rp_name,
+                            multi_shot_requirements[
                                 0])
                         special_button_text_list.append(special_text)
                     else:
-                        special_text = "Equip Iron-cast Arrows\n{} {}".format(LEGION_RANGER.rp_name,
-                                                                              equip_iron_cast_arrows_requirements[0])
+                        special_text = "Multi-shot\n{} {}".format(LEGION_RANGER.rp_name,
+                                                                              multi_shot_requirements[0])
                         special_button_text_list.append(special_text)
-                elif equip_iron_cast_arrows_requirements[3] > 0:
-                    special_text = "Equip Iron-cast Arrows ({})".format(equip_iron_cast_arrows_requirements[3])
+                elif multi_shot_requirements[3] > 0:
+                    special_text = "Multi-shot ({})".format(multi_shot_requirements[3])
                     special_button_text_list.append(special_text)
                 else:
                     special_button_text_list.append(special_name)
-            elif special_name == "Equip Tracker-tipped Arrows":
-                if equip_tracker_tipped_arrows_requirements[0] > 0:
-                    if equip_tracker_tipped_arrows_requirements[3] > 0:
-                        special_text = "Equip Tracker-tipped Arrows ({})\n{} {}".format(
-                            equip_tracker_tipped_arrows_requirements[3], LEGION_RANGER.rp_name,
-                            equip_tracker_tipped_arrows_requirements[
+            elif special_name == "Ricochet Shot":
+                if ricochet_shot_requirements[0] > 0:
+                    if ricochet_shot_requirements[3] > 0:
+                        special_text = "Ricochet Shot ({})\n{} {}".format(
+                            ricochet_shot_requirements[3], LEGION_RANGER.rp_name,
+                            ricochet_shot_requirements[
                                 0])
                         special_button_text_list.append(special_text)
                     else:
-                        special_text = "Equip Tracker-tipped Arrows\n{} {}".format(LEGION_RANGER.rp_name,
-                                                                                   equip_tracker_tipped_arrows_requirements[
+                        special_text = "Ricochet Shot\n{} {}".format(LEGION_RANGER.rp_name,
+                                                                                   ricochet_shot_requirements[
                                                                                        0])
                         special_button_text_list.append(special_text)
-                elif equip_tracker_tipped_arrows_requirements[3] > 0:
-                    special_text = "Equip Tracker-tipped Arrows ({})".format(
-                        equip_tracker_tipped_arrows_requirements[3])
+                elif ricochet_shot_requirements[3] > 0:
+                    special_text = "Ricochet Shot ({})".format(
+                        ricochet_shot_requirements[3])
                     special_button_text_list.append(special_text)
                 else:
                     special_button_text_list.append(special_name)
