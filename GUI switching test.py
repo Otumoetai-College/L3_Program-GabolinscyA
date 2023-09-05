@@ -4898,7 +4898,9 @@ class GameFrame(tk.Frame):
             special_button_champion1.grid(row=18, column=2)
             turn_choice_champion1.grid(row=18, column=3)
     def next_turn(self):
-        global combat_results, current_turn, new_round, champion1_turnover, champion2_turnover, champion3_turnover, champion4_turnover,champion5_turnover, from_end_of_turn, new_game
+        global combat_results, current_turn, new_round, from_end_of_turn, new_game,\
+            champion1_turnover, champion2_turnover, champion3_turnover, champion4_turnover,champion5_turnover, \
+            ranger_aura_completed, paladin_aura_completed
         if AI_SPAWNED == 1:
             if ai1_hp <= 0:
                 combat_results = "win"
@@ -4941,6 +4943,8 @@ class GameFrame(tk.Frame):
             self.ai_choose_attack_targets()
             self.repeating_combatUI_refresh_function()
             if new_game == 1:
+                ranger_aura_completed = 0
+                paladin_aura_completed = 0
                 self.before_round_choices()
             elif current_turn == "MN":
                 champion1_turnover = 0
@@ -4954,6 +4958,8 @@ class GameFrame(tk.Frame):
                 self.champion_turn_ticker(3)
                 self.champion_turn_ticker(4)
                 self.champion_turn_ticker(5)
+                ranger_aura_completed = 0
+                paladin_aura_completed = 0
                 self.before_round_choices()
             else:
                 new_round = 0
@@ -4978,78 +4984,89 @@ class GameFrame(tk.Frame):
         counter = 1
         while counter != 0:
             if LEGION_RANGER.title in CHAMPION_LIST:
-                ARROW_TYPES = ["Heavy Iron Tip", "Barbed TIp", "Shrapnel Tip", "Venom Tip", "Bola Tip", "Vein Sensitizer Tip"]
-                if legion_ranger_roundtracker < 3:
-                    legion_ranger_roundtracker = legion_ranger_roundtracker + 1
-                else:
-                    global ranger_arrow_choice_label, arrow_choice_button1, arrow_choice_button2, arrow_choice_button3
-                    random.shuffle(ARROW_TYPES)
-                    if current_arrow_type == ARROW_TYPES[0]:
-                        arrow_choice = [ARROW_TYPES[1], ARROW_TYPES[2], ARROW_TYPES[3]]
-                    elif current_arrow_type == ARROW_TYPES[1]:
-                        arrow_choice = [ARROW_TYPES[0], ARROW_TYPES[2], ARROW_TYPES[3]]
-                    elif current_arrow_type == [2]:
-                        arrow_choice = [ARROW_TYPES[0], ARROW_TYPES[1], ARROW_TYPES[3]]
+                if ranger_aura_completed == 0:
+                    ARROW_TYPES = ["Heavy Iron Tip", "Barbed Tip", "Shrapnel Tip", "Venom Tip", "Bola Tip", "Vein Sensitizer Tip"]
+                    if legion_ranger_roundtracker < 3:
+                        legion_ranger_roundtracker = legion_ranger_roundtracker + 1
                     else:
-                        arrow_choice = [ARROW_TYPES[0], ARROW_TYPES[1], ARROW_TYPES[2]]
-                    legion_ranger_roundtracker = 0
-                    ranger_arrow_choice_label = tk.Label(dungeon_game_frame, text="Choose a new arrow for Legion Ranger to equip")
-                    ranger_arrow_choice_label.grid(row=18, column=1)
-                    arrow_choice_button1 = tk.Button(dungeon_game_frame, text="{} n\ {}".format(arrow_choice[0], self.arrow_information(arrow_choice[0])), \
-                                                     command=lambda: self.apply_before_round_choices("LEGION-RANGER", arrow_choice[0]))
-                    arrow_choice_button2 = tk.Button(dungeon_game_frame, text="{} n\ {}".format(arrow_choice[1], self.arrow_information(arrow_choice[1])), \
-                                                     command=lambda: self.apply_before_round_choices("LEGION-RANGER", arrow_choice[1]))
-                    arrow_choice_button3 = tk.Button(dungeon_game_frame, text="{} n\ {}".format(arrow_choice[2], self.arrow_information(arrow_choice[2])), \
-                                                     command=lambda: self.apply_before_round_choices("LEGION-RANGER", arrow_choice[2]))
-                    arrow_choice_button1.grid(row=19, column=0)
-                    arrow_choice_button2.grid(row=19, column=1)
-                    arrow_choice_button3.grid(row=19, column=2)
+                        global ranger_arrow_choice_label, arrow_choice_button1, arrow_choice_button2, arrow_choice_button3
+                        random.shuffle(ARROW_TYPES)
+                        if current_arrow_type == ARROW_TYPES[0]:
+                            arrow_choice = [ARROW_TYPES[1], ARROW_TYPES[2], ARROW_TYPES[3]]
+                        elif current_arrow_type == ARROW_TYPES[1]:
+                            arrow_choice = [ARROW_TYPES[0], ARROW_TYPES[2], ARROW_TYPES[3]]
+                        elif current_arrow_type == [2]:
+                            arrow_choice = [ARROW_TYPES[0], ARROW_TYPES[1], ARROW_TYPES[3]]
+                        else:
+                            arrow_choice = [ARROW_TYPES[0], ARROW_TYPES[1], ARROW_TYPES[2]]
+                        legion_ranger_roundtracker = 0
+                        ranger_arrow_choice_label = tk.Label(dungeon_game_frame, text="Choose a new arrow for Legion Ranger to equip")
+                        ranger_arrow_choice_label.grid(row=18, column=2)
+                        arrow_choice_button1 = tk.Button(dungeon_game_frame, text="{} \n {}".format(arrow_choice[0], self.championaura_information(arrow_choice[0])), \
+                                                        command=lambda: self.apply_before_round_choices("LEGION-RANGER", arrow_choice[0]))
+                        arrow_choice_button2 = tk.Button(dungeon_game_frame, text="{} \n {}".format(arrow_choice[1], self.championaura_information(arrow_choice[1])), \
+                                                        command=lambda: self.apply_before_round_choices("LEGION-RANGER", arrow_choice[1]))
+                        arrow_choice_button3 = tk.Button(dungeon_game_frame, text="{} \n {}".format(arrow_choice[2], self.championaura_information(arrow_choice[2])), \
+                                                        command=lambda: self.apply_before_round_choices("LEGION-RANGER", arrow_choice[2]))
+                        arrow_choice_button1.grid(row=19, column=2)
+                        arrow_choice_button2.grid(row=20, column=2)
+                        arrow_choice_button3.grid(row=21, column=2)
+                        break
             if PALADIN.title in CHAMPION_LIST:
-                AURAS = ["Power Aura", "Protection Aura"]
-                if paladin_roundtracker < 2:
-                    paladin_roundtracker = paladin_roundtracker + 1
-                else:
-                    global paladin_aura_choice_label, aura_choice_button1, aura_choice_button2
-                    paladin_roundtracker = 0
-                    paladin_aura_choice_label = tk.Label(dungeon_game_frame, text="Choose your Paladin's Aura")
-                    paladin_aura_choice_label.grid(row=18, column=1)
-                    aura_choice_button1 = tk.Button(dungeon_game_frame, text="{}".format(AURAS[0]), command=lambda: self.apply_before_round_choices("PALADIN", AURAS[0]))
-                    aura_choice_button2 = tk.Button(dungeon_game_frame, text="{}".format(AURAS[1]), command=lambda: self.apply_before_round_choices("PALAIDN", AURAS[1]))
-                    aura_choice_button1.grid(row=19, column=1, sticky="w")
-                    aura_choice_button2.grid(row=19, column=1, sticky="e")
+                if paladin_aura_completed == 0:
+                    AURAS = ["Power Aura", "Protection Aura"]
+                    if paladin_roundtracker < 2:
+                        paladin_roundtracker = paladin_roundtracker + 1
+                    else:
+                        global paladin_aura_choice_label, aura_choice_button1, aura_choice_button2
+                        paladin_roundtracker = 0
+                        paladin_aura_choice_label = tk.Label(dungeon_game_frame, text="Choose your Paladin's Aura")
+                        paladin_aura_choice_label.grid(row=18, column=2)
+                        aura_choice_button1 = tk.Button(dungeon_game_frame, text="{} \n {}".format(AURAS[0], self.championaura_information(AURAS[0])), command=lambda: self.apply_before_round_choices("PALADIN", AURAS[0]))
+                        aura_choice_button2 = tk.Button(dungeon_game_frame, text="{} \n {}".format(AURAS[1], self.championaura_information(AURAS[1])), command=lambda: self.apply_before_round_choices("PALADIN", AURAS[1]))
+                        aura_choice_button1.grid(row=19, column=2)
+                        aura_choice_button2.grid(row=20, column=2)
+                        break
             counter = 0
-        if new_game == 1:
-            new_game = 0
-            self.player_combat_champion1()
-        else:
-            self.turn_choice()
-    def arrow_information(self, name):
+        if counter == 0:
+            if new_game == 1:
+                new_game = 0
+                self.player_combat_champion1()
+            else:
+                self.turn_choice()
+    def championaura_information(self, name):
         if name == "Heavy Iron Tip":
             text = "Deals 1.5x Damage"
-        if name == "Barbed TIp":
-            text = "Applies a Bleed effect to damaged enemies"
-        if name == "Shrapnel Tip":
-            text = "Damaged enemies explode for extra damage to other enemies"
-        if name == "Venom Tip":
-            text = "Applies the Weakness debuff to damaged enemies"
-        if name == "Bola Tip":
-            text = "Damaged enemies are stunned"
-        if name == "Vein Sensitizer Tip":
-            text = "Applies the Brittle debuff to damaged enemies"
+        elif name == "Barbed Tip":
+            text = "Applies a Bleed effect to hit enemies"
+        elif name == "Shrapnel Tip":
+            text = "Hit enemies explode for extra damage to other enemies"
+        elif name == "Venom Tip":
+            text = "Applies the Weakness debuff to hit enemies"
+        elif name == "Bola Tip":
+            text = "Hit enemies are stunned"
+        elif name == "Vein Sensitizer Tip":
+            text = "Applies the Brittle debuff to hit enemies"
+        elif name == "Power Aura":
+            text = "All Champions gain 20 perect extra damage"
+        elif name == "Protection Aura":
+            text = "All Champions take 10 percent less damage"
         return text
     def apply_before_round_choices(self, champion_identifier, choice):
-        global current_arrow_type, paladin_aura
+        global current_arrow_type, paladin_aura, ranger_aura_completed, paladin_aura_completed
         if champion_identifier == "LEGION-RANGER":
             current_arrow_type = choice
             ranger_arrow_choice_label.destroy()
             arrow_choice_button1.destroy()
             arrow_choice_button2.destroy()
             arrow_choice_button3.destroy()
-        if champion_identifier == "PALDIN":
+            ranger_aura_completed = 1
+        if champion_identifier == "PALADIN":
             paladin_aura = choice
             paladin_aura_choice_label.destroy()
             aura_choice_button1.destroy()
             aura_choice_button2.destroy()
+            paladin_aura_completed = 1
         
         self.turn_choice()
     def player_combat_champion2(self):
@@ -21130,88 +21147,205 @@ class GameFrame(tk.Frame):
             if current_arrow_type == "Heavy Iron Tip":
                 if 1 in target_list:
                     ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1) * 1.5)
+                    if ai1_hp < 0:
+                        ai1_hp = 0
                 if 2 in target_list:
                     ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2) * 1.5)
+                    if ai2_hp < 0:
+                        ai2_hp = 0
                 if 3 in target_list:
                     ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3) * 1.5)
+                    if ai3_hp < 0:
+                        ai3_hp = 0
                 if 4 in target_list:
                     ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4) * 1.5)
+                    if ai4_hp < 0:
+                        ai4_hp = 0
                 if 5 in target_list:
                     ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5) * 1.5)
+                    if ai5_hp < 0:
+                        ai5_hp = 0
             if current_arrow_type == "Barbed Tip":
                 if 1 in target_list:
                     ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1))
-                    self.apply_barbedArrowDot(1, 3)
+                    if ai1_hp < 0:
+                        ai1_hp = 0
+                    else:
+                        self.apply_barbedArrowDot(1, 3)
                 if 2 in target_list:
                     ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2))
-                    self.apply_barbedArrowDot(2, 3)
+                    if ai2_hp < 0:
+                        ai2_hp = 0
+                    else:
+                        self.apply_barbedArrowDot(2, 3)
                 if 3 in target_list:
                     ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3))
-                    self.apply_barbedArrowDot(3, 3)
+                    if ai3_hp < 0:
+                        ai3_hp = 0
+                    else:
+                        self.apply_barbedArrowDot(3, 3)
                 if 4 in target_list:
                     ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4))
-                    self.apply_barbedArrowDot(4, 3)
+                    if ai4_hp < 0:
+                        ai4_hp = 0
+                    else:
+                        self.apply_barbedArrowDot(4, 3)
                 if 5 in target_list:
                     ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5))
-                    self.apply_barbedArrowDot(5, 3)
+                    if ai5_hp < 0:
+                        ai5_hp = 0
+                    else:
+                        self.apply_barbedArrowDot(5, 3)
             if current_arrow_type == "Shrapnel Tip":
                 if 1 in target_list:
                     ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1))
+                    if ai1_hp < 0:
+                        ai1_hp = 0
                     if AI_SPAWNED == 2:
                         ai2_hp = ai2_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(2)) * 0.2)
+                        if ai2_hp < 0:
+                            ai2_hp = 0
                     if AI_SPAWNED == 3:
                         ai2_hp = ai2_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(2)) * 0.2)
                         ai3_hp = ai3_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(3)) * 0.2)
+                        if ai2_hp < 0:
+                            ai2_hp = 0
+                        if ai3_hp < 0:
+                            ai3_hp = 0
                     if AI_SPAWNED == 4:
                         ai2_hp = ai2_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(2)) * 0.2)
                         ai3_hp = ai3_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(3)) * 0.2)
                         ai4_hp = ai4_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(4)) * 0.2)
+                        if ai2_hp < 0:
+                            ai2_hp = 0
+                        if ai3_hp < 0:
+                            ai3_hp = 0
+                        if ai4_hp < 0:
+                            ai4_hp = 0
                     if AI_SPAWNED == 5:
                         ai2_hp = ai2_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(2)) * 0.2)
                         ai3_hp = ai3_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(3)) * 0.2)
                         ai4_hp = ai4_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(4)) * 0.2)
                         ai5_hp = ai5_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(5)) * 0.2)
+                        if ai2_hp < 0:
+                            ai2_hp = 0
+                        if ai3_hp < 0:
+                            ai3_hp = 0
+                        if ai4_hp < 0:
+                            ai4_hp = 0
+                        if ai5_hp < 0:
+                            ai5_hp = 0
                 if 2 in target_list:
                     ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2))
                     if AI_SPAWNED == 2:
                         ai1_hp = ai1_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(1)) * 0.2)
+                        if ai1_hp < 0:
+                            ai1_hp = 0
+                        if ai2_hp < 0:
+                            ai2_hp = 0
                     if AI_SPAWNED == 3:
                         ai1_hp = ai1_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(1)) * 0.2)
                         ai3_hp = ai3_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(3)) * 0.2)
+                        if ai1_hp < 0:
+                            ai1_hp = 0
+                        if ai2_hp < 0:
+                            ai2_hp = 0
+                        if ai3_hp < 0:
+                            ai3_hp = 0
                     if AI_SPAWNED == 4:
                         ai1_hp = ai1_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(1)) * 0.2)
                         ai3_hp = ai3_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(3)) * 0.2)
                         ai4_hp = ai4_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(4)) * 0.2)
+                        if ai1_hp < 0:
+                            ai1_hp = 0
+                        if ai2_hp < 0:
+                            ai2_hp = 0
+                        if ai3_hp < 0:
+                            ai3_hp = 0
+                        if ai4_hp < 0:
+                            ai4_hp = 0
                     if AI_SPAWNED == 5:
                         ai1_hp = ai1_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(1)) * 0.2)
                         ai3_hp = ai3_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(3)) * 0.2)
                         ai4_hp = ai4_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(4)) * 0.2)
                         ai5_hp = ai5_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(5)) * 0.2)
+                        if ai1_hp < 0:
+                            ai1_hp = 0
+                        if ai2_hp < 0:
+                            ai2_hp = 0
+                        if ai3_hp < 0:
+                            ai3_hp = 0
+                        if ai4_hp < 0:
+                            ai4_hp = 0
+                        if ai5_hp < 0:
+                            ai5_hp = 0
                 if 3 in target_list:
                     ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3))
                     if AI_SPAWNED == 3:
                         ai1_hp = ai1_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(1)) * 0.2)
                         ai2_hp = ai2_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(2)) * 0.2)
+                        if ai1_hp < 0:
+                            ai1_hp = 0
+                        if ai2_hp < 0:
+                            ai2_hp = 0
+                        if ai3_hp < 0:
+                            ai3_hp = 0
                     if AI_SPAWNED == 4:
                         ai1_hp = ai1_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(1)) * 0.2)
                         ai2_hp = ai2_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(2)) * 0.2)
                         ai4_hp = ai4_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(4)) * 0.2)
+                        if ai1_hp < 0:
+                            ai1_hp = 0
+                        if ai2_hp < 0:
+                            ai2_hp = 0
+                        if ai3_hp < 0:
+                            ai3_hp = 0
+                        if ai4_hp < 0:
+                            ai4_hp = 0
                     if AI_SPAWNED == 5:
                         ai1_hp = ai1_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(1)) * 0.2)
                         ai2_hp = ai2_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(2)) * 0.2)
                         ai4_hp = ai4_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(3)) * 0.2)
                         ai5_hp = ai5_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(5)) * 0.2)
+                        if ai1_hp < 0:
+                            ai1_hp = 0
+                        if ai2_hp < 0:
+                            ai2_hp = 0
+                        if ai3_hp < 0:
+                            ai3_hp = 0
+                        if ai4_hp < 0:
+                            ai4_hp = 0
+                        if ai5_hp < 0:
+                            ai5_hp = 0
                 if 4 in target_list:
                     ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4))
                     if AI_SPAWNED == 4:
                         ai1_hp = ai1_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(1)) * 0.2)
                         ai2_hp = ai2_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(2)) * 0.2)
                         ai3_hp = ai3_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(4)) * 0.2)
+                        if ai1_hp < 0:
+                            ai1_hp = 0
+                        if ai2_hp < 0:
+                            ai2_hp = 0
+                        if ai3_hp < 0:
+                            ai3_hp = 0
+                        if ai4_hp < 0:
+                            ai4_hp = 0
                     if AI_SPAWNED == 5:
                         ai1_hp = ai1_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(1)) * 0.2)
                         ai2_hp = ai2_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(2)) * 0.2)
                         ai3_hp = ai3_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(3)) * 0.2)
                         ai5_hp = ai5_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(5)) * 0.2)
+                        if ai1_hp < 0:
+                            ai1_hp = 0
+                        if ai2_hp < 0:
+                            ai2_hp = 0
+                        if ai3_hp < 0:
+                            ai3_hp = 0
+                        if ai4_hp < 0:
+                            ai4_hp = 0
+                        if ai5_hp < 0:
+                            ai5_hp = 0
                 if 5 in target_list:
                     ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5))
                     ai1_hp = ai1_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(1)) * 0.2)
@@ -21231,106 +21365,1183 @@ class GameFrame(tk.Frame):
             if current_arrow_type == "Venom Tip":
                 if 1 in target_list:
                     ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1))
-                    self.apply_weakness(1, 2)
+                    if ai1_hp < 0:
+                        ai1_hp = 0
+                    else:
+                        self.apply_weakness(1, 2)
                 if 2 in target_list:
                     ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2))
-                    self.apply_weakness(2, 2)
+                    if ai2_hp < 0:
+                        ai2_hp = 0
+                    else:
+                        self.apply_weakness(2, 2)
                 if 3 in target_list:
                     ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3))
-                    self.apply_weakness(3, 2)
+                    if ai3_hp < 0:
+                        ai3_hp = 0
+                    else:
+                        self.apply_weakness(3, 2)
                 if 4 in target_list:
                     ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4))
-                    self.apply_weakness(4, 2)
+                    if ai4_hp < 0:
+                        ai4_hp = 0
+                    else:
+                        self.apply_weakness(4, 2)
                 if 5 in target_list:
                     ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5))
-                    self.apply_weakness(5, 2)
+                    if ai5_hp < 0:
+                        ai5_hp = 0
+                    else:
+                        self.apply_weakness(5, 2)
             if current_arrow_type == "Bola Tip":
                 if 1 in target_list:
                     ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1))
-                    self.apply_stun(1, 1)
+                    if ai1_hp < 0:
+                        ai1_hp = 0
+                    else:
+                        self.apply_stun(1, 1)
                 if 2 in target_list:
                     ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2))
-                    self.apply_stun(2, 1)
+                    if ai2_hp < 0:
+                        ai2_hp = 0
+                    else:
+                        self.apply_stun(2, 1)
                 if 3 in target_list:
                     ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3))
-                    self.apply_stun(3, 1)
+                    if ai3_hp < 0:
+                        ai3_hp = 0
+                    else:
+                        self.apply_stun(3, 1)
                 if 4 in target_list:
                     ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4))
-                    self.apply_stun(4, 1)
+                    if ai4_hp < 0:
+                        ai4_hp = 0
+                    else:
+                        self.apply_stun(4, 1)
                 if 5 in target_list:
                     ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5))
-                    self.apply_stun(5, 1)
+                    if ai5_hp < 0:
+                        ai5_hp = 0
+                    else:
+                        self.apply_stun(5, 1)
             if current_arrow_type == "Vein Sensitizer Tip":
                 if 1 in target_list:
                     ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1))
-                    self.apply_brittle(1, 2)
+                    if ai1_hp < 0:
+                        ai1_hp = 0
+                    else:
+                        self.apply_brittle(1, 2)
                 if 2 in target_list:
                     ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2))
-                    self.apply_brittle(2, 2)
+                    if ai2_hp < 0:
+                        ai2_hp = 0
+                    else:
+                        self.apply_brittle(2, 2)
                 if 3 in target_list:
                     ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3))
-                    self.apply_brittle(3, 2)
+                    if ai3_hp < 0:
+                        ai3_hp = 0
+                    else:
+                        self.apply_brittle(3, 2)
                 if 4 in target_list:
                     ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4))
-                    self.apply_brittle(4, 2)
+                    if ai4_hp < 0:
+                        ai4_hp = 0
+                    else:
+                        self.apply_brittle(4, 2)
                 if 5 in target_list:
                     ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5))
-                    self.apply_brittle(5, 2)
+                    if ai5_hp < 0:
+                        ai5_hp = 0
+                    else:
+                        self.apply_brittle(5, 2)
             if power_shot_requirements[3] != 0:
                 power_shot_requirements[3] = power_shot_requirements[3] - 1
             if ricochet_shot_requirements[3] != 0:
                 ricochet_shot_requirements[3] = ricochet_shot_requirements[3] - 1
         elif ability_data[0] == "Power Shot":
-            if 1 in target_list:
-                ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1)) * 1.5
-            if 2 in target_list:
-                ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2)) * 1.5
-            if 3 in target_list:
-                ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3)) * 1.5
-            if 4 in target_list:
-                ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4)) * 1.5
-            if 5 in target_list:
-                ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5)) * 1.5
+            if current_arrow_type == "Heavy Iron Tip":
+                if 1 in target_list:
+                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1) * 3)
+                    if ai1_hp < 0:
+                        ai1_hp = 0
+                if 2 in target_list:
+                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2) * 3)
+                    if ai2_hp < 0:
+                        ai2_hp = 0
+                if 3 in target_list:
+                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3) * 3)
+                    if ai3_hp < 0:
+                        ai3_hp = 0
+                if 4 in target_list:
+                    ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4) * 3)
+                    if ai4_hp < 0:
+                        ai4_hp = 0
+                if 5 in target_list:
+                    ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5) * 3)
+                    if ai5_hp < 0:
+                        ai5_hp = 0
+            if current_arrow_type == "Barbed Tip":
+                if 1 in target_list:
+                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1) * 1.5)
+                    if ai1_hp < 0:
+                        ai1_hp = 0
+                    else:
+                        self.apply_barbedArrowDot(1, 6)
+                if 2 in target_list:
+                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2) * 1.5)
+                    if ai2_hp < 0:
+                        ai2_hp = 0
+                    else:
+                        self.apply_barbedArrowDot(2, 6)
+                if 3 in target_list:
+                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3) * 1.5)
+                    if ai3_hp < 0:
+                        ai3_hp = 0
+                    else:
+                        self.apply_barbedArrowDot(3, 6)
+                if 4 in target_list:
+                    ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4) * 1.5)
+                    if ai4_hp < 0:
+                        ai4_hp = 0
+                    else:
+                        self.apply_barbedArrowDot(4, 6)
+                if 5 in target_list:
+                    ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5) * 1.5)
+                    if ai5_hp < 0:
+                        ai5_hp = 0
+                    else:
+                        self.apply_barbedArrowDot(5, 6)
+            if current_arrow_type == "Shrapnel Tip":
+                if 1 in target_list:
+                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1) * 1.5)
+                    if ai1_hp < 0:
+                        ai1_hp = 0
+                    if AI_SPAWNED == 2:
+                        ai2_hp = ai2_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(2)) * 0.75)
+                        if ai2_hp < 0:
+                            ai2_hp = 0
+                    if AI_SPAWNED == 3:
+                        ai2_hp = ai2_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(2)) * 0.75)
+                        ai3_hp = ai3_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(3)) * 0.75)
+                        if ai2_hp < 0:
+                            ai2_hp = 0
+                        if ai3_hp < 0:
+                            ai3_hp = 0
+                    if AI_SPAWNED == 4:
+                        ai2_hp = ai2_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(2)) * 0.75)
+                        ai3_hp = ai3_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(3)) * 0.75)
+                        ai4_hp = ai4_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(4)) * 0.75)
+                        if ai2_hp < 0:
+                            ai2_hp = 0
+                        if ai3_hp < 0:
+                            ai3_hp = 0
+                        if ai4_hp < 0:
+                            ai4_hp = 0
+                    if AI_SPAWNED == 5:
+                        ai2_hp = ai2_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(2)) * 0.75)
+                        ai3_hp = ai3_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(3)) * 0.75)
+                        ai4_hp = ai4_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(4)) * 0.75)
+                        ai5_hp = ai5_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(5)) * 0.75)
+                        if ai2_hp < 0:
+                            ai2_hp = 0
+                        if ai3_hp < 0:
+                            ai3_hp = 0
+                        if ai4_hp < 0:
+                            ai4_hp = 0
+                        if ai5_hp < 0:
+                            ai5_hp = 0
+                if 2 in target_list:
+                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2) * 1.5)
+                    if AI_SPAWNED == 2:
+                        ai1_hp = ai1_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(1)) * 0.75)
+                        if ai1_hp < 0:
+                            ai1_hp = 0
+                        if ai2_hp < 0:
+                            ai2_hp = 0
+                    if AI_SPAWNED == 3:
+                        ai1_hp = ai1_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(1)) * 0.75)
+                        ai3_hp = ai3_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(3)) * 0.75)
+                        if ai1_hp < 0:
+                            ai1_hp = 0
+                        if ai2_hp < 0:
+                            ai2_hp = 0
+                        if ai3_hp < 0:
+                            ai3_hp = 0
+                    if AI_SPAWNED == 4:
+                        ai1_hp = ai1_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(1)) * 0.75)
+                        ai3_hp = ai3_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(3)) * 0.75)
+                        ai4_hp = ai4_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(4)) * 0.75)
+                        if ai1_hp < 0:
+                            ai1_hp = 0
+                        if ai2_hp < 0:
+                            ai2_hp = 0
+                        if ai3_hp < 0:
+                            ai3_hp = 0
+                        if ai4_hp < 0:
+                            ai4_hp = 0
+                    if AI_SPAWNED == 5:
+                        ai1_hp = ai1_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(1)) * 0.75)
+                        ai3_hp = ai3_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(3)) * 0.75)
+                        ai4_hp = ai4_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(4)) * 0.75)
+                        ai5_hp = ai5_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(5)) * 0.75)
+                        if ai1_hp < 0:
+                            ai1_hp = 0
+                        if ai2_hp < 0:
+                            ai2_hp = 0
+                        if ai3_hp < 0:
+                            ai3_hp = 0
+                        if ai4_hp < 0:
+                            ai4_hp = 0
+                        if ai5_hp < 0:
+                            ai5_hp = 0
+                if 3 in target_list:
+                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3) * 1.5)
+                    if AI_SPAWNED == 3:
+                        ai1_hp = ai1_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(1)) * 0.75)
+                        ai2_hp = ai2_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(2)) * 0.75)
+                        if ai1_hp < 0:
+                            ai1_hp = 0
+                        if ai2_hp < 0:
+                            ai2_hp = 0
+                        if ai3_hp < 0:
+                            ai3_hp = 0
+                    if AI_SPAWNED == 4:
+                        ai1_hp = ai1_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(1)) * 0.75)
+                        ai2_hp = ai2_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(2)) * 0.75)
+                        ai4_hp = ai4_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(4)) * 0.75)
+                        if ai1_hp < 0:
+                            ai1_hp = 0
+                        if ai2_hp < 0:
+                            ai2_hp = 0
+                        if ai3_hp < 0:
+                            ai3_hp = 0
+                        if ai4_hp < 0:
+                            ai4_hp = 0
+                    if AI_SPAWNED == 5:
+                        ai1_hp = ai1_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(1)) * 0.75)
+                        ai2_hp = ai2_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(2)) * 0.75)
+                        ai4_hp = ai4_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(3)) * 0.75)
+                        ai5_hp = ai5_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(5)) * 0.75)
+                        if ai1_hp < 0:
+                            ai1_hp = 0
+                        if ai2_hp < 0:
+                            ai2_hp = 0
+                        if ai3_hp < 0:
+                            ai3_hp = 0
+                        if ai4_hp < 0:
+                            ai4_hp = 0
+                        if ai5_hp < 0:
+                            ai5_hp = 0
+                if 4 in target_list:
+                    ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4) * 1.5)
+                    if AI_SPAWNED == 4:
+                        ai1_hp = ai1_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(1)) * 0.75)
+                        ai2_hp = ai2_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(2)) * 0.75)
+                        ai3_hp = ai3_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(4)) * 0.75)
+                        if ai1_hp < 0:
+                            ai1_hp = 0
+                        if ai2_hp < 0:
+                            ai2_hp = 0
+                        if ai3_hp < 0:
+                            ai3_hp = 0
+                        if ai4_hp < 0:
+                            ai4_hp = 0
+                    if AI_SPAWNED == 5:
+                        ai1_hp = ai1_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(1)) * 0.75)
+                        ai2_hp = ai2_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(2)) * 0.75)
+                        ai3_hp = ai3_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(3)) * 0.75)
+                        ai5_hp = ai5_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(5)) * 0.75)
+                        if ai1_hp < 0:
+                            ai1_hp = 0
+                        if ai2_hp < 0:
+                            ai2_hp = 0
+                        if ai3_hp < 0:
+                            ai3_hp = 0
+                        if ai4_hp < 0:
+                            ai4_hp = 0
+                        if ai5_hp < 0:
+                            ai5_hp = 0
+                if 5 in target_list:
+                    ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5) * 1.5)
+                    ai1_hp = ai1_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(1)) * 0.75)
+                    ai2_hp = ai2_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(2)) * 0.75)
+                    ai3_hp = ai3_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(3)) * 0.75)
+                    ai4_hp = ai4_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(4)) * 0.75)
+                    if ai1_hp < 0:
+                        ai1_hp = 0
+                    if ai2_hp < 0:
+                        ai2_hp = 0
+                    if ai3_hp < 0:
+                        ai3_hp = 0
+                    if ai4_hp < 0:
+                        ai4_hp = 0
+                    if ai5_hp < 0:
+                        ai5_hp = 0
+            if current_arrow_type == "Venom Tip":
+                if 1 in target_list:
+                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1) * 1.5)
+                    if ai1_hp < 0:
+                        ai1_hp = 0
+                    else:
+                        self.apply_weakness(1, 4)
+                if 2 in target_list:
+                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2) * 1.5)
+                    if ai2_hp < 0:
+                        ai2_hp = 0
+                    else:
+                        self.apply_weakness(2, 4)
+                if 3 in target_list:
+                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3) * 1.5)
+                    if ai3_hp < 0:
+                        ai3_hp = 0
+                    else:
+                        self.apply_weakness(3, 4)
+                if 4 in target_list:
+                    ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4) * 1.5)
+                    if ai4_hp < 0:
+                        ai4_hp = 0
+                    else:
+                        self.apply_weakness(4, 4)
+                if 5 in target_list:
+                    ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5) * 1.5)
+                    if ai5_hp < 0:
+                        ai5_hp = 0
+                    else:
+                        self.apply_weakness(5, 4)
+            if current_arrow_type == "Bola Tip":
+                if 1 in target_list:
+                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1) * 1.5)
+                    if ai1_hp < 0:
+                        ai1_hp = 0
+                    else:
+                        self.apply_stun(1, 2)
+                if 2 in target_list:
+                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2) * 1.5)
+                    if ai2_hp < 0:
+                        ai2_hp = 0
+                    else:
+                        self.apply_stun(2, 2)
+                if 3 in target_list:
+                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3) * 1.5)
+                    if ai3_hp < 0:
+                        ai3_hp = 0
+                    else:
+                        self.apply_stun(3, 2)
+                if 4 in target_list:
+                    ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4) * 1.5)
+                    if ai4_hp < 0:
+                        ai4_hp = 0
+                    else:
+                        self.apply_stun(4, 2)
+                if 5 in target_list:
+                    ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5) * 1.5)
+                    if ai5_hp < 0:
+                        ai5_hp = 0
+                    else:
+                        self.apply_stun(5, 2)
+            if current_arrow_type == "Vein Sensitizer Tip":
+                if 1 in target_list:
+                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1) * 1.5)
+                    if ai1_hp < 0:
+                        ai1_hp = 0
+                    else:
+                        self.apply_brittle(1, 4)
+                if 2 in target_list:
+                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2) * 1.5)
+                    if ai2_hp < 0:
+                        ai2_hp = 0
+                    else:
+                        self.apply_brittle(2, 4)
+                if 3 in target_list:
+                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3) * 1.5)
+                    if ai3_hp < 0:
+                        ai3_hp = 0
+                    else:
+                        self.apply_brittle(3, 4)
+                if 4 in target_list:
+                    ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4) * 1.5)
+                    if ai4_hp < 0:
+                        ai4_hp = 0
+                    else:
+                        self.apply_brittle(4, 4)
+                if 5 in target_list:
+                    ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5) * 1.5)
+                    if ai5_hp < 0:
+                        ai5_hp = 0
+                    else:
+                        self.apply_brittle(5, 4)
             if multi_shot_requirements[3] != 0:
                 multi_shot_requirements[3] = multi_shot_requirements[3] - 2
                 if multi_shot_requirements[3] < 0:
                     multi_shot_requirements[3] = 0
         elif ability_data[0] == "Multi-shot":
-            if 1 in target_list:
-                ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1))
-            if 2 in target_list:
-                ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2))
-            if 3 in target_list:
-                ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3))
-            if 4 in target_list:
-                ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4))
-            if 5 in target_list:
-                ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5))
+            if current_arrow_type == "Heavy Iron Tip":
+                if 1 in target_list:
+                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1) * 1.5)
+                    if ai1_hp < 0:
+                        ai1_hp = 0
+                if 2 in target_list:
+                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2) * 1.5)
+                    if ai2_hp < 0:
+                        ai2_hp = 0
+                if 3 in target_list:
+                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3) * 1.5)
+                    if ai3_hp < 0:
+                        ai3_hp = 0
+                if 4 in target_list:
+                    ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4) * 1.5)
+                    if ai4_hp < 0:
+                        ai4_hp = 0
+                if 5 in target_list:
+                    ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5) * 1.5)
+                    if ai5_hp < 0:
+                        ai5_hp = 0
+            if current_arrow_type == "Barbed Tip":
+                if 1 in target_list:
+                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1))
+                    if ai1_hp < 0:
+                        ai1_hp = 0
+                    else:
+                        self.apply_barbedArrowDot(1, 3)
+                if 2 in target_list:
+                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2))
+                    if ai2_hp < 0:
+                        ai2_hp = 0
+                    else:
+                        self.apply_barbedArrowDot(2, 3)
+                if 3 in target_list:
+                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3))
+                    if ai3_hp < 0:
+                        ai3_hp = 0
+                    else:
+                        self.apply_barbedArrowDot(3, 3)
+                if 4 in target_list:
+                    ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4))
+                    if ai4_hp < 0:
+                        ai4_hp = 0
+                    else:
+                        self.apply_barbedArrowDot(4, 3)
+                if 5 in target_list:
+                    ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5))
+                    if ai5_hp < 0:
+                        ai5_hp = 0
+                    else:
+                        self.apply_barbedArrowDot(5, 3)
+            if current_arrow_type == "Shrapnel Tip":
+                if 1 in target_list:
+                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1))
+                    if ai1_hp < 0:
+                        ai1_hp = 0
+                    if AI_SPAWNED == 2:
+                        ai2_hp = ai2_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(2)) * 0.2)
+                        if ai2_hp < 0:
+                            ai2_hp = 0
+                    if AI_SPAWNED == 3:
+                        ai2_hp = ai2_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(2)) * 0.2)
+                        ai3_hp = ai3_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(3)) * 0.2)
+                        if ai2_hp < 0:
+                            ai2_hp = 0
+                        if ai3_hp < 0:
+                            ai3_hp = 0
+                    if AI_SPAWNED == 4:
+                        ai2_hp = ai2_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(2)) * 0.2)
+                        ai3_hp = ai3_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(3)) * 0.2)
+                        ai4_hp = ai4_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(4)) * 0.2)
+                        if ai2_hp < 0:
+                            ai2_hp = 0
+                        if ai3_hp < 0:
+                            ai3_hp = 0
+                        if ai4_hp < 0:
+                            ai4_hp = 0
+                    if AI_SPAWNED == 5:
+                        ai2_hp = ai2_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(2)) * 0.2)
+                        ai3_hp = ai3_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(3)) * 0.2)
+                        ai4_hp = ai4_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(4)) * 0.2)
+                        ai5_hp = ai5_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(5)) * 0.2)
+                        if ai2_hp < 0:
+                            ai2_hp = 0
+                        if ai3_hp < 0:
+                            ai3_hp = 0
+                        if ai4_hp < 0:
+                            ai4_hp = 0
+                        if ai5_hp < 0:
+                            ai5_hp = 0
+                if 2 in target_list:
+                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2))
+                    if AI_SPAWNED == 2:
+                        ai1_hp = ai1_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(1)) * 0.2)
+                        if ai1_hp < 0:
+                            ai1_hp = 0
+                        if ai2_hp < 0:
+                            ai2_hp = 0
+                    if AI_SPAWNED == 3:
+                        ai1_hp = ai1_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(1)) * 0.2)
+                        ai3_hp = ai3_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(3)) * 0.2)
+                        if ai1_hp < 0:
+                            ai1_hp = 0
+                        if ai2_hp < 0:
+                            ai2_hp = 0
+                        if ai3_hp < 0:
+                            ai3_hp = 0
+                    if AI_SPAWNED == 4:
+                        ai1_hp = ai1_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(1)) * 0.2)
+                        ai3_hp = ai3_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(3)) * 0.2)
+                        ai4_hp = ai4_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(4)) * 0.2)
+                        if ai1_hp < 0:
+                            ai1_hp = 0
+                        if ai2_hp < 0:
+                            ai2_hp = 0
+                        if ai3_hp < 0:
+                            ai3_hp = 0
+                        if ai4_hp < 0:
+                            ai4_hp = 0
+                    if AI_SPAWNED == 5:
+                        ai1_hp = ai1_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(1)) * 0.2)
+                        ai3_hp = ai3_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(3)) * 0.2)
+                        ai4_hp = ai4_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(4)) * 0.2)
+                        ai5_hp = ai5_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(5)) * 0.2)
+                        if ai1_hp < 0:
+                            ai1_hp = 0
+                        if ai2_hp < 0:
+                            ai2_hp = 0
+                        if ai3_hp < 0:
+                            ai3_hp = 0
+                        if ai4_hp < 0:
+                            ai4_hp = 0
+                        if ai5_hp < 0:
+                            ai5_hp = 0
+                if 3 in target_list:
+                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3))
+                    if AI_SPAWNED == 3:
+                        ai1_hp = ai1_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(1)) * 0.2)
+                        ai2_hp = ai2_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(2)) * 0.2)
+                        if ai1_hp < 0:
+                            ai1_hp = 0
+                        if ai2_hp < 0:
+                            ai2_hp = 0
+                        if ai3_hp < 0:
+                            ai3_hp = 0
+                    if AI_SPAWNED == 4:
+                        ai1_hp = ai1_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(1)) * 0.2)
+                        ai2_hp = ai2_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(2)) * 0.2)
+                        ai4_hp = ai4_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(4)) * 0.2)
+                        if ai1_hp < 0:
+                            ai1_hp = 0
+                        if ai2_hp < 0:
+                            ai2_hp = 0
+                        if ai3_hp < 0:
+                            ai3_hp = 0
+                        if ai4_hp < 0:
+                            ai4_hp = 0
+                    if AI_SPAWNED == 5:
+                        ai1_hp = ai1_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(1)) * 0.2)
+                        ai2_hp = ai2_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(2)) * 0.2)
+                        ai4_hp = ai4_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(3)) * 0.2)
+                        ai5_hp = ai5_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(5)) * 0.2)
+                        if ai1_hp < 0:
+                            ai1_hp = 0
+                        if ai2_hp < 0:
+                            ai2_hp = 0
+                        if ai3_hp < 0:
+                            ai3_hp = 0
+                        if ai4_hp < 0:
+                            ai4_hp = 0
+                        if ai5_hp < 0:
+                            ai5_hp = 0
+                if 4 in target_list:
+                    ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4))
+                    if AI_SPAWNED == 4:
+                        ai1_hp = ai1_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(1)) * 0.2)
+                        ai2_hp = ai2_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(2)) * 0.2)
+                        ai3_hp = ai3_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(4)) * 0.2)
+                        if ai1_hp < 0:
+                            ai1_hp = 0
+                        if ai2_hp < 0:
+                            ai2_hp = 0
+                        if ai3_hp < 0:
+                            ai3_hp = 0
+                        if ai4_hp < 0:
+                            ai4_hp = 0
+                    if AI_SPAWNED == 5:
+                        ai1_hp = ai1_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(1)) * 0.2)
+                        ai2_hp = ai2_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(2)) * 0.2)
+                        ai3_hp = ai3_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(3)) * 0.2)
+                        ai5_hp = ai5_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(5)) * 0.2)
+                        if ai1_hp < 0:
+                            ai1_hp = 0
+                        if ai2_hp < 0:
+                            ai2_hp = 0
+                        if ai3_hp < 0:
+                            ai3_hp = 0
+                        if ai4_hp < 0:
+                            ai4_hp = 0
+                        if ai5_hp < 0:
+                            ai5_hp = 0
+                if 5 in target_list:
+                    ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5))
+                    ai1_hp = ai1_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(1)) * 0.2)
+                    ai2_hp = ai2_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(2)) * 0.2)
+                    ai3_hp = ai3_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(3)) * 0.2)
+                    ai4_hp = ai4_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(4)) * 0.2)
+                    if ai1_hp < 0:
+                        ai1_hp = 0
+                    if ai2_hp < 0:
+                        ai2_hp = 0
+                    if ai3_hp < 0:
+                        ai3_hp = 0
+                    if ai4_hp < 0:
+                        ai4_hp = 0
+                    if ai5_hp < 0:
+                        ai5_hp = 0
+            if current_arrow_type == "Venom Tip":
+                if 1 in target_list:
+                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1))
+                    if ai1_hp < 0:
+                        ai1_hp = 0
+                    else:
+                        self.apply_weakness(1, 2)
+                if 2 in target_list:
+                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2))
+                    if ai2_hp < 0:
+                        ai2_hp = 0
+                    else:
+                        self.apply_weakness(2, 2)
+                if 3 in target_list:
+                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3))
+                    if ai3_hp < 0:
+                        ai3_hp = 0
+                    else:
+                        self.apply_weakness(3, 2)
+                if 4 in target_list:
+                    ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4))
+                    if ai4_hp < 0:
+                        ai4_hp = 0
+                    else:
+                        self.apply_weakness(4, 2)
+                if 5 in target_list:
+                    ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5))
+                    if ai5_hp < 0:
+                        ai5_hp = 0
+                    else:
+                        self.apply_weakness(5, 2)
+            if current_arrow_type == "Bola Tip":
+                if 1 in target_list:
+                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1))
+                    if ai1_hp < 0:
+                        ai1_hp = 0
+                    else:
+                        self.apply_stun(1, 1)
+                if 2 in target_list:
+                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2))
+                    if ai2_hp < 0:
+                        ai2_hp = 0
+                    else:
+                        self.apply_stun(2, 1)
+                if 3 in target_list:
+                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3))
+                    if ai3_hp < 0:
+                        ai3_hp = 0
+                    else:
+                        self.apply_stun(3, 1)
+                if 4 in target_list:
+                    ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4))
+                    if ai4_hp < 0:
+                        ai4_hp = 0
+                    else:
+                        self.apply_stun(4, 1)
+                if 5 in target_list:
+                    ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5))
+                    if ai5_hp < 0:
+                        ai5_hp = 0
+                    else:
+                        self.apply_stun(5, 1)
+            if current_arrow_type == "Vein Sensitizer Tip":
+                if 1 in target_list:
+                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1))
+                    if ai1_hp < 0:
+                        ai1_hp = 0
+                    else:
+                        self.apply_brittle(1, 2)
+                if 2 in target_list:
+                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2))
+                    if ai2_hp < 0:
+                        ai2_hp = 0
+                    else:
+                        self.apply_brittle(2, 2)
+                if 3 in target_list:
+                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3))
+                    if ai3_hp < 0:
+                        ai3_hp = 0
+                    else:
+                        self.apply_brittle(3, 2)
+                if 4 in target_list:
+                    ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4))
+                    if ai4_hp < 0:
+                        ai4_hp = 0
+                    else:
+                        self.apply_brittle(4, 2)
+                if 5 in target_list:
+                    ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5))
+                    if ai5_hp < 0:
+                        ai5_hp = 0
+                    else:
+                        self.apply_brittle(5, 2)
             if ricochet_shot_requirements[3] != 0:
                 ricochet_shot_requirements[3] = ricochet_shot_requirements[3] - 3
                 if ricochet_shot_requirements[3] < 0:
                     ricochet_shot_requirements[3] = 0
         elif ability_data[0] == "Ricochet Shot":
-            if AI_SPAWNED == 1:
-                ai1_hp = ai1_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(1)) * 0.75)
-            if AI_SPAWNED == 2:
-                ai1_hp = ai1_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(1)) * 0.75)
-                ai2_hp = ai2_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(2)) * 0.75)
-            if AI_SPAWNED == 3:
-                ai1_hp = ai1_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(1)) * 0.75)
-                ai2_hp = ai2_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(2)) * 0.75)
-                ai3_hp = ai3_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(3)) * 0.75)
-            if AI_SPAWNED == 4:
-                ai1_hp = ai1_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(1)) * 0.75)
-                ai2_hp = ai2_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(2)) * 0.75)
-                ai3_hp = ai3_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(3)) * 0.75)
-                ai4_hp = ai4_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(4)) * 0.75)
-            if AI_SPAWNED == 5:
-                ai1_hp = ai1_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(1)) * 0.75)
-                ai2_hp = ai2_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(2)) * 0.75)
-                ai3_hp = ai3_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(3)) * 0.75)
-                ai4_hp = ai4_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(4)) * 0.75)
-                ai5_hp = ai5_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(5)) * 0.75)
+            if current_arrow_type == "Heavy Iron Tip":
+                if AI_SPAWNED == 1:
+                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1) * 1.5)
+                if AI_SPAWNED == 2:
+                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1) * 1.5)
+                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2) * 1.5)
+                if AI_SPAWNED == 3:
+                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1) * 1.5)
+                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2) * 1.5)
+                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3) * 1.5)
+                if AI_SPAWNED == 4:
+                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1) * 1.5)
+                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2) * 1.5)
+                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3) * 1.5)
+                    ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4) * 1.5)
+                if AI_SPAWNED == 5:
+                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1) * 1.5)
+                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2) * 1.5)
+                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3) * 1.5)
+                    ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4) * 1.5)
+                    ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5) * 1.5)
+            if current_arrow_type == "Serrated Tip":
+                if AI_SPAWNED == 1:
+                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1) * 0.75)
+                    if ai1_hp < 0:
+                        ai1_hp = 0
+                    else:
+                        self.apply_barbedArrowDot(1, 3)
+                if AI_SPAWNED == 2:
+                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1) * 0.75)
+                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2) * 0.75)
+                    if ai1_hp < 0:
+                        ai1_hp = 0
+                    else:
+                        self.apply_barbedArrowDot(1, 3)
+                    if ai2_hp < 0:
+                        ai2_hp = 0
+                    else:
+                        self.apply_barbedArrowDot(2, 3)
+                if AI_SPAWNED == 3:
+                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1) * 0.75)
+                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2) * 0.75)
+                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3) * 0.75)
+                    if ai1_hp < 0:
+                        ai1_hp = 0
+                    else:
+                        self.apply_barbedArrowDot(1, 3)
+                    if ai2_hp < 0:
+                        ai2_hp = 0
+                    else:
+                        self.apply_barbedArrowDot(2, 3)
+                    if ai3_hp < 0:
+                        ai3_hp = 0
+                    else:
+                        self.apply_barbedArrowDot(3, 3)
+                if AI_SPAWNED == 4:
+                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1) * 0.75)
+                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2) * 0.75)
+                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3) * 0.75)
+                    ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4) * 0.75)
+                    if ai1_hp < 0:
+                        ai1_hp = 0
+                    else:
+                        self.apply_barbedArrowDot(1, 3)
+                    if ai2_hp < 0:
+                        ai2_hp = 0
+                    else:
+                        self.apply_barbedArrowDot(2, 3)
+                    if ai3_hp < 0:
+                        ai3_hp = 0
+                    else:
+                        self.apply_barbedArrowDot(3, 3)
+                    if ai4_hp < 0:
+                        ai4_hp = 0
+                    else:
+                        self.apply_barbedArrowDot(4, 3)
+                if AI_SPAWNED == 5:
+                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1) * 0.75)
+                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2) * 0.75)
+                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3) * 0.75)
+                    ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4) * 0.75)
+                    ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5) * 0.75)
+                    if ai1_hp < 0:
+                        ai1_hp = 0
+                    else:
+                        self.apply_barbedArrowDot(1, 3)
+                    if ai2_hp < 0:
+                        ai2_hp = 0
+                    else:
+                        self.apply_barbedArrowDot(2, 3)
+                    if ai3_hp < 0:
+                        ai3_hp = 0
+                    else:
+                        self.apply_barbedArrowDot(3, 3)
+                    if ai4_hp < 0:
+                        ai4_hp = 0
+                    else:
+                        self.apply_barbedArrowDot(4, 3)
+                    if ai5_hp < 0:
+                        ai5_hp = 0
+                    else:
+                        self.apply_barbedArrowDot(5, 3)
+            if current_arrow_type == "Shrapnel Tip":
+                if AI_SPAWNED == 1:
+                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1) * 0.75)
+                    if ai1_hp < 0:
+                        ai1_hp = 0
+                if AI_SPAWNED == 2:
+                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1) * 0.75)
+                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2) * 0.75)
+                    if ai1_hp != 0:
+                        ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2) * 0.15)
+                    if ai2_hp != 0:
+                        ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1) * 0.15)
+                    if ai1_hp < 0:
+                        ai1_hp = 0
+                    if ai2_hp < 0:
+                        ai2_hp = 0
+                if AI_SPAWNED == 3:
+                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1) * 0.75)
+                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2) * 0.75)
+                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3) * 0.75)
+                    if ai1_hp != 0:
+                        ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2) * 0.15)
+                        ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3) * 0.15)
+                    if ai2_hp != 0:
+                        ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1) * 0.15)
+                        ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3) * 0.15)
+                    if ai3_hp != 0:
+                        ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1) * 0.15)
+                        ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2) * 0.15)
+                    if ai1_hp < 0:
+                        ai1_hp = 0
+                    if ai2_hp < 0:
+                        ai2_hp = 0
+                    if ai3_hp < 0:
+                        ai3_hp = 0
+                if AI_SPAWNED == 4:
+                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1) * 0.75)
+                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2) * 0.75)
+                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3) * 0.75)
+                    ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4) * 0.75)
+                    if ai1_hp != 0:
+                        ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2) * 0.15)
+                        ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3) * 0.15)
+                        ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4) * 0.15)
+                    if ai2_hp != 0:
+                        ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1) * 0.15)
+                        ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3) * 0.15)
+                        ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4) * 0.15)
+                    if ai3_hp != 0:
+                        ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1) * 0.15)
+                        ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2) * 0.15)
+                        ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4) * 0.15)
+                    if ai4_hp != 0:
+                        ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1) * 0.15)
+                        ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2) * 0.15)
+                        ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3) * 0.15)
+                    if ai1_hp < 0:
+                        ai1_hp = 0
+                    if ai2_hp < 0:
+                        ai2_hp = 0
+                    if ai3_hp < 0:
+                        ai3_hp = 0
+                    if ai4_hp < 0:
+                        ai4_hp = 0
+                if AI_SPAWNED == 5:
+                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1) * 0.75)
+                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2) * 0.75)
+                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3) * 0.75)
+                    ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4) * 0.75)
+                    ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5) * 0.75)
+                    if ai1_hp != 0:
+                        ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2) * 0.15)
+                        ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3) * 0.15)
+                        ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4) * 0.15)
+                        ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5) * 0.15)
+                    if ai2_hp != 0:
+                        ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1) * 0.15)
+                        ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3) * 0.15)
+                        ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4) * 0.15)
+                        ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5) * 0.15)
+                    if ai3_hp != 0:
+                        ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1) * 0.15)
+                        ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2) * 0.15)
+                        ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4) * 0.15)
+                        ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5) * 0.15)
+                    if ai4_hp != 0:
+                        ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1) * 0.15)
+                        ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2) * 0.15)
+                        ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3) * 0.15)
+                        ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5) * 0.15)
+                    if ai5_hp != 0:
+                        ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1) * 0.15)
+                        ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2) * 0.15)
+                        ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3) * 0.15)
+                        ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4) * 0.15)
+                    if ai1_hp < 0:
+                        ai1_hp = 0
+                    if ai2_hp < 0:
+                        ai2_hp = 0
+                    if ai3_hp < 0:
+                        ai3_hp = 0
+                    if ai4_hp < 0:
+                        ai4_hp = 0
+                    if ai5_hp < 0:
+                        ai5_hp = 0
+            if current_arrow_type == "Venom Tip":
+                if AI_SPAWNED == 1:
+                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1) * 0.75)
+                    if ai1_hp < 0:
+                        ai1_hp = 0
+                    else:
+                        self.apply_weakness(1, 2)
+                if AI_SPAWNED == 2:
+                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1) * 0.75)
+                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2) * 0.75)
+                    if ai1_hp < 0:
+                        ai1_hp = 0
+                    else:
+                        self.apply_weakness(1, 2)
+                    if ai2_hp < 0:
+                        ai2_hp = 0
+                    else:
+                        self.apply_weakness(2, 2)
+                if AI_SPAWNED == 3:
+                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1) * 0.75)
+                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2) * 0.75)
+                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3) * 0.75)
+                    if ai1_hp < 0:
+                        ai1_hp = 0
+                    else:
+                        self.apply_weakness(1, 2)
+                    if ai2_hp < 0:
+                        ai2_hp = 0
+                    else:
+                        self.apply_weakness(2, 2)
+                    if ai3_hp < 0:
+                        ai3_hp = 0
+                    else:
+                        self.apply_weakness(3, 2)
+                if AI_SPAWNED == 4:
+                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1) * 0.75)
+                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2) * 0.75)
+                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3) * 0.75)
+                    ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4) * 0.75)
+                    if ai1_hp < 0:
+                        ai1_hp = 0
+                    else:
+                        self.apply_weakness(1, 2)
+                    if ai2_hp < 0:
+                        ai2_hp = 0
+                    else:
+                        self.apply_weakness(2, 2)
+                    if ai3_hp < 0:
+                        ai3_hp = 0
+                    else:
+                        self.apply_weakness(3, 2)
+                    if ai4_hp < 0:
+                        ai4_hp = 0
+                    else:
+                        self.apply_weakness(4, 2)
+                if AI_SPAWNED == 5:
+                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1) * 0.75)
+                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2) * 0.75)
+                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3) * 0.75)
+                    ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4) * 0.75)
+                    ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5) * 0.75)
+                    if ai1_hp < 0:
+                        ai1_hp = 0
+                    else:
+                        self.apply_weakness(1, 2)
+                    if ai2_hp < 0:
+                        ai2_hp = 0
+                    else:
+                        self.apply_weakness(2, 2)
+                    if ai3_hp < 0:
+                        ai3_hp = 0
+                    else:
+                        self.apply_weakness(3, 2)
+                    if ai4_hp < 0:
+                        ai4_hp = 0
+                    else:
+                        self.apply_weakness(4, 2)
+                    if ai5_hp < 0:
+                        ai5_hp = 0
+                    else:
+                        self.apply_weakness(5, 2)
+            if current_arrow_type == "Bola Tip":
+                if AI_SPAWNED == 1:
+                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1) * 0.75)
+                    if ai1_hp < 0:
+                        ai1_hp = 0
+                    else:
+                        self.apply_stun(1, 1)
+                if AI_SPAWNED == 2:
+                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1) * 0.75)
+                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2) * 0.75)
+                    if ai1_hp < 0:
+                        ai1_hp = 0
+                    else:
+                        self.apply_stun(1, 1)
+                    if ai2_hp < 0:
+                        ai2_hp = 0
+                    else:
+                        self.apply_stun(2, 1)
+                if AI_SPAWNED == 3:
+                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1) * 0.75)
+                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2) * 0.75)
+                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3) * 0.75)
+                    if ai1_hp < 0:
+                        ai1_hp = 0
+                    else:
+                        self.apply_stun(1, 1)
+                    if ai2_hp < 0:
+                        ai2_hp = 0
+                    else:
+                        self.apply_stun(2, 1)
+                    if ai3_hp < 0:
+                        ai3_hp = 0
+                    else:
+                        self.apply_stun(3, 1)
+                if AI_SPAWNED == 4:
+                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1) * 0.75)
+                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2) * 0.75)
+                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3) * 0.75)
+                    ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4) * 0.75)
+                    if ai1_hp < 0:
+                        ai1_hp = 0
+                    else:
+                        self.apply_stun(1, 1)
+                    if ai2_hp < 0:
+                        ai2_hp = 0
+                    else:
+                        self.apply_stun(2, 1)
+                    if ai3_hp < 0:
+                        ai3_hp = 0
+                    else:
+                        self.apply_stun(3, 1)
+                    if ai4_hp < 0:
+                        ai4_hp = 0
+                    else:
+                        self.apply_stun(4, 1)
+                if AI_SPAWNED == 5:
+                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1) * 0.75)
+                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2) * 0.75)
+                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3) * 0.75)
+                    ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4) * 0.75)
+                    ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5) * 0.75)
+                    if ai1_hp < 0:
+                        ai1_hp = 0
+                    else:
+                        self.apply_stun(1, 1)
+                    if ai2_hp < 0:
+                        ai2_hp = 0
+                    else:
+                        self.apply_stun(2, 1)
+                    if ai3_hp < 0:
+                        ai3_hp = 0
+                    else:
+                        self.apply_stun(3, 1)
+                    if ai4_hp < 0:
+                        ai4_hp = 0
+                    else:
+                        self.apply_stun(4, 1)
+                    if ai5_hp < 0:
+                        ai5_hp = 0
+                    else:
+                        self.apply_stun(5, 1)
+            if current_arrow_type == "Vein Sensitizer Tip":
+                if AI_SPAWNED == 1:
+                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1) * 0.75)
+                    if ai1_hp < 0:
+                        ai1_hp = 0
+                    else:
+                        self.apply_brittle(1, 2)
+                if AI_SPAWNED == 2:
+                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1) * 0.75)
+                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2) * 0.75)
+                    if ai1_hp < 0:
+                        ai1_hp = 0
+                    else:
+                        self.apply_brittle(1, 2)
+                    if ai2_hp < 0:
+                        ai2_hp = 0
+                    else:
+                        self.apply_brittle(2, 2)
+                if AI_SPAWNED == 3:
+                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1) * 0.75)
+                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2) * 0.75)
+                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3) * 0.75)
+                    if ai1_hp < 0:
+                        ai1_hp = 0
+                    else:
+                        self.apply_brittle(1, 2)
+                    if ai2_hp < 0:
+                        ai2_hp = 0
+                    else:
+                        self.apply_brittle(2, 2)
+                    if ai3_hp < 0:
+                        ai3_hp = 0
+                    else:
+                        self.apply_brittle(3, 2)
+                if AI_SPAWNED == 4:
+                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1) * 0.75)
+                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2) * 0.75)
+                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3) * 0.75)
+                    ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4) * 0.75)
+                    if ai1_hp < 0:
+                        ai1_hp = 0
+                    else:
+                        self.apply_brittle(1, 2)
+                    if ai2_hp < 0:
+                        ai2_hp = 0
+                    else:
+                        self.apply_brittle(2, 2)
+                    if ai3_hp < 0:
+                        ai3_hp = 0
+                    else:
+                        self.apply_brittle(3, 2)
+                    if ai4_hp < 0:
+                        ai4_hp = 0
+                    else:
+                        self.apply_brittle(4, 2)
+                if AI_SPAWNED == 5:
+                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1) * 0.75)
+                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2) * 0.75)
+                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3) * 0.75)
+                    ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4) * 0.75)
+                    ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5) * 0.75)
+                    if ai1_hp < 0:
+                        ai1_hp = 0
+                    else:
+                        self.apply_brittle(1, 2)
+                    if ai2_hp < 0:
+                        ai2_hp = 0
+                    else:
+                        self.apply_brittle(2, 2)
+                    if ai3_hp < 0:
+                        ai3_hp = 0
+                    else:
+                        self.apply_brittle(3, 2)
+                    if ai4_hp < 0:
+                        ai4_hp = 0
+                    else:
+                        self.apply_brittle(4, 2)
+                    if ai5_hp < 0:
+                        ai5_hp = 0
+                    else:
+                        self.apply_brittle(5, 2)
         elif ability_data[0] == "Chain Bolts":
             if 1 in target_list:
                 ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1)) * 1.2
