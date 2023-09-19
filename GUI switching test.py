@@ -77,7 +77,7 @@ BLOODMANCER = Champions(1000, 0, 400, 'Flynn, the Bloodmancer', "Bloodmancer", "
 #PLD
 PALADIN = Champions(1000, 0, 400, 'Olig, the Paladin', "Paladin", "PLD", "null", ["Holy Wrath", "Righteous Blow", "Crusade"], ["Damnation"], "Holy Auras")
 #LGR
-LEGION_RANGER = Champions(1000, 0, 400, 'Brad, the Legion Ranger', "Ranger", "LGR", "null", ["Steady Aim", "Power shot", "Multi-shot", "Ricochet Shot"], ["Multi-shot", "Ricochet Shot"], "Arrow Tips")
+LEGION_RANGER = Champions(1000, 0, 400, 'Brad, the Legion Ranger', "Ranger", "LGR", "null", ["Steady Aim", "Power Shot", "Multi-shot", "Ricochet Shot"], [], "Arrow Tips")
 #MGM
 MAGNETIMANCER = Champions(1000, 0, 400, "Kel'ther, the Magnetimancer ", "Magnetimancer", "MGM", "null", ["Chain Bolts", "Electrical Expulsion"], ["Energise", "Superconductor"], "Polarisation")
 #PWC
@@ -121,7 +121,7 @@ WORMPULP_BROTHERS = Monsters(1500, 50, 100, "Scent", "Wormpulp Brothers", "Wormp
 
 SIREN_TRIPLETS = Monsters(1000, 33, 200, "Mana", "Siren Triplets", "Triplet", "the", ["Twilight Beam"], 3, 'Medium')
 
-VEMONSKIN_TROGGIES = Monsters(750, 25, 0, "null", "Venomskin Troggies", "Venomskin Troggie", "a gang of", ["Spear Thrust"], 4, 'Small')
+VENOMSKIN_AMPHIBOIDS = Monsters(750, 25, 0, "null", "Venomskin Amphiboids", "Venomskin Amphiboid", "a gang of", ["Spear Thrust"], 4, 'Small')
 
 GIANT_LOCUST_SWARM = Monsters(600, 20, 0, "null", "Giant Locust Swarm", "Giant Locust", "a", ["Bite"], 5, 'Tiny')
 
@@ -1082,7 +1082,7 @@ class GameFrame(tk.Frame):
 
     def set_monster_encounter(self):
         global AI_ATTACKS, AI_GROUP_HP, AI_ATTACKPOWER, AI_SPAWNED, AI_ENTRY_WORD, AI_NICKNAME, \
-            AI_NAME, AI_RESOURCE, AI_RESOURCE_NAME, ai1_hp, ai2_hp, ai3_hp, ai4_hp, ai5_hp, ai1_rp, ai2_rp, ai3_rp, \
+            AI_NAME, AI_RESOURCE, AI_RESOURCE_NAME, AI_SIZE, ai1_hp, ai2_hp, ai3_hp, ai4_hp, ai5_hp, ai1_rp, ai2_rp, ai3_rp, \
             ai4_rp, ai5_rp, ai1_max_hp, ai2_max_hp, ai3_max_hp, ai4_max_hp, ai5_max_hp
         NUM_SPAWNED_MONSTERS = [1, 2, 3, 4, 5]
         random.shuffle(NUM_SPAWNED_MONSTERS)
@@ -1093,7 +1093,7 @@ class GameFrame(tk.Frame):
         elif NUM_SPAWNED_MONSTERS[0] == 3:
             ai_type = [SIREN_TRIPLETS.name]  # will create variety later
         elif NUM_SPAWNED_MONSTERS[0] == 4:
-            ai_type = [VEMONSKIN_TROGGIES.name]  # will create variety later
+            ai_type = [VENOMSKIN_AMPHIBOIDS.name]  # will create variety later
         elif NUM_SPAWNED_MONSTERS[0] == 5:
             ai_type = [GIANT_LOCUST_SWARM.name]  # will create variety later
         random.shuffle(ai_type)
@@ -1108,6 +1108,7 @@ class GameFrame(tk.Frame):
             AI_NAME = GROTHAK_THE_DESTROYER.name
             AI_RESOURCE = GROTHAK_THE_DESTROYER.rp
             AI_RESOURCE_NAME = GROTHAK_THE_DESTROYER.rp_name
+            AI_SIZE = GROTHAK_THE_DESTROYER.size_class
         elif monster_ai == WORMPULP_BROTHERS.name:
             AI_ATTACKS = WORMPULP_BROTHERS.attack_list  # will add more later
             AI_GROUP_HP = WORMPULP_BROTHERS.hp
@@ -1118,6 +1119,7 @@ class GameFrame(tk.Frame):
             AI_NAME = WORMPULP_BROTHERS.name
             AI_RESOURCE = WORMPULP_BROTHERS.rp
             AI_RESOURCE_NAME = WORMPULP_BROTHERS.rp_name
+            AI_SIZE = WORMPULP_BROTHERS.size_class
         elif monster_ai == SIREN_TRIPLETS.name:
             AI_ATTACKS = SIREN_TRIPLETS.attack_list  # will add more later
             AI_GROUP_HP = SIREN_TRIPLETS.hp
@@ -1128,16 +1130,18 @@ class GameFrame(tk.Frame):
             AI_NAME = SIREN_TRIPLETS.name
             AI_RESOURCE = SIREN_TRIPLETS.rp
             AI_RESOURCE_NAME = SIREN_TRIPLETS.rp_name
-        elif monster_ai == VEMONSKIN_TROGGIES.name:
-            AI_ATTACKS = VEMONSKIN_TROGGIES.attack_list  # will add more later
-            AI_GROUP_HP = VEMONSKIN_TROGGIES.hp
-            AI_ATTACKPOWER = VEMONSKIN_TROGGIES.ap
-            AI_SPAWNED = VEMONSKIN_TROGGIES.ai_spawned
-            AI_ENTRY_WORD = VEMONSKIN_TROGGIES.enter_word
-            AI_NICKNAME = VEMONSKIN_TROGGIES.nickname
-            AI_NAME = VEMONSKIN_TROGGIES.name
-            AI_RESOURCE = VEMONSKIN_TROGGIES.rp
-            AI_RESOURCE_NAME = VEMONSKIN_TROGGIES.rp_name
+            AI_SIZE = SIREN_TRIPLETS.size_class
+        elif monster_ai == VENOMSKIN_AMPHIBOIDS.name:
+            AI_ATTACKS = VENOMSKIN_AMPHIBOIDS.attack_list  # will add more later
+            AI_GROUP_HP = VENOMSKIN_AMPHIBOIDS.hp
+            AI_ATTACKPOWER = VENOMSKIN_AMPHIBOIDS.ap
+            AI_SPAWNED = VENOMSKIN_AMPHIBOIDS.ai_spawned
+            AI_ENTRY_WORD = VENOMSKIN_AMPHIBOIDS.enter_word
+            AI_NICKNAME = VENOMSKIN_AMPHIBOIDS.nickname
+            AI_NAME = VENOMSKIN_AMPHIBOIDS.name
+            AI_RESOURCE = VENOMSKIN_AMPHIBOIDS.rp
+            AI_RESOURCE_NAME = VENOMSKIN_AMPHIBOIDS.rp_name
+            AI_SIZE = VENOMSKIN_AMPHIBOIDS.size_class
         elif monster_ai == GIANT_LOCUST_SWARM.name:
             AI_ATTACKS = GIANT_LOCUST_SWARM.attack_list  # will add more later
             AI_GROUP_HP = GIANT_LOCUST_SWARM.hp
@@ -1148,6 +1152,7 @@ class GameFrame(tk.Frame):
             AI_NAME = GIANT_LOCUST_SWARM.name
             AI_RESOURCE = GIANT_LOCUST_SWARM.rp
             AI_RESOURCE_NAME = GIANT_LOCUST_SWARM.rp_name
+            AI_SIZE = GIANT_LOCUST_SWARM.size_class
         aiEnemyNA = 0
         if AI_SPAWNED == 1:
             ai1_hp = math.ceil(AI_GROUP_HP * (1 + health_modifier))
@@ -1204,7 +1209,7 @@ class GameFrame(tk.Frame):
             violent_thrash_requirements = [0, 0, 0]
         if AI_NAME == "Siren Triplets":
             twilight_beam_requirements = [25, 0, 0]
-        if AI_NAME == "Venomskin Troggies":
+        if AI_NAME == "Venomskin Amphiboids":
             spear_stab_requirements = [0, 0, 0]
         if AI_NAME == "Giant Locust Swarm":
             bite_requirements = [0, 0, 0]
@@ -1435,7 +1440,7 @@ class GameFrame(tk.Frame):
         power_shot_requirements = [0, 0, 2, 0]
         multi_shot_requirements = [0, 0, 4, 0]
         ricochet_shot_requirements = [0, 0, 6, 0]
-        current_arrow_type = "Iron-cast"
+        current_arrow_type = "Heavy Iron Tip"
         # Magnetimancer Abilities
         chain_bolts_requirements = [0, 0, 0, 0]
         electrical_expulsion_requirements = [0, 0, 2, 0]
@@ -1700,6 +1705,10 @@ class GameFrame(tk.Frame):
             ai1_burnDot, ai2_burnDot, ai3_burnDot, ai4_burnDot, ai5_burnDot, ai1_serraSlashDot, ai2_serraSlashDot, ai3_serraSlashDot, \
             ai4_serraSlashDot, ai5_serraSlashDot, ai1_garroteDot, ai2_garroteDot, ai3_garroteDot, ai4_garroteDot, ai5_garroteDot, \
             ai1_eviscerDot, ai2_eviscerDot, ai3_eviscerDot, ai4_eviscerDot, ai5_eviscerDot, \
+            ai1_hh_db, ai2_hh_db, ai3_hh_db, ai4_hh_db, ai5_hh_db, \
+            ai1_ws_db, ai2_ws_db, ai3_ws_db, ai4_ws_db, ai5_ws_db, \
+            ai1_uc_db, ai2_uc_db, ai3_uc_db, ai4_uc_db, ai5_uc_db,  \
+            ai1_toc, ai2_toc, ai3_toc, ai4_toc, ai5_toc, \
             ai1_statuses, ai2_statuses, ai3_statuses, ai4_statuses, ai5_statuses, \
             ai1_thornsDot, ai2_thornsDot, ai3_thornsDot, ai4_thornsDot, ai5_thornsDot, \
             ai1_rottingDot, ai2_rottingDot, ai3_rottingDot, ai4_rottingDot, ai5_rottingDot, \
@@ -1742,11 +1751,31 @@ class GameFrame(tk.Frame):
         ai3_weakness = 0
         ai4_weakness = 0
         ai5_weakness = 0
+        ai1_hh_db = 0
+        ai2_hh_db = 0
+        ai3_hh_db = 0
+        ai4_hh_db = 0
+        ai5_hh_db = 0
+        ai1_ws_db = 0
+        ai2_ws_db = 0
+        ai3_ws_db = 0
+        ai4_ws_db = 0
+        ai5_ws_db = 0
+        ai1_uc_db = 0
+        ai2_uc_db = 0
+        ai3_uc_db = 0
+        ai4_uc_db = 0
+        ai5_uc_db = 0
         ai1_stun = 0
         ai2_stun = 0
         ai3_stun = 0
         ai4_stun = 0
         ai5_stun = 0
+        ai1_toc = 0
+        ai2_toc = 0
+        ai3_toc = 0
+        ai4_toc = 0
+        ai5_toc = 0
         ai1_statuses = []
         ai2_statuses = []
         ai3_statuses = []
@@ -1927,7 +1956,7 @@ class GameFrame(tk.Frame):
             random.shuffle(attack)
             if attack[0] == "Twilight Beam":
                 attack = ["Twilight Beam", math.ceil(twilight_beam_damage), "1T", "Magic"]
-        if AI_NAME == "Venomskin Troggies":
+        if AI_NAME == "Venomskin Amphiboids":
             # Spear Thrust
             spear_thrust_basenumber = [1.2, 1.4, 1.6]
             random.shuffle(spear_thrust_basenumber)
@@ -2374,8 +2403,8 @@ class GameFrame(tk.Frame):
                     for status_effect in champion1_statuses:
                         if "[Immunity]" in status_effect:
                             effects_list.append("{}".format(status_effect))
-                        if status_effect == "Protective Aura":
-                            effects_list.append("Protective Aura [+10%]")
+                        if status_effect == "Protection Aura":
+                            effects_list.append("Protection Aura [+10%]")
                         if status_effect == "Weak Tourniquet":
                             effects_list.append("Weak Tourniquet [+10%]: ({})".format(champion1_weaktourniquet))
                         if status_effect == "Flowing Water":
@@ -2558,8 +2587,8 @@ class GameFrame(tk.Frame):
                     for status_effect in champion2_statuses:
                         if "[Immunity]" in status_effect:
                             effects_list.append("{}".format(status_effect))
-                        if status_effect == "Protective Aura":
-                            effects_list.append("Protective Aura [+10%]")
+                        if status_effect == "Protection Aura":
+                            effects_list.append("Protection Aura [+10%]")
                         if status_effect == "Weak Tourniquet":
                             effects_list.append("Weak Tourniquet [+10%]: ({})".format(champion2_weaktourniquet))
                         if status_effect == "Flowing Water":
@@ -2742,8 +2771,8 @@ class GameFrame(tk.Frame):
                     for status_effect in champion3_statuses:
                         if "[Immunity]" in status_effect:
                             effects_list.append("{}".format(status_effect))
-                        if status_effect == "Protective Aura":
-                            effects_list.append("Protective Aura [+10%]")
+                        if status_effect == "Protection Aura":
+                            effects_list.append("Protection Aura [+10%]")
                         if status_effect == "Weak Tourniquet":
                             effects_list.append("Weak Tourniquet [+10%]: ({})".format(champion3_weaktourniquet))
                         if status_effect == "Flowing Water":
@@ -2926,8 +2955,8 @@ class GameFrame(tk.Frame):
                     for status_effect in champion4_statuses:
                         if "[Immunity]" in status_effect:
                             effects_list.append("{}".format(status_effect))
-                        if status_effect == "Protective Aura":
-                            effects_list.append("Protective Aura [+10%]")
+                        if status_effect == "Protection Aura":
+                            effects_list.append("Protection Aura [+10%]")
                         if status_effect == "Weak Tourniquet":
                             effects_list.append("Weak Tourniquet [+10%]: ({})".format(champion4_weaktourniquet))
                         if status_effect == "Flowing Water":
@@ -3110,8 +3139,8 @@ class GameFrame(tk.Frame):
                     for status_effect in champion5_statuses:
                         if "[Immunity]" in status_effect:
                             effects_list.append("{}".format(status_effect))
-                        if status_effect == "Protective Aura":
-                            effects_list.append("Protective Aura [+10%]")
+                        if status_effect == "Protection Aura":
+                            effects_list.append("Protection Aura [+10%]")
                         if status_effect == "Weak Tourniquet":
                             effects_list.append("Weak Tourniquet [+10%]: ({})".format(champion5_weaktourniquet))
                         if status_effect == "Flowing Water":
@@ -3212,11 +3241,11 @@ class GameFrame(tk.Frame):
                         if status_effect == "Thorns":
                             effects_list.append("Thorns[{}] [#{}]".format(ai1_thornsDot[0]*ai1_thornsDot[1], ai1_thornsDot[1]))
                         if status_effect == "Serrated":
-                            effects_list.append("Serrated[{}] ({})".format(ai1_serraSlashDot[0], ai1_serraSlashDot[1]))
+                            effects_list.append("Serrated[{}] ({})".format(self.calculate_bleed_damage("Serrated", 1), ai1_serraSlashDot[1]))
                         if status_effect == "Eviscerated":
-                            effects_list.append("Eviscerated[{}] ({})".format(ai1_eviscerDot[0], ai1_eviscerDot[1]))
+                            effects_list.append("Eviscerated[{}] ({})".format(self.calculate_bleed_damage("Eviscerated", 1), ai1_eviscerDot[1]))
                         if status_effect == "Garroted":
-                            effects_list.append("Garroted[{}] ({})".format(ai1_garroteDot[0], ai1_garroteDot[1]))
+                            effects_list.append("Garroted[{}] ({})".format(self.calculate_bleed_damage("Garroted", 1), ai1_garroteDot[1]))
                         if status_effect == "Rotting":
                             effects_list.append("Rotting[{}] ({})".format(ai1_rottingDot[0], ai1_rottingDot[1]))
                         if status_effect == "Burning":
@@ -3314,11 +3343,11 @@ class GameFrame(tk.Frame):
                         if status_effect == "Thorns":
                             effects_list.append("Thorns[{}] [#{}]".format(ai2_thornsDot[0]*ai2_thornsDot[1], ai2_thornsDot[1]))
                         if status_effect == "Serrated":
-                            effects_list.append("Serrated[{}] ({})".format(ai2_serraSlashDot[0], ai2_serraSlashDot[1]))
+                            effects_list.append("Serrated[{}] ({})".format(self.calculate_bleed_damage("Serrated", 2), ai2_serraSlashDot[1]))
                         if status_effect == "Eviscerated":
-                            effects_list.append("Eviscerated[{}] ({})".format(ai2_eviscerDot[0], ai2_eviscerDot[1]))
+                            effects_list.append("Eviscerated[{}] ({})".format(self.calculate_bleed_damage("Eviscerated", 2), ai2_eviscerDot[1]))
                         if status_effect == "Garroted":
-                            effects_list.append("Garroted[{}] ({})".format(ai2_garroteDot[0], ai2_garroteDot[1]))
+                            effects_list.append("Garroted[{}] ({})".format(self.calculate_bleed_damage("Garroted", 2), ai2_garroteDot[1]))
                         if status_effect == "Rotting":
                             effects_list.append("Rotting[{}] ({})".format(ai2_rottingDot[0], ai2_rottingDot[1]))
                         if status_effect == "Burning":
@@ -3416,11 +3445,11 @@ class GameFrame(tk.Frame):
                         if status_effect == "Thorns":
                             effects_list.append("Thorns[{}] [#{}]".format(ai3_thornsDot[0]*ai3_thornsDot[1], ai3_thornsDot[1]))
                         if status_effect == "Serrated":
-                            effects_list.append("Serrated[{}] ({})".format(ai3_serraSlashDot[0], ai3_serraSlashDot[1]))
+                            effects_list.append("Serrated[{}] ({})".format(self.calculate_bleed_damage("Serrated", 3), ai3_serraSlashDot[1]))
                         if status_effect == "Eviscerated":
-                            effects_list.append("Eviscerated[{}] ({})".format(ai3_eviscerDot[0], ai3_eviscerDot[1]))
+                            effects_list.append("Eviscerated[{}] ({})".format(self.calculate_bleed_damage("Eviscerated", 3), ai3_eviscerDot[1]))
                         if status_effect == "Garroted":
-                            effects_list.append("Garroted[{}] ({})".format(ai3_garroteDot[0], ai3_garroteDot[1]))
+                            effects_list.append("Garroted[{}] ({})".format(self.calculate_bleed_damage("Garroted", 3), ai3_garroteDot[1]))
                         if status_effect == "Rotting":
                             effects_list.append("Rotting[{}] ({})".format(ai3_rottingDot[0], ai3_rottingDot[1]))
                         if status_effect == "Burning":
@@ -3518,11 +3547,11 @@ class GameFrame(tk.Frame):
                         if status_effect == "Thorns":
                             effects_list.append("Thorns[{}] [#{}]".format(ai4_thornsDot[0]*ai4_thornsDot[1], ai4_thornsDot[1]))
                         if status_effect == "Serrated":
-                            effects_list.append("Serrated[{}] ({})".format(ai4_serraSlashDot[0], ai4_serraSlashDot[1]))
+                            effects_list.append("Serrated[{}] ({})".format(self.calculate_bleed_damage("Serrated", 4), ai4_serraSlashDot[1]))
                         if status_effect == "Eviscerated":
-                            effects_list.append("Eviscerated[{}] ({})".format(ai4_eviscerDot[0], ai4_eviscerDot[1]))
+                            effects_list.append("Eviscerated[{}] ({})".format(self.calculate_bleed_damage("Eviscerated", 4), ai4_eviscerDot[1]))
                         if status_effect == "Garroted":
-                            effects_list.append("Garroted[{}] ({})".format(ai4_garroteDot[0], ai4_garroteDot[1]))
+                            effects_list.append("Garroted[{}] ({})".format(self.calculate_bleed_damage("Garroted", 4), ai4_garroteDot[1]))
                         if status_effect == "Rotting":
                             effects_list.append("Rotting[{}] ({})".format(ai4_rottingDot[0], ai4_rottingDot[1]))
                         if status_effect == "Burning":
@@ -3620,11 +3649,11 @@ class GameFrame(tk.Frame):
                         if status_effect == "Thorns":
                             effects_list.append("Thorns[{}] [#{}]".format(ai5_thornsDot[0]*ai5_thornsDot[1], ai5_thornsDot[1]))
                         if status_effect == "Serrated":
-                            effects_list.append("Serrated[{}] ({})".format(ai5_serraSlashDot[0], ai5_serraSlashDot[1]))
+                            effects_list.append("Serrated[{}] ({})".format(self.calculate_bleed_damage("Serrated", 5), ai5_serraSlashDot[1]))
                         if status_effect == "Eviscerated":
-                            effects_list.append("Eviscerated[{}] ({})".format(ai5_eviscerDot[0], ai5_eviscerDot[1]))
+                            effects_list.append("Eviscerated[{}] ({})".format(self.calculate_bleed_damage("Eviscerated", 5), ai5_eviscerDot[1]))
                         if status_effect == "Garroted":
-                            effects_list.append("Garroted[{}] ({})".format(ai5_garroteDot[0], ai5_garroteDot[1]))
+                            effects_list.append("Garroted[{}] ({})".format(self.calculate_bleed_damage("Garroted", 5), ai5_garroteDot[1]))
                         if status_effect == "Rotting":
                             effects_list.append("Rotting[{}] ({})".format(ai5_rottingDot[0], ai5_rottingDot[1]))
                         if status_effect == "Burning":
@@ -4944,7 +4973,7 @@ class GameFrame(tk.Frame):
             self.repeating_combatUI_refresh_function()
             if new_game == 1:
                 ranger_aura_completed = 0
-                paladin_aura_completed = 0
+                paladin_aura_completed = 1
                 self.before_round_choices()
             elif current_turn == "MN":
                 champion1_turnover = 0
@@ -4959,7 +4988,7 @@ class GameFrame(tk.Frame):
                 self.champion_turn_ticker(4)
                 self.champion_turn_ticker(5)
                 ranger_aura_completed = 0
-                paladin_aura_completed = 0
+                paladin_aura_completed = 1
                 self.before_round_choices()
             else:
                 new_round = 0
@@ -4980,55 +5009,58 @@ class GameFrame(tk.Frame):
                 else:
                     self.turn_choice()
     def before_round_choices(self):
-        global legion_ranger_roundtracker, paladin_roundtracker, new_game
-        counter = 1
-        while counter != 0:
+        global legion_ranger_roundtracker, paladin_roundtracker, new_game, paladin_aura_completed, ranger_aura_completed
+        if ranger_aura_completed == 0:
             if LEGION_RANGER.title in CHAMPION_LIST:
-                if ranger_aura_completed == 0:
-                    ARROW_TYPES = ["Heavy Iron Tip", "Barbed Tip", "Shrapnel Tip", "Venom Tip", "Bola Tip", "Vein Sensitizer Tip"]
-                    if legion_ranger_roundtracker < 3:
-                        legion_ranger_roundtracker = legion_ranger_roundtracker + 1
+                ARROW_TYPES = ["Heavy Iron Tip", "Barbed Tip", "Shrapnel Tip", "Venom Tip", "Bola Tip", "Vein Sensitizer Tip"]
+                if legion_ranger_roundtracker < 3:
+                    legion_ranger_roundtracker = legion_ranger_roundtracker + 1
+                    ranger_aura_completed = 1
+                    paladin_aura_completed = 0
+                else:
+                    global ranger_arrow_choice_label, arrow_choice_button1, arrow_choice_button2, arrow_choice_button3
+                    random.shuffle(ARROW_TYPES)
+                    if current_arrow_type == ARROW_TYPES[0]:
+                        arrow_choice = [ARROW_TYPES[1], ARROW_TYPES[2], ARROW_TYPES[3]]
+                    elif current_arrow_type == ARROW_TYPES[1]:
+                        arrow_choice = [ARROW_TYPES[0], ARROW_TYPES[2], ARROW_TYPES[3]]
+                    elif current_arrow_type == [2]:
+                        arrow_choice = [ARROW_TYPES[0], ARROW_TYPES[1], ARROW_TYPES[3]]
                     else:
-                        global ranger_arrow_choice_label, arrow_choice_button1, arrow_choice_button2, arrow_choice_button3
-                        random.shuffle(ARROW_TYPES)
-                        if current_arrow_type == ARROW_TYPES[0]:
-                            arrow_choice = [ARROW_TYPES[1], ARROW_TYPES[2], ARROW_TYPES[3]]
-                        elif current_arrow_type == ARROW_TYPES[1]:
-                            arrow_choice = [ARROW_TYPES[0], ARROW_TYPES[2], ARROW_TYPES[3]]
-                        elif current_arrow_type == [2]:
-                            arrow_choice = [ARROW_TYPES[0], ARROW_TYPES[1], ARROW_TYPES[3]]
-                        else:
-                            arrow_choice = [ARROW_TYPES[0], ARROW_TYPES[1], ARROW_TYPES[2]]
-                        legion_ranger_roundtracker = 0
-                        ranger_arrow_choice_label = tk.Label(dungeon_game_frame, text="Choose a new arrow for Legion Ranger to equip")
-                        ranger_arrow_choice_label.grid(row=18, column=2)
-                        arrow_choice_button1 = tk.Button(dungeon_game_frame, text="{} \n {}".format(arrow_choice[0], self.championaura_information(arrow_choice[0])), \
-                                                        command=lambda: self.apply_before_round_choices("LEGION-RANGER", arrow_choice[0]))
-                        arrow_choice_button2 = tk.Button(dungeon_game_frame, text="{} \n {}".format(arrow_choice[1], self.championaura_information(arrow_choice[1])), \
-                                                        command=lambda: self.apply_before_round_choices("LEGION-RANGER", arrow_choice[1]))
-                        arrow_choice_button3 = tk.Button(dungeon_game_frame, text="{} \n {}".format(arrow_choice[2], self.championaura_information(arrow_choice[2])), \
-                                                        command=lambda: self.apply_before_round_choices("LEGION-RANGER", arrow_choice[2]))
-                        arrow_choice_button1.grid(row=19, column=2)
-                        arrow_choice_button2.grid(row=20, column=2)
-                        arrow_choice_button3.grid(row=21, column=2)
-                        break
+                        arrow_choice = [ARROW_TYPES[0], ARROW_TYPES[1], ARROW_TYPES[2]]
+                    legion_ranger_roundtracker = 0
+                    ranger_arrow_choice_label = tk.Label(dungeon_game_frame, text="Choose a new arrow for Legion Ranger to equip")
+                    ranger_arrow_choice_label.grid(row=18, column=2)
+                    arrow_choice_button1 = tk.Button(dungeon_game_frame, text="{} \n {}".format(arrow_choice[0], self.championaura_information(arrow_choice[0])), \
+                                                    command=lambda: self.apply_before_round_choices("LEGION-RANGER", arrow_choice[0]))
+                    arrow_choice_button2 = tk.Button(dungeon_game_frame, text="{} \n {}".format(arrow_choice[1], self.championaura_information(arrow_choice[1])), \
+                                                    command=lambda: self.apply_before_round_choices("LEGION-RANGER", arrow_choice[1]))
+                    arrow_choice_button3 = tk.Button(dungeon_game_frame, text="{} \n {}".format(arrow_choice[2], self.championaura_information(arrow_choice[2])), \
+                                                    command=lambda: self.apply_before_round_choices("LEGION-RANGER", arrow_choice[2]))
+                    arrow_choice_button1.grid(row=19, column=2)
+                    arrow_choice_button2.grid(row=20, column=2)
+                    arrow_choice_button3.grid(row=21, column=2)
+            else:
+                ranger_aura_completed = 1
+                paladin_aura_completed = 0
+        if paladin_aura_completed == 0:
             if PALADIN.title in CHAMPION_LIST:
-                if paladin_aura_completed == 0:
-                    AURAS = ["Power Aura", "Protection Aura"]
-                    if paladin_roundtracker < 2:
-                        paladin_roundtracker = paladin_roundtracker + 1
-                    else:
-                        global paladin_aura_choice_label, aura_choice_button1, aura_choice_button2
-                        paladin_roundtracker = 0
-                        paladin_aura_choice_label = tk.Label(dungeon_game_frame, text="Choose your Paladin's Aura")
-                        paladin_aura_choice_label.grid(row=18, column=2)
-                        aura_choice_button1 = tk.Button(dungeon_game_frame, text="{} \n {}".format(AURAS[0], self.championaura_information(AURAS[0])), command=lambda: self.apply_before_round_choices("PALADIN", AURAS[0]))
-                        aura_choice_button2 = tk.Button(dungeon_game_frame, text="{} \n {}".format(AURAS[1], self.championaura_information(AURAS[1])), command=lambda: self.apply_before_round_choices("PALADIN", AURAS[1]))
-                        aura_choice_button1.grid(row=19, column=2)
-                        aura_choice_button2.grid(row=20, column=2)
-                        break
-            counter = 0
-        if counter == 0:
+                AURAS = ["Power Aura", "Protection Aura"]
+                if paladin_roundtracker < 2:
+                    paladin_roundtracker = paladin_roundtracker + 1
+                    paladin_aura_completed = 1
+                else:
+                    global paladin_aura_choice_label, aura_choice_button1, aura_choice_button2
+                    paladin_roundtracker = 0
+                    paladin_aura_choice_label = tk.Label(dungeon_game_frame, text="Choose your Paladin's Aura")
+                    paladin_aura_choice_label.grid(row=18, column=2)
+                    aura_choice_button1 = tk.Button(dungeon_game_frame, text="{} \n {}".format(AURAS[0], self.championaura_information(AURAS[0])), command=lambda: self.apply_before_round_choices("PALADIN", AURAS[0]))
+                    aura_choice_button2 = tk.Button(dungeon_game_frame, text="{} \n {}".format(AURAS[1], self.championaura_information(AURAS[1])), command=lambda: self.apply_before_round_choices("PALADIN", AURAS[1]))
+                    aura_choice_button1.grid(row=19, column=2)
+                    aura_choice_button2.grid(row=20, column=2)
+            else:
+                paladin_aura_completed = 1
+        if ranger_aura_completed and paladin_aura_completed == 1:
             if new_game == 1:
                 new_game = 0
                 self.player_combat_champion1()
@@ -5061,12 +5093,40 @@ class GameFrame(tk.Frame):
             arrow_choice_button2.destroy()
             arrow_choice_button3.destroy()
             ranger_aura_completed = 1
+            paladin_aura_completed = 0
+            self.before_round_choices()
         if champion_identifier == "PALADIN":
-            paladin_aura = choice
+            if choice == "Power Aura":
+                paladin_aura = 1
+                if "Protection Aura" in champion1_statuses:
+                    champion1_statuses.remove("Protection Aura")
+                    champion2_statuses.remove("Protection Aura")
+                    champion3_statuses.remove("Protection Aura")
+                    champion4_statuses.remove("Protection Aura")
+                    champion5_statuses.remove("Protection Aura")
+                    champion1_statuses.append("Power Aura")
+                    champion2_statuses.append("Power Aura")
+                    champion3_statuses.append("Power Aura")
+                    champion4_statuses.append("Power Aura")
+                    champion5_statuses.append("Power Aura")
+            elif choice == "Protection Aura":
+                paladin_aura = 2
+                if "Power Aura" in champion1_statuses:
+                    champion1_statuses.remove("Power Aura")
+                    champion2_statuses.remove("Power Aura")
+                    champion3_statuses.remove("Power Aura")
+                    champion4_statuses.remove("Power Aura")
+                    champion5_statuses.remove("Power Aura")
+                    champion1_statuses.append("Protection Aura")
+                    champion2_statuses.append("Protection Aura")
+                    champion3_statuses.append("Protection Aura")
+                    champion4_statuses.append("Protection Aura")
+                    champion5_statuses.append("Protection Aura")
             paladin_aura_choice_label.destroy()
             aura_choice_button1.destroy()
             aura_choice_button2.destroy()
             paladin_aura_completed = 1
+            self.before_round_choices()
         
         self.turn_choice()
     def player_combat_champion2(self):
@@ -5325,19 +5385,19 @@ class GameFrame(tk.Frame):
                             ai1_hp = 0
                             continue
                     if ai1_serraSlashDot[1] != 0:
-                        ai1_hp = ai1_hp - ai1_serraSlashDot[0]
+                        ai1_hp = ai1_hp - self.calculate_bleed_damage("Serrated", 1)
                         ai1_serraSlashDot[1] = ai1_serraSlashDot[1] - 1
                         if ai1_hp < 0:
                             ai1_hp = 0
                             continue
                     if ai1_eviscerDot[1] != 0:
-                        ai1_hp = ai1_hp - ai1_eviscerDot[0]
+                        ai1_hp = ai1_hp - self.calculate_bleed_damage("Eviscerated", 1)
                         ai1_eviscerDot[1] = ai1_eviscerDot[1] - 1
                         if ai1_hp < 0:
                             ai1_hp = 0
                             continue
                     if ai1_garroteDot[1] != 0:
-                        ai1_hp = ai1_hp - ai1_garroteDot[0]
+                        ai1_hp = ai1_hp - self.calculate_bleed_damage("Garroted", 1)
                         ai1_garroteDot[1] = ai1_garroteDot[1] - 1
                         if ai1_hp < 0:
                             ai1_hp = 0
@@ -5380,6 +5440,18 @@ class GameFrame(tk.Frame):
                         if ai1_hp < 0:
                             ai1_hp = 0
                             continue
+                    if ai1_barbedArrDot[1] != 0:
+                        ai1_hp = ai1_hp - ai1_barbedArrDot[0]
+                        ai1_barbedArrDot[1] = ai1_barbedArrDot[1] - 1
+                        if ai1_hp < 0:
+                            ai1_hp = 0
+                            continue
+                    if ai1_damnation[1] != 0:
+                        ai1_damnation[1] = ai1_damnation[1] - 1
+                        if ai1_damnation[1] == 0:
+                            ai1_hp = ai1_hp - ai1_damnation[0]
+                            if ai1_hp < 0:
+                                ai1_hp = 0
                     #HERE update all the damage overtime stuff
                     if ai1_stun != 0:
                         continue
@@ -6622,19 +6694,19 @@ class GameFrame(tk.Frame):
                             ai2_hp = 0
                             continue
                     if ai2_serraSlashDot[1] != 0:
-                        ai2_hp = ai2_hp - ai2_serraSlashDot[0]
+                        ai2_hp = ai2_hp - self.calculate_bleed_damage("Serrated", 2)
                         ai2_serraSlashDot[1] = ai2_serraSlashDot[1] - 1
                         if ai2_hp < 0:
                             ai2_hp = 0
                             continue
                     if ai2_eviscerDot[1] != 0:
-                        ai2_hp = ai2_hp - ai2_eviscerDot[0]
+                        ai2_hp = ai2_hp - self.calculate_bleed_damage("Eviscerated", 2)
                         ai2_eviscerDot[1] = ai2_eviscerDot[1] - 1
                         if ai2_hp < 0:
                             ai2_hp = 0
                             continue
                     if ai2_garroteDot[1] != 0:
-                        ai2_hp = ai2_hp - ai2_garroteDot[0]
+                        ai2_hp = ai2_hp - self.calculate_bleed_damage("Garroted", 2)
                         ai2_garroteDot[1] = ai2_garroteDot[1] - 1
                         if ai2_hp < 0:
                             ai2_hp = 0
@@ -7920,19 +7992,19 @@ class GameFrame(tk.Frame):
                             ai3_hp = 0
                             continue
                     if ai3_serraSlashDot[1] != 0:
-                        ai3_hp = ai3_hp - ai3_serraSlashDot[0]
+                        ai3_hp = ai3_hp - self.calculate_bleed_damage("Serrated", 3)
                         ai3_serraSlashDot[1] = ai3_serraSlashDot[1] - 1
                         if ai3_hp < 0:
                             ai3_hp = 0
                             continue
                     if ai3_eviscerDot[1] != 0:
-                        ai3_hp = ai3_hp - ai3_eviscerDot[0]
+                        ai3_hp = ai3_hp - self.calculate_bleed_damage("Eviscerated", 3)
                         ai3_eviscerDot[1] = ai3_eviscerDot[1] - 1
                         if ai3_hp < 0:
                             ai3_hp = 0
                             continue
                     if ai3_garroteDot[1] != 0:
-                        ai3_hp = ai3_hp - ai3_garroteDot[0]
+                        ai3_hp = ai3_hp - self.calculate_bleed_damage("Garroted", 3)
                         ai3_garroteDot[1] = ai3_garroteDot[1] - 1
                         if ai3_hp < 0:
                             ai3_hp = 0
@@ -9224,19 +9296,19 @@ class GameFrame(tk.Frame):
                             ai4_hp = 0
                             continue
                     if ai4_serraSlashDot[1] != 0:
-                        ai4_hp = ai4_hp - ai4_serraSlashDot[0]
+                        ai4_hp = ai4_hp - self.calculate_bleed_damage("Serrated", 4)
                         ai4_serraSlashDot[1] = ai4_serraSlashDot[1] - 1
                         if ai4_hp < 0:
                             ai4_hp = 0
                             continue
                     if ai4_eviscerDot[1] != 0:
-                        ai4_hp = ai4_hp - ai4_eviscerDot[0]
+                        ai4_hp = ai4_hp - self.calculate_bleed_damage("Eviscerated", 4)
                         ai4_eviscerDot[1] = ai4_eviscerDot[1] - 1
                         if ai4_hp < 0:
                             ai4_hp = 0
                             continue
                     if ai4_garroteDot[1] != 0:
-                        ai4_hp = ai4_hp - ai4_garroteDot[0]
+                        ai4_hp = ai4_hp - self.calculate_bleed_damage("Garroted", 4)
                         ai4_garroteDot[1] = ai4_garroteDot[1] - 1
                         if ai4_hp < 0:
                             ai4_hp = 0
@@ -10528,19 +10600,19 @@ class GameFrame(tk.Frame):
                             ai5_hp = 0
                             continue
                     if ai5_serraSlashDot[1] != 0:
-                        ai5_hp = ai5_hp - ai5_serraSlashDot[0]
+                        ai5_hp = ai5_hp - self.calculate_bleed_damage("Serrated", 5)
                         ai5_serraSlashDot[1] = ai5_serraSlashDot[1] - 1
                         if ai5_hp < 0:
                             ai5_hp = 0
                             continue
                     if ai5_eviscerDot[1] != 0:
-                        ai5_hp = ai5_hp - ai5_eviscerDot[0]
+                        ai5_hp = ai5_hp - self.calculate_bleed_damage("Eviscerated", 5)
                         ai5_eviscerDot[1] = ai5_eviscerDot[1] - 1
                         if ai5_hp < 0:
                             ai5_hp = 0
                             continue
                     if ai5_garroteDot[1] != 0:
-                        ai5_hp = ai5_hp - ai5_garroteDot[0]
+                        ai5_hp = ai5_hp - self.calculate_bleed_damage("Garroted", 5)
                         ai5_garroteDot[1] = ai5_garroteDot[1] - 1
                         if ai5_hp < 0:
                             ai5_hp = 0
@@ -15385,7 +15457,6 @@ class GameFrame(tk.Frame):
                                 power_shot_requirements[3] = power_shot_requirements[2]
                                 champion1_rp = champion1_rp + power_shot_requirements[1]
                                 damage_done = math.ceil(LEGION_RANGER.ap * self.calculate_champion_damage(1))
-                                damage_done = math.ceil(     LEGION_RANGER.ap * self.calculate_champion_damage(1))
                                 ability_data = ["Power Shot", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -15395,7 +15466,6 @@ class GameFrame(tk.Frame):
                                 power_shot_requirements[3] = power_shot_requirements[2]
                                 champion2_rp = champion2_rp + power_shot_requirements[1]
                                 damage_done = math.ceil(LEGION_RANGER.ap * self.calculate_champion_damage(2))
-                                damage_done = math.ceil(     LEGION_RANGER.ap * self.calculate_champion_damage(2))
                                 ability_data = ["Power Shot", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -15405,7 +15475,6 @@ class GameFrame(tk.Frame):
                                 power_shot_requirements[3] = power_shot_requirements[2]
                                 champion3_rp = champion3_rp + power_shot_requirements[1]
                                 damage_done = math.ceil(LEGION_RANGER.ap * self.calculate_champion_damage(3))
-                                damage_done = math.ceil(     LEGION_RANGER.ap * self.calculate_champion_damage(3))
                                 ability_data = ["Power Shot", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -15415,7 +15484,6 @@ class GameFrame(tk.Frame):
                                 power_shot_requirements[3] = power_shot_requirements[2]
                                 champion4_rp = champion4_rp + power_shot_requirements[1]
                                 damage_done = math.ceil(LEGION_RANGER.ap * self.calculate_champion_damage(4))
-                                damage_done = math.ceil(     LEGION_RANGER.ap * self.calculate_champion_damage(4))
                                 ability_data = ["Power Shot", "enemy", "1T", damage_done]
                             else:
                                 return
@@ -15425,8 +15493,113 @@ class GameFrame(tk.Frame):
                                 power_shot_requirements[3] = power_shot_requirements[2]
                                 champion5_rp = champion5_rp + power_shot_requirements[1]
                                 damage_done = math.ceil(LEGION_RANGER.ap * self.calculate_champion_damage(5))
-                                damage_done = math.ceil(     LEGION_RANGER.ap * self.calculate_champion_damage(5))
                                 ability_data = ["Power Shot", "enemy", "1T", damage_done]
+                            else:
+                                return
+                    counter += 1
+            else:
+                return
+        elif ability_name == "Multi-shot":
+            global multi_shot_requirements
+            if multi_shot_requirements[3] == 0:
+                for character in CHAMPION_LIST:
+                    if character == LEGION_RANGER.title:
+                        if counter == 1:
+                            if multi_shot_requirements[0] <= champion1_rp:
+                                champion1_rp = champion1_rp - multi_shot_requirements[0]
+                                multi_shot_requirements[3] = multi_shot_requirements[2]
+                                champion1_rp = champion1_rp + multi_shot_requirements[1]
+                                damage_done = math.ceil(LEGION_RANGER.ap * self.calculate_champion_damage(1))
+                                ability_data = ["Multi-shot", "enemy", "2T", damage_done]
+                            else:
+                                return
+                        if counter == 2:
+                            if multi_shot_requirements[0] <= champion2_rp:
+                                champion2_rp = champion2_rp - multi_shot_requirements[0]
+                                multi_shot_requirements[3] = multi_shot_requirements[2]
+                                champion2_rp = champion2_rp + multi_shot_requirements[1]
+                                damage_done = math.ceil(LEGION_RANGER.ap * self.calculate_champion_damage(2))
+                                ability_data = ["Multi-shot", "enemy", "2T", damage_done]
+                            else:
+                                return
+                        if counter == 3:
+                            if multi_shot_requirements[0] <= champion3_rp:
+                                champion3_rp = champion3_rp - multi_shot_requirements[0]
+                                multi_shot_requirements[3] = multi_shot_requirements[2]
+                                champion3_rp = champion3_rp + multi_shot_requirements[1]
+                                damage_done = math.ceil(LEGION_RANGER.ap * self.calculate_champion_damage(3))
+                                ability_data = ["Multi-shot", "enemy", "2T", damage_done]
+                            else:
+                                return
+                        if counter == 4:
+                            if multi_shot_requirements[0] <= champion4_rp:
+                                champion4_rp = champion4_rp - multi_shot_requirements[0]
+                                multi_shot_requirements[3] = multi_shot_requirements[2]
+                                champion4_rp = champion4_rp + multi_shot_requirements[1]
+                                damage_done = math.ceil(LEGION_RANGER.ap * self.calculate_champion_damage(4))
+                                ability_data = ["Multi-shot", "enemy", "2T", damage_done]
+                            else:
+                                return
+                        if counter == 5:
+                            if multi_shot_requirements[0] <= champion5_rp:
+                                champion5_rp = champion5_rp - multi_shot_requirements[0]
+                                multi_shot_requirements[3] = multi_shot_requirements[2]
+                                champion5_rp = champion5_rp + multi_shot_requirements[1]
+                                damage_done = math.ceil(LEGION_RANGER.ap * self.calculate_champion_damage(5))
+                                ability_data = ["Multi-shot", "enemy", "2T", damage_done]
+                            else:
+                                return
+                    counter += 1
+            else:
+                return
+        elif ability_name == "Ricochet Shot":
+            global ricochet_shot_requirements
+            if ricochet_shot_requirements[3] == 0:
+                for character in CHAMPION_LIST:
+                    if character == LEGION_RANGER.title:
+                        if counter == 1:
+                            if ricochet_shot_requirements[0] <= champion1_rp:
+                                champion1_rp = champion1_rp - ricochet_shot_requirements[0]
+                                ricochet_shot_requirements[3] = ricochet_shot_requirements[2]
+                                champion1_rp = champion1_rp + ricochet_shot_requirements[1]
+                                damage_done = math.ceil(LEGION_RANGER.ap * self.calculate_champion_damage(1))
+                                ability_data = ["Ricochet Shot", "enemy", "AOE", damage_done]
+                            else:
+                                return
+                        if counter == 2:
+                            if ricochet_shot_requirements[0] <= champion2_rp:
+                                champion2_rp = champion2_rp - ricochet_shot_requirements[0]
+                                ricochet_shot_requirements[3] = ricochet_shot_requirements[2]
+                                champion2_rp = champion2_rp + ricochet_shot_requirements[1]
+                                damage_done = math.ceil(LEGION_RANGER.ap * self.calculate_champion_damage(2))
+                                ability_data = ["Ricochet Shot", "enemy", "AOE", damage_done]
+                            else:
+                                return
+                        if counter == 3:
+                            if ricochet_shot_requirements[0] <= champion3_rp:
+                                champion3_rp = champion3_rp - ricochet_shot_requirements[0]
+                                ricochet_shot_requirements[3] = ricochet_shot_requirements[2]
+                                champion3_rp = champion3_rp + ricochet_shot_requirements[1]
+                                damage_done = math.ceil(LEGION_RANGER.ap * self.calculate_champion_damage(3))
+                                ability_data = ["Ricochet Shot", "enemy", "AOE", damage_done]
+                            else:
+                                return
+                        if counter == 4:
+                            if ricochet_shot_requirements[0] <= champion4_rp:
+                                champion4_rp = champion4_rp - ricochet_shot_requirements[0]
+                                ricochet_shot_requirements[3] = ricochet_shot_requirements[2]
+                                champion4_rp = champion4_rp + ricochet_shot_requirements[1]
+                                damage_done = math.ceil(LEGION_RANGER.ap * self.calculate_champion_damage(4))
+                                ability_data = ["Ricochet Shot", "enemy", "AOE", damage_done]
+                            else:
+                                return
+                        if counter == 5:
+                            if ricochet_shot_requirements[0] <= champion5_rp:
+                                champion5_rp = champion5_rp - ricochet_shot_requirements[0]
+                                ricochet_shot_requirements[3] = ricochet_shot_requirements[2]
+                                champion5_rp = champion5_rp + ricochet_shot_requirements[1]
+                                damage_done = math.ceil(LEGION_RANGER.ap * self.calculate_champion_damage(5))
+                                ability_data = ["Ricochet Shot", "enemy", "AOE", damage_done]
                             else:
                                 return
                     counter += 1
@@ -17172,112 +17345,6 @@ class GameFrame(tk.Frame):
                                 champion5_rp = champion5_rp + damnation_requirements[1]
                                 damage_done = math.ceil(PALADIN.ap * self.calculate_champion_damage(5))
                                 ability_data = ["Damnation", "enemy", "1T", damage_done]
-                            else:
-                                return
-                    counter += 1
-            else:
-                return
-        elif ability_name == "Multi-shot":
-            global multi_shot_requirements
-            if multi_shot_requirements[3] == 0:
-                for character in CHAMPION_LIST:
-                    if character == LEGION_RANGER.title:
-                        if counter == 1:
-                            if multi_shot_requirements[0] <= champion1_rp:
-                                champion1_rp = champion1_rp - multi_shot_requirements[0]
-                                multi_shot_requirements[3] = multi_shot_requirements[2]
-                                champion1_rp = champion1_rp + multi_shot_requirements[1]
-                                damage_done = math.ceil(LEGION_RANGER.ap * self.calculate_champion_damage(1))
-                                ability_data = ["Multi-shot", "enemy", "2T", damage_done]
-                            else:
-                                return
-                        if counter == 2:
-                            if multi_shot_requirements[0] <= champion2_rp:
-                                champion2_rp = champion2_rp - multi_shot_requirements[0]
-                                multi_shot_requirements[3] = multi_shot_requirements[2]
-                                champion2_rp = champion2_rp + multi_shot_requirements[1]
-                                damage_done = math.ceil(LEGION_RANGER.ap * self.calculate_champion_damage(2))
-                                ability_data = ["Multi-shot", "enemy", "2T", damage_done]
-                            else:
-                                return
-                        if counter == 3:
-                            if multi_shot_requirements[0] <= champion3_rp:
-                                champion3_rp = champion3_rp - multi_shot_requirements[0]
-                                multi_shot_requirements[3] = multi_shot_requirements[2]
-                                champion3_rp = champion3_rp + multi_shot_requirements[1]
-                                damage_done = math.ceil(LEGION_RANGER.ap * self.calculate_champion_damage(3))
-                                ability_data = ["Multi-shot", "enemy", "2T", damage_done]
-                            else:
-                                return
-                        if counter == 4:
-                            if multi_shot_requirements[0] <= champion4_rp:
-                                champion4_rp = champion4_rp - multi_shot_requirements[0]
-                                multi_shot_requirements[3] = multi_shot_requirements[2]
-                                champion4_rp = champion4_rp + multi_shot_requirements[1]
-                                damage_done = math.ceil(LEGION_RANGER.ap * self.calculate_champion_damage(4))
-                                ability_data = ["Multi-shot", "enemy", "2T", damage_done]
-                            else:
-                                return
-                        if counter == 5:
-                            if multi_shot_requirements[0] <= champion5_rp:
-                                champion5_rp = champion5_rp - multi_shot_requirements[0]
-                                multi_shot_requirements[3] = multi_shot_requirements[2]
-                                champion5_rp = champion5_rp + multi_shot_requirements[1]
-                                damage_done = math.ceil(LEGION_RANGER.ap * self.calculate_champion_damage(5))
-                                ability_data = ["Multi-shot", "enemy", "2T", damage_done]
-                            else:
-                                return
-                    counter += 1
-            else:
-                return
-        elif ability_name == "Ricochet Shot":
-            global ricochet_shot_requirements
-            if ricochet_shot_requirements[3] == 0:
-                for character in CHAMPION_LIST:
-                    if character == LEGION_RANGER.title:
-                        if counter == 1:
-                            if ricochet_shot_requirements[0] <= champion1_rp:
-                                champion1_rp = champion1_rp - ricochet_shot_requirements[0]
-                                ricochet_shot_requirements[3] = ricochet_shot_requirements[2]
-                                champion1_rp = champion1_rp + ricochet_shot_requirements[1]
-                                damage_done = math.ceil(LEGION_RANGER.ap * self.calculate_champion_damage(1))
-                                ability_data = ["Ricochet Shot", "enemy", "AOE", damage_done]
-                            else:
-                                return
-                        if counter == 2:
-                            if ricochet_shot_requirements[0] <= champion2_rp:
-                                champion2_rp = champion2_rp - ricochet_shot_requirements[0]
-                                ricochet_shot_requirements[3] = ricochet_shot_requirements[2]
-                                champion2_rp = champion2_rp + ricochet_shot_requirements[1]
-                                damage_done = math.ceil(LEGION_RANGER.ap * self.calculate_champion_damage(2))
-                                ability_data = ["Ricochet Shot", "enemy", "AOE", damage_done]
-                            else:
-                                return
-                        if counter == 3:
-                            if ricochet_shot_requirements[0] <= champion3_rp:
-                                champion3_rp = champion3_rp - ricochet_shot_requirements[0]
-                                ricochet_shot_requirements[3] = ricochet_shot_requirements[2]
-                                champion3_rp = champion3_rp + ricochet_shot_requirements[1]
-                                damage_done = math.ceil(LEGION_RANGER.ap * self.calculate_champion_damage(3))
-                                ability_data = ["Ricochet Shot", "enemy", "AOE", damage_done]
-                            else:
-                                return
-                        if counter == 4:
-                            if ricochet_shot_requirements[0] <= champion4_rp:
-                                champion4_rp = champion4_rp - ricochet_shot_requirements[0]
-                                ricochet_shot_requirements[3] = ricochet_shot_requirements[2]
-                                champion4_rp = champion4_rp + ricochet_shot_requirements[1]
-                                damage_done = math.ceil(LEGION_RANGER.ap * self.calculate_champion_damage(4))
-                                ability_data = ["Ricochet Shot", "enemy", "AOE", damage_done]
-                            else:
-                                return
-                        if counter == 5:
-                            if ricochet_shot_requirements[0] <= champion5_rp:
-                                champion5_rp = champion5_rp - ricochet_shot_requirements[0]
-                                ricochet_shot_requirements[3] = ricochet_shot_requirements[2]
-                                champion5_rp = champion5_rp + ricochet_shot_requirements[1]
-                                damage_done = math.ceil(LEGION_RANGER.ap * self.calculate_champion_damage(5))
-                                ability_data = ["Ricochet Shot", "enemy", "AOE", damage_done]
                             else:
                                 return
                     counter += 1
@@ -19623,15 +19690,85 @@ class GameFrame(tk.Frame):
                 ai5_uc_db = 1
         elif ability_data[0] == "Knock Out":
             if 1 in target_list:
-                ai1_hp = 0
+                if AI_SIZE == "Tiny":
+                    if ai1_hp < 0.5 * AI_GROUP_HP:
+                        ai1_hp = 0
+                if AI_SIZE == "Small":
+                    if ai1_hp < 0.4 * AI_GROUP_HP:
+                        ai1_hp = 0
+                if AI_SIZE == "Medium":
+                    if ai1_hp < 0.3 * AI_GROUP_HP:
+                        ai1_hp = 0
+                if AI_SIZE == "Large":
+                    if ai1_hp < 0.2 * AI_GROUP_HP:
+                        ai1_hp = 0
+                if AI_SIZE == "Huge":
+                    if ai1_hp < 0.1 * AI_GROUP_HP:
+                        ai1_hp = 0
             if 2 in target_list:
-                ai2_hp = 0
+                if AI_SIZE == "Tiny":
+                    if ai2_hp < 0.5 * AI_GROUP_HP:
+                        ai2_hp = 0
+                if AI_SIZE == "Small":
+                    if ai2_hp < 0.4 * AI_GROUP_HP:
+                        ai2_hp = 0
+                if AI_SIZE == "Medium":
+                    if ai2_hp < 0.3 * AI_GROUP_HP:
+                        ai2_hp = 0
+                if AI_SIZE == "Large":
+                    if ai2_hp < 0.2 * AI_GROUP_HP:
+                        ai2_hp = 0
+                if AI_SIZE == "Huge":
+                    if ai2_hp < 0.1 * AI_GROUP_HP:
+                        ai2_hp = 0
             if 3 in target_list:
-                ai3_hp = 0
+                if AI_SIZE == "Tiny":
+                    if ai3_hp < 0.5 * AI_GROUP_HP:
+                        ai3_hp = 0
+                if AI_SIZE == "Small":
+                    if ai3_hp < 0.4 * AI_GROUP_HP:
+                        ai3_hp = 0
+                if AI_SIZE == "Medium":
+                    if ai3_hp < 0.3 * AI_GROUP_HP:
+                        ai3_hp = 0
+                if AI_SIZE == "Large":
+                    if ai3_hp < 0.2 * AI_GROUP_HP:
+                        ai3_hp = 0
+                if AI_SIZE == "Huge":
+                    if ai3_hp < 0.1 * AI_GROUP_HP:
+                        ai3_hp = 0
             if 4 in target_list:
-                ai4_hp = 0
+                if AI_SIZE == "Tiny":
+                    if ai4_hp < 0.5 * AI_GROUP_HP:
+                        ai4_hp = 0
+                if AI_SIZE == "Small":
+                    if ai4_hp < 0.4 * AI_GROUP_HP:
+                        ai4_hp = 0
+                if AI_SIZE == "Medium":
+                    if ai4_hp < 0.3 * AI_GROUP_HP:
+                        ai4_hp = 0
+                if AI_SIZE == "Large":
+                    if ai4_hp < 0.2 * AI_GROUP_HP:
+                        ai4_hp = 0
+                if AI_SIZE == "Huge":
+                    if ai4_hp < 0.1 * AI_GROUP_HP:
+                        ai4_hp = 0
             if 5 in target_list:
-                ai5_hp = 0
+                if AI_SIZE == "Tiny":
+                    if ai5_hp < 0.5 * AI_GROUP_HP:
+                        ai5_hp = 0
+                if AI_SIZE == "Small":
+                    if ai5_hp < 0.4 * AI_GROUP_HP:
+                        ai5_hp = 0
+                if AI_SIZE == "Medium":
+                    if ai5_hp < 0.3 * AI_GROUP_HP:
+                        ai5_hp = 0
+                if AI_SIZE == "Large":
+                    if ai5_hp < 0.2 * AI_GROUP_HP:
+                        ai5_hp = 0
+                if AI_SIZE == "Huge":
+                    if ai5_hp < 0.1 * AI_GROUP_HP:
+                        ai5_hp = 0
         elif ability_data[0] == "Frost Bolt":
             if 1 in target_list:
                 ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1))
@@ -20132,7 +20269,7 @@ class GameFrame(tk.Frame):
                             break
                         if counter == 2:
                             break
-                        ai1_hp = ai1_hp - ai1_serraSlashDot[0]
+                        ai1_hp = ai1_hp - self.calculate_bleed_damage("Serrated", 1)
                         ai1_serraSlashDot[1] = ai1_serraSlashDot[1] - 1
                         counter += 1
                     counter = 0
@@ -20142,7 +20279,7 @@ class GameFrame(tk.Frame):
                             break
                         if counter == 2:
                             break
-                        ai1_hp = ai1_hp - ai1_eviscerDot[0]
+                        ai1_hp = ai1_hp - self.calculate_bleed_damage("Eviscerated", 1)
                         ai1_eviscerDot[1] = ai1_eviscerDot[1] - 1
                         counter += 1
                     counter = 0
@@ -20152,7 +20289,7 @@ class GameFrame(tk.Frame):
                             break
                         if counter == 2:
                             break
-                        ai1_hp = ai1_hp - ai1_garroteDot[0]
+                        ai1_hp = ai1_hp - self.calculate_bleed_damage("Garroted", 1)
                         ai1_garroteDot[1] = ai1_garroteDot[1] - 1
                         counter += 1
                     counter = 0
@@ -20223,7 +20360,7 @@ class GameFrame(tk.Frame):
                             break
                         if counter == 2:
                             break
-                        ai2_hp = ai2_hp - ai2_serraSlashDot[0]
+                        ai2_hp = ai2_hp - self.calculate_bleed_damage("Serrated", 2)
                         ai2_serraSlashDot[1] = ai2_serraSlashDot[1] - 1
                         counter += 1
                     counter = 0
@@ -20233,7 +20370,7 @@ class GameFrame(tk.Frame):
                             break
                         if counter == 2:
                             break
-                        ai2_hp = ai2_hp - ai2_eviscerDot[0]
+                        ai2_hp = ai2_hp - self.calculate_bleed_damage("Eviscerated", 2)
                         ai2_eviscerDot[1] = ai2_eviscerDot[1] - 1
                         counter += 1
                     counter = 0
@@ -20243,7 +20380,7 @@ class GameFrame(tk.Frame):
                             break
                         if counter == 2:
                             break
-                        ai2_hp = ai2_hp - ai2_garroteDot[0]
+                        ai2_hp = ai2_hp - self.calculate_bleed_damage("Garroted", 2)
                         ai2_garroteDot[1] = ai2_garroteDot[1] - 1
                         counter += 1
                     counter = 0
@@ -20314,7 +20451,7 @@ class GameFrame(tk.Frame):
                             break
                         if counter == 2:
                             break
-                        ai3_hp = ai3_hp - ai3_serraSlashDot[0]
+                        ai3_hp = ai3_hp - self.calculate_bleed_damage("Serrated", 3)
                         ai3_serraSlashDot[1] = ai3_serraSlashDot[1] - 1
                         counter += 1
                     counter = 0
@@ -20324,7 +20461,7 @@ class GameFrame(tk.Frame):
                             break
                         if counter == 2:
                             break
-                        ai3_hp = ai3_hp - ai3_eviscerDot[0]
+                        ai3_hp = ai3_hp - self.calculate_bleed_damage("Eviscerated", 3)
                         ai3_eviscerDot[1] = ai3_eviscerDot[1] - 1
                         counter += 1
                     counter = 0
@@ -20334,7 +20471,7 @@ class GameFrame(tk.Frame):
                             break
                         if counter == 2:
                             break
-                        ai3_hp = ai3_hp - ai3_garroteDot[0]
+                        ai3_hp = ai3_hp - self.calculate_bleed_damage("Garroted", 3)
                         ai3_garroteDot[1] = ai3_garroteDot[1] - 1
                         counter += 1
                     counter = 0
@@ -20405,7 +20542,7 @@ class GameFrame(tk.Frame):
                             break
                         if counter == 2:
                             break
-                        ai4_hp = ai4_hp - ai4_serraSlashDot[0]
+                        ai4_hp = ai4_hp - self.calculate_bleed_damage("Serrated", 4)
                         ai4_serraSlashDot[1] = ai4_serraSlashDot[1] - 1
                         counter += 1
                     counter = 0
@@ -20415,7 +20552,7 @@ class GameFrame(tk.Frame):
                             break
                         if counter == 2:
                             break
-                        ai4_hp = ai4_hp - ai4_eviscerDot[0]
+                        ai4_hp = ai4_hp - self.calculate_bleed_damage("Eviscerated", 4)
                         ai4_eviscerDot[1] = ai4_eviscerDot[1] - 1
                         counter += 1
                     counter = 0
@@ -20425,7 +20562,7 @@ class GameFrame(tk.Frame):
                             break
                         if counter == 2:
                             break
-                        ai4_hp = ai4_hp - ai4_garroteDot[0]
+                        ai4_hp = ai4_hp - self.calculate_bleed_damage("Garroted", 4)
                         ai4_garroteDot[1] = ai4_garroteDot[1] - 1
                         counter += 1
                     counter = 0
@@ -20496,7 +20633,7 @@ class GameFrame(tk.Frame):
                             break
                         if counter == 2:
                             break
-                        ai5_hp = ai5_hp - ai5_serraSlashDot[0]
+                        ai5_hp = ai5_hp - self.calculate_bleed_damage("Serrated", 5)
                         ai5_serraSlashDot[1] = ai5_serraSlashDot[1] - 1
                         counter += 1
                     counter = 0
@@ -20506,7 +20643,7 @@ class GameFrame(tk.Frame):
                             break
                         if counter == 2:
                             break
-                        ai5_hp = ai5_hp - ai5_eviscerDot[0]
+                        ai5_hp = ai5_hp - self.calculate_bleed_damage("Eviscerated", 5)
                         ai5_eviscerDot[1] = ai5_eviscerDot[1] - 1
                         counter += 1
                     counter = 0
@@ -20516,7 +20653,7 @@ class GameFrame(tk.Frame):
                             break
                         if counter == 2:
                             break
-                        ai5_hp = ai5_hp - ai5_garroteDot[0]
+                        ai5_hp = ai5_hp - self.calculate_bleed_damage("Garroted", 5)
                         ai5_garroteDot[1] = ai5_garroteDot[1] - 1
                         counter += 1
                     counter = 0 
@@ -22113,7 +22250,7 @@ class GameFrame(tk.Frame):
                     ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3) * 1.5)
                     ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4) * 1.5)
                     ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5) * 1.5)
-            if current_arrow_type == "Serrated Tip":
+            if current_arrow_type == "Barbed Tip":
                 if AI_SPAWNED == 1:
                     ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1) * 0.75)
                     if ai1_hp < 0:
@@ -24823,6 +24960,207 @@ class GameFrame(tk.Frame):
             else: 
                 ai5_toc = 1
                 ai5_statuses.append("Touch of Corruption")
+    def calculate_bleed_damage(self, bleed_name, enemy_number):
+        if enemy_number == 1:
+            if bleed_name == "Serrated":
+                updated_damage = ai1_serraSlashDot[0]
+                unique_bleed = 0
+                if ai1_garroteDot[1] != 0:
+                    unique_bleed = unique_bleed + 1
+                if ai1_eviscerDot[1] != 0:
+                    unique_bleed = unique_bleed + 1
+                if ai1_barbedArrDot[1] != 0:
+                    unique_bleed = unique_bleed + 1
+                if ai1_thornsDot[1] != 0:
+                    unique_bleed = unique_bleed + 1
+                updated_damaged = updated_damage * (1 + (0.1 * unique_bleed))
+                return updated_damage
+            if bleed_name == "Garroted":
+                updated_damage = ai1_garroteDot[0]
+                unique_bleed = 0
+                if ai1_serraSlashDot[1] != 0:
+                    unique_bleed = unique_bleed + 1
+                if ai1_eviscerDot[1] != 0:
+                    unique_bleed = unique_bleed + 1
+                if ai1_barbedArrDot[1] != 0:
+                    unique_bleed = unique_bleed + 1
+                if ai1_thornsDot[1] != 0:
+                    unique_bleed = unique_bleed + 1
+                updated_damaged = updated_damage * (1 + (0.1 * unique_bleed))
+                return updated_damage
+            if bleed_name == "Eviscerated":
+                updated_damage = ai1_eviscerDot[0]
+                unique_bleed = 0
+                if ai1_garroteDot[1] != 0:
+                    unique_bleed = unique_bleed + 1
+                if ai1_serraSlashDot[1] != 0:
+                    unique_bleed = unique_bleed + 1
+                if ai1_barbedArrDot[1] != 0:
+                    unique_bleed = unique_bleed + 1
+                if ai1_thornsDot[1] != 0:
+                    unique_bleed = unique_bleed + 1
+                updated_damaged = updated_damage * (1 + (0.1 * unique_bleed))
+                return updated_damage
+        if enemy_number == 2:
+            if bleed_name == "Serrated":
+                updated_damage = ai2_serraSlashDot[0]
+                unique_bleed = 0
+                if ai2_garroteDot[1] != 0:
+                    unique_bleed = unique_bleed + 1
+                if ai2_eviscerDot[1] != 0:
+                    unique_bleed = unique_bleed + 1
+                if ai2_barbedArrDot[1] != 0:
+                    unique_bleed = unique_bleed + 1
+                if ai2_thornsDot[1] != 0:
+                    unique_bleed = unique_bleed + 1
+                updated_damaged = updated_damage * (1 + (0.1 * unique_bleed))
+                return updated_damage
+            if bleed_name == "Garroted":
+                updated_damage = ai2_garroteDot[0]
+                unique_bleed = 0
+                if ai2_serraSlashDot[1] != 0:
+                    unique_bleed = unique_bleed + 1
+                if ai2_eviscerDot[1] != 0:
+                    unique_bleed = unique_bleed + 1
+                if ai2_barbedArrDot[1] != 0:
+                    unique_bleed = unique_bleed + 1
+                if ai2_thornsDot[1] != 0:
+                    unique_bleed = unique_bleed + 1
+                updated_damaged = updated_damage * (1 + (0.1 * unique_bleed))
+                return updated_damage
+            if bleed_name == "Eviscerated":
+                updated_damage = ai2_eviscerDot[0]
+                unique_bleed = 0
+                if ai2_garroteDot[1] != 0:
+                    unique_bleed = unique_bleed + 1
+                if ai2_serraSlashDot[1] != 0:
+                    unique_bleed = unique_bleed + 1
+                if ai2_barbedArrDot[1] != 0:
+                    unique_bleed = unique_bleed + 1
+                if ai2_thornsDot[1] != 0:
+                    unique_bleed = unique_bleed + 1
+                updated_damaged = updated_damage * (1 + (0.1 * unique_bleed))
+                return updated_damage
+        if enemy_number == 3:
+            if bleed_name == "Serrated":
+                updated_damage = ai3_serraSlashDot[0]
+                unique_bleed = 0
+                if ai3_garroteDot[1] != 0:
+                    unique_bleed = unique_bleed + 1
+                if ai3_eviscerDot[1] != 0:
+                    unique_bleed = unique_bleed + 1
+                if ai3_barbedArrDot[1] != 0:
+                    unique_bleed = unique_bleed + 1
+                if ai3_thornsDot[1] != 0:
+                    unique_bleed = unique_bleed + 1
+                updated_damaged = updated_damage * (1 + (0.1 * unique_bleed))
+                return updated_damage
+            if bleed_name == "Garroted":
+                updated_damage = ai3_garroteDot[0]
+                unique_bleed = 0
+                if ai3_serraSlashDot[1] != 0:
+                    unique_bleed = unique_bleed + 1
+                if ai3_eviscerDot[1] != 0:
+                    unique_bleed = unique_bleed + 1
+                if ai3_barbedArrDot[1] != 0:
+                    unique_bleed = unique_bleed + 1
+                if ai3_thornsDot[1] != 0:
+                    unique_bleed = unique_bleed + 1
+                updated_damaged = updated_damage * (1 + (0.1 * unique_bleed))
+                return updated_damage
+            if bleed_name == "Eviscerated":
+                updated_damage = ai3_eviscerDot[0]
+                unique_bleed = 0
+                if ai3_garroteDot[1] != 0:
+                    unique_bleed = unique_bleed + 1
+                if ai3_serraSlashDot[1] != 0:
+                    unique_bleed = unique_bleed + 1
+                if ai3_barbedArrDot[1] != 0:
+                    unique_bleed = unique_bleed + 1
+                if ai3_thornsDot[1] != 0:
+                    unique_bleed = unique_bleed + 1
+                updated_damaged = updated_damage * (1 + (0.1 * unique_bleed))
+                return updated_damage
+        if enemy_number == 4:
+            if bleed_name == "Serrated":
+                updated_damage = ai4_serraSlashDot[0]
+                unique_bleed = 0
+                if ai4_garroteDot[1] != 0:
+                    unique_bleed = unique_bleed + 1
+                if ai4_eviscerDot[1] != 0:
+                    unique_bleed = unique_bleed + 1
+                if ai4_barbedArrDot[1] != 0:
+                    unique_bleed = unique_bleed + 1
+                if ai4_thornsDot[1] != 0:
+                    unique_bleed = unique_bleed + 1
+                updated_damaged = updated_damage * (1 + (0.1 * unique_bleed))
+                return updated_damage
+            if bleed_name == "Garroted":
+                updated_damage = ai4_garroteDot[0]
+                unique_bleed = 0
+                if ai4_serraSlashDot[1] != 0:
+                    unique_bleed = unique_bleed + 1
+                if ai4_eviscerDot[1] != 0:
+                    unique_bleed = unique_bleed + 1
+                if ai4_barbedArrDot[1] != 0:
+                    unique_bleed = unique_bleed + 1
+                if ai4_thornsDot[1] != 0:
+                    unique_bleed = unique_bleed + 1
+                updated_damaged = updated_damage * (1 + (0.1 * unique_bleed))
+                return updated_damage
+            if bleed_name == "Eviscerated":
+                updated_damage = ai4_eviscerDot[0]
+                unique_bleed = 0
+                if ai4_garroteDot[1] != 0:
+                    unique_bleed = unique_bleed + 1
+                if ai4_serraSlashDot[1] != 0:
+                    unique_bleed = unique_bleed + 1
+                if ai4_barbedArrDot[1] != 0:
+                    unique_bleed = unique_bleed + 1
+                if ai4_thornsDot[1] != 0:
+                    unique_bleed = unique_bleed + 1
+                updated_damaged = updated_damage * (1 + (0.1 * unique_bleed))
+                return updated_damage
+        if enemy_number == 5:
+            if bleed_name == "Serrated":
+                updated_damage = ai5_serraSlashDot[0]
+                unique_bleed = 0
+                if ai5_garroteDot[1] != 0:
+                    unique_bleed = unique_bleed + 1
+                if ai5_eviscerDot[1] != 0:
+                    unique_bleed = unique_bleed + 1
+                if ai5_barbedArrDot[1] != 0:
+                    unique_bleed = unique_bleed + 1
+                if ai5_thornsDot[1] != 0:
+                    unique_bleed = unique_bleed + 1
+                updated_damaged = updated_damage * (1 + (0.1 * unique_bleed))
+                return updated_damage
+            if bleed_name == "Garroted":
+                updated_damage = ai5_garroteDot[0]
+                unique_bleed = 0
+                if ai5_serraSlashDot[1] != 0:
+                    unique_bleed = unique_bleed + 1
+                if ai5_eviscerDot[1] != 0:
+                    unique_bleed = unique_bleed + 1
+                if ai5_barbedArrDot[1] != 0:
+                    unique_bleed = unique_bleed + 1
+                if ai5_thornsDot[1] != 0:
+                    unique_bleed = unique_bleed + 1
+                updated_damaged = updated_damage * (1 + (0.1 * unique_bleed))
+                return updated_damage
+            if bleed_name == "Eviscerated":
+                updated_damage = ai5_eviscerDot[0]
+                unique_bleed = 0
+                if ai5_garroteDot[1] != 0:
+                    unique_bleed = unique_bleed + 1
+                if ai5_serraSlashDot[1] != 0:
+                    unique_bleed = unique_bleed + 1
+                if ai5_barbedArrDot[1] != 0:
+                    unique_bleed = unique_bleed + 1
+                if ai5_thornsDot[1] != 0:
+                    unique_bleed = unique_bleed + 1
+                updated_damaged = updated_damage * (1 + (0.1 * unique_bleed))
+                return updated_damage
     def clean_up(self):
         if ability_data[1] == "ally":
             if ability_data[2] == "AOE":
