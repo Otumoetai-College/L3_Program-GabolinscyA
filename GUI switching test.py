@@ -1718,6 +1718,7 @@ class GameFrame(tk.Frame):
             ai1_superconducted, ai2_superconducted, ai3_superconducted, ai4_superconducted, ai5_superconducted, \
             ai1_shimmerDot, ai2_shimmerDot, ai3_shimmerDot, ai4_shimmerDot, ai5_shimmerDot, \
             ai1_divineDot, ai2_divineDot, ai3_divineDot, ai4_divineDot, ai5_divineDot, \
+            ai1_fencer_dodgechance, ai2_fencer_dodgechance, ai3_fencer_dodgechance, ai4_fencer_dodgechance, ai5_fencer_dodgechance, \
             ai1_attack_intention, ai2_attack_intention, ai3_attack_intention, ai4_attack_intention, ai5_attack_intention, \
             champion1_turnover, champion2_turnover, champion3_turnover, champion4_turnover, champion5_turnover, target_to_attack, target_to_special
         new_round = 1
@@ -1776,6 +1777,18 @@ class GameFrame(tk.Frame):
         ai3_toc = 0
         ai4_toc = 0
         ai5_toc = 0
+        if MASTER_FENCER.title in CHAMPION_LIST:
+            ai1_fencer_dodgechance = 30
+            ai2_fencer_dodgechance = 30
+            ai3_fencer_dodgechance = 30
+            ai4_fencer_dodgechance = 30
+            ai5_fencer_dodgechance = 30
+        else:
+            ai1_fencer_dodgechance = 0
+            ai2_fencer_dodgechance = 0
+            ai3_fencer_dodgechance = 0
+            ai4_fencer_dodgechance = 0
+            ai5_fencer_dodgechance = 0
         ai1_statuses = []
         ai2_statuses = []
         ai3_statuses = []
@@ -19222,18 +19235,27 @@ class GameFrame(tk.Frame):
             if 5 in target_list:
                 ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5)) * 3
         elif ability_data[0] == "Flanking Strikes":
+            global ai1_fencer_dodgechance, ai2_fencer_dodgechance, ai3_fencer_dodgechance, ai4_fencer_dodgechance, ai5_fencer_dodgechance
             if 1 in target_list:
                 ai1_hp = ai1_hp -math.ceil(ability_data[3] * self.check_brittle(1))
-                #Add dodge chance increase with a enemy attack intention tracker here
-                ai1_fencer_dodgechance = ai1_fencer_dodgechance + 40
+                if MASTER_FENCER.title in ai1_attack_intention:
+                    ai1_fencer_dodgechance = ai1_fencer_dodgechance + 40
             if 2 in target_list:
                 ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2))
+                if MASTER_FENCER.title in ai2_attack_intention:
+                    ai2_fencer_dodgechance = ai2_fencer_dodgechance + 40
             if 3 in target_list:
                 ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3))
+                if MASTER_FENCER.title in ai3_attack_intention:
+                    ai3_fencer_dodgechance = ai3_fencer_dodgechance + 40
             if 4 in target_list:
                 ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4))
+                if MASTER_FENCER.title in ai4_attack_intention:
+                    ai4_fencer_dodgechance = ai4_fencer_dodgechance + 40
             if 5 in target_list:
                 ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5))
+                if MASTER_FENCER.title in ai5_attack_intention:
+                    ai5_fencer_dodgechance = ai5_fencer_dodgechance + 40
         elif ability_data[0] == "Riposte":
             if 1 in target_list:
                 ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1))
@@ -19303,73 +19325,199 @@ class GameFrame(tk.Frame):
                 else:
                     ai5_hp = ai5_hp
         elif ability_data[0] == "Raging Blow":
+            counter = 0
+            if AI_SPAWNED == 1:
+                berserker_passive = 1.5
+            if AI_SPAWNED == 2:
+                if ai1_hp == 0:
+                    counter = counter + 1
+                if ai2_hp == 0:
+                    counter = counter + 1
+                if counter == 1:
+                    berserker_passive = 1.5
+                else:
+                    berserker_passive = 1.35
+            if AI_SPAWNED == 3:
+                if ai1_hp == 0:
+                    counter = counter + 1
+                if ai2_hp == 0:
+                    counter = counter + 1
+                if ai3_hp == 0:
+                    counter = counter + 1
+                if counter == 1:
+                    berserker_passive = 1.5
+                elif counter == 2:
+                    berserker_passive = 1.35
+                else:
+                    berserker_passive = 1.2
+            if AI_SPAWNED == 4:
+                if ai1_hp == 0:
+                    counter = counter + 1
+                if ai2_hp == 0:
+                    counter = counter + 1
+                if ai3_hp == 0:
+                    counter = counter + 1
+                if ai4_hp == 0:
+                    counter = counter + 1
+                elif counter == 1:
+                    berserker_passive = 1.5
+                elif counter == 2:
+                    berserker_passive = 1.35
+                elif counter == 3:
+                    berserker_passive = 1.2
+                else:
+                    berserker_passive = 1.1
+            if AI_SPAWNED == 5:
+                if ai1_hp == 0:
+                    counter = counter + 1
+                if ai2_hp == 0:
+                    counter = counter + 1
+                if ai3_hp == 0:
+                    counter = counter + 1
+                if ai4_hp == 0:
+                    counter = counter + 1
+                if ai5_hp == 0:
+                    counter = counter + 1
+                if counter == 1:
+                    berserker_passive = 1.5
+                elif counter == 2:
+                    berserker_passive = 1.35
+                elif counter == 3:
+                    berserker_passive = 1.2
+                elif counter == 4:
+                    berserker_passive = 1.1
+                else:
+                    berserker_passive = 1
             if reckless_flurry_buff != 0:
                 if AI_SPAWNED == 1:
-                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1))
+                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1) * berserker_passive)
                 if AI_SPAWNED == 2:
-                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1))
-                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2))
+                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1) * berserker_passive)
+                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2) * berserker_passive)
                 if AI_SPAWNED == 3:
-                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1))
-                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2))
-                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3))
+                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1) * berserker_passive)
+                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2) * berserker_passive)
+                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3) * berserker_passive)
                 if AI_SPAWNED == 4:
-                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1))
-                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2))
-                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3))
-                    ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4))
+                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1) * berserker_passive)
+                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2) * berserker_passive)
+                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3) * berserker_passive)
+                    ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4) * berserker_passive)
                 if AI_SPAWNED == 5:
-                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1))
-                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2))
-                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3))
-                    ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4))
-                    ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5))
+                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1) * berserker_passive)
+                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2) * berserker_passive)
+                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3) * berserker_passive)
+                    ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4) * berserker_passive)
+                    ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5) * berserker_passive)
                 reckless_flurry_buff = reckless_flurry_buff - 1
             else:
                 if 1 in target_list:
-                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1))
+                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1) * berserker_passive)
                 if 2 in target_list:
-                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2))
+                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2) * berserker_passive)
                 if 3 in target_list:
-                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3))
+                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3) * berserker_passive)
                 if 4 in target_list:
-                    ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4))
+                    ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4) * berserker_passive)
                 if 5 in target_list:
-                    ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5))
+                    ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5) * berserker_passive)
         elif ability_data[0] == "Rampage":
+            counter = 0
+            if AI_SPAWNED == 1:
+                berserker_passive = 1.5
+            if AI_SPAWNED == 2:
+                if ai1_hp == 0:
+                    counter = counter + 1
+                if ai2_hp == 0:
+                    counter = counter + 1
+                if counter == 1:
+                    berserker_passive = 1.5
+                else:
+                    berserker_passive = 1.35
+            if AI_SPAWNED == 3:
+                if ai1_hp == 0:
+                    counter = counter + 1
+                if ai2_hp == 0:
+                    counter = counter + 1
+                if ai3_hp == 0:
+                    counter = counter + 1
+                if counter == 1:
+                    berserker_passive = 1.5
+                elif counter == 2:
+                    berserker_passive = 1.35
+                else:
+                    berserker_passive = 1.2
+            if AI_SPAWNED == 4:
+                if ai1_hp == 0:
+                    counter = counter + 1
+                if ai2_hp == 0:
+                    counter = counter + 1
+                if ai3_hp == 0:
+                    counter = counter + 1
+                if ai4_hp == 0:
+                    counter = counter + 1
+                elif counter == 1:
+                    berserker_passive = 1.5
+                elif counter == 2:
+                    berserker_passive = 1.35
+                elif counter == 3:
+                    berserker_passive = 1.2
+                else:
+                    berserker_passive = 1.1
+            if AI_SPAWNED == 5:
+                if ai1_hp == 0:
+                    counter = counter + 1
+                if ai2_hp == 0:
+                    counter = counter + 1
+                if ai3_hp == 0:
+                    counter = counter + 1
+                if ai4_hp == 0:
+                    counter = counter + 1
+                if ai5_hp == 0:
+                    counter = counter + 1
+                if counter == 1:
+                    berserker_passive = 1.5
+                elif counter == 2:
+                    berserker_passive = 1.35
+                elif counter == 3:
+                    berserker_passive = 1.2
+                elif counter == 4:
+                    berserker_passive = 1.1
+                else:
+                    berserker_passive = 1
             if reckless_flurry_buff != 0:
                 if AI_SPAWNED == 1:
-                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1)) * 2.5
+                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1) * berserker_passive * 2.5)
                 if AI_SPAWNED == 2:
-                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1)) * 2.5
-                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2)) * 2.5
+                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1) * berserker_passive * 2.5)
+                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2) * berserker_passive * 2.5)
                 if AI_SPAWNED == 3:
-                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1)) * 2.5
-                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2)) * 2.5
-                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3)) * 2.5
+                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1) * berserker_passive * 2.5)
+                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2) * berserker_passive * 2.5)
+                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3) * berserker_passive * 2.5)
                 if AI_SPAWNED == 4:
-                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1)) * 2.5
-                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2)) * 2.5
-                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3)) * 2.5
+                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1) * berserker_passive * 2.5)
+                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2) * berserker_passive * 2.5)
+                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3) * berserker_passive * 2.5)
                     ai4_hp = ai4_hp - ability_data[3]
                 if AI_SPAWNED == 5:
-                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1)) * 2.5
-                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2)) * 2.5
-                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3)) * 2.5
-                    ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4)) *2.5
-                    ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5)) * 2.5
+                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1) * berserker_passive * 2.5)
+                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2) * berserker_passive * 2.5)
+                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3) * berserker_passive * 2.5)
+                    ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4) * berserker_passive * 2.5)
+                    ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5) * berserker_passive * 2.5)
                 reckless_flurry_buff = reckless_flurry_buff - 1
             else:
                 if 1 in target_list:
-                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1)) * 2.5
+                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1) * berserker_passive * 2.5)
                 if 2 in target_list:
-                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2)) * 2.5
+                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2) * berserker_passive * 2.5)
                 if 3 in target_list:
-                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3)) * 2.5
+                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3) * berserker_passive * 2.5)
                 if 4 in target_list:
-                    ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4)) * 2.5
+                    ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4) * berserker_passive * 2.5)
                 if 5 in target_list:
-                    ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5)) * 2.5
+                    ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5) * berserker_passive * 2.5)
         elif ability_data[0] == "Serrated Slash":
             if 1 in target_list:
                 ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1))
