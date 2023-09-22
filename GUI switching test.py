@@ -1299,7 +1299,7 @@ class GameFrame(tk.Frame):
             champion4_statuses.append("Nano-repair Bots")
             champion5_statuses.append("Nano-repair Bots")
         global palm_strike_requirements, leg_sweep_requirements, harmonize_requirements, pressure_points_requirements, \
-            monk_stagger_damage_list1, monk_stagger_damage_list2, monk_stagger_damage_list3, \
+            monk_bauble_damage_list1, monk_bauble_damage_list2, monk_bauble_damage_list3, \
             bloodthirst_requirements, pulverize_requirements, challenging_shout_requirements, impactful_boast_requirements, \
             shield_bash_requirements, trainwreck_requirements, fortification_requirements, block_requirements, \
             champion1_fortification, champion2_fortification, champion3_fortification, champion4_fortification, champion5_fortification, \
@@ -1314,9 +1314,9 @@ class GameFrame(tk.Frame):
         leg_sweep_requirements = [30, 0, 3, 0]
         harmonize_requirements = [50, 0, 0, 0]
         pressure_points_requirements = [30, 0, 6, 0]
-        monk_stagger_damage_list1 = [0, 0]
-        monk_stagger_damage_list2 = [0, 0]
-        monk_stagger_damage_list3 = [0, 0]
+        monk_bauble_damage_list1 = [0, 0]
+        monk_bauble_damage_list2 = [0, 0]
+        monk_bauble_damage_list3 = [0, 0]
         # Barbarian Abiltities:
         bloodthirst_requirements = [0, 30, 0, 0]
         pulverize_requirements = [20, 0, 0, 0]
@@ -5372,7 +5372,7 @@ class GameFrame(tk.Frame):
                 champion1_hp, champion2_hp, champion3_hp,champion4_hp, champion5_hp, \
                 champion1_lastRoundDamageTaken_list, champion2_lastRoundDamageTaken_list, champion3_lastRoundDamageTaken_list, champion4_lastRoundDamageTaken_list, champion5_lastRoundDamageTaken_list, \
                 champion1_immunity, champion2_immunity, champion3_immunity, champion4_immunity, champion5_immunity, \
-                monk_stagger_damage_list1, monk_stagger_damage_list2, monk_stagger_damage_list3, \
+                monk_bauble_damage_list1, monk_bauble_damage_list2, monk_bauble_damage_list3, \
                 champion1_bush_armour, champion2_bush_armour, champion3_bush_armour, champion4_bush_armour, champion5_bush_armour, \
                 champion1_magical_barrier, champion2_magical_barrier, champion3_magical_barrier, champion4_magical_barrier, champion5_magical_barrier,\
                 ai1_fencer_dodgechance, ai2_fencer_dodgechance, ai3_fencer_dodgechance, ai4_fencer_dodgechance, ai5_fencer_dodgechance
@@ -5515,27 +5515,27 @@ class GameFrame(tk.Frame):
                                     elif immune == "Evasive Manoeuvres":
                                         self.apply_taunt(1, MASTER_FENCER.title, 1)
                             elif CHAMPION_LIST[0] == MONK.title:
-                                stagger_damage = self.calculate_ai_damage(1, 1, 0)
-                                unstaggerable_check = 0
-                                if monk_stagger_damage_list1[1] == 0:
-                                    monk_stagger_damage_list1 = [math.ceil(stagger_damage / 3), 3]
+                                bauble_damage = self.calculate_ai_damage(1, 1, 0)
+                                unbaubleable_check = 0
+                                if monk_bauble_damage_list1[1] == 0:
+                                    monk_bauble_damage_list1 = [math.ceil(bauble_damage / 3), 3]
                                 else:
-                                    if monk_stagger_damage_list2[1] == 0:
-                                        monk_stagger_damage_list2 = [math.ceil(stagger_damage / 3), 3]
+                                    if monk_bauble_damage_list2[1] == 0:
+                                        monk_bauble_damage_list2 = [math.ceil(bauble_damage / 3), 3]
                                     else:
-                                        if monk_stagger_damage_list3[1] == 0:
-                                            monk_stagger_damage_list3 = [math.ceil(stagger_damage / 3), 3]
+                                        if monk_bauble_damage_list3[1] == 0:
+                                            monk_bauble_damage_list3 = [math.ceil(bauble_damage / 3), 3]
                                         else:
-                                            unstaggerable_check = 1
+                                            unbaubleable_check = 1
                                 monk_damage_taken = 0
-                                if monk_stagger_damage_list1[1] != 0:
-                                    monk_damage_taken = monk_damage_taken + monk_stagger_damage_list1[0]
-                                if monk_stagger_damage_list2[1] != 0:
-                                    monk_damage_taken = monk_damage_taken + monk_stagger_damage_list2[0]
-                                if monk_stagger_damage_list3[1] != 0:
-                                    monk_damage_taken = monk_damage_taken + monk_stagger_damage_list3[0]
-                                if unstaggerable_check == 1:
-                                    monk_damage_taken = monk_damage_taken + stagger_damage
+                                if monk_bauble_damage_list1[1] != 0:
+                                    monk_damage_taken = monk_damage_taken + monk_bauble_damage_list1[0]
+                                if monk_bauble_damage_list2[1] != 0:
+                                    monk_damage_taken = monk_damage_taken + monk_bauble_damage_list2[0]
+                                if monk_bauble_damage_list3[1] != 0:
+                                    monk_damage_taken = monk_damage_taken + monk_bauble_damage_list3[0]
+                                if unbaubleable_check == 1:
+                                    monk_damage_taken = monk_damage_taken + bauble_damage
                                 champion1_hp = champion1_hp - math.ceil(monk_damage_taken)
                                 champion1_lastRoundDamageTaken_list.append(math.ceil(monk_damage_taken))
                                 if champion1_hp < 0:
@@ -5613,27 +5613,27 @@ class GameFrame(tk.Frame):
                                     elif immune == "Evasive Manoeuvres":
                                         self.apply_taunt(1, MASTER_FENCER.title, 1)
                             elif CHAMPION_LIST[0] == MONK.title:
-                                stagger_damage = self.calculate_ai_damage(2, 1, 0)
-                                unstaggerable_check = 0
-                                if monk_stagger_damage_list1[1] == 0:
-                                    monk_stagger_damage_list1 = [math.ceil(stagger_damage / 3), 3]
+                                bauble_damage = self.calculate_ai_damage(2, 1, 0)
+                                unbaubleable_check = 0
+                                if monk_bauble_damage_list1[1] == 0:
+                                    monk_bauble_damage_list1 = [math.ceil(bauble_damage / 3), 3]
                                 else:
-                                    if monk_stagger_damage_list2[1] == 0:
-                                        monk_stagger_damage_list2 = [math.ceil(stagger_damage / 3), 3]
+                                    if monk_bauble_damage_list2[1] == 0:
+                                        monk_bauble_damage_list2 = [math.ceil(bauble_damage / 3), 3]
                                     else:
-                                        if monk_stagger_damage_list3[1] == 0:
-                                            monk_stagger_damage_list3 = [math.ceil(stagger_damage / 3), 3]
+                                        if monk_bauble_damage_list3[1] == 0:
+                                            monk_bauble_damage_list3 = [math.ceil(bauble_damage / 3), 3]
                                         else:
-                                            unstaggerable_check = 1
+                                            unbaubleable_check = 1
                                 monk_damage_taken = 0
-                                if monk_stagger_damage_list1[1] != 0:
-                                    monk_damage_taken = monk_damage_taken + monk_stagger_damage_list1[0]
-                                if monk_stagger_damage_list2[1] != 0:
-                                    monk_damage_taken = monk_damage_taken + monk_stagger_damage_list2[0]
-                                if monk_stagger_damage_list3[1] != 0:
-                                    monk_damage_taken = monk_damage_taken + monk_stagger_damage_list3[0]
-                                if unstaggerable_check == 1:
-                                    monk_damage_taken = monk_damage_taken + stagger_damage
+                                if monk_bauble_damage_list1[1] != 0:
+                                    monk_damage_taken = monk_damage_taken + monk_bauble_damage_list1[0]
+                                if monk_bauble_damage_list2[1] != 0:
+                                    monk_damage_taken = monk_damage_taken + monk_bauble_damage_list2[0]
+                                if monk_bauble_damage_list3[1] != 0:
+                                    monk_damage_taken = monk_damage_taken + monk_bauble_damage_list3[0]
+                                if unbaubleable_check == 1:
+                                    monk_damage_taken = monk_damage_taken + bauble_damage
                                 champion2_hp = champion2_hp - math.ceil(monk_damage_taken)
                                 champion2_lastRoundDamageTaken_list.append(math.ceil(monk_damage_taken))
                                 if champion2_hp < 0:
@@ -5711,27 +5711,27 @@ class GameFrame(tk.Frame):
                                     elif immune == "Evasive Manoeuvres":
                                         self.apply_taunt(1, MASTER_FENCER.title, 1)
                             elif CHAMPION_LIST[0] == MONK.title:
-                                stagger_damage = self.calculate_ai_damage(3, 1)
-                                unstaggerable_check = 0
-                                if monk_stagger_damage_list1[1] == 0:
-                                    monk_stagger_damage_list1 = [math.ceil(stagger_damage / 3), 3]
+                                bauble_damage = self.calculate_ai_damage(3, 1)
+                                unbaubleable_check = 0
+                                if monk_bauble_damage_list1[1] == 0:
+                                    monk_bauble_damage_list1 = [math.ceil(bauble_damage / 3), 3]
                                 else:
-                                    if monk_stagger_damage_list2[1] == 0:
-                                        monk_stagger_damage_list2 = [math.ceil(stagger_damage / 3), 3]
+                                    if monk_bauble_damage_list2[1] == 0:
+                                        monk_bauble_damage_list2 = [math.ceil(bauble_damage / 3), 3]
                                     else:
-                                        if monk_stagger_damage_list3[1] == 0:
-                                            monk_stagger_damage_list3 = [math.ceil(stagger_damage / 3), 3]
+                                        if monk_bauble_damage_list3[1] == 0:
+                                            monk_bauble_damage_list3 = [math.ceil(bauble_damage / 3), 3]
                                         else:
-                                            unstaggerable_check = 1
+                                            unbaubleable_check = 1
                                 monk_damage_taken = 0
-                                if monk_stagger_damage_list1[1] != 0:
-                                    monk_damage_taken = monk_damage_taken + monk_stagger_damage_list1[0]
-                                if monk_stagger_damage_list2[1] != 0:
-                                    monk_damage_taken = monk_damage_taken + monk_stagger_damage_list2[0]
-                                if monk_stagger_damage_list3[1] != 0:
-                                    monk_damage_taken = monk_damage_taken + monk_stagger_damage_list3[0]
-                                if unstaggerable_check == 1:
-                                    monk_damage_taken = monk_damage_taken + stagger_damage
+                                if monk_bauble_damage_list1[1] != 0:
+                                    monk_damage_taken = monk_damage_taken + monk_bauble_damage_list1[0]
+                                if monk_bauble_damage_list2[1] != 0:
+                                    monk_damage_taken = monk_damage_taken + monk_bauble_damage_list2[0]
+                                if monk_bauble_damage_list3[1] != 0:
+                                    monk_damage_taken = monk_damage_taken + monk_bauble_damage_list3[0]
+                                if unbaubleable_check == 1:
+                                    monk_damage_taken = monk_damage_taken + bauble_damage
                                 champion3_hp = champion3_hp - math.ceil(monk_damage_taken)
                                 champion3_lastRoundDamageTaken_list.append(math.ceil(monk_damage_taken))
                                 if champion3_hp < 0:
@@ -5809,27 +5809,27 @@ class GameFrame(tk.Frame):
                                     elif immune == "Evasive Manoeuvres":
                                         self.apply_taunt(1, MASTER_FENCER.title, 1)
                             elif CHAMPION_LIST[0] == MONK.title:
-                                stagger_damage = self.calculate_ai_damage(4, 1, 0)
-                                unstaggerable_check = 0
-                                if monk_stagger_damage_list1[1] == 0:
-                                    monk_stagger_damage_list1 = [math.ceil(stagger_damage / 3), 3]
+                                bauble_damage = self.calculate_ai_damage(4, 1, 0)
+                                unbaubleable_check = 0
+                                if monk_bauble_damage_list1[1] == 0:
+                                    monk_bauble_damage_list1 = [math.ceil(bauble_damage / 3), 3]
                                 else:
-                                    if monk_stagger_damage_list2[1] == 0:
-                                        monk_stagger_damage_list2 = [math.ceil(stagger_damage / 3), 3]
+                                    if monk_bauble_damage_list2[1] == 0:
+                                        monk_bauble_damage_list2 = [math.ceil(bauble_damage / 3), 3]
                                     else:
-                                        if monk_stagger_damage_list3[1] == 0:
-                                            monk_stagger_damage_list3 = [math.ceil(stagger_damage / 3), 3]
+                                        if monk_bauble_damage_list3[1] == 0:
+                                            monk_bauble_damage_list3 = [math.ceil(bauble_damage / 3), 3]
                                         else:
-                                            unstaggerable_check = 1
+                                            unbaubleable_check = 1
                                 monk_damage_taken = 0
-                                if monk_stagger_damage_list1[1] != 0:
-                                    monk_damage_taken = monk_damage_taken + monk_stagger_damage_list1[0]
-                                if monk_stagger_damage_list2[1] != 0:
-                                    monk_damage_taken = monk_damage_taken + monk_stagger_damage_list2[0]
-                                if monk_stagger_damage_list3[1] != 0:
-                                    monk_damage_taken = monk_damage_taken + monk_stagger_damage_list3[0]
-                                if unstaggerable_check == 1:
-                                    monk_damage_taken = monk_damage_taken + stagger_damage
+                                if monk_bauble_damage_list1[1] != 0:
+                                    monk_damage_taken = monk_damage_taken + monk_bauble_damage_list1[0]
+                                if monk_bauble_damage_list2[1] != 0:
+                                    monk_damage_taken = monk_damage_taken + monk_bauble_damage_list2[0]
+                                if monk_bauble_damage_list3[1] != 0:
+                                    monk_damage_taken = monk_damage_taken + monk_bauble_damage_list3[0]
+                                if unbaubleable_check == 1:
+                                    monk_damage_taken = monk_damage_taken + bauble_damage
                                 champion4_hp = champion4_hp - math.ceil(monk_damage_taken)
                                 champion4_lastRoundDamageTaken_list.append(math.ceil(monk_damage_taken))
                                 if champion4_hp < 0:
@@ -5907,27 +5907,27 @@ class GameFrame(tk.Frame):
                                     elif immune == "Evasive Manoeuvres":
                                         self.apply_taunt(1, MASTER_FENCER.title, 1)
                             elif CHAMPION_LIST[0] == MONK.title:
-                                stagger_damage = self.calculate_ai_damage(5, 1, 0)
-                                unstaggerable_check = 0
-                                if monk_stagger_damage_list1[1] == 0:
-                                    monk_stagger_damage_list1 = [math.ceil(stagger_damage / 3), 3]
+                                bauble_damage = self.calculate_ai_damage(5, 1, 0)
+                                unbaubleable_check = 0
+                                if monk_bauble_damage_list1[1] == 0:
+                                    monk_bauble_damage_list1 = [math.ceil(bauble_damage / 3), 3]
                                 else:
-                                    if monk_stagger_damage_list2[1] == 0:
-                                        monk_stagger_damage_list2 = [math.ceil(stagger_damage / 3), 3]
+                                    if monk_bauble_damage_list2[1] == 0:
+                                        monk_bauble_damage_list2 = [math.ceil(bauble_damage / 3), 3]
                                     else:
-                                        if monk_stagger_damage_list3[1] == 0:
-                                            monk_stagger_damage_list3 = [math.ceil(stagger_damage / 3), 3]
+                                        if monk_bauble_damage_list3[1] == 0:
+                                            monk_bauble_damage_list3 = [math.ceil(bauble_damage / 3), 3]
                                         else:
-                                            unstaggerable_check = 1
+                                            unbaubleable_check = 1
                                 monk_damage_taken = 0
-                                if monk_stagger_damage_list1[1] != 0:
-                                    monk_damage_taken = monk_damage_taken + monk_stagger_damage_list1[0]
-                                if monk_stagger_damage_list2[1] != 0:
-                                    monk_damage_taken = monk_damage_taken + monk_stagger_damage_list2[0]
-                                if monk_stagger_damage_list3[1] != 0:
-                                    monk_damage_taken = monk_damage_taken + monk_stagger_damage_list3[0]
-                                if unstaggerable_check == 1:
-                                    monk_damage_taken = monk_damage_taken + stagger_damage
+                                if monk_bauble_damage_list1[1] != 0:
+                                    monk_damage_taken = monk_damage_taken + monk_bauble_damage_list1[0]
+                                if monk_bauble_damage_list2[1] != 0:
+                                    monk_damage_taken = monk_damage_taken + monk_bauble_damage_list2[0]
+                                if monk_bauble_damage_list3[1] != 0:
+                                    monk_damage_taken = monk_damage_taken + monk_bauble_damage_list3[0]
+                                if unbaubleable_check == 1:
+                                    monk_damage_taken = monk_damage_taken + bauble_damage
                                 champion5_hp = champion5_hp - math.ceil(monk_damage_taken)
                                 champion5_lastRoundDamageTaken_list.append(math.ceil(monk_damage_taken))
                                 if champion5_hp < 0:
@@ -6007,27 +6007,27 @@ class GameFrame(tk.Frame):
                                         elif immune == "Evasive Manoeuvres":
                                             self.apply_taunt(1, MASTER_FENCER.title, 1)
                                 elif CHAMPION_LIST[0] == MONK.title:
-                                    stagger_damage = self.calculate_ai_damage(1, 1, 0)
-                                    unstaggerable_check = 0
-                                    if monk_stagger_damage_list1[1] == 0:
-                                        monk_stagger_damage_list1 = [math.ceil(stagger_damage / 3), 3]
+                                    bauble_damage = self.calculate_ai_damage(1, 1, 0)
+                                    unbaubleable_check = 0
+                                    if monk_bauble_damage_list1[1] == 0:
+                                        monk_bauble_damage_list1 = [math.ceil(bauble_damage / 3), 3]
                                     else:
-                                        if monk_stagger_damage_list2[1] == 0:
-                                            monk_stagger_damage_list2 = [math.ceil(stagger_damage / 3), 3]
+                                        if monk_bauble_damage_list2[1] == 0:
+                                            monk_bauble_damage_list2 = [math.ceil(bauble_damage / 3), 3]
                                         else:
-                                            if monk_stagger_damage_list3[1] == 0:
-                                                monk_stagger_damage_list3 = [math.ceil(stagger_damage / 3), 3]
+                                            if monk_bauble_damage_list3[1] == 0:
+                                                monk_bauble_damage_list3 = [math.ceil(bauble_damage / 3), 3]
                                             else:
-                                                unstaggerable_check = 1
+                                                unbaubleable_check = 1
                                     monk_damage_taken = 0
-                                    if monk_stagger_damage_list1[1] != 0:
-                                        monk_damage_taken = monk_damage_taken + monk_stagger_damage_list1[0]
-                                    if monk_stagger_damage_list2[1] != 0:
-                                        monk_damage_taken = monk_damage_taken + monk_stagger_damage_list2[0]
-                                    if monk_stagger_damage_list3[1] != 0:
-                                        monk_damage_taken = monk_damage_taken + monk_stagger_damage_list3[0]
-                                    if unstaggerable_check == 1:
-                                        monk_damage_taken = monk_damage_taken + stagger_damage
+                                    if monk_bauble_damage_list1[1] != 0:
+                                        monk_damage_taken = monk_damage_taken + monk_bauble_damage_list1[0]
+                                    if monk_bauble_damage_list2[1] != 0:
+                                        monk_damage_taken = monk_damage_taken + monk_bauble_damage_list2[0]
+                                    if monk_bauble_damage_list3[1] != 0:
+                                        monk_damage_taken = monk_damage_taken + monk_bauble_damage_list3[0]
+                                    if unbaubleable_check == 1:
+                                        monk_damage_taken = monk_damage_taken + bauble_damage
                                     champion1_hp = champion1_hp - math.ceil(monk_damage_taken)
                                     champion1_lastRoundDamageTaken_list.append(math.ceil(monk_damage_taken))
                                     if champion1_hp < 0:
@@ -6123,27 +6123,27 @@ class GameFrame(tk.Frame):
                                         elif immune == "Evasive Manoeuvres":
                                             self.apply_taunt(2, MASTER_FENCER.title, 1)
                                 elif CHAMPION_LIST[0] == MONK.title:
-                                    stagger_damage = self.calculate_ai_damage(2, 1, 0)
-                                    unstaggerable_check = 0
-                                    if monk_stagger_damage_list1[1] == 0:
-                                        monk_stagger_damage_list1 = [math.ceil(stagger_damage / 3), 3]
+                                    bauble_damage = self.calculate_ai_damage(2, 1, 0)
+                                    unbaubleable_check = 0
+                                    if monk_bauble_damage_list1[1] == 0:
+                                        monk_bauble_damage_list1 = [math.ceil(bauble_damage / 3), 3]
                                     else:
-                                        if monk_stagger_damage_list2[1] == 0:
-                                            monk_stagger_damage_list2 = [math.ceil(stagger_damage / 3), 3]
+                                        if monk_bauble_damage_list2[1] == 0:
+                                            monk_bauble_damage_list2 = [math.ceil(bauble_damage / 3), 3]
                                         else:
-                                            if monk_stagger_damage_list3[1] == 0:
-                                                monk_stagger_damage_list3 = [math.ceil(stagger_damage / 3), 3]
+                                            if monk_bauble_damage_list3[1] == 0:
+                                                monk_bauble_damage_list3 = [math.ceil(bauble_damage / 3), 3]
                                             else:
-                                                unstaggerable_check = 1
+                                                unbaubleable_check = 1
                                     monk_damage_taken = 0
-                                    if monk_stagger_damage_list1[1] != 0:
-                                        monk_damage_taken = monk_damage_taken + monk_stagger_damage_list1[0]
-                                    if monk_stagger_damage_list2[1] != 0:
-                                        monk_damage_taken = monk_damage_taken + monk_stagger_damage_list2[0]
-                                    if monk_stagger_damage_list3[1] != 0:
-                                        monk_damage_taken = monk_damage_taken + monk_stagger_damage_list3[0]
-                                    if unstaggerable_check == 1:
-                                        monk_damage_taken = monk_damage_taken + stagger_damage
+                                    if monk_bauble_damage_list1[1] != 0:
+                                        monk_damage_taken = monk_damage_taken + monk_bauble_damage_list1[0]
+                                    if monk_bauble_damage_list2[1] != 0:
+                                        monk_damage_taken = monk_damage_taken + monk_bauble_damage_list2[0]
+                                    if monk_bauble_damage_list3[1] != 0:
+                                        monk_damage_taken = monk_damage_taken + monk_bauble_damage_list3[0]
+                                    if unbaubleable_check == 1:
+                                        monk_damage_taken = monk_damage_taken + bauble_damage
                                     champion2_hp = champion2_hp - math.ceil(monk_damage_taken)
                                     champion2_lastRoundDamageTaken_list.append(math.ceil(monk_damage_taken))
                                     if champion2_hp < 0:
@@ -6239,27 +6239,27 @@ class GameFrame(tk.Frame):
                                         elif immune == "Evasive Manoeuvres":
                                             self.apply_taunt(3, MASTER_FENCER.title, 1)
                                 elif CHAMPION_LIST[0] == MONK.title:
-                                    stagger_damage = self.calculate_ai_damage(3, 1, 0)
-                                    unstaggerable_check = 0
-                                    if monk_stagger_damage_list1[1] == 0:
-                                        monk_stagger_damage_list1 = [math.ceil(stagger_damage / 3), 3]
+                                    bauble_damage = self.calculate_ai_damage(3, 1, 0)
+                                    unbaubleable_check = 0
+                                    if monk_bauble_damage_list1[1] == 0:
+                                        monk_bauble_damage_list1 = [math.ceil(bauble_damage / 3), 3]
                                     else:
-                                        if monk_stagger_damage_list2[1] == 0:
-                                            monk_stagger_damage_list2 = [math.ceil(stagger_damage / 3), 3]
+                                        if monk_bauble_damage_list2[1] == 0:
+                                            monk_bauble_damage_list2 = [math.ceil(bauble_damage / 3), 3]
                                         else:
-                                            if monk_stagger_damage_list3[1] == 0:
-                                                monk_stagger_damage_list3 = [math.ceil(stagger_damage / 3), 3]
+                                            if monk_bauble_damage_list3[1] == 0:
+                                                monk_bauble_damage_list3 = [math.ceil(bauble_damage / 3), 3]
                                             else:
-                                                unstaggerable_check = 1
+                                                unbaubleable_check = 1
                                     monk_damage_taken = 0
-                                    if monk_stagger_damage_list1[1] != 0:
-                                        monk_damage_taken = monk_damage_taken + monk_stagger_damage_list1[0]
-                                    if monk_stagger_damage_list2[1] != 0:
-                                        monk_damage_taken = monk_damage_taken + monk_stagger_damage_list2[0]
-                                    if monk_stagger_damage_list3[1] != 0:
-                                        monk_damage_taken = monk_damage_taken + monk_stagger_damage_list3[0]
-                                    if unstaggerable_check == 1:
-                                        monk_damage_taken = monk_damage_taken + stagger_damage
+                                    if monk_bauble_damage_list1[1] != 0:
+                                        monk_damage_taken = monk_damage_taken + monk_bauble_damage_list1[0]
+                                    if monk_bauble_damage_list2[1] != 0:
+                                        monk_damage_taken = monk_damage_taken + monk_bauble_damage_list2[0]
+                                    if monk_bauble_damage_list3[1] != 0:
+                                        monk_damage_taken = monk_damage_taken + monk_bauble_damage_list3[0]
+                                    if unbaubleable_check == 1:
+                                        monk_damage_taken = monk_damage_taken + bauble_damage
                                     champion3_hp = champion3_hp - math.ceil(monk_damage_taken)
                                     champion3_lastRoundDamageTaken_list.append(math.ceil(monk_damage_taken))
                                     if champion3_hp < 0:
@@ -6355,27 +6355,27 @@ class GameFrame(tk.Frame):
                                         elif immune == "Evasive Manoeuvres":
                                             self.apply_taunt(4, MASTER_FENCER.title, 1)
                                 elif CHAMPION_LIST[0] == MONK.title:
-                                    stagger_damage = self.calculate_ai_damage(4, 1, 0)
-                                    unstaggerable_check = 0
-                                    if monk_stagger_damage_list1[1] == 0:
-                                        monk_stagger_damage_list1 = [math.ceil(stagger_damage / 3), 3]
+                                    bauble_damage = self.calculate_ai_damage(4, 1, 0)
+                                    unbaubleable_check = 0
+                                    if monk_bauble_damage_list1[1] == 0:
+                                        monk_bauble_damage_list1 = [math.ceil(bauble_damage / 3), 3]
                                     else:
-                                        if monk_stagger_damage_list2[1] == 0:
-                                            monk_stagger_damage_list2 = [math.ceil(stagger_damage / 3), 3]
+                                        if monk_bauble_damage_list2[1] == 0:
+                                            monk_bauble_damage_list2 = [math.ceil(bauble_damage / 3), 3]
                                         else:
-                                            if monk_stagger_damage_list3[1] == 0:
-                                                monk_stagger_damage_list3 = [math.ceil(stagger_damage / 3), 3]
+                                            if monk_bauble_damage_list3[1] == 0:
+                                                monk_bauble_damage_list3 = [math.ceil(bauble_damage / 3), 3]
                                             else:
-                                                unstaggerable_check = 1
+                                                unbaubleable_check = 1
                                     monk_damage_taken = 0
-                                    if monk_stagger_damage_list1[1] != 0:
-                                        monk_damage_taken = monk_damage_taken + monk_stagger_damage_list1[0]
-                                    if monk_stagger_damage_list2[1] != 0:
-                                        monk_damage_taken = monk_damage_taken + monk_stagger_damage_list2[0]
-                                    if monk_stagger_damage_list3[1] != 0:
-                                        monk_damage_taken = monk_damage_taken + monk_stagger_damage_list3[0]
-                                    if unstaggerable_check == 1:
-                                        monk_damage_taken = monk_damage_taken + stagger_damage
+                                    if monk_bauble_damage_list1[1] != 0:
+                                        monk_damage_taken = monk_damage_taken + monk_bauble_damage_list1[0]
+                                    if monk_bauble_damage_list2[1] != 0:
+                                        monk_damage_taken = monk_damage_taken + monk_bauble_damage_list2[0]
+                                    if monk_bauble_damage_list3[1] != 0:
+                                        monk_damage_taken = monk_damage_taken + monk_bauble_damage_list3[0]
+                                    if unbaubleable_check == 1:
+                                        monk_damage_taken = monk_damage_taken + bauble_damage
                                     champion4_hp = champion4_hp - math.ceil(monk_damage_taken)
                                     champion4_lastRoundDamageTaken_list.append(math.ceil(monk_damage_taken))
                                     if champion4_hp < 0:
@@ -6471,27 +6471,27 @@ class GameFrame(tk.Frame):
                                         elif immune == "Evasive Manoeuvres":
                                             self.apply_taunt(5, MASTER_FENCER.title, 1)
                                 elif CHAMPION_LIST[0] == MONK.title:
-                                    stagger_damage = self.calculate_ai_damage(5, 1, 0)
-                                    unstaggerable_check = 0
-                                    if monk_stagger_damage_list1[1] == 0:
-                                        monk_stagger_damage_list1 = [math.ceil(stagger_damage / 3), 3]
+                                    bauble_damage = self.calculate_ai_damage(5, 1, 0)
+                                    unbaubleable_check = 0
+                                    if monk_bauble_damage_list1[1] == 0:
+                                        monk_bauble_damage_list1 = [math.ceil(bauble_damage / 3), 3]
                                     else:
-                                        if monk_stagger_damage_list2[1] == 0:
-                                            monk_stagger_damage_list2 = [math.ceil(stagger_damage / 3), 3]
+                                        if monk_bauble_damage_list2[1] == 0:
+                                            monk_bauble_damage_list2 = [math.ceil(bauble_damage / 3), 3]
                                         else:
-                                            if monk_stagger_damage_list3[1] == 0:
-                                                monk_stagger_damage_list3 = [math.ceil(stagger_damage / 3), 3]
+                                            if monk_bauble_damage_list3[1] == 0:
+                                                monk_bauble_damage_list3 = [math.ceil(bauble_damage / 3), 3]
                                             else:
-                                                unstaggerable_check = 1
+                                                unbaubleable_check = 1
                                     monk_damage_taken = 0
-                                    if monk_stagger_damage_list1[1] != 0:
-                                        monk_damage_taken = monk_damage_taken + monk_stagger_damage_list1[0]
-                                    if monk_stagger_damage_list2[1] != 0:
-                                        monk_damage_taken = monk_damage_taken + monk_stagger_damage_list2[0]
-                                    if monk_stagger_damage_list3[1] != 0:
-                                        monk_damage_taken = monk_damage_taken + monk_stagger_damage_list3[0]
-                                    if unstaggerable_check == 1:
-                                        monk_damage_taken = monk_damage_taken + stagger_damage
+                                    if monk_bauble_damage_list1[1] != 0:
+                                        monk_damage_taken = monk_damage_taken + monk_bauble_damage_list1[0]
+                                    if monk_bauble_damage_list2[1] != 0:
+                                        monk_damage_taken = monk_damage_taken + monk_bauble_damage_list2[0]
+                                    if monk_bauble_damage_list3[1] != 0:
+                                        monk_damage_taken = monk_damage_taken + monk_bauble_damage_list3[0]
+                                    if unbaubleable_check == 1:
+                                        monk_damage_taken = monk_damage_taken + bauble_damage
                                     champion5_hp = champion5_hp - math.ceil(monk_damage_taken)
                                     champion5_lastRoundDamageTaken_list.append(math.ceil(monk_damage_taken))
                                     if champion5_hp < 0:
@@ -6588,27 +6588,27 @@ class GameFrame(tk.Frame):
                                         elif immune == "Evasive Manoeuvres":
                                             self.apply_taunt(1, MASTER_FENCER.title, 1)
                                 elif CHAMPION_LIST[0] == MONK.title:
-                                    stagger_damage = self.calculate_ai_damage(1, 1, 0)
-                                    unstaggerable_check = 0
-                                    if monk_stagger_damage_list1[1] == 0:
-                                        monk_stagger_damage_list1 = [math.ceil(stagger_damage / 3), 3]
+                                    bauble_damage = self.calculate_ai_damage(1, 1, 0)
+                                    unbaubleable_check = 0
+                                    if monk_bauble_damage_list1[1] == 0:
+                                        monk_bauble_damage_list1 = [math.ceil(bauble_damage / 3), 3]
                                     else:
-                                        if monk_stagger_damage_list2[1] == 0:
-                                            monk_stagger_damage_list2 = [math.ceil(stagger_damage / 3), 3]
+                                        if monk_bauble_damage_list2[1] == 0:
+                                            monk_bauble_damage_list2 = [math.ceil(bauble_damage / 3), 3]
                                         else:
-                                            if monk_stagger_damage_list3[1] == 0:
-                                                monk_stagger_damage_list3 = [math.ceil(stagger_damage / 3), 3]
+                                            if monk_bauble_damage_list3[1] == 0:
+                                                monk_bauble_damage_list3 = [math.ceil(bauble_damage / 3), 3]
                                             else:
-                                                unstaggerable_check = 1
+                                                unbaubleable_check = 1
                                     monk_damage_taken = 0
-                                    if monk_stagger_damage_list1[1] != 0:
-                                        monk_damage_taken = monk_damage_taken + monk_stagger_damage_list1[0]
-                                    if monk_stagger_damage_list2[1] != 0:
-                                        monk_damage_taken = monk_damage_taken + monk_stagger_damage_list2[0]
-                                    if monk_stagger_damage_list3[1] != 0:
-                                        monk_damage_taken = monk_damage_taken + monk_stagger_damage_list3[0]
-                                    if unstaggerable_check == 1:
-                                        monk_damage_taken = monk_damage_taken + stagger_damage
+                                    if monk_bauble_damage_list1[1] != 0:
+                                        monk_damage_taken = monk_damage_taken + monk_bauble_damage_list1[0]
+                                    if monk_bauble_damage_list2[1] != 0:
+                                        monk_damage_taken = monk_damage_taken + monk_bauble_damage_list2[0]
+                                    if monk_bauble_damage_list3[1] != 0:
+                                        monk_damage_taken = monk_damage_taken + monk_bauble_damage_list3[0]
+                                    if unbaubleable_check == 1:
+                                        monk_damage_taken = monk_damage_taken + bauble_damage
                                     champion1_hp = champion1_hp - math.ceil(monk_damage_taken)
                                     champion1_lastRoundDamageTaken_list.append(math.ceil(monk_damage_taken))
                                     if champion1_hp < 0:
@@ -6704,27 +6704,27 @@ class GameFrame(tk.Frame):
                                         elif immune == "Evasive Manoeuvres":
                                             self.apply_taunt(2, MASTER_FENCER.title, 1)
                                 elif CHAMPION_LIST[0] == MONK.title:
-                                    stagger_damage = self.calculate_ai_damage(2, 1, 0)
-                                    unstaggerable_check = 0
-                                    if monk_stagger_damage_list1[1] == 0:
-                                        monk_stagger_damage_list1 = [math.ceil(stagger_damage / 3), 3]
+                                    bauble_damage = self.calculate_ai_damage(2, 1, 0)
+                                    unbaubleable_check = 0
+                                    if monk_bauble_damage_list1[1] == 0:
+                                        monk_bauble_damage_list1 = [math.ceil(bauble_damage / 3), 3]
                                     else:
-                                        if monk_stagger_damage_list2[1] == 0:
-                                            monk_stagger_damage_list2 = [math.ceil(stagger_damage / 3), 3]
+                                        if monk_bauble_damage_list2[1] == 0:
+                                            monk_bauble_damage_list2 = [math.ceil(bauble_damage / 3), 3]
                                         else:
-                                            if monk_stagger_damage_list3[1] == 0:
-                                                monk_stagger_damage_list3 = [math.ceil(stagger_damage / 3), 3]
+                                            if monk_bauble_damage_list3[1] == 0:
+                                                monk_bauble_damage_list3 = [math.ceil(bauble_damage / 3), 3]
                                             else:
-                                                unstaggerable_check = 1
+                                                unbaubleable_check = 1
                                     monk_damage_taken = 0
-                                    if monk_stagger_damage_list1[1] != 0:
-                                        monk_damage_taken = monk_damage_taken + monk_stagger_damage_list1[0]
-                                    if monk_stagger_damage_list2[1] != 0:
-                                        monk_damage_taken = monk_damage_taken + monk_stagger_damage_list2[0]
-                                    if monk_stagger_damage_list3[1] != 0:
-                                        monk_damage_taken = monk_damage_taken + monk_stagger_damage_list3[0]
-                                    if unstaggerable_check == 1:
-                                        monk_damage_taken = monk_damage_taken + stagger_damage
+                                    if monk_bauble_damage_list1[1] != 0:
+                                        monk_damage_taken = monk_damage_taken + monk_bauble_damage_list1[0]
+                                    if monk_bauble_damage_list2[1] != 0:
+                                        monk_damage_taken = monk_damage_taken + monk_bauble_damage_list2[0]
+                                    if monk_bauble_damage_list3[1] != 0:
+                                        monk_damage_taken = monk_damage_taken + monk_bauble_damage_list3[0]
+                                    if unbaubleable_check == 1:
+                                        monk_damage_taken = monk_damage_taken + bauble_damage
                                     champion2_hp = champion2_hp - math.ceil(monk_damage_taken)
                                     champion2_lastRoundDamageTaken_list.append(math.ceil(monk_damage_taken))
                                     if champion2_hp < 0:
@@ -6820,27 +6820,27 @@ class GameFrame(tk.Frame):
                                         elif immune == "Evasive Manoeuvres":
                                             self.apply_taunt(3, MASTER_FENCER.title, 1)
                                 elif CHAMPION_LIST[0] == MONK.title:
-                                    stagger_damage = self.calculate_ai_damage(3, 1, 0)
-                                    unstaggerable_check = 0
-                                    if monk_stagger_damage_list1[1] == 0:
-                                        monk_stagger_damage_list1 = [math.ceil(stagger_damage / 3), 3]
+                                    bauble_damage = self.calculate_ai_damage(3, 1, 0)
+                                    unbaubleable_check = 0
+                                    if monk_bauble_damage_list1[1] == 0:
+                                        monk_bauble_damage_list1 = [math.ceil(bauble_damage / 3), 3]
                                     else:
-                                        if monk_stagger_damage_list2[1] == 0:
-                                            monk_stagger_damage_list2 = [math.ceil(stagger_damage / 3), 3]
+                                        if monk_bauble_damage_list2[1] == 0:
+                                            monk_bauble_damage_list2 = [math.ceil(bauble_damage / 3), 3]
                                         else:
-                                            if monk_stagger_damage_list3[1] == 0:
-                                                monk_stagger_damage_list3 = [math.ceil(stagger_damage / 3), 3]
+                                            if monk_bauble_damage_list3[1] == 0:
+                                                monk_bauble_damage_list3 = [math.ceil(bauble_damage / 3), 3]
                                             else:
-                                                unstaggerable_check = 1
+                                                unbaubleable_check = 1
                                     monk_damage_taken = 0
-                                    if monk_stagger_damage_list1[1] != 0:
-                                        monk_damage_taken = monk_damage_taken + monk_stagger_damage_list1[0]
-                                    if monk_stagger_damage_list2[1] != 0:
-                                        monk_damage_taken = monk_damage_taken + monk_stagger_damage_list2[0]
-                                    if monk_stagger_damage_list3[1] != 0:
-                                        monk_damage_taken = monk_damage_taken + monk_stagger_damage_list3[0]
-                                    if unstaggerable_check == 1:
-                                        monk_damage_taken = monk_damage_taken + stagger_damage
+                                    if monk_bauble_damage_list1[1] != 0:
+                                        monk_damage_taken = monk_damage_taken + monk_bauble_damage_list1[0]
+                                    if monk_bauble_damage_list2[1] != 0:
+                                        monk_damage_taken = monk_damage_taken + monk_bauble_damage_list2[0]
+                                    if monk_bauble_damage_list3[1] != 0:
+                                        monk_damage_taken = monk_damage_taken + monk_bauble_damage_list3[0]
+                                    if unbaubleable_check == 1:
+                                        monk_damage_taken = monk_damage_taken + bauble_damage
                                     champion3_hp = champion3_hp - math.ceil(monk_damage_taken)
                                     champion3_lastRoundDamageTaken_list.append(math.ceil(monk_damage_taken))
                                     if champion3_hp < 0:
@@ -6936,27 +6936,27 @@ class GameFrame(tk.Frame):
                                         elif immune == "Evasive Manoeuvres":
                                             self.apply_taunt(4, MASTER_FENCER.title, 1)
                                 elif CHAMPION_LIST[0] == MONK.title:
-                                    stagger_damage = self.calculate_ai_damage(4, 1, 0)
-                                    unstaggerable_check = 0
-                                    if monk_stagger_damage_list1[1] == 0:
-                                        monk_stagger_damage_list1 = [math.ceil(stagger_damage / 3), 3]
+                                    bauble_damage = self.calculate_ai_damage(4, 1, 0)
+                                    unbaubleable_check = 0
+                                    if monk_bauble_damage_list1[1] == 0:
+                                        monk_bauble_damage_list1 = [math.ceil(bauble_damage / 3), 3]
                                     else:
-                                        if monk_stagger_damage_list2[1] == 0:
-                                            monk_stagger_damage_list2 = [math.ceil(stagger_damage / 3), 3]
+                                        if monk_bauble_damage_list2[1] == 0:
+                                            monk_bauble_damage_list2 = [math.ceil(bauble_damage / 3), 3]
                                         else:
-                                            if monk_stagger_damage_list3[1] == 0:
-                                                monk_stagger_damage_list3 = [math.ceil(stagger_damage / 3), 3]
+                                            if monk_bauble_damage_list3[1] == 0:
+                                                monk_bauble_damage_list3 = [math.ceil(bauble_damage / 3), 3]
                                             else:
-                                                unstaggerable_check = 1
+                                                unbaubleable_check = 1
                                     monk_damage_taken = 0
-                                    if monk_stagger_damage_list1[1] != 0:
-                                        monk_damage_taken = monk_damage_taken + monk_stagger_damage_list1[0]
-                                    if monk_stagger_damage_list2[1] != 0:
-                                        monk_damage_taken = monk_damage_taken + monk_stagger_damage_list2[0]
-                                    if monk_stagger_damage_list3[1] != 0:
-                                        monk_damage_taken = monk_damage_taken + monk_stagger_damage_list3[0]
-                                    if unstaggerable_check == 1:
-                                        monk_damage_taken = monk_damage_taken + stagger_damage
+                                    if monk_bauble_damage_list1[1] != 0:
+                                        monk_damage_taken = monk_damage_taken + monk_bauble_damage_list1[0]
+                                    if monk_bauble_damage_list2[1] != 0:
+                                        monk_damage_taken = monk_damage_taken + monk_bauble_damage_list2[0]
+                                    if monk_bauble_damage_list3[1] != 0:
+                                        monk_damage_taken = monk_damage_taken + monk_bauble_damage_list3[0]
+                                    if unbaubleable_check == 1:
+                                        monk_damage_taken = monk_damage_taken + bauble_damage
                                     champion4_hp = champion4_hp - math.ceil(monk_damage_taken)
                                     champion4_lastRoundDamageTaken_list.append(math.ceil(monk_damage_taken))
                                     if champion4_hp < 0:
@@ -7052,27 +7052,27 @@ class GameFrame(tk.Frame):
                                         elif immune == "Evasive Manoeuvres":
                                             self.apply_taunt(5, MASTER_FENCER.title, 1)
                                 elif CHAMPION_LIST[0] == MONK.title:
-                                    stagger_damage = self.calculate_ai_damage(5, 1, 0)
-                                    unstaggerable_check = 0
-                                    if monk_stagger_damage_list1[1] == 0:
-                                        monk_stagger_damage_list1 = [math.ceil(stagger_damage / 3), 3]
+                                    bauble_damage = self.calculate_ai_damage(5, 1, 0)
+                                    unbaubleable_check = 0
+                                    if monk_bauble_damage_list1[1] == 0:
+                                        monk_bauble_damage_list1 = [math.ceil(bauble_damage / 3), 3]
                                     else:
-                                        if monk_stagger_damage_list2[1] == 0:
-                                            monk_stagger_damage_list2 = [math.ceil(stagger_damage / 3), 3]
+                                        if monk_bauble_damage_list2[1] == 0:
+                                            monk_bauble_damage_list2 = [math.ceil(bauble_damage / 3), 3]
                                         else:
-                                            if monk_stagger_damage_list3[1] == 0:
-                                                monk_stagger_damage_list3 = [math.ceil(stagger_damage / 3), 3]
+                                            if monk_bauble_damage_list3[1] == 0:
+                                                monk_bauble_damage_list3 = [math.ceil(bauble_damage / 3), 3]
                                             else:
-                                                unstaggerable_check = 1
+                                                unbaubleable_check = 1
                                     monk_damage_taken = 0
-                                    if monk_stagger_damage_list1[1] != 0:
-                                        monk_damage_taken = monk_damage_taken + monk_stagger_damage_list1[0]
-                                    if monk_stagger_damage_list2[1] != 0:
-                                        monk_damage_taken = monk_damage_taken + monk_stagger_damage_list2[0]
-                                    if monk_stagger_damage_list3[1] != 0:
-                                        monk_damage_taken = monk_damage_taken + monk_stagger_damage_list3[0]
-                                    if unstaggerable_check == 1:
-                                        monk_damage_taken = monk_damage_taken + stagger_damage
+                                    if monk_bauble_damage_list1[1] != 0:
+                                        monk_damage_taken = monk_damage_taken + monk_bauble_damage_list1[0]
+                                    if monk_bauble_damage_list2[1] != 0:
+                                        monk_damage_taken = monk_damage_taken + monk_bauble_damage_list2[0]
+                                    if monk_bauble_damage_list3[1] != 0:
+                                        monk_damage_taken = monk_damage_taken + monk_bauble_damage_list3[0]
+                                    if unbaubleable_check == 1:
+                                        monk_damage_taken = monk_damage_taken + bauble_damage
                                     champion5_hp = champion5_hp - math.ceil(monk_damage_taken)
                                     champion5_lastRoundDamageTaken_list.append(math.ceil(monk_damage_taken))
                                     if champion5_hp < 0:
@@ -7256,27 +7256,27 @@ class GameFrame(tk.Frame):
                                     elif immune == "Evasive Manoeuvres":
                                         self.apply_taunt(2, MASTER_FENCER.title, 1)
                             elif CHAMPION_LIST[0] == MONK.title:
-                                stagger_damage = self.calculate_ai_damage(1, 2, 0)
-                                unstaggerable_check = 0
-                                if monk_stagger_damage_list1[1] == 0:
-                                    monk_stagger_damage_list1 = [math.ceil(stagger_damage / 3), 3]
+                                bauble_damage = self.calculate_ai_damage(1, 2, 0)
+                                unbaubleable_check = 0
+                                if monk_bauble_damage_list1[1] == 0:
+                                    monk_bauble_damage_list1 = [math.ceil(bauble_damage / 3), 3]
                                 else:
-                                    if monk_stagger_damage_list2[1] == 0:
-                                        monk_stagger_damage_list2 = [math.ceil(stagger_damage / 3), 3]
+                                    if monk_bauble_damage_list2[1] == 0:
+                                        monk_bauble_damage_list2 = [math.ceil(bauble_damage / 3), 3]
                                     else:
-                                        if monk_stagger_damage_list3[1] == 0:
-                                            monk_stagger_damage_list3 = [math.ceil(stagger_damage / 3), 3]
+                                        if monk_bauble_damage_list3[1] == 0:
+                                            monk_bauble_damage_list3 = [math.ceil(bauble_damage / 3), 3]
                                         else:
-                                            unstaggerable_check = 1
+                                            unbaubleable_check = 1
                                 monk_damage_taken = 0
-                                if monk_stagger_damage_list1[1] != 0:
-                                    monk_damage_taken = monk_damage_taken + monk_stagger_damage_list1[0]
-                                if monk_stagger_damage_list2[1] != 0:
-                                    monk_damage_taken = monk_damage_taken + monk_stagger_damage_list2[0]
-                                if monk_stagger_damage_list3[1] != 0:
-                                    monk_damage_taken = monk_damage_taken + monk_stagger_damage_list3[0]
-                                if unstaggerable_check == 1:
-                                    monk_damage_taken = monk_damage_taken + stagger_damage
+                                if monk_bauble_damage_list1[1] != 0:
+                                    monk_damage_taken = monk_damage_taken + monk_bauble_damage_list1[0]
+                                if monk_bauble_damage_list2[1] != 0:
+                                    monk_damage_taken = monk_damage_taken + monk_bauble_damage_list2[0]
+                                if monk_bauble_damage_list3[1] != 0:
+                                    monk_damage_taken = monk_damage_taken + monk_bauble_damage_list3[0]
+                                if unbaubleable_check == 1:
+                                    monk_damage_taken = monk_damage_taken + bauble_damage
                                 champion1_hp = champion1_hp - math.ceil(monk_damage_taken)
                                 champion1_lastRoundDamageTaken_list.append(math.ceil(monk_damage_taken))
                                 if champion1_hp < 0:
@@ -7354,27 +7354,27 @@ class GameFrame(tk.Frame):
                                     elif immune == "Evasive Manoeuvres":
                                         self.apply_taunt(2, MASTER_FENCER.title, 1)
                             elif CHAMPION_LIST[0] == MONK.title:
-                                stagger_damage = self.calculate_ai_damage(2, 2, 0)
-                                unstaggerable_check = 0
-                                if monk_stagger_damage_list1[1] == 0:
-                                    monk_stagger_damage_list1 = [math.ceil(stagger_damage / 3), 3]
+                                bauble_damage = self.calculate_ai_damage(2, 2, 0)
+                                unbaubleable_check = 0
+                                if monk_bauble_damage_list1[1] == 0:
+                                    monk_bauble_damage_list1 = [math.ceil(bauble_damage / 3), 3]
                                 else:
-                                    if monk_stagger_damage_list2[1] == 0:
-                                        monk_stagger_damage_list2 = [math.ceil(stagger_damage / 3), 3]
+                                    if monk_bauble_damage_list2[1] == 0:
+                                        monk_bauble_damage_list2 = [math.ceil(bauble_damage / 3), 3]
                                     else:
-                                        if monk_stagger_damage_list3[1] == 0:
-                                            monk_stagger_damage_list3 = [math.ceil(stagger_damage / 3), 3]
+                                        if monk_bauble_damage_list3[1] == 0:
+                                            monk_bauble_damage_list3 = [math.ceil(bauble_damage / 3), 3]
                                         else:
-                                            unstaggerable_check = 1
+                                            unbaubleable_check = 1
                                 monk_damage_taken = 0
-                                if monk_stagger_damage_list1[1] != 0:
-                                    monk_damage_taken = monk_damage_taken + monk_stagger_damage_list1[0]
-                                if monk_stagger_damage_list2[1] != 0:
-                                    monk_damage_taken = monk_damage_taken + monk_stagger_damage_list2[0]
-                                if monk_stagger_damage_list3[1] != 0:
-                                    monk_damage_taken = monk_damage_taken + monk_stagger_damage_list3[0]
-                                if unstaggerable_check == 1:
-                                    monk_damage_taken = monk_damage_taken + stagger_damage
+                                if monk_bauble_damage_list1[1] != 0:
+                                    monk_damage_taken = monk_damage_taken + monk_bauble_damage_list1[0]
+                                if monk_bauble_damage_list2[1] != 0:
+                                    monk_damage_taken = monk_damage_taken + monk_bauble_damage_list2[0]
+                                if monk_bauble_damage_list3[1] != 0:
+                                    monk_damage_taken = monk_damage_taken + monk_bauble_damage_list3[0]
+                                if unbaubleable_check == 1:
+                                    monk_damage_taken = monk_damage_taken + bauble_damage
                                 champion2_hp = champion2_hp - math.ceil(monk_damage_taken)
                                 champion2_lastRoundDamageTaken_list.append(math.ceil(monk_damage_taken))
                                 if champion2_hp < 0:
@@ -7452,27 +7452,27 @@ class GameFrame(tk.Frame):
                                     elif immune == "Evasive Manoeuvres":
                                         self.apply_taunt(2, MASTER_FENCER.title, 1)
                             elif CHAMPION_LIST[0] == MONK.title:
-                                stagger_damage = self.calculate_ai_damage(3, 2)
-                                unstaggerable_check = 0
-                                if monk_stagger_damage_list1[1] == 0:
-                                    monk_stagger_damage_list1 = [math.ceil(stagger_damage / 3), 3]
+                                bauble_damage = self.calculate_ai_damage(3, 2)
+                                unbaubleable_check = 0
+                                if monk_bauble_damage_list1[1] == 0:
+                                    monk_bauble_damage_list1 = [math.ceil(bauble_damage / 3), 3]
                                 else:
-                                    if monk_stagger_damage_list2[1] == 0:
-                                        monk_stagger_damage_list2 = [math.ceil(stagger_damage / 3), 3]
+                                    if monk_bauble_damage_list2[1] == 0:
+                                        monk_bauble_damage_list2 = [math.ceil(bauble_damage / 3), 3]
                                     else:
-                                        if monk_stagger_damage_list3[1] == 0:
-                                            monk_stagger_damage_list3 = [math.ceil(stagger_damage / 3), 3]
+                                        if monk_bauble_damage_list3[1] == 0:
+                                            monk_bauble_damage_list3 = [math.ceil(bauble_damage / 3), 3]
                                         else:
-                                            unstaggerable_check = 1
+                                            unbaubleable_check = 1
                                 monk_damage_taken = 0
-                                if monk_stagger_damage_list1[1] != 0:
-                                    monk_damage_taken = monk_damage_taken + monk_stagger_damage_list1[0]
-                                if monk_stagger_damage_list2[1] != 0:
-                                    monk_damage_taken = monk_damage_taken + monk_stagger_damage_list2[0]
-                                if monk_stagger_damage_list3[1] != 0:
-                                    monk_damage_taken = monk_damage_taken + monk_stagger_damage_list3[0]
-                                if unstaggerable_check == 1:
-                                    monk_damage_taken = monk_damage_taken + stagger_damage
+                                if monk_bauble_damage_list1[1] != 0:
+                                    monk_damage_taken = monk_damage_taken + monk_bauble_damage_list1[0]
+                                if monk_bauble_damage_list2[1] != 0:
+                                    monk_damage_taken = monk_damage_taken + monk_bauble_damage_list2[0]
+                                if monk_bauble_damage_list3[1] != 0:
+                                    monk_damage_taken = monk_damage_taken + monk_bauble_damage_list3[0]
+                                if unbaubleable_check == 1:
+                                    monk_damage_taken = monk_damage_taken + bauble_damage
                                 champion3_hp = champion3_hp - math.ceil(monk_damage_taken)
                                 champion3_lastRoundDamageTaken_list.append(math.ceil(monk_damage_taken))
                                 if champion3_hp < 0:
@@ -7550,27 +7550,27 @@ class GameFrame(tk.Frame):
                                     elif immune == "Evasive Manoeuvres":
                                         self.apply_taunt(2, MASTER_FENCER.title, 1)
                             elif CHAMPION_LIST[0] == MONK.title:
-                                stagger_damage = self.calculate_ai_damage(4, 2, 0)
-                                unstaggerable_check = 0
-                                if monk_stagger_damage_list1[1] == 0:
-                                    monk_stagger_damage_list1 = [math.ceil(stagger_damage / 3), 3]
+                                bauble_damage = self.calculate_ai_damage(4, 2, 0)
+                                unbaubleable_check = 0
+                                if monk_bauble_damage_list1[1] == 0:
+                                    monk_bauble_damage_list1 = [math.ceil(bauble_damage / 3), 3]
                                 else:
-                                    if monk_stagger_damage_list2[1] == 0:
-                                        monk_stagger_damage_list2 = [math.ceil(stagger_damage / 3), 3]
+                                    if monk_bauble_damage_list2[1] == 0:
+                                        monk_bauble_damage_list2 = [math.ceil(bauble_damage / 3), 3]
                                     else:
-                                        if monk_stagger_damage_list3[1] == 0:
-                                            monk_stagger_damage_list3 = [math.ceil(stagger_damage / 3), 3]
+                                        if monk_bauble_damage_list3[1] == 0:
+                                            monk_bauble_damage_list3 = [math.ceil(bauble_damage / 3), 3]
                                         else:
-                                            unstaggerable_check = 1
+                                            unbaubleable_check = 1
                                 monk_damage_taken = 0
-                                if monk_stagger_damage_list1[1] != 0:
-                                    monk_damage_taken = monk_damage_taken + monk_stagger_damage_list1[0]
-                                if monk_stagger_damage_list2[1] != 0:
-                                    monk_damage_taken = monk_damage_taken + monk_stagger_damage_list2[0]
-                                if monk_stagger_damage_list3[1] != 0:
-                                    monk_damage_taken = monk_damage_taken + monk_stagger_damage_list3[0]
-                                if unstaggerable_check == 1:
-                                    monk_damage_taken = monk_damage_taken + stagger_damage
+                                if monk_bauble_damage_list1[1] != 0:
+                                    monk_damage_taken = monk_damage_taken + monk_bauble_damage_list1[0]
+                                if monk_bauble_damage_list2[1] != 0:
+                                    monk_damage_taken = monk_damage_taken + monk_bauble_damage_list2[0]
+                                if monk_bauble_damage_list3[1] != 0:
+                                    monk_damage_taken = monk_damage_taken + monk_bauble_damage_list3[0]
+                                if unbaubleable_check == 1:
+                                    monk_damage_taken = monk_damage_taken + bauble_damage
                                 champion4_hp = champion4_hp - math.ceil(monk_damage_taken)
                                 champion4_lastRoundDamageTaken_list.append(math.ceil(monk_damage_taken))
                                 if champion4_hp < 0:
@@ -7648,27 +7648,27 @@ class GameFrame(tk.Frame):
                                     elif immune == "Evasive Manoeuvres":
                                         self.apply_taunt(2, MASTER_FENCER.title, 1)
                             elif CHAMPION_LIST[0] == MONK.title:
-                                stagger_damage = self.calculate_ai_damage(5, 2, 0)
-                                unstaggerable_check = 0
-                                if monk_stagger_damage_list1[1] == 0:
-                                    monk_stagger_damage_list1 = [math.ceil(stagger_damage / 3), 3]
+                                bauble_damage = self.calculate_ai_damage(5, 2, 0)
+                                unbaubleable_check = 0
+                                if monk_bauble_damage_list1[1] == 0:
+                                    monk_bauble_damage_list1 = [math.ceil(bauble_damage / 3), 3]
                                 else:
-                                    if monk_stagger_damage_list2[1] == 0:
-                                        monk_stagger_damage_list2 = [math.ceil(stagger_damage / 3), 3]
+                                    if monk_bauble_damage_list2[1] == 0:
+                                        monk_bauble_damage_list2 = [math.ceil(bauble_damage / 3), 3]
                                     else:
-                                        if monk_stagger_damage_list3[1] == 0:
-                                            monk_stagger_damage_list3 = [math.ceil(stagger_damage / 3), 3]
+                                        if monk_bauble_damage_list3[1] == 0:
+                                            monk_bauble_damage_list3 = [math.ceil(bauble_damage / 3), 3]
                                         else:
-                                            unstaggerable_check = 1
+                                            unbaubleable_check = 1
                                 monk_damage_taken = 0
-                                if monk_stagger_damage_list1[1] != 0:
-                                    monk_damage_taken = monk_damage_taken + monk_stagger_damage_list1[0]
-                                if monk_stagger_damage_list2[1] != 0:
-                                    monk_damage_taken = monk_damage_taken + monk_stagger_damage_list2[0]
-                                if monk_stagger_damage_list3[1] != 0:
-                                    monk_damage_taken = monk_damage_taken + monk_stagger_damage_list3[0]
-                                if unstaggerable_check == 1:
-                                    monk_damage_taken = monk_damage_taken + stagger_damage
+                                if monk_bauble_damage_list1[1] != 0:
+                                    monk_damage_taken = monk_damage_taken + monk_bauble_damage_list1[0]
+                                if monk_bauble_damage_list2[1] != 0:
+                                    monk_damage_taken = monk_damage_taken + monk_bauble_damage_list2[0]
+                                if monk_bauble_damage_list3[1] != 0:
+                                    monk_damage_taken = monk_damage_taken + monk_bauble_damage_list3[0]
+                                if unbaubleable_check == 1:
+                                    monk_damage_taken = monk_damage_taken + bauble_damage
                                 champion5_hp = champion5_hp - math.ceil(monk_damage_taken)
                                 champion5_lastRoundDamageTaken_list.append(math.ceil(monk_damage_taken))
                                 if champion5_hp < 0:
@@ -7748,27 +7748,27 @@ class GameFrame(tk.Frame):
                                         elif immune == "Evasive Manoeuvres":
                                             self.apply_taunt(2, MASTER_FENCER.title, 1)
                                 elif CHAMPION_LIST[0] == MONK.title:
-                                    stagger_damage = self.calculate_ai_damage(1, 2, 0)
-                                    unstaggerable_check = 0
-                                    if monk_stagger_damage_list1[1] == 0:
-                                        monk_stagger_damage_list1 = [math.ceil(stagger_damage / 3), 3]
+                                    bauble_damage = self.calculate_ai_damage(1, 2, 0)
+                                    unbaubleable_check = 0
+                                    if monk_bauble_damage_list1[1] == 0:
+                                        monk_bauble_damage_list1 = [math.ceil(bauble_damage / 3), 3]
                                     else:
-                                        if monk_stagger_damage_list2[1] == 0:
-                                            monk_stagger_damage_list2 = [math.ceil(stagger_damage / 3), 3]
+                                        if monk_bauble_damage_list2[1] == 0:
+                                            monk_bauble_damage_list2 = [math.ceil(bauble_damage / 3), 3]
                                         else:
-                                            if monk_stagger_damage_list3[1] == 0:
-                                                monk_stagger_damage_list3 = [math.ceil(stagger_damage / 3), 3]
+                                            if monk_bauble_damage_list3[1] == 0:
+                                                monk_bauble_damage_list3 = [math.ceil(bauble_damage / 3), 3]
                                             else:
-                                                unstaggerable_check = 1
+                                                unbaubleable_check = 1
                                     monk_damage_taken = 0
-                                    if monk_stagger_damage_list1[1] != 0:
-                                        monk_damage_taken = monk_damage_taken + monk_stagger_damage_list1[0]
-                                    if monk_stagger_damage_list2[1] != 0:
-                                        monk_damage_taken = monk_damage_taken + monk_stagger_damage_list2[0]
-                                    if monk_stagger_damage_list3[1] != 0:
-                                        monk_damage_taken = monk_damage_taken + monk_stagger_damage_list3[0]
-                                    if unstaggerable_check == 1:
-                                        monk_damage_taken = monk_damage_taken + stagger_damage
+                                    if monk_bauble_damage_list1[1] != 0:
+                                        monk_damage_taken = monk_damage_taken + monk_bauble_damage_list1[0]
+                                    if monk_bauble_damage_list2[1] != 0:
+                                        monk_damage_taken = monk_damage_taken + monk_bauble_damage_list2[0]
+                                    if monk_bauble_damage_list3[1] != 0:
+                                        monk_damage_taken = monk_damage_taken + monk_bauble_damage_list3[0]
+                                    if unbaubleable_check == 1:
+                                        monk_damage_taken = monk_damage_taken + bauble_damage
                                     champion1_hp = champion1_hp - math.ceil(monk_damage_taken)
                                     champion1_lastRoundDamageTaken_list.append(math.ceil(monk_damage_taken))
                                     if champion1_hp < 0:
@@ -7864,27 +7864,27 @@ class GameFrame(tk.Frame):
                                         elif immune == "Evasive Manoeuvres":
                                             self.apply_taunt(2, MASTER_FENCER.title, 1)
                                 elif CHAMPION_LIST[0] == MONK.title:
-                                    stagger_damage = self.calculate_ai_damage(2, 2, 0)
-                                    unstaggerable_check = 0
-                                    if monk_stagger_damage_list1[1] == 0:
-                                        monk_stagger_damage_list1 = [math.ceil(stagger_damage / 3), 3]
+                                    bauble_damage = self.calculate_ai_damage(2, 2, 0)
+                                    unbaubleable_check = 0
+                                    if monk_bauble_damage_list1[1] == 0:
+                                        monk_bauble_damage_list1 = [math.ceil(bauble_damage / 3), 3]
                                     else:
-                                        if monk_stagger_damage_list2[1] == 0:
-                                            monk_stagger_damage_list2 = [math.ceil(stagger_damage / 3), 3]
+                                        if monk_bauble_damage_list2[1] == 0:
+                                            monk_bauble_damage_list2 = [math.ceil(bauble_damage / 3), 3]
                                         else:
-                                            if monk_stagger_damage_list3[1] == 0:
-                                                monk_stagger_damage_list3 = [math.ceil(stagger_damage / 3), 3]
+                                            if monk_bauble_damage_list3[1] == 0:
+                                                monk_bauble_damage_list3 = [math.ceil(bauble_damage / 3), 3]
                                             else:
-                                                unstaggerable_check = 1
+                                                unbaubleable_check = 1
                                     monk_damage_taken = 0
-                                    if monk_stagger_damage_list1[1] != 0:
-                                        monk_damage_taken = monk_damage_taken + monk_stagger_damage_list1[0]
-                                    if monk_stagger_damage_list2[1] != 0:
-                                        monk_damage_taken = monk_damage_taken + monk_stagger_damage_list2[0]
-                                    if monk_stagger_damage_list3[1] != 0:
-                                        monk_damage_taken = monk_damage_taken + monk_stagger_damage_list3[0]
-                                    if unstaggerable_check == 1:
-                                        monk_damage_taken = monk_damage_taken + stagger_damage
+                                    if monk_bauble_damage_list1[1] != 0:
+                                        monk_damage_taken = monk_damage_taken + monk_bauble_damage_list1[0]
+                                    if monk_bauble_damage_list2[1] != 0:
+                                        monk_damage_taken = monk_damage_taken + monk_bauble_damage_list2[0]
+                                    if monk_bauble_damage_list3[1] != 0:
+                                        monk_damage_taken = monk_damage_taken + monk_bauble_damage_list3[0]
+                                    if unbaubleable_check == 1:
+                                        monk_damage_taken = monk_damage_taken + bauble_damage
                                     champion2_hp = champion2_hp - math.ceil(monk_damage_taken)
                                     champion2_lastRoundDamageTaken_list.append(math.ceil(monk_damage_taken))
                                     if champion2_hp < 0:
@@ -7980,27 +7980,27 @@ class GameFrame(tk.Frame):
                                         elif immune == "Evasive Manoeuvres":
                                             self.apply_taunt(2, MASTER_FENCER.title, 1)
                                 elif CHAMPION_LIST[0] == MONK.title:
-                                    stagger_damage = self.calculate_ai_damage(3, 2, 0)
-                                    unstaggerable_check = 0
-                                    if monk_stagger_damage_list1[1] == 0:
-                                        monk_stagger_damage_list1 = [math.ceil(stagger_damage / 3), 3]
+                                    bauble_damage = self.calculate_ai_damage(3, 2, 0)
+                                    unbaubleable_check = 0
+                                    if monk_bauble_damage_list1[1] == 0:
+                                        monk_bauble_damage_list1 = [math.ceil(bauble_damage / 3), 3]
                                     else:
-                                        if monk_stagger_damage_list2[1] == 0:
-                                            monk_stagger_damage_list2 = [math.ceil(stagger_damage / 3), 3]
+                                        if monk_bauble_damage_list2[1] == 0:
+                                            monk_bauble_damage_list2 = [math.ceil(bauble_damage / 3), 3]
                                         else:
-                                            if monk_stagger_damage_list3[1] == 0:
-                                                monk_stagger_damage_list3 = [math.ceil(stagger_damage / 3), 3]
+                                            if monk_bauble_damage_list3[1] == 0:
+                                                monk_bauble_damage_list3 = [math.ceil(bauble_damage / 3), 3]
                                             else:
-                                                unstaggerable_check = 1
+                                                unbaubleable_check = 1
                                     monk_damage_taken = 0
-                                    if monk_stagger_damage_list1[1] != 0:
-                                        monk_damage_taken = monk_damage_taken + monk_stagger_damage_list1[0]
-                                    if monk_stagger_damage_list2[1] != 0:
-                                        monk_damage_taken = monk_damage_taken + monk_stagger_damage_list2[0]
-                                    if monk_stagger_damage_list3[1] != 0:
-                                        monk_damage_taken = monk_damage_taken + monk_stagger_damage_list3[0]
-                                    if unstaggerable_check == 1:
-                                        monk_damage_taken = monk_damage_taken + stagger_damage
+                                    if monk_bauble_damage_list1[1] != 0:
+                                        monk_damage_taken = monk_damage_taken + monk_bauble_damage_list1[0]
+                                    if monk_bauble_damage_list2[1] != 0:
+                                        monk_damage_taken = monk_damage_taken + monk_bauble_damage_list2[0]
+                                    if monk_bauble_damage_list3[1] != 0:
+                                        monk_damage_taken = monk_damage_taken + monk_bauble_damage_list3[0]
+                                    if unbaubleable_check == 1:
+                                        monk_damage_taken = monk_damage_taken + bauble_damage
                                     champion3_hp = champion3_hp - math.ceil(monk_damage_taken)
                                     champion3_lastRoundDamageTaken_list.append(math.ceil(monk_damage_taken))
                                     if champion3_hp < 0:
@@ -8096,27 +8096,27 @@ class GameFrame(tk.Frame):
                                         elif immune == "Evasive Manoeuvres":
                                             self.apply_taunt(2, MASTER_FENCER.title, 1)
                                 elif CHAMPION_LIST[0] == MONK.title:
-                                    stagger_damage = self.calculate_ai_damage(4, 2, 0)
-                                    unstaggerable_check = 0
-                                    if monk_stagger_damage_list1[1] == 0:
-                                        monk_stagger_damage_list1 = [math.ceil(stagger_damage / 3), 3]
+                                    bauble_damage = self.calculate_ai_damage(4, 2, 0)
+                                    unbaubleable_check = 0
+                                    if monk_bauble_damage_list1[1] == 0:
+                                        monk_bauble_damage_list1 = [math.ceil(bauble_damage / 3), 3]
                                     else:
-                                        if monk_stagger_damage_list2[1] == 0:
-                                            monk_stagger_damage_list2 = [math.ceil(stagger_damage / 3), 3]
+                                        if monk_bauble_damage_list2[1] == 0:
+                                            monk_bauble_damage_list2 = [math.ceil(bauble_damage / 3), 3]
                                         else:
-                                            if monk_stagger_damage_list3[1] == 0:
-                                                monk_stagger_damage_list3 = [math.ceil(stagger_damage / 3), 3]
+                                            if monk_bauble_damage_list3[1] == 0:
+                                                monk_bauble_damage_list3 = [math.ceil(bauble_damage / 3), 3]
                                             else:
-                                                unstaggerable_check = 1
+                                                unbaubleable_check = 1
                                     monk_damage_taken = 0
-                                    if monk_stagger_damage_list1[1] != 0:
-                                        monk_damage_taken = monk_damage_taken + monk_stagger_damage_list1[0]
-                                    if monk_stagger_damage_list2[1] != 0:
-                                        monk_damage_taken = monk_damage_taken + monk_stagger_damage_list2[0]
-                                    if monk_stagger_damage_list3[1] != 0:
-                                        monk_damage_taken = monk_damage_taken + monk_stagger_damage_list3[0]
-                                    if unstaggerable_check == 1:
-                                        monk_damage_taken = monk_damage_taken + stagger_damage
+                                    if monk_bauble_damage_list1[1] != 0:
+                                        monk_damage_taken = monk_damage_taken + monk_bauble_damage_list1[0]
+                                    if monk_bauble_damage_list2[1] != 0:
+                                        monk_damage_taken = monk_damage_taken + monk_bauble_damage_list2[0]
+                                    if monk_bauble_damage_list3[1] != 0:
+                                        monk_damage_taken = monk_damage_taken + monk_bauble_damage_list3[0]
+                                    if unbaubleable_check == 1:
+                                        monk_damage_taken = monk_damage_taken + bauble_damage
                                     champion4_hp = champion4_hp - math.ceil(monk_damage_taken)
                                     champion4_lastRoundDamageTaken_list.append(math.ceil(monk_damage_taken))
                                     if champion4_hp < 0:
@@ -8212,27 +8212,27 @@ class GameFrame(tk.Frame):
                                         elif immune == "Evasive Manoeuvres":
                                             self.apply_taunt(2, MASTER_FENCER.title, 1)
                                 elif CHAMPION_LIST[0] == MONK.title:
-                                    stagger_damage = self.calculate_ai_damage(5, 2, 0)
-                                    unstaggerable_check = 0
-                                    if monk_stagger_damage_list1[1] == 0:
-                                        monk_stagger_damage_list1 = [math.ceil(stagger_damage / 3), 3]
+                                    bauble_damage = self.calculate_ai_damage(5, 2, 0)
+                                    unbaubleable_check = 0
+                                    if monk_bauble_damage_list1[1] == 0:
+                                        monk_bauble_damage_list1 = [math.ceil(bauble_damage / 3), 3]
                                     else:
-                                        if monk_stagger_damage_list2[1] == 0:
-                                            monk_stagger_damage_list2 = [math.ceil(stagger_damage / 3), 3]
+                                        if monk_bauble_damage_list2[1] == 0:
+                                            monk_bauble_damage_list2 = [math.ceil(bauble_damage / 3), 3]
                                         else:
-                                            if monk_stagger_damage_list3[1] == 0:
-                                                monk_stagger_damage_list3 = [math.ceil(stagger_damage / 3), 3]
+                                            if monk_bauble_damage_list3[1] == 0:
+                                                monk_bauble_damage_list3 = [math.ceil(bauble_damage / 3), 3]
                                             else:
-                                                unstaggerable_check = 1
+                                                unbaubleable_check = 1
                                     monk_damage_taken = 0
-                                    if monk_stagger_damage_list1[1] != 0:
-                                        monk_damage_taken = monk_damage_taken + monk_stagger_damage_list1[0]
-                                    if monk_stagger_damage_list2[1] != 0:
-                                        monk_damage_taken = monk_damage_taken + monk_stagger_damage_list2[0]
-                                    if monk_stagger_damage_list3[1] != 0:
-                                        monk_damage_taken = monk_damage_taken + monk_stagger_damage_list3[0]
-                                    if unstaggerable_check == 1:
-                                        monk_damage_taken = monk_damage_taken + stagger_damage
+                                    if monk_bauble_damage_list1[1] != 0:
+                                        monk_damage_taken = monk_damage_taken + monk_bauble_damage_list1[0]
+                                    if monk_bauble_damage_list2[1] != 0:
+                                        monk_damage_taken = monk_damage_taken + monk_bauble_damage_list2[0]
+                                    if monk_bauble_damage_list3[1] != 0:
+                                        monk_damage_taken = monk_damage_taken + monk_bauble_damage_list3[0]
+                                    if unbaubleable_check == 1:
+                                        monk_damage_taken = monk_damage_taken + bauble_damage
                                     champion5_hp = champion5_hp - math.ceil(monk_damage_taken)
                                     champion5_lastRoundDamageTaken_list.append(math.ceil(monk_damage_taken))
                                     if champion5_hp < 0:
@@ -8329,27 +8329,27 @@ class GameFrame(tk.Frame):
                                         elif immune == "Evasive Manoeuvres":
                                             self.apply_taunt(2, MASTER_FENCER.title, 1)
                                 elif CHAMPION_LIST[0] == MONK.title:
-                                    stagger_damage = self.calculate_ai_damage(1, 2, 0)
-                                    unstaggerable_check = 0
-                                    if monk_stagger_damage_list1[1] == 0:
-                                        monk_stagger_damage_list1 = [math.ceil(stagger_damage / 3), 3]
+                                    bauble_damage = self.calculate_ai_damage(1, 2, 0)
+                                    unbaubleable_check = 0
+                                    if monk_bauble_damage_list1[1] == 0:
+                                        monk_bauble_damage_list1 = [math.ceil(bauble_damage / 3), 3]
                                     else:
-                                        if monk_stagger_damage_list2[1] == 0:
-                                            monk_stagger_damage_list2 = [math.ceil(stagger_damage / 3), 3]
+                                        if monk_bauble_damage_list2[1] == 0:
+                                            monk_bauble_damage_list2 = [math.ceil(bauble_damage / 3), 3]
                                         else:
-                                            if monk_stagger_damage_list3[1] == 0:
-                                                monk_stagger_damage_list3 = [math.ceil(stagger_damage / 3), 3]
+                                            if monk_bauble_damage_list3[1] == 0:
+                                                monk_bauble_damage_list3 = [math.ceil(bauble_damage / 3), 3]
                                             else:
-                                                unstaggerable_check = 1
+                                                unbaubleable_check = 1
                                     monk_damage_taken = 0
-                                    if monk_stagger_damage_list1[1] != 0:
-                                        monk_damage_taken = monk_damage_taken + monk_stagger_damage_list1[0]
-                                    if monk_stagger_damage_list2[1] != 0:
-                                        monk_damage_taken = monk_damage_taken + monk_stagger_damage_list2[0]
-                                    if monk_stagger_damage_list3[1] != 0:
-                                        monk_damage_taken = monk_damage_taken + monk_stagger_damage_list3[0]
-                                    if unstaggerable_check == 1:
-                                        monk_damage_taken = monk_damage_taken + stagger_damage
+                                    if monk_bauble_damage_list1[1] != 0:
+                                        monk_damage_taken = monk_damage_taken + monk_bauble_damage_list1[0]
+                                    if monk_bauble_damage_list2[1] != 0:
+                                        monk_damage_taken = monk_damage_taken + monk_bauble_damage_list2[0]
+                                    if monk_bauble_damage_list3[1] != 0:
+                                        monk_damage_taken = monk_damage_taken + monk_bauble_damage_list3[0]
+                                    if unbaubleable_check == 1:
+                                        monk_damage_taken = monk_damage_taken + bauble_damage
                                     champion1_hp = champion1_hp - math.ceil(monk_damage_taken)
                                     champion1_lastRoundDamageTaken_list.append(math.ceil(monk_damage_taken))
                                     if champion1_hp < 0:
@@ -8445,27 +8445,27 @@ class GameFrame(tk.Frame):
                                         elif immune == "Evasive Manoeuvres":
                                             self.apply_taunt(2, MASTER_FENCER.title, 1)
                                 elif CHAMPION_LIST[0] == MONK.title:
-                                    stagger_damage = self.calculate_ai_damage(2, 2, 0)
-                                    unstaggerable_check = 0
-                                    if monk_stagger_damage_list1[1] == 0:
-                                        monk_stagger_damage_list1 = [math.ceil(stagger_damage / 3), 3]
+                                    bauble_damage = self.calculate_ai_damage(2, 2, 0)
+                                    unbaubleable_check = 0
+                                    if monk_bauble_damage_list1[1] == 0:
+                                        monk_bauble_damage_list1 = [math.ceil(bauble_damage / 3), 3]
                                     else:
-                                        if monk_stagger_damage_list2[1] == 0:
-                                            monk_stagger_damage_list2 = [math.ceil(stagger_damage / 3), 3]
+                                        if monk_bauble_damage_list2[1] == 0:
+                                            monk_bauble_damage_list2 = [math.ceil(bauble_damage / 3), 3]
                                         else:
-                                            if monk_stagger_damage_list3[1] == 0:
-                                                monk_stagger_damage_list3 = [math.ceil(stagger_damage / 3), 3]
+                                            if monk_bauble_damage_list3[1] == 0:
+                                                monk_bauble_damage_list3 = [math.ceil(bauble_damage / 3), 3]
                                             else:
-                                                unstaggerable_check = 1
+                                                unbaubleable_check = 1
                                     monk_damage_taken = 0
-                                    if monk_stagger_damage_list1[1] != 0:
-                                        monk_damage_taken = monk_damage_taken + monk_stagger_damage_list1[0]
-                                    if monk_stagger_damage_list2[1] != 0:
-                                        monk_damage_taken = monk_damage_taken + monk_stagger_damage_list2[0]
-                                    if monk_stagger_damage_list3[1] != 0:
-                                        monk_damage_taken = monk_damage_taken + monk_stagger_damage_list3[0]
-                                    if unstaggerable_check == 1:
-                                        monk_damage_taken = monk_damage_taken + stagger_damage
+                                    if monk_bauble_damage_list1[1] != 0:
+                                        monk_damage_taken = monk_damage_taken + monk_bauble_damage_list1[0]
+                                    if monk_bauble_damage_list2[1] != 0:
+                                        monk_damage_taken = monk_damage_taken + monk_bauble_damage_list2[0]
+                                    if monk_bauble_damage_list3[1] != 0:
+                                        monk_damage_taken = monk_damage_taken + monk_bauble_damage_list3[0]
+                                    if unbaubleable_check == 1:
+                                        monk_damage_taken = monk_damage_taken + bauble_damage
                                     champion2_hp = champion2_hp - math.ceil(monk_damage_taken)
                                     champion2_lastRoundDamageTaken_list.append(math.ceil(monk_damage_taken))
                                     if champion2_hp < 0:
@@ -8561,27 +8561,27 @@ class GameFrame(tk.Frame):
                                         elif immune == "Evasive Manoeuvres":
                                             self.apply_taunt(2, MASTER_FENCER.title, 1)
                                 elif CHAMPION_LIST[0] == MONK.title:
-                                    stagger_damage = self.calculate_ai_damage(3, 2, 0)
-                                    unstaggerable_check = 0
-                                    if monk_stagger_damage_list1[1] == 0:
-                                        monk_stagger_damage_list1 = [math.ceil(stagger_damage / 3), 3]
+                                    bauble_damage = self.calculate_ai_damage(3, 2, 0)
+                                    unbaubleable_check = 0
+                                    if monk_bauble_damage_list1[1] == 0:
+                                        monk_bauble_damage_list1 = [math.ceil(bauble_damage / 3), 3]
                                     else:
-                                        if monk_stagger_damage_list2[1] == 0:
-                                            monk_stagger_damage_list2 = [math.ceil(stagger_damage / 3), 3]
+                                        if monk_bauble_damage_list2[1] == 0:
+                                            monk_bauble_damage_list2 = [math.ceil(bauble_damage / 3), 3]
                                         else:
-                                            if monk_stagger_damage_list3[1] == 0:
-                                                monk_stagger_damage_list3 = [math.ceil(stagger_damage / 3), 3]
+                                            if monk_bauble_damage_list3[1] == 0:
+                                                monk_bauble_damage_list3 = [math.ceil(bauble_damage / 3), 3]
                                             else:
-                                                unstaggerable_check = 1
+                                                unbaubleable_check = 1
                                     monk_damage_taken = 0
-                                    if monk_stagger_damage_list1[1] != 0:
-                                        monk_damage_taken = monk_damage_taken + monk_stagger_damage_list1[0]
-                                    if monk_stagger_damage_list2[1] != 0:
-                                        monk_damage_taken = monk_damage_taken + monk_stagger_damage_list2[0]
-                                    if monk_stagger_damage_list3[1] != 0:
-                                        monk_damage_taken = monk_damage_taken + monk_stagger_damage_list3[0]
-                                    if unstaggerable_check == 1:
-                                        monk_damage_taken = monk_damage_taken + stagger_damage
+                                    if monk_bauble_damage_list1[1] != 0:
+                                        monk_damage_taken = monk_damage_taken + monk_bauble_damage_list1[0]
+                                    if monk_bauble_damage_list2[1] != 0:
+                                        monk_damage_taken = monk_damage_taken + monk_bauble_damage_list2[0]
+                                    if monk_bauble_damage_list3[1] != 0:
+                                        monk_damage_taken = monk_damage_taken + monk_bauble_damage_list3[0]
+                                    if unbaubleable_check == 1:
+                                        monk_damage_taken = monk_damage_taken + bauble_damage
                                     champion3_hp = champion3_hp - math.ceil(monk_damage_taken)
                                     champion3_lastRoundDamageTaken_list.append(math.ceil(monk_damage_taken))
                                     if champion3_hp < 0:
@@ -8677,27 +8677,27 @@ class GameFrame(tk.Frame):
                                         elif immune == "Evasive Manoeuvres":
                                             self.apply_taunt(2, MASTER_FENCER.title, 1)
                                 elif CHAMPION_LIST[0] == MONK.title:
-                                    stagger_damage = self.calculate_ai_damage(4, 2, 0)
-                                    unstaggerable_check = 0
-                                    if monk_stagger_damage_list1[1] == 0:
-                                        monk_stagger_damage_list1 = [math.ceil(stagger_damage / 3), 3]
+                                    bauble_damage = self.calculate_ai_damage(4, 2, 0)
+                                    unbaubleable_check = 0
+                                    if monk_bauble_damage_list1[1] == 0:
+                                        monk_bauble_damage_list1 = [math.ceil(bauble_damage / 3), 3]
                                     else:
-                                        if monk_stagger_damage_list2[1] == 0:
-                                            monk_stagger_damage_list2 = [math.ceil(stagger_damage / 3), 3]
+                                        if monk_bauble_damage_list2[1] == 0:
+                                            monk_bauble_damage_list2 = [math.ceil(bauble_damage / 3), 3]
                                         else:
-                                            if monk_stagger_damage_list3[1] == 0:
-                                                monk_stagger_damage_list3 = [math.ceil(stagger_damage / 3), 3]
+                                            if monk_bauble_damage_list3[1] == 0:
+                                                monk_bauble_damage_list3 = [math.ceil(bauble_damage / 3), 3]
                                             else:
-                                                unstaggerable_check = 1
+                                                unbaubleable_check = 1
                                     monk_damage_taken = 0
-                                    if monk_stagger_damage_list1[1] != 0:
-                                        monk_damage_taken = monk_damage_taken + monk_stagger_damage_list1[0]
-                                    if monk_stagger_damage_list2[1] != 0:
-                                        monk_damage_taken = monk_damage_taken + monk_stagger_damage_list2[0]
-                                    if monk_stagger_damage_list3[1] != 0:
-                                        monk_damage_taken = monk_damage_taken + monk_stagger_damage_list3[0]
-                                    if unstaggerable_check == 1:
-                                        monk_damage_taken = monk_damage_taken + stagger_damage
+                                    if monk_bauble_damage_list1[1] != 0:
+                                        monk_damage_taken = monk_damage_taken + monk_bauble_damage_list1[0]
+                                    if monk_bauble_damage_list2[1] != 0:
+                                        monk_damage_taken = monk_damage_taken + monk_bauble_damage_list2[0]
+                                    if monk_bauble_damage_list3[1] != 0:
+                                        monk_damage_taken = monk_damage_taken + monk_bauble_damage_list3[0]
+                                    if unbaubleable_check == 1:
+                                        monk_damage_taken = monk_damage_taken + bauble_damage
                                     champion4_hp = champion4_hp - math.ceil(monk_damage_taken)
                                     champion4_lastRoundDamageTaken_list.append(math.ceil(monk_damage_taken))
                                     if champion4_hp < 0:
@@ -8793,27 +8793,27 @@ class GameFrame(tk.Frame):
                                         elif immune == "Evasive Manoeuvres":
                                             self.apply_taunt(2, MASTER_FENCER.title, 1)
                                 elif CHAMPION_LIST[0] == MONK.title:
-                                    stagger_damage = self.calculate_ai_damage(5, 2, 0)
-                                    unstaggerable_check = 0
-                                    if monk_stagger_damage_list1[1] == 0:
-                                        monk_stagger_damage_list1 = [math.ceil(stagger_damage / 3), 3]
+                                    bauble_damage = self.calculate_ai_damage(5, 2, 0)
+                                    unbaubleable_check = 0
+                                    if monk_bauble_damage_list1[1] == 0:
+                                        monk_bauble_damage_list1 = [math.ceil(bauble_damage / 3), 3]
                                     else:
-                                        if monk_stagger_damage_list2[1] == 0:
-                                            monk_stagger_damage_list2 = [math.ceil(stagger_damage / 3), 3]
+                                        if monk_bauble_damage_list2[1] == 0:
+                                            monk_bauble_damage_list2 = [math.ceil(bauble_damage / 3), 3]
                                         else:
-                                            if monk_stagger_damage_list3[1] == 0:
-                                                monk_stagger_damage_list3 = [math.ceil(stagger_damage / 3), 3]
+                                            if monk_bauble_damage_list3[1] == 0:
+                                                monk_bauble_damage_list3 = [math.ceil(bauble_damage / 3), 3]
                                             else:
-                                                unstaggerable_check = 1
+                                                unbaubleable_check = 1
                                     monk_damage_taken = 0
-                                    if monk_stagger_damage_list1[1] != 0:
-                                        monk_damage_taken = monk_damage_taken + monk_stagger_damage_list1[0]
-                                    if monk_stagger_damage_list2[1] != 0:
-                                        monk_damage_taken = monk_damage_taken + monk_stagger_damage_list2[0]
-                                    if monk_stagger_damage_list3[1] != 0:
-                                        monk_damage_taken = monk_damage_taken + monk_stagger_damage_list3[0]
-                                    if unstaggerable_check == 1:
-                                        monk_damage_taken = monk_damage_taken + stagger_damage
+                                    if monk_bauble_damage_list1[1] != 0:
+                                        monk_damage_taken = monk_damage_taken + monk_bauble_damage_list1[0]
+                                    if monk_bauble_damage_list2[1] != 0:
+                                        monk_damage_taken = monk_damage_taken + monk_bauble_damage_list2[0]
+                                    if monk_bauble_damage_list3[1] != 0:
+                                        monk_damage_taken = monk_damage_taken + monk_bauble_damage_list3[0]
+                                    if unbaubleable_check == 1:
+                                        monk_damage_taken = monk_damage_taken + bauble_damage
                                     champion5_hp = champion5_hp - math.ceil(monk_damage_taken)
                                     champion5_lastRoundDamageTaken_list.append(math.ceil(monk_damage_taken))
                                     if champion5_hp < 0:
@@ -8997,27 +8997,27 @@ class GameFrame(tk.Frame):
                                     elif immune == "Evasive Manoeuvres":
                                         self.apply_taunt(3, MASTER_FENCER.title, 1)
                             elif CHAMPION_LIST[0] == MONK.title:
-                                stagger_damage = self.calculate_ai_damage(1, 3, 0)
-                                unstaggerable_check = 0
-                                if monk_stagger_damage_list1[1] == 0:
-                                    monk_stagger_damage_list1 = [math.ceil(stagger_damage / 3), 3]
+                                bauble_damage = self.calculate_ai_damage(1, 3, 0)
+                                unbaubleable_check = 0
+                                if monk_bauble_damage_list1[1] == 0:
+                                    monk_bauble_damage_list1 = [math.ceil(bauble_damage / 3), 3]
                                 else:
-                                    if monk_stagger_damage_list2[1] == 0:
-                                        monk_stagger_damage_list2 = [math.ceil(stagger_damage / 3), 3]
+                                    if monk_bauble_damage_list2[1] == 0:
+                                        monk_bauble_damage_list2 = [math.ceil(bauble_damage / 3), 3]
                                     else:
-                                        if monk_stagger_damage_list3[1] == 0:
-                                            monk_stagger_damage_list3 = [math.ceil(stagger_damage / 3), 3]
+                                        if monk_bauble_damage_list3[1] == 0:
+                                            monk_bauble_damage_list3 = [math.ceil(bauble_damage / 3), 3]
                                         else:
-                                            unstaggerable_check = 1
+                                            unbaubleable_check = 1
                                 monk_damage_taken = 0
-                                if monk_stagger_damage_list1[1] != 0:
-                                    monk_damage_taken = monk_damage_taken + monk_stagger_damage_list1[0]
-                                if monk_stagger_damage_list2[1] != 0:
-                                    monk_damage_taken = monk_damage_taken + monk_stagger_damage_list2[0]
-                                if monk_stagger_damage_list3[1] != 0:
-                                    monk_damage_taken = monk_damage_taken + monk_stagger_damage_list3[0]
-                                if unstaggerable_check == 1:
-                                    monk_damage_taken = monk_damage_taken + stagger_damage
+                                if monk_bauble_damage_list1[1] != 0:
+                                    monk_damage_taken = monk_damage_taken + monk_bauble_damage_list1[0]
+                                if monk_bauble_damage_list2[1] != 0:
+                                    monk_damage_taken = monk_damage_taken + monk_bauble_damage_list2[0]
+                                if monk_bauble_damage_list3[1] != 0:
+                                    monk_damage_taken = monk_damage_taken + monk_bauble_damage_list3[0]
+                                if unbaubleable_check == 1:
+                                    monk_damage_taken = monk_damage_taken + bauble_damage
                                 champion1_hp = champion1_hp - math.ceil(monk_damage_taken)
                                 champion1_lastRoundDamageTaken_list.append(math.ceil(monk_damage_taken))
                                 if champion1_hp < 0:
@@ -9095,27 +9095,27 @@ class GameFrame(tk.Frame):
                                     elif immune == "Evasive Manoeuvres":
                                         self.apply_taunt(3, MASTER_FENCER.title, 1)
                             elif CHAMPION_LIST[0] == MONK.title:
-                                stagger_damage = self.calculate_ai_damage(2, 3, 0)
-                                unstaggerable_check = 0
-                                if monk_stagger_damage_list1[1] == 0:
-                                    monk_stagger_damage_list1 = [math.ceil(stagger_damage / 3), 3]
+                                bauble_damage = self.calculate_ai_damage(2, 3, 0)
+                                unbaubleable_check = 0
+                                if monk_bauble_damage_list1[1] == 0:
+                                    monk_bauble_damage_list1 = [math.ceil(bauble_damage / 3), 3]
                                 else:
-                                    if monk_stagger_damage_list2[1] == 0:
-                                        monk_stagger_damage_list2 = [math.ceil(stagger_damage / 3), 3]
+                                    if monk_bauble_damage_list2[1] == 0:
+                                        monk_bauble_damage_list2 = [math.ceil(bauble_damage / 3), 3]
                                     else:
-                                        if monk_stagger_damage_list3[1] == 0:
-                                            monk_stagger_damage_list3 = [math.ceil(stagger_damage / 3), 3]
+                                        if monk_bauble_damage_list3[1] == 0:
+                                            monk_bauble_damage_list3 = [math.ceil(bauble_damage / 3), 3]
                                         else:
-                                            unstaggerable_check = 1
+                                            unbaubleable_check = 1
                                 monk_damage_taken = 0
-                                if monk_stagger_damage_list1[1] != 0:
-                                    monk_damage_taken = monk_damage_taken + monk_stagger_damage_list1[0]
-                                if monk_stagger_damage_list2[1] != 0:
-                                    monk_damage_taken = monk_damage_taken + monk_stagger_damage_list2[0]
-                                if monk_stagger_damage_list3[1] != 0:
-                                    monk_damage_taken = monk_damage_taken + monk_stagger_damage_list3[0]
-                                if unstaggerable_check == 1:
-                                    monk_damage_taken = monk_damage_taken + stagger_damage
+                                if monk_bauble_damage_list1[1] != 0:
+                                    monk_damage_taken = monk_damage_taken + monk_bauble_damage_list1[0]
+                                if monk_bauble_damage_list2[1] != 0:
+                                    monk_damage_taken = monk_damage_taken + monk_bauble_damage_list2[0]
+                                if monk_bauble_damage_list3[1] != 0:
+                                    monk_damage_taken = monk_damage_taken + monk_bauble_damage_list3[0]
+                                if unbaubleable_check == 1:
+                                    monk_damage_taken = monk_damage_taken + bauble_damage
                                 champion2_hp = champion2_hp - math.ceil(monk_damage_taken)
                                 champion2_lastRoundDamageTaken_list.append(math.ceil(monk_damage_taken))
                                 if champion2_hp < 0:
@@ -9193,27 +9193,27 @@ class GameFrame(tk.Frame):
                                     elif immune == "Evasive Manoeuvres":
                                         self.apply_taunt(3, MASTER_FENCER.title, 1)
                             elif CHAMPION_LIST[0] == MONK.title:
-                                stagger_damage = self.calculate_ai_damage(3, 3)
-                                unstaggerable_check = 0
-                                if monk_stagger_damage_list1[1] == 0:
-                                    monk_stagger_damage_list1 = [math.ceil(stagger_damage / 3), 3]
+                                bauble_damage = self.calculate_ai_damage(3, 3)
+                                unbaubleable_check = 0
+                                if monk_bauble_damage_list1[1] == 0:
+                                    monk_bauble_damage_list1 = [math.ceil(bauble_damage / 3), 3]
                                 else:
-                                    if monk_stagger_damage_list2[1] == 0:
-                                        monk_stagger_damage_list2 = [math.ceil(stagger_damage / 3), 3]
+                                    if monk_bauble_damage_list2[1] == 0:
+                                        monk_bauble_damage_list2 = [math.ceil(bauble_damage / 3), 3]
                                     else:
-                                        if monk_stagger_damage_list3[1] == 0:
-                                            monk_stagger_damage_list3 = [math.ceil(stagger_damage / 3), 3]
+                                        if monk_bauble_damage_list3[1] == 0:
+                                            monk_bauble_damage_list3 = [math.ceil(bauble_damage / 3), 3]
                                         else:
-                                            unstaggerable_check = 1
+                                            unbaubleable_check = 1
                                 monk_damage_taken = 0
-                                if monk_stagger_damage_list1[1] != 0:
-                                    monk_damage_taken = monk_damage_taken + monk_stagger_damage_list1[0]
-                                if monk_stagger_damage_list2[1] != 0:
-                                    monk_damage_taken = monk_damage_taken + monk_stagger_damage_list2[0]
-                                if monk_stagger_damage_list3[1] != 0:
-                                    monk_damage_taken = monk_damage_taken + monk_stagger_damage_list3[0]
-                                if unstaggerable_check == 1:
-                                    monk_damage_taken = monk_damage_taken + stagger_damage
+                                if monk_bauble_damage_list1[1] != 0:
+                                    monk_damage_taken = monk_damage_taken + monk_bauble_damage_list1[0]
+                                if monk_bauble_damage_list2[1] != 0:
+                                    monk_damage_taken = monk_damage_taken + monk_bauble_damage_list2[0]
+                                if monk_bauble_damage_list3[1] != 0:
+                                    monk_damage_taken = monk_damage_taken + monk_bauble_damage_list3[0]
+                                if unbaubleable_check == 1:
+                                    monk_damage_taken = monk_damage_taken + bauble_damage
                                 champion3_hp = champion3_hp - math.ceil(monk_damage_taken)
                                 champion3_lastRoundDamageTaken_list.append(math.ceil(monk_damage_taken))
                                 if champion3_hp < 0:
@@ -9291,27 +9291,27 @@ class GameFrame(tk.Frame):
                                     elif immune == "Evasive Manoeuvres":
                                         self.apply_taunt(3, MASTER_FENCER.title, 1)
                             elif CHAMPION_LIST[0] == MONK.title:
-                                stagger_damage = self.calculate_ai_damage(4, 3, 0)
-                                unstaggerable_check = 0
-                                if monk_stagger_damage_list1[1] == 0:
-                                    monk_stagger_damage_list1 = [math.ceil(stagger_damage / 3), 3]
+                                bauble_damage = self.calculate_ai_damage(4, 3, 0)
+                                unbaubleable_check = 0
+                                if monk_bauble_damage_list1[1] == 0:
+                                    monk_bauble_damage_list1 = [math.ceil(bauble_damage / 3), 3]
                                 else:
-                                    if monk_stagger_damage_list2[1] == 0:
-                                        monk_stagger_damage_list2 = [math.ceil(stagger_damage / 3), 3]
+                                    if monk_bauble_damage_list2[1] == 0:
+                                        monk_bauble_damage_list2 = [math.ceil(bauble_damage / 3), 3]
                                     else:
-                                        if monk_stagger_damage_list3[1] == 0:
-                                            monk_stagger_damage_list3 = [math.ceil(stagger_damage / 3), 3]
+                                        if monk_bauble_damage_list3[1] == 0:
+                                            monk_bauble_damage_list3 = [math.ceil(bauble_damage / 3), 3]
                                         else:
-                                            unstaggerable_check = 1
+                                            unbaubleable_check = 1
                                 monk_damage_taken = 0
-                                if monk_stagger_damage_list1[1] != 0:
-                                    monk_damage_taken = monk_damage_taken + monk_stagger_damage_list1[0]
-                                if monk_stagger_damage_list2[1] != 0:
-                                    monk_damage_taken = monk_damage_taken + monk_stagger_damage_list2[0]
-                                if monk_stagger_damage_list3[1] != 0:
-                                    monk_damage_taken = monk_damage_taken + monk_stagger_damage_list3[0]
-                                if unstaggerable_check == 1:
-                                    monk_damage_taken = monk_damage_taken + stagger_damage
+                                if monk_bauble_damage_list1[1] != 0:
+                                    monk_damage_taken = monk_damage_taken + monk_bauble_damage_list1[0]
+                                if monk_bauble_damage_list2[1] != 0:
+                                    monk_damage_taken = monk_damage_taken + monk_bauble_damage_list2[0]
+                                if monk_bauble_damage_list3[1] != 0:
+                                    monk_damage_taken = monk_damage_taken + monk_bauble_damage_list3[0]
+                                if unbaubleable_check == 1:
+                                    monk_damage_taken = monk_damage_taken + bauble_damage
                                 champion4_hp = champion4_hp - math.ceil(monk_damage_taken)
                                 champion4_lastRoundDamageTaken_list.append(math.ceil(monk_damage_taken))
                                 if champion4_hp < 0:
@@ -9389,27 +9389,27 @@ class GameFrame(tk.Frame):
                                     elif immune == "Evasive Manoeuvres":
                                         self.apply_taunt(3, MASTER_FENCER.title, 1)
                             elif CHAMPION_LIST[0] == MONK.title:
-                                stagger_damage = self.calculate_ai_damage(5, 3, 0)
-                                unstaggerable_check = 0
-                                if monk_stagger_damage_list1[1] == 0:
-                                    monk_stagger_damage_list1 = [math.ceil(stagger_damage / 3), 3]
+                                bauble_damage = self.calculate_ai_damage(5, 3, 0)
+                                unbaubleable_check = 0
+                                if monk_bauble_damage_list1[1] == 0:
+                                    monk_bauble_damage_list1 = [math.ceil(bauble_damage / 3), 3]
                                 else:
-                                    if monk_stagger_damage_list2[1] == 0:
-                                        monk_stagger_damage_list2 = [math.ceil(stagger_damage / 3), 3]
+                                    if monk_bauble_damage_list2[1] == 0:
+                                        monk_bauble_damage_list2 = [math.ceil(bauble_damage / 3), 3]
                                     else:
-                                        if monk_stagger_damage_list3[1] == 0:
-                                            monk_stagger_damage_list3 = [math.ceil(stagger_damage / 3), 3]
+                                        if monk_bauble_damage_list3[1] == 0:
+                                            monk_bauble_damage_list3 = [math.ceil(bauble_damage / 3), 3]
                                         else:
-                                            unstaggerable_check = 1
+                                            unbaubleable_check = 1
                                 monk_damage_taken = 0
-                                if monk_stagger_damage_list1[1] != 0:
-                                    monk_damage_taken = monk_damage_taken + monk_stagger_damage_list1[0]
-                                if monk_stagger_damage_list2[1] != 0:
-                                    monk_damage_taken = monk_damage_taken + monk_stagger_damage_list2[0]
-                                if monk_stagger_damage_list3[1] != 0:
-                                    monk_damage_taken = monk_damage_taken + monk_stagger_damage_list3[0]
-                                if unstaggerable_check == 1:
-                                    monk_damage_taken = monk_damage_taken + stagger_damage
+                                if monk_bauble_damage_list1[1] != 0:
+                                    monk_damage_taken = monk_damage_taken + monk_bauble_damage_list1[0]
+                                if monk_bauble_damage_list2[1] != 0:
+                                    monk_damage_taken = monk_damage_taken + monk_bauble_damage_list2[0]
+                                if monk_bauble_damage_list3[1] != 0:
+                                    monk_damage_taken = monk_damage_taken + monk_bauble_damage_list3[0]
+                                if unbaubleable_check == 1:
+                                    monk_damage_taken = monk_damage_taken + bauble_damage
                                 champion5_hp = champion5_hp - math.ceil(monk_damage_taken)
                                 champion5_lastRoundDamageTaken_list.append(math.ceil(monk_damage_taken))
                                 if champion5_hp < 0:
@@ -9489,27 +9489,27 @@ class GameFrame(tk.Frame):
                                         elif immune == "Evasive Manoeuvres":
                                             self.apply_taunt(3, MASTER_FENCER.title, 1)
                                 elif CHAMPION_LIST[0] == MONK.title:
-                                    stagger_damage = self.calculate_ai_damage(1, 3, 0)
-                                    unstaggerable_check = 0
-                                    if monk_stagger_damage_list1[1] == 0:
-                                        monk_stagger_damage_list1 = [math.ceil(stagger_damage / 3), 3]
+                                    bauble_damage = self.calculate_ai_damage(1, 3, 0)
+                                    unbaubleable_check = 0
+                                    if monk_bauble_damage_list1[1] == 0:
+                                        monk_bauble_damage_list1 = [math.ceil(bauble_damage / 3), 3]
                                     else:
-                                        if monk_stagger_damage_list2[1] == 0:
-                                            monk_stagger_damage_list2 = [math.ceil(stagger_damage / 3), 3]
+                                        if monk_bauble_damage_list2[1] == 0:
+                                            monk_bauble_damage_list2 = [math.ceil(bauble_damage / 3), 3]
                                         else:
-                                            if monk_stagger_damage_list3[1] == 0:
-                                                monk_stagger_damage_list3 = [math.ceil(stagger_damage / 3), 3]
+                                            if monk_bauble_damage_list3[1] == 0:
+                                                monk_bauble_damage_list3 = [math.ceil(bauble_damage / 3), 3]
                                             else:
-                                                unstaggerable_check = 1
+                                                unbaubleable_check = 1
                                     monk_damage_taken = 0
-                                    if monk_stagger_damage_list1[1] != 0:
-                                        monk_damage_taken = monk_damage_taken + monk_stagger_damage_list1[0]
-                                    if monk_stagger_damage_list2[1] != 0:
-                                        monk_damage_taken = monk_damage_taken + monk_stagger_damage_list2[0]
-                                    if monk_stagger_damage_list3[1] != 0:
-                                        monk_damage_taken = monk_damage_taken + monk_stagger_damage_list3[0]
-                                    if unstaggerable_check == 1:
-                                        monk_damage_taken = monk_damage_taken + stagger_damage
+                                    if monk_bauble_damage_list1[1] != 0:
+                                        monk_damage_taken = monk_damage_taken + monk_bauble_damage_list1[0]
+                                    if monk_bauble_damage_list2[1] != 0:
+                                        monk_damage_taken = monk_damage_taken + monk_bauble_damage_list2[0]
+                                    if monk_bauble_damage_list3[1] != 0:
+                                        monk_damage_taken = monk_damage_taken + monk_bauble_damage_list3[0]
+                                    if unbaubleable_check == 1:
+                                        monk_damage_taken = monk_damage_taken + bauble_damage
                                     champion1_hp = champion1_hp - math.ceil(monk_damage_taken)
                                     champion1_lastRoundDamageTaken_list.append(math.ceil(monk_damage_taken))
                                     if champion1_hp < 0:
@@ -9605,27 +9605,27 @@ class GameFrame(tk.Frame):
                                         elif immune == "Evasive Manoeuvres":
                                             self.apply_taunt(3, MASTER_FENCER.title, 1)
                                 elif CHAMPION_LIST[0] == MONK.title:
-                                    stagger_damage = self.calculate_ai_damage(2, 3, 0)
-                                    unstaggerable_check = 0
-                                    if monk_stagger_damage_list1[1] == 0:
-                                        monk_stagger_damage_list1 = [math.ceil(stagger_damage / 3), 3]
+                                    bauble_damage = self.calculate_ai_damage(2, 3, 0)
+                                    unbaubleable_check = 0
+                                    if monk_bauble_damage_list1[1] == 0:
+                                        monk_bauble_damage_list1 = [math.ceil(bauble_damage / 3), 3]
                                     else:
-                                        if monk_stagger_damage_list2[1] == 0:
-                                            monk_stagger_damage_list2 = [math.ceil(stagger_damage / 3), 3]
+                                        if monk_bauble_damage_list2[1] == 0:
+                                            monk_bauble_damage_list2 = [math.ceil(bauble_damage / 3), 3]
                                         else:
-                                            if monk_stagger_damage_list3[1] == 0:
-                                                monk_stagger_damage_list3 = [math.ceil(stagger_damage / 3), 3]
+                                            if monk_bauble_damage_list3[1] == 0:
+                                                monk_bauble_damage_list3 = [math.ceil(bauble_damage / 3), 3]
                                             else:
-                                                unstaggerable_check = 1
+                                                unbaubleable_check = 1
                                     monk_damage_taken = 0
-                                    if monk_stagger_damage_list1[1] != 0:
-                                        monk_damage_taken = monk_damage_taken + monk_stagger_damage_list1[0]
-                                    if monk_stagger_damage_list2[1] != 0:
-                                        monk_damage_taken = monk_damage_taken + monk_stagger_damage_list2[0]
-                                    if monk_stagger_damage_list3[1] != 0:
-                                        monk_damage_taken = monk_damage_taken + monk_stagger_damage_list3[0]
-                                    if unstaggerable_check == 1:
-                                        monk_damage_taken = monk_damage_taken + stagger_damage
+                                    if monk_bauble_damage_list1[1] != 0:
+                                        monk_damage_taken = monk_damage_taken + monk_bauble_damage_list1[0]
+                                    if monk_bauble_damage_list2[1] != 0:
+                                        monk_damage_taken = monk_damage_taken + monk_bauble_damage_list2[0]
+                                    if monk_bauble_damage_list3[1] != 0:
+                                        monk_damage_taken = monk_damage_taken + monk_bauble_damage_list3[0]
+                                    if unbaubleable_check == 1:
+                                        monk_damage_taken = monk_damage_taken + bauble_damage
                                     champion2_hp = champion2_hp - math.ceil(monk_damage_taken)
                                     champion2_lastRoundDamageTaken_list.append(math.ceil(monk_damage_taken))
                                     if champion2_hp < 0:
@@ -9721,27 +9721,27 @@ class GameFrame(tk.Frame):
                                         elif immune == "Evasive Manoeuvres":
                                             self.apply_taunt(3, MASTER_FENCER.title, 1)
                                 elif CHAMPION_LIST[0] == MONK.title:
-                                    stagger_damage = self.calculate_ai_damage(3, 3, 0)
-                                    unstaggerable_check = 0
-                                    if monk_stagger_damage_list1[1] == 0:
-                                        monk_stagger_damage_list1 = [math.ceil(stagger_damage / 3), 3]
+                                    bauble_damage = self.calculate_ai_damage(3, 3, 0)
+                                    unbaubleable_check = 0
+                                    if monk_bauble_damage_list1[1] == 0:
+                                        monk_bauble_damage_list1 = [math.ceil(bauble_damage / 3), 3]
                                     else:
-                                        if monk_stagger_damage_list2[1] == 0:
-                                            monk_stagger_damage_list2 = [math.ceil(stagger_damage / 3), 3]
+                                        if monk_bauble_damage_list2[1] == 0:
+                                            monk_bauble_damage_list2 = [math.ceil(bauble_damage / 3), 3]
                                         else:
-                                            if monk_stagger_damage_list3[1] == 0:
-                                                monk_stagger_damage_list3 = [math.ceil(stagger_damage / 3), 3]
+                                            if monk_bauble_damage_list3[1] == 0:
+                                                monk_bauble_damage_list3 = [math.ceil(bauble_damage / 3), 3]
                                             else:
-                                                unstaggerable_check = 1
+                                                unbaubleable_check = 1
                                     monk_damage_taken = 0
-                                    if monk_stagger_damage_list1[1] != 0:
-                                        monk_damage_taken = monk_damage_taken + monk_stagger_damage_list1[0]
-                                    if monk_stagger_damage_list2[1] != 0:
-                                        monk_damage_taken = monk_damage_taken + monk_stagger_damage_list2[0]
-                                    if monk_stagger_damage_list3[1] != 0:
-                                        monk_damage_taken = monk_damage_taken + monk_stagger_damage_list3[0]
-                                    if unstaggerable_check == 1:
-                                        monk_damage_taken = monk_damage_taken + stagger_damage
+                                    if monk_bauble_damage_list1[1] != 0:
+                                        monk_damage_taken = monk_damage_taken + monk_bauble_damage_list1[0]
+                                    if monk_bauble_damage_list2[1] != 0:
+                                        monk_damage_taken = monk_damage_taken + monk_bauble_damage_list2[0]
+                                    if monk_bauble_damage_list3[1] != 0:
+                                        monk_damage_taken = monk_damage_taken + monk_bauble_damage_list3[0]
+                                    if unbaubleable_check == 1:
+                                        monk_damage_taken = monk_damage_taken + bauble_damage
                                     champion3_hp = champion3_hp - math.ceil(monk_damage_taken)
                                     champion3_lastRoundDamageTaken_list.append(math.ceil(monk_damage_taken))
                                     if champion3_hp < 0:
@@ -9837,27 +9837,27 @@ class GameFrame(tk.Frame):
                                         elif immune == "Evasive Manoeuvres":
                                             self.apply_taunt(3, MASTER_FENCER.title, 1)
                                 elif CHAMPION_LIST[0] == MONK.title:
-                                    stagger_damage = self.calculate_ai_damage(4, 3, 0)
-                                    unstaggerable_check = 0
-                                    if monk_stagger_damage_list1[1] == 0:
-                                        monk_stagger_damage_list1 = [math.ceil(stagger_damage / 3), 3]
+                                    bauble_damage = self.calculate_ai_damage(4, 3, 0)
+                                    unbaubleable_check = 0
+                                    if monk_bauble_damage_list1[1] == 0:
+                                        monk_bauble_damage_list1 = [math.ceil(bauble_damage / 3), 3]
                                     else:
-                                        if monk_stagger_damage_list2[1] == 0:
-                                            monk_stagger_damage_list2 = [math.ceil(stagger_damage / 3), 3]
+                                        if monk_bauble_damage_list2[1] == 0:
+                                            monk_bauble_damage_list2 = [math.ceil(bauble_damage / 3), 3]
                                         else:
-                                            if monk_stagger_damage_list3[1] == 0:
-                                                monk_stagger_damage_list3 = [math.ceil(stagger_damage / 3), 3]
+                                            if monk_bauble_damage_list3[1] == 0:
+                                                monk_bauble_damage_list3 = [math.ceil(bauble_damage / 3), 3]
                                             else:
-                                                unstaggerable_check = 1
+                                                unbaubleable_check = 1
                                     monk_damage_taken = 0
-                                    if monk_stagger_damage_list1[1] != 0:
-                                        monk_damage_taken = monk_damage_taken + monk_stagger_damage_list1[0]
-                                    if monk_stagger_damage_list2[1] != 0:
-                                        monk_damage_taken = monk_damage_taken + monk_stagger_damage_list2[0]
-                                    if monk_stagger_damage_list3[1] != 0:
-                                        monk_damage_taken = monk_damage_taken + monk_stagger_damage_list3[0]
-                                    if unstaggerable_check == 1:
-                                        monk_damage_taken = monk_damage_taken + stagger_damage
+                                    if monk_bauble_damage_list1[1] != 0:
+                                        monk_damage_taken = monk_damage_taken + monk_bauble_damage_list1[0]
+                                    if monk_bauble_damage_list2[1] != 0:
+                                        monk_damage_taken = monk_damage_taken + monk_bauble_damage_list2[0]
+                                    if monk_bauble_damage_list3[1] != 0:
+                                        monk_damage_taken = monk_damage_taken + monk_bauble_damage_list3[0]
+                                    if unbaubleable_check == 1:
+                                        monk_damage_taken = monk_damage_taken + bauble_damage
                                     champion4_hp = champion4_hp - math.ceil(monk_damage_taken)
                                     champion4_lastRoundDamageTaken_list.append(math.ceil(monk_damage_taken))
                                     if champion4_hp < 0:
@@ -9953,27 +9953,27 @@ class GameFrame(tk.Frame):
                                         elif immune == "Evasive Manoeuvres":
                                             self.apply_taunt(3, MASTER_FENCER.title, 1)
                                 elif CHAMPION_LIST[0] == MONK.title:
-                                    stagger_damage = self.calculate_ai_damage(5, 3, 0)
-                                    unstaggerable_check = 0
-                                    if monk_stagger_damage_list1[1] == 0:
-                                        monk_stagger_damage_list1 = [math.ceil(stagger_damage / 3), 3]
+                                    bauble_damage = self.calculate_ai_damage(5, 3, 0)
+                                    unbaubleable_check = 0
+                                    if monk_bauble_damage_list1[1] == 0:
+                                        monk_bauble_damage_list1 = [math.ceil(bauble_damage / 3), 3]
                                     else:
-                                        if monk_stagger_damage_list2[1] == 0:
-                                            monk_stagger_damage_list2 = [math.ceil(stagger_damage / 3), 3]
+                                        if monk_bauble_damage_list2[1] == 0:
+                                            monk_bauble_damage_list2 = [math.ceil(bauble_damage / 3), 3]
                                         else:
-                                            if monk_stagger_damage_list3[1] == 0:
-                                                monk_stagger_damage_list3 = [math.ceil(stagger_damage / 3), 3]
+                                            if monk_bauble_damage_list3[1] == 0:
+                                                monk_bauble_damage_list3 = [math.ceil(bauble_damage / 3), 3]
                                             else:
-                                                unstaggerable_check = 1
+                                                unbaubleable_check = 1
                                     monk_damage_taken = 0
-                                    if monk_stagger_damage_list1[1] != 0:
-                                        monk_damage_taken = monk_damage_taken + monk_stagger_damage_list1[0]
-                                    if monk_stagger_damage_list2[1] != 0:
-                                        monk_damage_taken = monk_damage_taken + monk_stagger_damage_list2[0]
-                                    if monk_stagger_damage_list3[1] != 0:
-                                        monk_damage_taken = monk_damage_taken + monk_stagger_damage_list3[0]
-                                    if unstaggerable_check == 1:
-                                        monk_damage_taken = monk_damage_taken + stagger_damage
+                                    if monk_bauble_damage_list1[1] != 0:
+                                        monk_damage_taken = monk_damage_taken + monk_bauble_damage_list1[0]
+                                    if monk_bauble_damage_list2[1] != 0:
+                                        monk_damage_taken = monk_damage_taken + monk_bauble_damage_list2[0]
+                                    if monk_bauble_damage_list3[1] != 0:
+                                        monk_damage_taken = monk_damage_taken + monk_bauble_damage_list3[0]
+                                    if unbaubleable_check == 1:
+                                        monk_damage_taken = monk_damage_taken + bauble_damage
                                     champion5_hp = champion5_hp - math.ceil(monk_damage_taken)
                                     champion5_lastRoundDamageTaken_list.append(math.ceil(monk_damage_taken))
                                     if champion5_hp < 0:
@@ -10070,27 +10070,27 @@ class GameFrame(tk.Frame):
                                         elif immune == "Evasive Manoeuvres":
                                             self.apply_taunt(3, MASTER_FENCER.title, 1)
                                 elif CHAMPION_LIST[0] == MONK.title:
-                                    stagger_damage = self.calculate_ai_damage(1, 3, 0)
-                                    unstaggerable_check = 0
-                                    if monk_stagger_damage_list1[1] == 0:
-                                        monk_stagger_damage_list1 = [math.ceil(stagger_damage / 3), 3]
+                                    bauble_damage = self.calculate_ai_damage(1, 3, 0)
+                                    unbaubleable_check = 0
+                                    if monk_bauble_damage_list1[1] == 0:
+                                        monk_bauble_damage_list1 = [math.ceil(bauble_damage / 3), 3]
                                     else:
-                                        if monk_stagger_damage_list2[1] == 0:
-                                            monk_stagger_damage_list2 = [math.ceil(stagger_damage / 3), 3]
+                                        if monk_bauble_damage_list2[1] == 0:
+                                            monk_bauble_damage_list2 = [math.ceil(bauble_damage / 3), 3]
                                         else:
-                                            if monk_stagger_damage_list3[1] == 0:
-                                                monk_stagger_damage_list3 = [math.ceil(stagger_damage / 3), 3]
+                                            if monk_bauble_damage_list3[1] == 0:
+                                                monk_bauble_damage_list3 = [math.ceil(bauble_damage / 3), 3]
                                             else:
-                                                unstaggerable_check = 1
+                                                unbaubleable_check = 1
                                     monk_damage_taken = 0
-                                    if monk_stagger_damage_list1[1] != 0:
-                                        monk_damage_taken = monk_damage_taken + monk_stagger_damage_list1[0]
-                                    if monk_stagger_damage_list2[1] != 0:
-                                        monk_damage_taken = monk_damage_taken + monk_stagger_damage_list2[0]
-                                    if monk_stagger_damage_list3[1] != 0:
-                                        monk_damage_taken = monk_damage_taken + monk_stagger_damage_list3[0]
-                                    if unstaggerable_check == 1:
-                                        monk_damage_taken = monk_damage_taken + stagger_damage
+                                    if monk_bauble_damage_list1[1] != 0:
+                                        monk_damage_taken = monk_damage_taken + monk_bauble_damage_list1[0]
+                                    if monk_bauble_damage_list2[1] != 0:
+                                        monk_damage_taken = monk_damage_taken + monk_bauble_damage_list2[0]
+                                    if monk_bauble_damage_list3[1] != 0:
+                                        monk_damage_taken = monk_damage_taken + monk_bauble_damage_list3[0]
+                                    if unbaubleable_check == 1:
+                                        monk_damage_taken = monk_damage_taken + bauble_damage
                                     champion1_hp = champion1_hp - math.ceil(monk_damage_taken)
                                     champion1_lastRoundDamageTaken_list.append(math.ceil(monk_damage_taken))
                                     if champion1_hp < 0:
@@ -10186,27 +10186,27 @@ class GameFrame(tk.Frame):
                                         elif immune == "Evasive Manoeuvres":
                                             self.apply_taunt(3, MASTER_FENCER.title, 1)
                                 elif CHAMPION_LIST[0] == MONK.title:
-                                    stagger_damage = self.calculate_ai_damage(2, 3, 0)
-                                    unstaggerable_check = 0
-                                    if monk_stagger_damage_list1[1] == 0:
-                                        monk_stagger_damage_list1 = [math.ceil(stagger_damage / 3), 3]
+                                    bauble_damage = self.calculate_ai_damage(2, 3, 0)
+                                    unbaubleable_check = 0
+                                    if monk_bauble_damage_list1[1] == 0:
+                                        monk_bauble_damage_list1 = [math.ceil(bauble_damage / 3), 3]
                                     else:
-                                        if monk_stagger_damage_list2[1] == 0:
-                                            monk_stagger_damage_list2 = [math.ceil(stagger_damage / 3), 3]
+                                        if monk_bauble_damage_list2[1] == 0:
+                                            monk_bauble_damage_list2 = [math.ceil(bauble_damage / 3), 3]
                                         else:
-                                            if monk_stagger_damage_list3[1] == 0:
-                                                monk_stagger_damage_list3 = [math.ceil(stagger_damage / 3), 3]
+                                            if monk_bauble_damage_list3[1] == 0:
+                                                monk_bauble_damage_list3 = [math.ceil(bauble_damage / 3), 3]
                                             else:
-                                                unstaggerable_check = 1
+                                                unbaubleable_check = 1
                                     monk_damage_taken = 0
-                                    if monk_stagger_damage_list1[1] != 0:
-                                        monk_damage_taken = monk_damage_taken + monk_stagger_damage_list1[0]
-                                    if monk_stagger_damage_list2[1] != 0:
-                                        monk_damage_taken = monk_damage_taken + monk_stagger_damage_list2[0]
-                                    if monk_stagger_damage_list3[1] != 0:
-                                        monk_damage_taken = monk_damage_taken + monk_stagger_damage_list3[0]
-                                    if unstaggerable_check == 1:
-                                        monk_damage_taken = monk_damage_taken + stagger_damage
+                                    if monk_bauble_damage_list1[1] != 0:
+                                        monk_damage_taken = monk_damage_taken + monk_bauble_damage_list1[0]
+                                    if monk_bauble_damage_list2[1] != 0:
+                                        monk_damage_taken = monk_damage_taken + monk_bauble_damage_list2[0]
+                                    if monk_bauble_damage_list3[1] != 0:
+                                        monk_damage_taken = monk_damage_taken + monk_bauble_damage_list3[0]
+                                    if unbaubleable_check == 1:
+                                        monk_damage_taken = monk_damage_taken + bauble_damage
                                     champion2_hp = champion2_hp - math.ceil(monk_damage_taken)
                                     champion2_lastRoundDamageTaken_list.append(math.ceil(monk_damage_taken))
                                     if champion2_hp < 0:
@@ -10302,27 +10302,27 @@ class GameFrame(tk.Frame):
                                         elif immune == "Evasive Manoeuvres":
                                             self.apply_taunt(3, MASTER_FENCER.title, 1)
                                 elif CHAMPION_LIST[0] == MONK.title:
-                                    stagger_damage = self.calculate_ai_damage(3, 3, 0)
-                                    unstaggerable_check = 0
-                                    if monk_stagger_damage_list1[1] == 0:
-                                        monk_stagger_damage_list1 = [math.ceil(stagger_damage / 3), 3]
+                                    bauble_damage = self.calculate_ai_damage(3, 3, 0)
+                                    unbaubleable_check = 0
+                                    if monk_bauble_damage_list1[1] == 0:
+                                        monk_bauble_damage_list1 = [math.ceil(bauble_damage / 3), 3]
                                     else:
-                                        if monk_stagger_damage_list2[1] == 0:
-                                            monk_stagger_damage_list2 = [math.ceil(stagger_damage / 3), 3]
+                                        if monk_bauble_damage_list2[1] == 0:
+                                            monk_bauble_damage_list2 = [math.ceil(bauble_damage / 3), 3]
                                         else:
-                                            if monk_stagger_damage_list3[1] == 0:
-                                                monk_stagger_damage_list3 = [math.ceil(stagger_damage / 3), 3]
+                                            if monk_bauble_damage_list3[1] == 0:
+                                                monk_bauble_damage_list3 = [math.ceil(bauble_damage / 3), 3]
                                             else:
-                                                unstaggerable_check = 1
+                                                unbaubleable_check = 1
                                     monk_damage_taken = 0
-                                    if monk_stagger_damage_list1[1] != 0:
-                                        monk_damage_taken = monk_damage_taken + monk_stagger_damage_list1[0]
-                                    if monk_stagger_damage_list2[1] != 0:
-                                        monk_damage_taken = monk_damage_taken + monk_stagger_damage_list2[0]
-                                    if monk_stagger_damage_list3[1] != 0:
-                                        monk_damage_taken = monk_damage_taken + monk_stagger_damage_list3[0]
-                                    if unstaggerable_check == 1:
-                                        monk_damage_taken = monk_damage_taken + stagger_damage
+                                    if monk_bauble_damage_list1[1] != 0:
+                                        monk_damage_taken = monk_damage_taken + monk_bauble_damage_list1[0]
+                                    if monk_bauble_damage_list2[1] != 0:
+                                        monk_damage_taken = monk_damage_taken + monk_bauble_damage_list2[0]
+                                    if monk_bauble_damage_list3[1] != 0:
+                                        monk_damage_taken = monk_damage_taken + monk_bauble_damage_list3[0]
+                                    if unbaubleable_check == 1:
+                                        monk_damage_taken = monk_damage_taken + bauble_damage
                                     champion3_hp = champion3_hp - math.ceil(monk_damage_taken)
                                     champion3_lastRoundDamageTaken_list.append(math.ceil(monk_damage_taken))
                                     if champion3_hp < 0:
@@ -10418,27 +10418,27 @@ class GameFrame(tk.Frame):
                                         elif immune == "Evasive Manoeuvres":
                                             self.apply_taunt(3, MASTER_FENCER.title, 1)
                                 elif CHAMPION_LIST[0] == MONK.title:
-                                    stagger_damage = self.calculate_ai_damage(4, 3, 0)
-                                    unstaggerable_check = 0
-                                    if monk_stagger_damage_list1[1] == 0:
-                                        monk_stagger_damage_list1 = [math.ceil(stagger_damage / 3), 3]
+                                    bauble_damage = self.calculate_ai_damage(4, 3, 0)
+                                    unbaubleable_check = 0
+                                    if monk_bauble_damage_list1[1] == 0:
+                                        monk_bauble_damage_list1 = [math.ceil(bauble_damage / 3), 3]
                                     else:
-                                        if monk_stagger_damage_list2[1] == 0:
-                                            monk_stagger_damage_list2 = [math.ceil(stagger_damage / 3), 3]
+                                        if monk_bauble_damage_list2[1] == 0:
+                                            monk_bauble_damage_list2 = [math.ceil(bauble_damage / 3), 3]
                                         else:
-                                            if monk_stagger_damage_list3[1] == 0:
-                                                monk_stagger_damage_list3 = [math.ceil(stagger_damage / 3), 3]
+                                            if monk_bauble_damage_list3[1] == 0:
+                                                monk_bauble_damage_list3 = [math.ceil(bauble_damage / 3), 3]
                                             else:
-                                                unstaggerable_check = 1
+                                                unbaubleable_check = 1
                                     monk_damage_taken = 0
-                                    if monk_stagger_damage_list1[1] != 0:
-                                        monk_damage_taken = monk_damage_taken + monk_stagger_damage_list1[0]
-                                    if monk_stagger_damage_list2[1] != 0:
-                                        monk_damage_taken = monk_damage_taken + monk_stagger_damage_list2[0]
-                                    if monk_stagger_damage_list3[1] != 0:
-                                        monk_damage_taken = monk_damage_taken + monk_stagger_damage_list3[0]
-                                    if unstaggerable_check == 1:
-                                        monk_damage_taken = monk_damage_taken + stagger_damage
+                                    if monk_bauble_damage_list1[1] != 0:
+                                        monk_damage_taken = monk_damage_taken + monk_bauble_damage_list1[0]
+                                    if monk_bauble_damage_list2[1] != 0:
+                                        monk_damage_taken = monk_damage_taken + monk_bauble_damage_list2[0]
+                                    if monk_bauble_damage_list3[1] != 0:
+                                        monk_damage_taken = monk_damage_taken + monk_bauble_damage_list3[0]
+                                    if unbaubleable_check == 1:
+                                        monk_damage_taken = monk_damage_taken + bauble_damage
                                     champion4_hp = champion4_hp - math.ceil(monk_damage_taken)
                                     champion4_lastRoundDamageTaken_list.append(math.ceil(monk_damage_taken))
                                     if champion4_hp < 0:
@@ -10534,27 +10534,27 @@ class GameFrame(tk.Frame):
                                         elif immune == "Evasive Manoeuvres":
                                             self.apply_taunt(3, MASTER_FENCER.title, 1)
                                 elif CHAMPION_LIST[0] == MONK.title:
-                                    stagger_damage = self.calculate_ai_damage(5, 3, 0)
-                                    unstaggerable_check = 0
-                                    if monk_stagger_damage_list1[1] == 0:
-                                        monk_stagger_damage_list1 = [math.ceil(stagger_damage / 3), 3]
+                                    bauble_damage = self.calculate_ai_damage(5, 3, 0)
+                                    unbaubleable_check = 0
+                                    if monk_bauble_damage_list1[1] == 0:
+                                        monk_bauble_damage_list1 = [math.ceil(bauble_damage / 3), 3]
                                     else:
-                                        if monk_stagger_damage_list2[1] == 0:
-                                            monk_stagger_damage_list2 = [math.ceil(stagger_damage / 3), 3]
+                                        if monk_bauble_damage_list2[1] == 0:
+                                            monk_bauble_damage_list2 = [math.ceil(bauble_damage / 3), 3]
                                         else:
-                                            if monk_stagger_damage_list3[1] == 0:
-                                                monk_stagger_damage_list3 = [math.ceil(stagger_damage / 3), 3]
+                                            if monk_bauble_damage_list3[1] == 0:
+                                                monk_bauble_damage_list3 = [math.ceil(bauble_damage / 3), 3]
                                             else:
-                                                unstaggerable_check = 1
+                                                unbaubleable_check = 1
                                     monk_damage_taken = 0
-                                    if monk_stagger_damage_list1[1] != 0:
-                                        monk_damage_taken = monk_damage_taken + monk_stagger_damage_list1[0]
-                                    if monk_stagger_damage_list2[1] != 0:
-                                        monk_damage_taken = monk_damage_taken + monk_stagger_damage_list2[0]
-                                    if monk_stagger_damage_list3[1] != 0:
-                                        monk_damage_taken = monk_damage_taken + monk_stagger_damage_list3[0]
-                                    if unstaggerable_check == 1:
-                                        monk_damage_taken = monk_damage_taken + stagger_damage
+                                    if monk_bauble_damage_list1[1] != 0:
+                                        monk_damage_taken = monk_damage_taken + monk_bauble_damage_list1[0]
+                                    if monk_bauble_damage_list2[1] != 0:
+                                        monk_damage_taken = monk_damage_taken + monk_bauble_damage_list2[0]
+                                    if monk_bauble_damage_list3[1] != 0:
+                                        monk_damage_taken = monk_damage_taken + monk_bauble_damage_list3[0]
+                                    if unbaubleable_check == 1:
+                                        monk_damage_taken = monk_damage_taken + bauble_damage
                                     champion5_hp = champion5_hp - math.ceil(monk_damage_taken)
                                     champion5_lastRoundDamageTaken_list.append(math.ceil(monk_damage_taken))
                                     if champion5_hp < 0:
@@ -10738,27 +10738,27 @@ class GameFrame(tk.Frame):
                                     elif immune == "Evasive Manoeuvres":
                                         self.apply_taunt(4, MASTER_FENCER.title, 1)
                             elif CHAMPION_LIST[0] == MONK.title:
-                                stagger_damage = self.calculate_ai_damage(1, 4, 0)
-                                unstaggerable_check = 0
-                                if monk_stagger_damage_list1[1] == 0:
-                                    monk_stagger_damage_list1 = [math.ceil(stagger_damage / 3), 3]
+                                bauble_damage = self.calculate_ai_damage(1, 4, 0)
+                                unbaubleable_check = 0
+                                if monk_bauble_damage_list1[1] == 0:
+                                    monk_bauble_damage_list1 = [math.ceil(bauble_damage / 3), 3]
                                 else:
-                                    if monk_stagger_damage_list2[1] == 0:
-                                        monk_stagger_damage_list2 = [math.ceil(stagger_damage / 3), 3]
+                                    if monk_bauble_damage_list2[1] == 0:
+                                        monk_bauble_damage_list2 = [math.ceil(bauble_damage / 3), 3]
                                     else:
-                                        if monk_stagger_damage_list3[1] == 0:
-                                            monk_stagger_damage_list3 = [math.ceil(stagger_damage / 3), 3]
+                                        if monk_bauble_damage_list3[1] == 0:
+                                            monk_bauble_damage_list3 = [math.ceil(bauble_damage / 3), 3]
                                         else:
-                                            unstaggerable_check = 1
+                                            unbaubleable_check = 1
                                 monk_damage_taken = 0
-                                if monk_stagger_damage_list1[1] != 0:
-                                    monk_damage_taken = monk_damage_taken + monk_stagger_damage_list1[0]
-                                if monk_stagger_damage_list2[1] != 0:
-                                    monk_damage_taken = monk_damage_taken + monk_stagger_damage_list2[0]
-                                if monk_stagger_damage_list3[1] != 0:
-                                    monk_damage_taken = monk_damage_taken + monk_stagger_damage_list3[0]
-                                if unstaggerable_check == 1:
-                                    monk_damage_taken = monk_damage_taken + stagger_damage
+                                if monk_bauble_damage_list1[1] != 0:
+                                    monk_damage_taken = monk_damage_taken + monk_bauble_damage_list1[0]
+                                if monk_bauble_damage_list2[1] != 0:
+                                    monk_damage_taken = monk_damage_taken + monk_bauble_damage_list2[0]
+                                if monk_bauble_damage_list3[1] != 0:
+                                    monk_damage_taken = monk_damage_taken + monk_bauble_damage_list3[0]
+                                if unbaubleable_check == 1:
+                                    monk_damage_taken = monk_damage_taken + bauble_damage
                                 champion1_hp = champion1_hp - math.ceil(monk_damage_taken)
                                 champion1_lastRoundDamageTaken_list.append(math.ceil(monk_damage_taken))
                                 if champion1_hp < 0:
@@ -10836,27 +10836,27 @@ class GameFrame(tk.Frame):
                                     elif immune == "Evasive Manoeuvres":
                                         self.apply_taunt(4, MASTER_FENCER.title, 1)
                             elif CHAMPION_LIST[0] == MONK.title:
-                                stagger_damage = self.calculate_ai_damage(2, 4, 0)
-                                unstaggerable_check = 0
-                                if monk_stagger_damage_list1[1] == 0:
-                                    monk_stagger_damage_list1 = [math.ceil(stagger_damage / 3), 3]
+                                bauble_damage = self.calculate_ai_damage(2, 4, 0)
+                                unbaubleable_check = 0
+                                if monk_bauble_damage_list1[1] == 0:
+                                    monk_bauble_damage_list1 = [math.ceil(bauble_damage / 3), 3]
                                 else:
-                                    if monk_stagger_damage_list2[1] == 0:
-                                        monk_stagger_damage_list2 = [math.ceil(stagger_damage / 3), 3]
+                                    if monk_bauble_damage_list2[1] == 0:
+                                        monk_bauble_damage_list2 = [math.ceil(bauble_damage / 3), 3]
                                     else:
-                                        if monk_stagger_damage_list3[1] == 0:
-                                            monk_stagger_damage_list3 = [math.ceil(stagger_damage / 3), 3]
+                                        if monk_bauble_damage_list3[1] == 0:
+                                            monk_bauble_damage_list3 = [math.ceil(bauble_damage / 3), 3]
                                         else:
-                                            unstaggerable_check = 1
+                                            unbaubleable_check = 1
                                 monk_damage_taken = 0
-                                if monk_stagger_damage_list1[1] != 0:
-                                    monk_damage_taken = monk_damage_taken + monk_stagger_damage_list1[0]
-                                if monk_stagger_damage_list2[1] != 0:
-                                    monk_damage_taken = monk_damage_taken + monk_stagger_damage_list2[0]
-                                if monk_stagger_damage_list3[1] != 0:
-                                    monk_damage_taken = monk_damage_taken + monk_stagger_damage_list3[0]
-                                if unstaggerable_check == 1:
-                                    monk_damage_taken = monk_damage_taken + stagger_damage
+                                if monk_bauble_damage_list1[1] != 0:
+                                    monk_damage_taken = monk_damage_taken + monk_bauble_damage_list1[0]
+                                if monk_bauble_damage_list2[1] != 0:
+                                    monk_damage_taken = monk_damage_taken + monk_bauble_damage_list2[0]
+                                if monk_bauble_damage_list3[1] != 0:
+                                    monk_damage_taken = monk_damage_taken + monk_bauble_damage_list3[0]
+                                if unbaubleable_check == 1:
+                                    monk_damage_taken = monk_damage_taken + bauble_damage
                                 champion2_hp = champion2_hp - math.ceil(monk_damage_taken)
                                 champion2_lastRoundDamageTaken_list.append(math.ceil(monk_damage_taken))
                                 if champion2_hp < 0:
@@ -10934,27 +10934,27 @@ class GameFrame(tk.Frame):
                                     elif immune == "Evasive Manoeuvres":
                                         self.apply_taunt(4, MASTER_FENCER.title, 1)
                             elif CHAMPION_LIST[0] == MONK.title:
-                                stagger_damage = self.calculate_ai_damage(3, 4)
-                                unstaggerable_check = 0
-                                if monk_stagger_damage_list1[1] == 0:
-                                    monk_stagger_damage_list1 = [math.ceil(stagger_damage / 3), 3]
+                                bauble_damage = self.calculate_ai_damage(3, 4)
+                                unbaubleable_check = 0
+                                if monk_bauble_damage_list1[1] == 0:
+                                    monk_bauble_damage_list1 = [math.ceil(bauble_damage / 3), 3]
                                 else:
-                                    if monk_stagger_damage_list2[1] == 0:
-                                        monk_stagger_damage_list2 = [math.ceil(stagger_damage / 3), 3]
+                                    if monk_bauble_damage_list2[1] == 0:
+                                        monk_bauble_damage_list2 = [math.ceil(bauble_damage / 3), 3]
                                     else:
-                                        if monk_stagger_damage_list3[1] == 0:
-                                            monk_stagger_damage_list3 = [math.ceil(stagger_damage / 3), 3]
+                                        if monk_bauble_damage_list3[1] == 0:
+                                            monk_bauble_damage_list3 = [math.ceil(bauble_damage / 3), 3]
                                         else:
-                                            unstaggerable_check = 1
+                                            unbaubleable_check = 1
                                 monk_damage_taken = 0
-                                if monk_stagger_damage_list1[1] != 0:
-                                    monk_damage_taken = monk_damage_taken + monk_stagger_damage_list1[0]
-                                if monk_stagger_damage_list2[1] != 0:
-                                    monk_damage_taken = monk_damage_taken + monk_stagger_damage_list2[0]
-                                if monk_stagger_damage_list3[1] != 0:
-                                    monk_damage_taken = monk_damage_taken + monk_stagger_damage_list3[0]
-                                if unstaggerable_check == 1:
-                                    monk_damage_taken = monk_damage_taken + stagger_damage
+                                if monk_bauble_damage_list1[1] != 0:
+                                    monk_damage_taken = monk_damage_taken + monk_bauble_damage_list1[0]
+                                if monk_bauble_damage_list2[1] != 0:
+                                    monk_damage_taken = monk_damage_taken + monk_bauble_damage_list2[0]
+                                if monk_bauble_damage_list3[1] != 0:
+                                    monk_damage_taken = monk_damage_taken + monk_bauble_damage_list3[0]
+                                if unbaubleable_check == 1:
+                                    monk_damage_taken = monk_damage_taken + bauble_damage
                                 champion3_hp = champion3_hp - math.ceil(monk_damage_taken)
                                 champion3_lastRoundDamageTaken_list.append(math.ceil(monk_damage_taken))
                                 if champion3_hp < 0:
@@ -11032,27 +11032,27 @@ class GameFrame(tk.Frame):
                                     elif immune == "Evasive Manoeuvres":
                                         self.apply_taunt(4, MASTER_FENCER.title, 1)
                             elif CHAMPION_LIST[0] == MONK.title:
-                                stagger_damage = self.calculate_ai_damage(4, 4, 0)
-                                unstaggerable_check = 0
-                                if monk_stagger_damage_list1[1] == 0:
-                                    monk_stagger_damage_list1 = [math.ceil(stagger_damage / 3), 3]
+                                bauble_damage = self.calculate_ai_damage(4, 4, 0)
+                                unbaubleable_check = 0
+                                if monk_bauble_damage_list1[1] == 0:
+                                    monk_bauble_damage_list1 = [math.ceil(bauble_damage / 3), 3]
                                 else:
-                                    if monk_stagger_damage_list2[1] == 0:
-                                        monk_stagger_damage_list2 = [math.ceil(stagger_damage / 3), 3]
+                                    if monk_bauble_damage_list2[1] == 0:
+                                        monk_bauble_damage_list2 = [math.ceil(bauble_damage / 3), 3]
                                     else:
-                                        if monk_stagger_damage_list3[1] == 0:
-                                            monk_stagger_damage_list3 = [math.ceil(stagger_damage / 3), 3]
+                                        if monk_bauble_damage_list3[1] == 0:
+                                            monk_bauble_damage_list3 = [math.ceil(bauble_damage / 3), 3]
                                         else:
-                                            unstaggerable_check = 1
+                                            unbaubleable_check = 1
                                 monk_damage_taken = 0
-                                if monk_stagger_damage_list1[1] != 0:
-                                    monk_damage_taken = monk_damage_taken + monk_stagger_damage_list1[0]
-                                if monk_stagger_damage_list2[1] != 0:
-                                    monk_damage_taken = monk_damage_taken + monk_stagger_damage_list2[0]
-                                if monk_stagger_damage_list3[1] != 0:
-                                    monk_damage_taken = monk_damage_taken + monk_stagger_damage_list3[0]
-                                if unstaggerable_check == 1:
-                                    monk_damage_taken = monk_damage_taken + stagger_damage
+                                if monk_bauble_damage_list1[1] != 0:
+                                    monk_damage_taken = monk_damage_taken + monk_bauble_damage_list1[0]
+                                if monk_bauble_damage_list2[1] != 0:
+                                    monk_damage_taken = monk_damage_taken + monk_bauble_damage_list2[0]
+                                if monk_bauble_damage_list3[1] != 0:
+                                    monk_damage_taken = monk_damage_taken + monk_bauble_damage_list3[0]
+                                if unbaubleable_check == 1:
+                                    monk_damage_taken = monk_damage_taken + bauble_damage
                                 champion4_hp = champion4_hp - math.ceil(monk_damage_taken)
                                 champion4_lastRoundDamageTaken_list.append(math.ceil(monk_damage_taken))
                                 if champion4_hp < 0:
@@ -11130,27 +11130,27 @@ class GameFrame(tk.Frame):
                                     elif immune == "Evasive Manoeuvres":
                                         self.apply_taunt(4, MASTER_FENCER.title, 1)
                             elif CHAMPION_LIST[0] == MONK.title:
-                                stagger_damage = self.calculate_ai_damage(5, 4, 0)
-                                unstaggerable_check = 0
-                                if monk_stagger_damage_list1[1] == 0:
-                                    monk_stagger_damage_list1 = [math.ceil(stagger_damage / 3), 3]
+                                bauble_damage = self.calculate_ai_damage(5, 4, 0)
+                                unbaubleable_check = 0
+                                if monk_bauble_damage_list1[1] == 0:
+                                    monk_bauble_damage_list1 = [math.ceil(bauble_damage / 3), 3]
                                 else:
-                                    if monk_stagger_damage_list2[1] == 0:
-                                        monk_stagger_damage_list2 = [math.ceil(stagger_damage / 3), 3]
+                                    if monk_bauble_damage_list2[1] == 0:
+                                        monk_bauble_damage_list2 = [math.ceil(bauble_damage / 3), 3]
                                     else:
-                                        if monk_stagger_damage_list3[1] == 0:
-                                            monk_stagger_damage_list3 = [math.ceil(stagger_damage / 3), 3]
+                                        if monk_bauble_damage_list3[1] == 0:
+                                            monk_bauble_damage_list3 = [math.ceil(bauble_damage / 3), 3]
                                         else:
-                                            unstaggerable_check = 1
+                                            unbaubleable_check = 1
                                 monk_damage_taken = 0
-                                if monk_stagger_damage_list1[1] != 0:
-                                    monk_damage_taken = monk_damage_taken + monk_stagger_damage_list1[0]
-                                if monk_stagger_damage_list2[1] != 0:
-                                    monk_damage_taken = monk_damage_taken + monk_stagger_damage_list2[0]
-                                if monk_stagger_damage_list3[1] != 0:
-                                    monk_damage_taken = monk_damage_taken + monk_stagger_damage_list3[0]
-                                if unstaggerable_check == 1:
-                                    monk_damage_taken = monk_damage_taken + stagger_damage
+                                if monk_bauble_damage_list1[1] != 0:
+                                    monk_damage_taken = monk_damage_taken + monk_bauble_damage_list1[0]
+                                if monk_bauble_damage_list2[1] != 0:
+                                    monk_damage_taken = monk_damage_taken + monk_bauble_damage_list2[0]
+                                if monk_bauble_damage_list3[1] != 0:
+                                    monk_damage_taken = monk_damage_taken + monk_bauble_damage_list3[0]
+                                if unbaubleable_check == 1:
+                                    monk_damage_taken = monk_damage_taken + bauble_damage
                                 champion5_hp = champion5_hp - math.ceil(monk_damage_taken)
                                 champion5_lastRoundDamageTaken_list.append(math.ceil(monk_damage_taken))
                                 if champion5_hp < 0:
@@ -11230,27 +11230,27 @@ class GameFrame(tk.Frame):
                                         elif immune == "Evasive Manoeuvres":
                                             self.apply_taunt(4, MASTER_FENCER.title, 1)
                                 elif CHAMPION_LIST[0] == MONK.title:
-                                    stagger_damage = self.calculate_ai_damage(1, 4, 0)
-                                    unstaggerable_check = 0
-                                    if monk_stagger_damage_list1[1] == 0:
-                                        monk_stagger_damage_list1 = [math.ceil(stagger_damage / 3), 3]
+                                    bauble_damage = self.calculate_ai_damage(1, 4, 0)
+                                    unbaubleable_check = 0
+                                    if monk_bauble_damage_list1[1] == 0:
+                                        monk_bauble_damage_list1 = [math.ceil(bauble_damage / 3), 3]
                                     else:
-                                        if monk_stagger_damage_list2[1] == 0:
-                                            monk_stagger_damage_list2 = [math.ceil(stagger_damage / 3), 3]
+                                        if monk_bauble_damage_list2[1] == 0:
+                                            monk_bauble_damage_list2 = [math.ceil(bauble_damage / 3), 3]
                                         else:
-                                            if monk_stagger_damage_list3[1] == 0:
-                                                monk_stagger_damage_list3 = [math.ceil(stagger_damage / 3), 3]
+                                            if monk_bauble_damage_list3[1] == 0:
+                                                monk_bauble_damage_list3 = [math.ceil(bauble_damage / 3), 3]
                                             else:
-                                                unstaggerable_check = 1
+                                                unbaubleable_check = 1
                                     monk_damage_taken = 0
-                                    if monk_stagger_damage_list1[1] != 0:
-                                        monk_damage_taken = monk_damage_taken + monk_stagger_damage_list1[0]
-                                    if monk_stagger_damage_list2[1] != 0:
-                                        monk_damage_taken = monk_damage_taken + monk_stagger_damage_list2[0]
-                                    if monk_stagger_damage_list3[1] != 0:
-                                        monk_damage_taken = monk_damage_taken + monk_stagger_damage_list3[0]
-                                    if unstaggerable_check == 1:
-                                        monk_damage_taken = monk_damage_taken + stagger_damage
+                                    if monk_bauble_damage_list1[1] != 0:
+                                        monk_damage_taken = monk_damage_taken + monk_bauble_damage_list1[0]
+                                    if monk_bauble_damage_list2[1] != 0:
+                                        monk_damage_taken = monk_damage_taken + monk_bauble_damage_list2[0]
+                                    if monk_bauble_damage_list3[1] != 0:
+                                        monk_damage_taken = monk_damage_taken + monk_bauble_damage_list3[0]
+                                    if unbaubleable_check == 1:
+                                        monk_damage_taken = monk_damage_taken + bauble_damage
                                     champion1_hp = champion1_hp - math.ceil(monk_damage_taken)
                                     champion1_lastRoundDamageTaken_list.append(math.ceil(monk_damage_taken))
                                     if champion1_hp < 0:
@@ -11346,27 +11346,27 @@ class GameFrame(tk.Frame):
                                         elif immune == "Evasive Manoeuvres":
                                             self.apply_taunt(4, MASTER_FENCER.title, 1)
                                 elif CHAMPION_LIST[0] == MONK.title:
-                                    stagger_damage = self.calculate_ai_damage(2, 4, 0)
-                                    unstaggerable_check = 0
-                                    if monk_stagger_damage_list1[1] == 0:
-                                        monk_stagger_damage_list1 = [math.ceil(stagger_damage / 3), 3]
+                                    bauble_damage = self.calculate_ai_damage(2, 4, 0)
+                                    unbaubleable_check = 0
+                                    if monk_bauble_damage_list1[1] == 0:
+                                        monk_bauble_damage_list1 = [math.ceil(bauble_damage / 3), 3]
                                     else:
-                                        if monk_stagger_damage_list2[1] == 0:
-                                            monk_stagger_damage_list2 = [math.ceil(stagger_damage / 3), 3]
+                                        if monk_bauble_damage_list2[1] == 0:
+                                            monk_bauble_damage_list2 = [math.ceil(bauble_damage / 3), 3]
                                         else:
-                                            if monk_stagger_damage_list3[1] == 0:
-                                                monk_stagger_damage_list3 = [math.ceil(stagger_damage / 3), 3]
+                                            if monk_bauble_damage_list3[1] == 0:
+                                                monk_bauble_damage_list3 = [math.ceil(bauble_damage / 3), 3]
                                             else:
-                                                unstaggerable_check = 1
+                                                unbaubleable_check = 1
                                     monk_damage_taken = 0
-                                    if monk_stagger_damage_list1[1] != 0:
-                                        monk_damage_taken = monk_damage_taken + monk_stagger_damage_list1[0]
-                                    if monk_stagger_damage_list2[1] != 0:
-                                        monk_damage_taken = monk_damage_taken + monk_stagger_damage_list2[0]
-                                    if monk_stagger_damage_list3[1] != 0:
-                                        monk_damage_taken = monk_damage_taken + monk_stagger_damage_list3[0]
-                                    if unstaggerable_check == 1:
-                                        monk_damage_taken = monk_damage_taken + stagger_damage
+                                    if monk_bauble_damage_list1[1] != 0:
+                                        monk_damage_taken = monk_damage_taken + monk_bauble_damage_list1[0]
+                                    if monk_bauble_damage_list2[1] != 0:
+                                        monk_damage_taken = monk_damage_taken + monk_bauble_damage_list2[0]
+                                    if monk_bauble_damage_list3[1] != 0:
+                                        monk_damage_taken = monk_damage_taken + monk_bauble_damage_list3[0]
+                                    if unbaubleable_check == 1:
+                                        monk_damage_taken = monk_damage_taken + bauble_damage
                                     champion2_hp = champion2_hp - math.ceil(monk_damage_taken)
                                     champion2_lastRoundDamageTaken_list.append(math.ceil(monk_damage_taken))
                                     if champion2_hp < 0:
@@ -11462,27 +11462,27 @@ class GameFrame(tk.Frame):
                                         elif immune == "Evasive Manoeuvres":
                                             self.apply_taunt(4, MASTER_FENCER.title, 1)
                                 elif CHAMPION_LIST[0] == MONK.title:
-                                    stagger_damage = self.calculate_ai_damage(3, 4, 0)
-                                    unstaggerable_check = 0
-                                    if monk_stagger_damage_list1[1] == 0:
-                                        monk_stagger_damage_list1 = [math.ceil(stagger_damage / 3), 3]
+                                    bauble_damage = self.calculate_ai_damage(3, 4, 0)
+                                    unbaubleable_check = 0
+                                    if monk_bauble_damage_list1[1] == 0:
+                                        monk_bauble_damage_list1 = [math.ceil(bauble_damage / 3), 3]
                                     else:
-                                        if monk_stagger_damage_list2[1] == 0:
-                                            monk_stagger_damage_list2 = [math.ceil(stagger_damage / 3), 3]
+                                        if monk_bauble_damage_list2[1] == 0:
+                                            monk_bauble_damage_list2 = [math.ceil(bauble_damage / 3), 3]
                                         else:
-                                            if monk_stagger_damage_list3[1] == 0:
-                                                monk_stagger_damage_list3 = [math.ceil(stagger_damage / 3), 3]
+                                            if monk_bauble_damage_list3[1] == 0:
+                                                monk_bauble_damage_list3 = [math.ceil(bauble_damage / 3), 3]
                                             else:
-                                                unstaggerable_check = 1
+                                                unbaubleable_check = 1
                                     monk_damage_taken = 0
-                                    if monk_stagger_damage_list1[1] != 0:
-                                        monk_damage_taken = monk_damage_taken + monk_stagger_damage_list1[0]
-                                    if monk_stagger_damage_list2[1] != 0:
-                                        monk_damage_taken = monk_damage_taken + monk_stagger_damage_list2[0]
-                                    if monk_stagger_damage_list3[1] != 0:
-                                        monk_damage_taken = monk_damage_taken + monk_stagger_damage_list3[0]
-                                    if unstaggerable_check == 1:
-                                        monk_damage_taken = monk_damage_taken + stagger_damage
+                                    if monk_bauble_damage_list1[1] != 0:
+                                        monk_damage_taken = monk_damage_taken + monk_bauble_damage_list1[0]
+                                    if monk_bauble_damage_list2[1] != 0:
+                                        monk_damage_taken = monk_damage_taken + monk_bauble_damage_list2[0]
+                                    if monk_bauble_damage_list3[1] != 0:
+                                        monk_damage_taken = monk_damage_taken + monk_bauble_damage_list3[0]
+                                    if unbaubleable_check == 1:
+                                        monk_damage_taken = monk_damage_taken + bauble_damage
                                     champion3_hp = champion3_hp - math.ceil(monk_damage_taken)
                                     champion3_lastRoundDamageTaken_list.append(math.ceil(monk_damage_taken))
                                     if champion3_hp < 0:
@@ -11578,27 +11578,27 @@ class GameFrame(tk.Frame):
                                         elif immune == "Evasive Manoeuvres":
                                             self.apply_taunt(4, MASTER_FENCER.title, 1)
                                 elif CHAMPION_LIST[0] == MONK.title:
-                                    stagger_damage = self.calculate_ai_damage(4, 4, 0)
-                                    unstaggerable_check = 0
-                                    if monk_stagger_damage_list1[1] == 0:
-                                        monk_stagger_damage_list1 = [math.ceil(stagger_damage / 3), 3]
+                                    bauble_damage = self.calculate_ai_damage(4, 4, 0)
+                                    unbaubleable_check = 0
+                                    if monk_bauble_damage_list1[1] == 0:
+                                        monk_bauble_damage_list1 = [math.ceil(bauble_damage / 3), 3]
                                     else:
-                                        if monk_stagger_damage_list2[1] == 0:
-                                            monk_stagger_damage_list2 = [math.ceil(stagger_damage / 3), 3]
+                                        if monk_bauble_damage_list2[1] == 0:
+                                            monk_bauble_damage_list2 = [math.ceil(bauble_damage / 3), 3]
                                         else:
-                                            if monk_stagger_damage_list3[1] == 0:
-                                                monk_stagger_damage_list3 = [math.ceil(stagger_damage / 3), 3]
+                                            if monk_bauble_damage_list3[1] == 0:
+                                                monk_bauble_damage_list3 = [math.ceil(bauble_damage / 3), 3]
                                             else:
-                                                unstaggerable_check = 1
+                                                unbaubleable_check = 1
                                     monk_damage_taken = 0
-                                    if monk_stagger_damage_list1[1] != 0:
-                                        monk_damage_taken = monk_damage_taken + monk_stagger_damage_list1[0]
-                                    if monk_stagger_damage_list2[1] != 0:
-                                        monk_damage_taken = monk_damage_taken + monk_stagger_damage_list2[0]
-                                    if monk_stagger_damage_list3[1] != 0:
-                                        monk_damage_taken = monk_damage_taken + monk_stagger_damage_list3[0]
-                                    if unstaggerable_check == 1:
-                                        monk_damage_taken = monk_damage_taken + stagger_damage
+                                    if monk_bauble_damage_list1[1] != 0:
+                                        monk_damage_taken = monk_damage_taken + monk_bauble_damage_list1[0]
+                                    if monk_bauble_damage_list2[1] != 0:
+                                        monk_damage_taken = monk_damage_taken + monk_bauble_damage_list2[0]
+                                    if monk_bauble_damage_list3[1] != 0:
+                                        monk_damage_taken = monk_damage_taken + monk_bauble_damage_list3[0]
+                                    if unbaubleable_check == 1:
+                                        monk_damage_taken = monk_damage_taken + bauble_damage
                                     champion4_hp = champion4_hp - math.ceil(monk_damage_taken)
                                     champion4_lastRoundDamageTaken_list.append(math.ceil(monk_damage_taken))
                                     if champion4_hp < 0:
@@ -11694,27 +11694,27 @@ class GameFrame(tk.Frame):
                                         elif immune == "Evasive Manoeuvres":
                                             self.apply_taunt(4, MASTER_FENCER.title, 1)
                                 elif CHAMPION_LIST[0] == MONK.title:
-                                    stagger_damage = self.calculate_ai_damage(5, 4, 0)
-                                    unstaggerable_check = 0
-                                    if monk_stagger_damage_list1[1] == 0:
-                                        monk_stagger_damage_list1 = [math.ceil(stagger_damage / 3), 3]
+                                    bauble_damage = self.calculate_ai_damage(5, 4, 0)
+                                    unbaubleable_check = 0
+                                    if monk_bauble_damage_list1[1] == 0:
+                                        monk_bauble_damage_list1 = [math.ceil(bauble_damage / 3), 3]
                                     else:
-                                        if monk_stagger_damage_list2[1] == 0:
-                                            monk_stagger_damage_list2 = [math.ceil(stagger_damage / 3), 3]
+                                        if monk_bauble_damage_list2[1] == 0:
+                                            monk_bauble_damage_list2 = [math.ceil(bauble_damage / 3), 3]
                                         else:
-                                            if monk_stagger_damage_list3[1] == 0:
-                                                monk_stagger_damage_list3 = [math.ceil(stagger_damage / 3), 3]
+                                            if monk_bauble_damage_list3[1] == 0:
+                                                monk_bauble_damage_list3 = [math.ceil(bauble_damage / 3), 3]
                                             else:
-                                                unstaggerable_check = 1
+                                                unbaubleable_check = 1
                                     monk_damage_taken = 0
-                                    if monk_stagger_damage_list1[1] != 0:
-                                        monk_damage_taken = monk_damage_taken + monk_stagger_damage_list1[0]
-                                    if monk_stagger_damage_list2[1] != 0:
-                                        monk_damage_taken = monk_damage_taken + monk_stagger_damage_list2[0]
-                                    if monk_stagger_damage_list3[1] != 0:
-                                        monk_damage_taken = monk_damage_taken + monk_stagger_damage_list3[0]
-                                    if unstaggerable_check == 1:
-                                        monk_damage_taken = monk_damage_taken + stagger_damage
+                                    if monk_bauble_damage_list1[1] != 0:
+                                        monk_damage_taken = monk_damage_taken + monk_bauble_damage_list1[0]
+                                    if monk_bauble_damage_list2[1] != 0:
+                                        monk_damage_taken = monk_damage_taken + monk_bauble_damage_list2[0]
+                                    if monk_bauble_damage_list3[1] != 0:
+                                        monk_damage_taken = monk_damage_taken + monk_bauble_damage_list3[0]
+                                    if unbaubleable_check == 1:
+                                        monk_damage_taken = monk_damage_taken + bauble_damage
                                     champion5_hp = champion5_hp - math.ceil(monk_damage_taken)
                                     champion5_lastRoundDamageTaken_list.append(math.ceil(monk_damage_taken))
                                     if champion5_hp < 0:
@@ -11811,27 +11811,27 @@ class GameFrame(tk.Frame):
                                         elif immune == "Evasive Manoeuvres":
                                             self.apply_taunt(4, MASTER_FENCER.title, 1)
                                 elif CHAMPION_LIST[0] == MONK.title:
-                                    stagger_damage = self.calculate_ai_damage(1, 4, 0)
-                                    unstaggerable_check = 0
-                                    if monk_stagger_damage_list1[1] == 0:
-                                        monk_stagger_damage_list1 = [math.ceil(stagger_damage / 3), 3]
+                                    bauble_damage = self.calculate_ai_damage(1, 4, 0)
+                                    unbaubleable_check = 0
+                                    if monk_bauble_damage_list1[1] == 0:
+                                        monk_bauble_damage_list1 = [math.ceil(bauble_damage / 3), 3]
                                     else:
-                                        if monk_stagger_damage_list2[1] == 0:
-                                            monk_stagger_damage_list2 = [math.ceil(stagger_damage / 3), 3]
+                                        if monk_bauble_damage_list2[1] == 0:
+                                            monk_bauble_damage_list2 = [math.ceil(bauble_damage / 3), 3]
                                         else:
-                                            if monk_stagger_damage_list3[1] == 0:
-                                                monk_stagger_damage_list3 = [math.ceil(stagger_damage / 3), 3]
+                                            if monk_bauble_damage_list3[1] == 0:
+                                                monk_bauble_damage_list3 = [math.ceil(bauble_damage / 3), 3]
                                             else:
-                                                unstaggerable_check = 1
+                                                unbaubleable_check = 1
                                     monk_damage_taken = 0
-                                    if monk_stagger_damage_list1[1] != 0:
-                                        monk_damage_taken = monk_damage_taken + monk_stagger_damage_list1[0]
-                                    if monk_stagger_damage_list2[1] != 0:
-                                        monk_damage_taken = monk_damage_taken + monk_stagger_damage_list2[0]
-                                    if monk_stagger_damage_list3[1] != 0:
-                                        monk_damage_taken = monk_damage_taken + monk_stagger_damage_list3[0]
-                                    if unstaggerable_check == 1:
-                                        monk_damage_taken = monk_damage_taken + stagger_damage
+                                    if monk_bauble_damage_list1[1] != 0:
+                                        monk_damage_taken = monk_damage_taken + monk_bauble_damage_list1[0]
+                                    if monk_bauble_damage_list2[1] != 0:
+                                        monk_damage_taken = monk_damage_taken + monk_bauble_damage_list2[0]
+                                    if monk_bauble_damage_list3[1] != 0:
+                                        monk_damage_taken = monk_damage_taken + monk_bauble_damage_list3[0]
+                                    if unbaubleable_check == 1:
+                                        monk_damage_taken = monk_damage_taken + bauble_damage
                                     champion1_hp = champion1_hp - math.ceil(monk_damage_taken)
                                     champion1_lastRoundDamageTaken_list.append(math.ceil(monk_damage_taken))
                                     if champion1_hp < 0:
@@ -11927,27 +11927,27 @@ class GameFrame(tk.Frame):
                                         elif immune == "Evasive Manoeuvres":
                                             self.apply_taunt(4, MASTER_FENCER.title, 1)
                                 elif CHAMPION_LIST[0] == MONK.title:
-                                    stagger_damage = self.calculate_ai_damage(2, 4, 0)
-                                    unstaggerable_check = 0
-                                    if monk_stagger_damage_list1[1] == 0:
-                                        monk_stagger_damage_list1 = [math.ceil(stagger_damage / 3), 3]
+                                    bauble_damage = self.calculate_ai_damage(2, 4, 0)
+                                    unbaubleable_check = 0
+                                    if monk_bauble_damage_list1[1] == 0:
+                                        monk_bauble_damage_list1 = [math.ceil(bauble_damage / 3), 3]
                                     else:
-                                        if monk_stagger_damage_list2[1] == 0:
-                                            monk_stagger_damage_list2 = [math.ceil(stagger_damage / 3), 3]
+                                        if monk_bauble_damage_list2[1] == 0:
+                                            monk_bauble_damage_list2 = [math.ceil(bauble_damage / 3), 3]
                                         else:
-                                            if monk_stagger_damage_list3[1] == 0:
-                                                monk_stagger_damage_list3 = [math.ceil(stagger_damage / 3), 3]
+                                            if monk_bauble_damage_list3[1] == 0:
+                                                monk_bauble_damage_list3 = [math.ceil(bauble_damage / 3), 3]
                                             else:
-                                                unstaggerable_check = 1
+                                                unbaubleable_check = 1
                                     monk_damage_taken = 0
-                                    if monk_stagger_damage_list1[1] != 0:
-                                        monk_damage_taken = monk_damage_taken + monk_stagger_damage_list1[0]
-                                    if monk_stagger_damage_list2[1] != 0:
-                                        monk_damage_taken = monk_damage_taken + monk_stagger_damage_list2[0]
-                                    if monk_stagger_damage_list3[1] != 0:
-                                        monk_damage_taken = monk_damage_taken + monk_stagger_damage_list3[0]
-                                    if unstaggerable_check == 1:
-                                        monk_damage_taken = monk_damage_taken + stagger_damage
+                                    if monk_bauble_damage_list1[1] != 0:
+                                        monk_damage_taken = monk_damage_taken + monk_bauble_damage_list1[0]
+                                    if monk_bauble_damage_list2[1] != 0:
+                                        monk_damage_taken = monk_damage_taken + monk_bauble_damage_list2[0]
+                                    if monk_bauble_damage_list3[1] != 0:
+                                        monk_damage_taken = monk_damage_taken + monk_bauble_damage_list3[0]
+                                    if unbaubleable_check == 1:
+                                        monk_damage_taken = monk_damage_taken + bauble_damage
                                     champion2_hp = champion2_hp - math.ceil(monk_damage_taken)
                                     champion2_lastRoundDamageTaken_list.append(math.ceil(monk_damage_taken))
                                     if champion2_hp < 0:
@@ -12043,27 +12043,27 @@ class GameFrame(tk.Frame):
                                         elif immune == "Evasive Manoeuvres":
                                             self.apply_taunt(4, MASTER_FENCER.title, 1)
                                 elif CHAMPION_LIST[0] == MONK.title:
-                                    stagger_damage = self.calculate_ai_damage(3, 4, 0)
-                                    unstaggerable_check = 0
-                                    if monk_stagger_damage_list1[1] == 0:
-                                        monk_stagger_damage_list1 = [math.ceil(stagger_damage / 3), 3]
+                                    bauble_damage = self.calculate_ai_damage(3, 4, 0)
+                                    unbaubleable_check = 0
+                                    if monk_bauble_damage_list1[1] == 0:
+                                        monk_bauble_damage_list1 = [math.ceil(bauble_damage / 3), 3]
                                     else:
-                                        if monk_stagger_damage_list2[1] == 0:
-                                            monk_stagger_damage_list2 = [math.ceil(stagger_damage / 3), 3]
+                                        if monk_bauble_damage_list2[1] == 0:
+                                            monk_bauble_damage_list2 = [math.ceil(bauble_damage / 3), 3]
                                         else:
-                                            if monk_stagger_damage_list3[1] == 0:
-                                                monk_stagger_damage_list3 = [math.ceil(stagger_damage / 3), 3]
+                                            if monk_bauble_damage_list3[1] == 0:
+                                                monk_bauble_damage_list3 = [math.ceil(bauble_damage / 3), 3]
                                             else:
-                                                unstaggerable_check = 1
+                                                unbaubleable_check = 1
                                     monk_damage_taken = 0
-                                    if monk_stagger_damage_list1[1] != 0:
-                                        monk_damage_taken = monk_damage_taken + monk_stagger_damage_list1[0]
-                                    if monk_stagger_damage_list2[1] != 0:
-                                        monk_damage_taken = monk_damage_taken + monk_stagger_damage_list2[0]
-                                    if monk_stagger_damage_list3[1] != 0:
-                                        monk_damage_taken = monk_damage_taken + monk_stagger_damage_list3[0]
-                                    if unstaggerable_check == 1:
-                                        monk_damage_taken = monk_damage_taken + stagger_damage
+                                    if monk_bauble_damage_list1[1] != 0:
+                                        monk_damage_taken = monk_damage_taken + monk_bauble_damage_list1[0]
+                                    if monk_bauble_damage_list2[1] != 0:
+                                        monk_damage_taken = monk_damage_taken + monk_bauble_damage_list2[0]
+                                    if monk_bauble_damage_list3[1] != 0:
+                                        monk_damage_taken = monk_damage_taken + monk_bauble_damage_list3[0]
+                                    if unbaubleable_check == 1:
+                                        monk_damage_taken = monk_damage_taken + bauble_damage
                                     champion3_hp = champion3_hp - math.ceil(monk_damage_taken)
                                     champion3_lastRoundDamageTaken_list.append(math.ceil(monk_damage_taken))
                                     if champion3_hp < 0:
@@ -12159,27 +12159,27 @@ class GameFrame(tk.Frame):
                                         elif immune == "Evasive Manoeuvres":
                                             self.apply_taunt(4, MASTER_FENCER.title, 1)
                                 elif CHAMPION_LIST[0] == MONK.title:
-                                    stagger_damage = self.calculate_ai_damage(4, 4, 0)
-                                    unstaggerable_check = 0
-                                    if monk_stagger_damage_list1[1] == 0:
-                                        monk_stagger_damage_list1 = [math.ceil(stagger_damage / 3), 3]
+                                    bauble_damage = self.calculate_ai_damage(4, 4, 0)
+                                    unbaubleable_check = 0
+                                    if monk_bauble_damage_list1[1] == 0:
+                                        monk_bauble_damage_list1 = [math.ceil(bauble_damage / 3), 3]
                                     else:
-                                        if monk_stagger_damage_list2[1] == 0:
-                                            monk_stagger_damage_list2 = [math.ceil(stagger_damage / 3), 3]
+                                        if monk_bauble_damage_list2[1] == 0:
+                                            monk_bauble_damage_list2 = [math.ceil(bauble_damage / 3), 3]
                                         else:
-                                            if monk_stagger_damage_list3[1] == 0:
-                                                monk_stagger_damage_list3 = [math.ceil(stagger_damage / 3), 3]
+                                            if monk_bauble_damage_list3[1] == 0:
+                                                monk_bauble_damage_list3 = [math.ceil(bauble_damage / 3), 3]
                                             else:
-                                                unstaggerable_check = 1
+                                                unbaubleable_check = 1
                                     monk_damage_taken = 0
-                                    if monk_stagger_damage_list1[1] != 0:
-                                        monk_damage_taken = monk_damage_taken + monk_stagger_damage_list1[0]
-                                    if monk_stagger_damage_list2[1] != 0:
-                                        monk_damage_taken = monk_damage_taken + monk_stagger_damage_list2[0]
-                                    if monk_stagger_damage_list3[1] != 0:
-                                        monk_damage_taken = monk_damage_taken + monk_stagger_damage_list3[0]
-                                    if unstaggerable_check == 1:
-                                        monk_damage_taken = monk_damage_taken + stagger_damage
+                                    if monk_bauble_damage_list1[1] != 0:
+                                        monk_damage_taken = monk_damage_taken + monk_bauble_damage_list1[0]
+                                    if monk_bauble_damage_list2[1] != 0:
+                                        monk_damage_taken = monk_damage_taken + monk_bauble_damage_list2[0]
+                                    if monk_bauble_damage_list3[1] != 0:
+                                        monk_damage_taken = monk_damage_taken + monk_bauble_damage_list3[0]
+                                    if unbaubleable_check == 1:
+                                        monk_damage_taken = monk_damage_taken + bauble_damage
                                     champion4_hp = champion4_hp - math.ceil(monk_damage_taken)
                                     champion4_lastRoundDamageTaken_list.append(math.ceil(monk_damage_taken))
                                     if champion4_hp < 0:
@@ -12275,27 +12275,27 @@ class GameFrame(tk.Frame):
                                         elif immune == "Evasive Manoeuvres":
                                             self.apply_taunt(4, MASTER_FENCER.title, 1)
                                 elif CHAMPION_LIST[0] == MONK.title:
-                                    stagger_damage = self.calculate_ai_damage(5, 4, 0)
-                                    unstaggerable_check = 0
-                                    if monk_stagger_damage_list1[1] == 0:
-                                        monk_stagger_damage_list1 = [math.ceil(stagger_damage / 3), 3]
+                                    bauble_damage = self.calculate_ai_damage(5, 4, 0)
+                                    unbaubleable_check = 0
+                                    if monk_bauble_damage_list1[1] == 0:
+                                        monk_bauble_damage_list1 = [math.ceil(bauble_damage / 3), 3]
                                     else:
-                                        if monk_stagger_damage_list2[1] == 0:
-                                            monk_stagger_damage_list2 = [math.ceil(stagger_damage / 3), 3]
+                                        if monk_bauble_damage_list2[1] == 0:
+                                            monk_bauble_damage_list2 = [math.ceil(bauble_damage / 3), 3]
                                         else:
-                                            if monk_stagger_damage_list3[1] == 0:
-                                                monk_stagger_damage_list3 = [math.ceil(stagger_damage / 3), 3]
+                                            if monk_bauble_damage_list3[1] == 0:
+                                                monk_bauble_damage_list3 = [math.ceil(bauble_damage / 3), 3]
                                             else:
-                                                unstaggerable_check = 1
+                                                unbaubleable_check = 1
                                     monk_damage_taken = 0
-                                    if monk_stagger_damage_list1[1] != 0:
-                                        monk_damage_taken = monk_damage_taken + monk_stagger_damage_list1[0]
-                                    if monk_stagger_damage_list2[1] != 0:
-                                        monk_damage_taken = monk_damage_taken + monk_stagger_damage_list2[0]
-                                    if monk_stagger_damage_list3[1] != 0:
-                                        monk_damage_taken = monk_damage_taken + monk_stagger_damage_list3[0]
-                                    if unstaggerable_check == 1:
-                                        monk_damage_taken = monk_damage_taken + stagger_damage
+                                    if monk_bauble_damage_list1[1] != 0:
+                                        monk_damage_taken = monk_damage_taken + monk_bauble_damage_list1[0]
+                                    if monk_bauble_damage_list2[1] != 0:
+                                        monk_damage_taken = monk_damage_taken + monk_bauble_damage_list2[0]
+                                    if monk_bauble_damage_list3[1] != 0:
+                                        monk_damage_taken = monk_damage_taken + monk_bauble_damage_list3[0]
+                                    if unbaubleable_check == 1:
+                                        monk_damage_taken = monk_damage_taken + bauble_damage
                                     champion5_hp = champion5_hp - math.ceil(monk_damage_taken)
                                     champion5_lastRoundDamageTaken_list.append(math.ceil(monk_damage_taken))
                                     if champion5_hp < 0:
@@ -12479,27 +12479,27 @@ class GameFrame(tk.Frame):
                                     elif immune == "Evasive Manoeuvres":
                                         self.apply_taunt(5, MASTER_FENCER.title, 1)
                             elif CHAMPION_LIST[0] == MONK.title:
-                                stagger_damage = self.calculate_ai_damage(1, 5, 0)
-                                unstaggerable_check = 0
-                                if monk_stagger_damage_list1[1] == 0:
-                                    monk_stagger_damage_list1 = [math.ceil(stagger_damage / 3), 3]
+                                bauble_damage = self.calculate_ai_damage(1, 5, 0)
+                                unbaubleable_check = 0
+                                if monk_bauble_damage_list1[1] == 0:
+                                    monk_bauble_damage_list1 = [math.ceil(bauble_damage / 3), 3]
                                 else:
-                                    if monk_stagger_damage_list2[1] == 0:
-                                        monk_stagger_damage_list2 = [math.ceil(stagger_damage / 3), 3]
+                                    if monk_bauble_damage_list2[1] == 0:
+                                        monk_bauble_damage_list2 = [math.ceil(bauble_damage / 3), 3]
                                     else:
-                                        if monk_stagger_damage_list3[1] == 0:
-                                            monk_stagger_damage_list3 = [math.ceil(stagger_damage / 3), 3]
+                                        if monk_bauble_damage_list3[1] == 0:
+                                            monk_bauble_damage_list3 = [math.ceil(bauble_damage / 3), 3]
                                         else:
-                                            unstaggerable_check = 1
+                                            unbaubleable_check = 1
                                 monk_damage_taken = 0
-                                if monk_stagger_damage_list1[1] != 0:
-                                    monk_damage_taken = monk_damage_taken + monk_stagger_damage_list1[0]
-                                if monk_stagger_damage_list2[1] != 0:
-                                    monk_damage_taken = monk_damage_taken + monk_stagger_damage_list2[0]
-                                if monk_stagger_damage_list3[1] != 0:
-                                    monk_damage_taken = monk_damage_taken + monk_stagger_damage_list3[0]
-                                if unstaggerable_check == 1:
-                                    monk_damage_taken = monk_damage_taken + stagger_damage
+                                if monk_bauble_damage_list1[1] != 0:
+                                    monk_damage_taken = monk_damage_taken + monk_bauble_damage_list1[0]
+                                if monk_bauble_damage_list2[1] != 0:
+                                    monk_damage_taken = monk_damage_taken + monk_bauble_damage_list2[0]
+                                if monk_bauble_damage_list3[1] != 0:
+                                    monk_damage_taken = monk_damage_taken + monk_bauble_damage_list3[0]
+                                if unbaubleable_check == 1:
+                                    monk_damage_taken = monk_damage_taken + bauble_damage
                                 champion1_hp = champion1_hp - math.ceil(monk_damage_taken)
                                 champion1_lastRoundDamageTaken_list.append(math.ceil(monk_damage_taken))
                                 if champion1_hp < 0:
@@ -12577,27 +12577,27 @@ class GameFrame(tk.Frame):
                                     elif immune == "Evasive Manoeuvres":
                                         self.apply_taunt(5, MASTER_FENCER.title, 1)
                             elif CHAMPION_LIST[0] == MONK.title:
-                                stagger_damage = self.calculate_ai_damage(2, 5, 0)
-                                unstaggerable_check = 0
-                                if monk_stagger_damage_list1[1] == 0:
-                                    monk_stagger_damage_list1 = [math.ceil(stagger_damage / 3), 3]
+                                bauble_damage = self.calculate_ai_damage(2, 5, 0)
+                                unbaubleable_check = 0
+                                if monk_bauble_damage_list1[1] == 0:
+                                    monk_bauble_damage_list1 = [math.ceil(bauble_damage / 3), 3]
                                 else:
-                                    if monk_stagger_damage_list2[1] == 0:
-                                        monk_stagger_damage_list2 = [math.ceil(stagger_damage / 3), 3]
+                                    if monk_bauble_damage_list2[1] == 0:
+                                        monk_bauble_damage_list2 = [math.ceil(bauble_damage / 3), 3]
                                     else:
-                                        if monk_stagger_damage_list3[1] == 0:
-                                            monk_stagger_damage_list3 = [math.ceil(stagger_damage / 3), 3]
+                                        if monk_bauble_damage_list3[1] == 0:
+                                            monk_bauble_damage_list3 = [math.ceil(bauble_damage / 3), 3]
                                         else:
-                                            unstaggerable_check = 1
+                                            unbaubleable_check = 1
                                 monk_damage_taken = 0
-                                if monk_stagger_damage_list1[1] != 0:
-                                    monk_damage_taken = monk_damage_taken + monk_stagger_damage_list1[0]
-                                if monk_stagger_damage_list2[1] != 0:
-                                    monk_damage_taken = monk_damage_taken + monk_stagger_damage_list2[0]
-                                if monk_stagger_damage_list3[1] != 0:
-                                    monk_damage_taken = monk_damage_taken + monk_stagger_damage_list3[0]
-                                if unstaggerable_check == 1:
-                                    monk_damage_taken = monk_damage_taken + stagger_damage
+                                if monk_bauble_damage_list1[1] != 0:
+                                    monk_damage_taken = monk_damage_taken + monk_bauble_damage_list1[0]
+                                if monk_bauble_damage_list2[1] != 0:
+                                    monk_damage_taken = monk_damage_taken + monk_bauble_damage_list2[0]
+                                if monk_bauble_damage_list3[1] != 0:
+                                    monk_damage_taken = monk_damage_taken + monk_bauble_damage_list3[0]
+                                if unbaubleable_check == 1:
+                                    monk_damage_taken = monk_damage_taken + bauble_damage
                                 champion2_hp = champion2_hp - math.ceil(monk_damage_taken)
                                 champion2_lastRoundDamageTaken_list.append(math.ceil(monk_damage_taken))
                                 if champion2_hp < 0:
@@ -12675,27 +12675,27 @@ class GameFrame(tk.Frame):
                                     elif immune == "Evasive Manoeuvres":
                                         self.apply_taunt(5, MASTER_FENCER.title, 1)
                             elif CHAMPION_LIST[0] == MONK.title:
-                                stagger_damage = self.calculate_ai_damage(3, 5)
-                                unstaggerable_check = 0
-                                if monk_stagger_damage_list1[1] == 0:
-                                    monk_stagger_damage_list1 = [math.ceil(stagger_damage / 3), 3]
+                                bauble_damage = self.calculate_ai_damage(3, 5)
+                                unbaubleable_check = 0
+                                if monk_bauble_damage_list1[1] == 0:
+                                    monk_bauble_damage_list1 = [math.ceil(bauble_damage / 3), 3]
                                 else:
-                                    if monk_stagger_damage_list2[1] == 0:
-                                        monk_stagger_damage_list2 = [math.ceil(stagger_damage / 3), 3]
+                                    if monk_bauble_damage_list2[1] == 0:
+                                        monk_bauble_damage_list2 = [math.ceil(bauble_damage / 3), 3]
                                     else:
-                                        if monk_stagger_damage_list3[1] == 0:
-                                            monk_stagger_damage_list3 = [math.ceil(stagger_damage / 3), 3]
+                                        if monk_bauble_damage_list3[1] == 0:
+                                            monk_bauble_damage_list3 = [math.ceil(bauble_damage / 3), 3]
                                         else:
-                                            unstaggerable_check = 1
+                                            unbaubleable_check = 1
                                 monk_damage_taken = 0
-                                if monk_stagger_damage_list1[1] != 0:
-                                    monk_damage_taken = monk_damage_taken + monk_stagger_damage_list1[0]
-                                if monk_stagger_damage_list2[1] != 0:
-                                    monk_damage_taken = monk_damage_taken + monk_stagger_damage_list2[0]
-                                if monk_stagger_damage_list3[1] != 0:
-                                    monk_damage_taken = monk_damage_taken + monk_stagger_damage_list3[0]
-                                if unstaggerable_check == 1:
-                                    monk_damage_taken = monk_damage_taken + stagger_damage
+                                if monk_bauble_damage_list1[1] != 0:
+                                    monk_damage_taken = monk_damage_taken + monk_bauble_damage_list1[0]
+                                if monk_bauble_damage_list2[1] != 0:
+                                    monk_damage_taken = monk_damage_taken + monk_bauble_damage_list2[0]
+                                if monk_bauble_damage_list3[1] != 0:
+                                    monk_damage_taken = monk_damage_taken + monk_bauble_damage_list3[0]
+                                if unbaubleable_check == 1:
+                                    monk_damage_taken = monk_damage_taken + bauble_damage
                                 champion3_hp = champion3_hp - math.ceil(monk_damage_taken)
                                 champion3_lastRoundDamageTaken_list.append(math.ceil(monk_damage_taken))
                                 if champion3_hp < 0:
@@ -12773,27 +12773,27 @@ class GameFrame(tk.Frame):
                                     elif immune == "Evasive Manoeuvres":
                                         self.apply_taunt(5, MASTER_FENCER.title, 1)
                             elif CHAMPION_LIST[0] == MONK.title:
-                                stagger_damage = self.calculate_ai_damage(4, 5, 0)
-                                unstaggerable_check = 0
-                                if monk_stagger_damage_list1[1] == 0:
-                                    monk_stagger_damage_list1 = [math.ceil(stagger_damage / 3), 3]
+                                bauble_damage = self.calculate_ai_damage(4, 5, 0)
+                                unbaubleable_check = 0
+                                if monk_bauble_damage_list1[1] == 0:
+                                    monk_bauble_damage_list1 = [math.ceil(bauble_damage / 3), 3]
                                 else:
-                                    if monk_stagger_damage_list2[1] == 0:
-                                        monk_stagger_damage_list2 = [math.ceil(stagger_damage / 3), 3]
+                                    if monk_bauble_damage_list2[1] == 0:
+                                        monk_bauble_damage_list2 = [math.ceil(bauble_damage / 3), 3]
                                     else:
-                                        if monk_stagger_damage_list3[1] == 0:
-                                            monk_stagger_damage_list3 = [math.ceil(stagger_damage / 3), 3]
+                                        if monk_bauble_damage_list3[1] == 0:
+                                            monk_bauble_damage_list3 = [math.ceil(bauble_damage / 3), 3]
                                         else:
-                                            unstaggerable_check = 1
+                                            unbaubleable_check = 1
                                 monk_damage_taken = 0
-                                if monk_stagger_damage_list1[1] != 0:
-                                    monk_damage_taken = monk_damage_taken + monk_stagger_damage_list1[0]
-                                if monk_stagger_damage_list2[1] != 0:
-                                    monk_damage_taken = monk_damage_taken + monk_stagger_damage_list2[0]
-                                if monk_stagger_damage_list3[1] != 0:
-                                    monk_damage_taken = monk_damage_taken + monk_stagger_damage_list3[0]
-                                if unstaggerable_check == 1:
-                                    monk_damage_taken = monk_damage_taken + stagger_damage
+                                if monk_bauble_damage_list1[1] != 0:
+                                    monk_damage_taken = monk_damage_taken + monk_bauble_damage_list1[0]
+                                if monk_bauble_damage_list2[1] != 0:
+                                    monk_damage_taken = monk_damage_taken + monk_bauble_damage_list2[0]
+                                if monk_bauble_damage_list3[1] != 0:
+                                    monk_damage_taken = monk_damage_taken + monk_bauble_damage_list3[0]
+                                if unbaubleable_check == 1:
+                                    monk_damage_taken = monk_damage_taken + bauble_damage
                                 champion4_hp = champion4_hp - math.ceil(monk_damage_taken)
                                 champion4_lastRoundDamageTaken_list.append(math.ceil(monk_damage_taken))
                                 if champion4_hp < 0:
@@ -12871,27 +12871,27 @@ class GameFrame(tk.Frame):
                                     elif immune == "Evasive Manoeuvres":
                                         self.apply_taunt(5, MASTER_FENCER.title, 1)
                             elif CHAMPION_LIST[0] == MONK.title:
-                                stagger_damage = self.calculate_ai_damage(5, 5, 0)
-                                unstaggerable_check = 0
-                                if monk_stagger_damage_list1[1] == 0:
-                                    monk_stagger_damage_list1 = [math.ceil(stagger_damage / 3), 3]
+                                bauble_damage = self.calculate_ai_damage(5, 5, 0)
+                                unbaubleable_check = 0
+                                if monk_bauble_damage_list1[1] == 0:
+                                    monk_bauble_damage_list1 = [math.ceil(bauble_damage / 3), 3]
                                 else:
-                                    if monk_stagger_damage_list2[1] == 0:
-                                        monk_stagger_damage_list2 = [math.ceil(stagger_damage / 3), 3]
+                                    if monk_bauble_damage_list2[1] == 0:
+                                        monk_bauble_damage_list2 = [math.ceil(bauble_damage / 3), 3]
                                     else:
-                                        if monk_stagger_damage_list3[1] == 0:
-                                            monk_stagger_damage_list3 = [math.ceil(stagger_damage / 3), 3]
+                                        if monk_bauble_damage_list3[1] == 0:
+                                            monk_bauble_damage_list3 = [math.ceil(bauble_damage / 3), 3]
                                         else:
-                                            unstaggerable_check = 1
+                                            unbaubleable_check = 1
                                 monk_damage_taken = 0
-                                if monk_stagger_damage_list1[1] != 0:
-                                    monk_damage_taken = monk_damage_taken + monk_stagger_damage_list1[0]
-                                if monk_stagger_damage_list2[1] != 0:
-                                    monk_damage_taken = monk_damage_taken + monk_stagger_damage_list2[0]
-                                if monk_stagger_damage_list3[1] != 0:
-                                    monk_damage_taken = monk_damage_taken + monk_stagger_damage_list3[0]
-                                if unstaggerable_check == 1:
-                                    monk_damage_taken = monk_damage_taken + stagger_damage
+                                if monk_bauble_damage_list1[1] != 0:
+                                    monk_damage_taken = monk_damage_taken + monk_bauble_damage_list1[0]
+                                if monk_bauble_damage_list2[1] != 0:
+                                    monk_damage_taken = monk_damage_taken + monk_bauble_damage_list2[0]
+                                if monk_bauble_damage_list3[1] != 0:
+                                    monk_damage_taken = monk_damage_taken + monk_bauble_damage_list3[0]
+                                if unbaubleable_check == 1:
+                                    monk_damage_taken = monk_damage_taken + bauble_damage
                                 champion5_hp = champion5_hp - math.ceil(monk_damage_taken)
                                 champion5_lastRoundDamageTaken_list.append(math.ceil(monk_damage_taken))
                                 if champion5_hp < 0:
@@ -12971,27 +12971,27 @@ class GameFrame(tk.Frame):
                                         elif immune == "Evasive Manoeuvres":
                                             self.apply_taunt(5, MASTER_FENCER.title, 1)
                                 elif CHAMPION_LIST[0] == MONK.title:
-                                    stagger_damage = self.calculate_ai_damage(1, 5, 0)
-                                    unstaggerable_check = 0
-                                    if monk_stagger_damage_list1[1] == 0:
-                                        monk_stagger_damage_list1 = [math.ceil(stagger_damage / 3), 3]
+                                    bauble_damage = self.calculate_ai_damage(1, 5, 0)
+                                    unbaubleable_check = 0
+                                    if monk_bauble_damage_list1[1] == 0:
+                                        monk_bauble_damage_list1 = [math.ceil(bauble_damage / 3), 3]
                                     else:
-                                        if monk_stagger_damage_list2[1] == 0:
-                                            monk_stagger_damage_list2 = [math.ceil(stagger_damage / 3), 3]
+                                        if monk_bauble_damage_list2[1] == 0:
+                                            monk_bauble_damage_list2 = [math.ceil(bauble_damage / 3), 3]
                                         else:
-                                            if monk_stagger_damage_list3[1] == 0:
-                                                monk_stagger_damage_list3 = [math.ceil(stagger_damage / 3), 3]
+                                            if monk_bauble_damage_list3[1] == 0:
+                                                monk_bauble_damage_list3 = [math.ceil(bauble_damage / 3), 3]
                                             else:
-                                                unstaggerable_check = 1
+                                                unbaubleable_check = 1
                                     monk_damage_taken = 0
-                                    if monk_stagger_damage_list1[1] != 0:
-                                        monk_damage_taken = monk_damage_taken + monk_stagger_damage_list1[0]
-                                    if monk_stagger_damage_list2[1] != 0:
-                                        monk_damage_taken = monk_damage_taken + monk_stagger_damage_list2[0]
-                                    if monk_stagger_damage_list3[1] != 0:
-                                        monk_damage_taken = monk_damage_taken + monk_stagger_damage_list3[0]
-                                    if unstaggerable_check == 1:
-                                        monk_damage_taken = monk_damage_taken + stagger_damage
+                                    if monk_bauble_damage_list1[1] != 0:
+                                        monk_damage_taken = monk_damage_taken + monk_bauble_damage_list1[0]
+                                    if monk_bauble_damage_list2[1] != 0:
+                                        monk_damage_taken = monk_damage_taken + monk_bauble_damage_list2[0]
+                                    if monk_bauble_damage_list3[1] != 0:
+                                        monk_damage_taken = monk_damage_taken + monk_bauble_damage_list3[0]
+                                    if unbaubleable_check == 1:
+                                        monk_damage_taken = monk_damage_taken + bauble_damage
                                     champion1_hp = champion1_hp - math.ceil(monk_damage_taken)
                                     champion1_lastRoundDamageTaken_list.append(math.ceil(monk_damage_taken))
                                     if champion1_hp < 0:
@@ -13087,27 +13087,27 @@ class GameFrame(tk.Frame):
                                         elif immune == "Evasive Manoeuvres":
                                             self.apply_taunt(5, MASTER_FENCER.title, 1)
                                 elif CHAMPION_LIST[0] == MONK.title:
-                                    stagger_damage = self.calculate_ai_damage(2, 5, 0)
-                                    unstaggerable_check = 0
-                                    if monk_stagger_damage_list1[1] == 0:
-                                        monk_stagger_damage_list1 = [math.ceil(stagger_damage / 3), 3]
+                                    bauble_damage = self.calculate_ai_damage(2, 5, 0)
+                                    unbaubleable_check = 0
+                                    if monk_bauble_damage_list1[1] == 0:
+                                        monk_bauble_damage_list1 = [math.ceil(bauble_damage / 3), 3]
                                     else:
-                                        if monk_stagger_damage_list2[1] == 0:
-                                            monk_stagger_damage_list2 = [math.ceil(stagger_damage / 3), 3]
+                                        if monk_bauble_damage_list2[1] == 0:
+                                            monk_bauble_damage_list2 = [math.ceil(bauble_damage / 3), 3]
                                         else:
-                                            if monk_stagger_damage_list3[1] == 0:
-                                                monk_stagger_damage_list3 = [math.ceil(stagger_damage / 3), 3]
+                                            if monk_bauble_damage_list3[1] == 0:
+                                                monk_bauble_damage_list3 = [math.ceil(bauble_damage / 3), 3]
                                             else:
-                                                unstaggerable_check = 1
+                                                unbaubleable_check = 1
                                     monk_damage_taken = 0
-                                    if monk_stagger_damage_list1[1] != 0:
-                                        monk_damage_taken = monk_damage_taken + monk_stagger_damage_list1[0]
-                                    if monk_stagger_damage_list2[1] != 0:
-                                        monk_damage_taken = monk_damage_taken + monk_stagger_damage_list2[0]
-                                    if monk_stagger_damage_list3[1] != 0:
-                                        monk_damage_taken = monk_damage_taken + monk_stagger_damage_list3[0]
-                                    if unstaggerable_check == 1:
-                                        monk_damage_taken = monk_damage_taken + stagger_damage
+                                    if monk_bauble_damage_list1[1] != 0:
+                                        monk_damage_taken = monk_damage_taken + monk_bauble_damage_list1[0]
+                                    if monk_bauble_damage_list2[1] != 0:
+                                        monk_damage_taken = monk_damage_taken + monk_bauble_damage_list2[0]
+                                    if monk_bauble_damage_list3[1] != 0:
+                                        monk_damage_taken = monk_damage_taken + monk_bauble_damage_list3[0]
+                                    if unbaubleable_check == 1:
+                                        monk_damage_taken = monk_damage_taken + bauble_damage
                                     champion2_hp = champion2_hp - math.ceil(monk_damage_taken)
                                     champion2_lastRoundDamageTaken_list.append(math.ceil(monk_damage_taken))
                                     if champion2_hp < 0:
@@ -13203,27 +13203,27 @@ class GameFrame(tk.Frame):
                                         elif immune == "Evasive Manoeuvres":
                                             self.apply_taunt(5, MASTER_FENCER.title, 1)
                                 elif CHAMPION_LIST[0] == MONK.title:
-                                    stagger_damage = self.calculate_ai_damage(3, 5, 0)
-                                    unstaggerable_check = 0
-                                    if monk_stagger_damage_list1[1] == 0:
-                                        monk_stagger_damage_list1 = [math.ceil(stagger_damage / 3), 3]
+                                    bauble_damage = self.calculate_ai_damage(3, 5, 0)
+                                    unbaubleable_check = 0
+                                    if monk_bauble_damage_list1[1] == 0:
+                                        monk_bauble_damage_list1 = [math.ceil(bauble_damage / 3), 3]
                                     else:
-                                        if monk_stagger_damage_list2[1] == 0:
-                                            monk_stagger_damage_list2 = [math.ceil(stagger_damage / 3), 3]
+                                        if monk_bauble_damage_list2[1] == 0:
+                                            monk_bauble_damage_list2 = [math.ceil(bauble_damage / 3), 3]
                                         else:
-                                            if monk_stagger_damage_list3[1] == 0:
-                                                monk_stagger_damage_list3 = [math.ceil(stagger_damage / 3), 3]
+                                            if monk_bauble_damage_list3[1] == 0:
+                                                monk_bauble_damage_list3 = [math.ceil(bauble_damage / 3), 3]
                                             else:
-                                                unstaggerable_check = 1
+                                                unbaubleable_check = 1
                                     monk_damage_taken = 0
-                                    if monk_stagger_damage_list1[1] != 0:
-                                        monk_damage_taken = monk_damage_taken + monk_stagger_damage_list1[0]
-                                    if monk_stagger_damage_list2[1] != 0:
-                                        monk_damage_taken = monk_damage_taken + monk_stagger_damage_list2[0]
-                                    if monk_stagger_damage_list3[1] != 0:
-                                        monk_damage_taken = monk_damage_taken + monk_stagger_damage_list3[0]
-                                    if unstaggerable_check == 1:
-                                        monk_damage_taken = monk_damage_taken + stagger_damage
+                                    if monk_bauble_damage_list1[1] != 0:
+                                        monk_damage_taken = monk_damage_taken + monk_bauble_damage_list1[0]
+                                    if monk_bauble_damage_list2[1] != 0:
+                                        monk_damage_taken = monk_damage_taken + monk_bauble_damage_list2[0]
+                                    if monk_bauble_damage_list3[1] != 0:
+                                        monk_damage_taken = monk_damage_taken + monk_bauble_damage_list3[0]
+                                    if unbaubleable_check == 1:
+                                        monk_damage_taken = monk_damage_taken + bauble_damage
                                     champion3_hp = champion3_hp - math.ceil(monk_damage_taken)
                                     champion3_lastRoundDamageTaken_list.append(math.ceil(monk_damage_taken))
                                     if champion3_hp < 0:
@@ -13319,27 +13319,27 @@ class GameFrame(tk.Frame):
                                         elif immune == "Evasive Manoeuvres":
                                             self.apply_taunt(5, MASTER_FENCER.title, 1)
                                 elif CHAMPION_LIST[0] == MONK.title:
-                                    stagger_damage = self.calculate_ai_damage(4, 5, 0)
-                                    unstaggerable_check = 0
-                                    if monk_stagger_damage_list1[1] == 0:
-                                        monk_stagger_damage_list1 = [math.ceil(stagger_damage / 3), 3]
+                                    bauble_damage = self.calculate_ai_damage(4, 5, 0)
+                                    unbaubleable_check = 0
+                                    if monk_bauble_damage_list1[1] == 0:
+                                        monk_bauble_damage_list1 = [math.ceil(bauble_damage / 3), 3]
                                     else:
-                                        if monk_stagger_damage_list2[1] == 0:
-                                            monk_stagger_damage_list2 = [math.ceil(stagger_damage / 3), 3]
+                                        if monk_bauble_damage_list2[1] == 0:
+                                            monk_bauble_damage_list2 = [math.ceil(bauble_damage / 3), 3]
                                         else:
-                                            if monk_stagger_damage_list3[1] == 0:
-                                                monk_stagger_damage_list3 = [math.ceil(stagger_damage / 3), 3]
+                                            if monk_bauble_damage_list3[1] == 0:
+                                                monk_bauble_damage_list3 = [math.ceil(bauble_damage / 3), 3]
                                             else:
-                                                unstaggerable_check = 1
+                                                unbaubleable_check = 1
                                     monk_damage_taken = 0
-                                    if monk_stagger_damage_list1[1] != 0:
-                                        monk_damage_taken = monk_damage_taken + monk_stagger_damage_list1[0]
-                                    if monk_stagger_damage_list2[1] != 0:
-                                        monk_damage_taken = monk_damage_taken + monk_stagger_damage_list2[0]
-                                    if monk_stagger_damage_list3[1] != 0:
-                                        monk_damage_taken = monk_damage_taken + monk_stagger_damage_list3[0]
-                                    if unstaggerable_check == 1:
-                                        monk_damage_taken = monk_damage_taken + stagger_damage
+                                    if monk_bauble_damage_list1[1] != 0:
+                                        monk_damage_taken = monk_damage_taken + monk_bauble_damage_list1[0]
+                                    if monk_bauble_damage_list2[1] != 0:
+                                        monk_damage_taken = monk_damage_taken + monk_bauble_damage_list2[0]
+                                    if monk_bauble_damage_list3[1] != 0:
+                                        monk_damage_taken = monk_damage_taken + monk_bauble_damage_list3[0]
+                                    if unbaubleable_check == 1:
+                                        monk_damage_taken = monk_damage_taken + bauble_damage
                                     champion4_hp = champion4_hp - math.ceil(monk_damage_taken)
                                     champion4_lastRoundDamageTaken_list.append(math.ceil(monk_damage_taken))
                                     if champion4_hp < 0:
@@ -13435,27 +13435,27 @@ class GameFrame(tk.Frame):
                                         elif immune == "Evasive Manoeuvres":
                                             self.apply_taunt(5, MASTER_FENCER.title, 1)
                                 elif CHAMPION_LIST[0] == MONK.title:
-                                    stagger_damage = self.calculate_ai_damage(5, 5, 0)
-                                    unstaggerable_check = 0
-                                    if monk_stagger_damage_list1[1] == 0:
-                                        monk_stagger_damage_list1 = [math.ceil(stagger_damage / 3), 3]
+                                    bauble_damage = self.calculate_ai_damage(5, 5, 0)
+                                    unbaubleable_check = 0
+                                    if monk_bauble_damage_list1[1] == 0:
+                                        monk_bauble_damage_list1 = [math.ceil(bauble_damage / 3), 3]
                                     else:
-                                        if monk_stagger_damage_list2[1] == 0:
-                                            monk_stagger_damage_list2 = [math.ceil(stagger_damage / 3), 3]
+                                        if monk_bauble_damage_list2[1] == 0:
+                                            monk_bauble_damage_list2 = [math.ceil(bauble_damage / 3), 3]
                                         else:
-                                            if monk_stagger_damage_list3[1] == 0:
-                                                monk_stagger_damage_list3 = [math.ceil(stagger_damage / 3), 3]
+                                            if monk_bauble_damage_list3[1] == 0:
+                                                monk_bauble_damage_list3 = [math.ceil(bauble_damage / 3), 3]
                                             else:
-                                                unstaggerable_check = 1
+                                                unbaubleable_check = 1
                                     monk_damage_taken = 0
-                                    if monk_stagger_damage_list1[1] != 0:
-                                        monk_damage_taken = monk_damage_taken + monk_stagger_damage_list1[0]
-                                    if monk_stagger_damage_list2[1] != 0:
-                                        monk_damage_taken = monk_damage_taken + monk_stagger_damage_list2[0]
-                                    if monk_stagger_damage_list3[1] != 0:
-                                        monk_damage_taken = monk_damage_taken + monk_stagger_damage_list3[0]
-                                    if unstaggerable_check == 1:
-                                        monk_damage_taken = monk_damage_taken + stagger_damage
+                                    if monk_bauble_damage_list1[1] != 0:
+                                        monk_damage_taken = monk_damage_taken + monk_bauble_damage_list1[0]
+                                    if monk_bauble_damage_list2[1] != 0:
+                                        monk_damage_taken = monk_damage_taken + monk_bauble_damage_list2[0]
+                                    if monk_bauble_damage_list3[1] != 0:
+                                        monk_damage_taken = monk_damage_taken + monk_bauble_damage_list3[0]
+                                    if unbaubleable_check == 1:
+                                        monk_damage_taken = monk_damage_taken + bauble_damage
                                     champion5_hp = champion5_hp - math.ceil(monk_damage_taken)
                                     champion5_lastRoundDamageTaken_list.append(math.ceil(monk_damage_taken))
                                     if champion5_hp < 0:
@@ -13552,27 +13552,27 @@ class GameFrame(tk.Frame):
                                         elif immune == "Evasive Manoeuvres":
                                             self.apply_taunt(5, MASTER_FENCER.title, 1)
                                 elif CHAMPION_LIST[0] == MONK.title:
-                                    stagger_damage = self.calculate_ai_damage(1, 5, 0)
-                                    unstaggerable_check = 0
-                                    if monk_stagger_damage_list1[1] == 0:
-                                        monk_stagger_damage_list1 = [math.ceil(stagger_damage / 3), 3]
+                                    bauble_damage = self.calculate_ai_damage(1, 5, 0)
+                                    unbaubleable_check = 0
+                                    if monk_bauble_damage_list1[1] == 0:
+                                        monk_bauble_damage_list1 = [math.ceil(bauble_damage / 3), 3]
                                     else:
-                                        if monk_stagger_damage_list2[1] == 0:
-                                            monk_stagger_damage_list2 = [math.ceil(stagger_damage / 3), 3]
+                                        if monk_bauble_damage_list2[1] == 0:
+                                            monk_bauble_damage_list2 = [math.ceil(bauble_damage / 3), 3]
                                         else:
-                                            if monk_stagger_damage_list3[1] == 0:
-                                                monk_stagger_damage_list3 = [math.ceil(stagger_damage / 3), 3]
+                                            if monk_bauble_damage_list3[1] == 0:
+                                                monk_bauble_damage_list3 = [math.ceil(bauble_damage / 3), 3]
                                             else:
-                                                unstaggerable_check = 1
+                                                unbaubleable_check = 1
                                     monk_damage_taken = 0
-                                    if monk_stagger_damage_list1[1] != 0:
-                                        monk_damage_taken = monk_damage_taken + monk_stagger_damage_list1[0]
-                                    if monk_stagger_damage_list2[1] != 0:
-                                        monk_damage_taken = monk_damage_taken + monk_stagger_damage_list2[0]
-                                    if monk_stagger_damage_list3[1] != 0:
-                                        monk_damage_taken = monk_damage_taken + monk_stagger_damage_list3[0]
-                                    if unstaggerable_check == 1:
-                                        monk_damage_taken = monk_damage_taken + stagger_damage
+                                    if monk_bauble_damage_list1[1] != 0:
+                                        monk_damage_taken = monk_damage_taken + monk_bauble_damage_list1[0]
+                                    if monk_bauble_damage_list2[1] != 0:
+                                        monk_damage_taken = monk_damage_taken + monk_bauble_damage_list2[0]
+                                    if monk_bauble_damage_list3[1] != 0:
+                                        monk_damage_taken = monk_damage_taken + monk_bauble_damage_list3[0]
+                                    if unbaubleable_check == 1:
+                                        monk_damage_taken = monk_damage_taken + bauble_damage
                                     champion1_hp = champion1_hp - math.ceil(monk_damage_taken)
                                     champion1_lastRoundDamageTaken_list.append(math.ceil(monk_damage_taken))
                                     if champion1_hp < 0:
@@ -13668,27 +13668,27 @@ class GameFrame(tk.Frame):
                                         elif immune == "Evasive Manoeuvres":
                                             self.apply_taunt(5, MASTER_FENCER.title, 1)
                                 elif CHAMPION_LIST[0] == MONK.title:
-                                    stagger_damage = self.calculate_ai_damage(2, 5, 0)
-                                    unstaggerable_check = 0
-                                    if monk_stagger_damage_list1[1] == 0:
-                                        monk_stagger_damage_list1 = [math.ceil(stagger_damage / 3), 3]
+                                    bauble_damage = self.calculate_ai_damage(2, 5, 0)
+                                    unbaubleable_check = 0
+                                    if monk_bauble_damage_list1[1] == 0:
+                                        monk_bauble_damage_list1 = [math.ceil(bauble_damage / 3), 3]
                                     else:
-                                        if monk_stagger_damage_list2[1] == 0:
-                                            monk_stagger_damage_list2 = [math.ceil(stagger_damage / 3), 3]
+                                        if monk_bauble_damage_list2[1] == 0:
+                                            monk_bauble_damage_list2 = [math.ceil(bauble_damage / 3), 3]
                                         else:
-                                            if monk_stagger_damage_list3[1] == 0:
-                                                monk_stagger_damage_list3 = [math.ceil(stagger_damage / 3), 3]
+                                            if monk_bauble_damage_list3[1] == 0:
+                                                monk_bauble_damage_list3 = [math.ceil(bauble_damage / 3), 3]
                                             else:
-                                                unstaggerable_check = 1
+                                                unbaubleable_check = 1
                                     monk_damage_taken = 0
-                                    if monk_stagger_damage_list1[1] != 0:
-                                        monk_damage_taken = monk_damage_taken + monk_stagger_damage_list1[0]
-                                    if monk_stagger_damage_list2[1] != 0:
-                                        monk_damage_taken = monk_damage_taken + monk_stagger_damage_list2[0]
-                                    if monk_stagger_damage_list3[1] != 0:
-                                        monk_damage_taken = monk_damage_taken + monk_stagger_damage_list3[0]
-                                    if unstaggerable_check == 1:
-                                        monk_damage_taken = monk_damage_taken + stagger_damage
+                                    if monk_bauble_damage_list1[1] != 0:
+                                        monk_damage_taken = monk_damage_taken + monk_bauble_damage_list1[0]
+                                    if monk_bauble_damage_list2[1] != 0:
+                                        monk_damage_taken = monk_damage_taken + monk_bauble_damage_list2[0]
+                                    if monk_bauble_damage_list3[1] != 0:
+                                        monk_damage_taken = monk_damage_taken + monk_bauble_damage_list3[0]
+                                    if unbaubleable_check == 1:
+                                        monk_damage_taken = monk_damage_taken + bauble_damage
                                     champion2_hp = champion2_hp - math.ceil(monk_damage_taken)
                                     champion2_lastRoundDamageTaken_list.append(math.ceil(monk_damage_taken))
                                     if champion2_hp < 0:
@@ -13784,27 +13784,27 @@ class GameFrame(tk.Frame):
                                         elif immune == "Evasive Manoeuvres":
                                             self.apply_taunt(5, MASTER_FENCER.title, 1)
                                 elif CHAMPION_LIST[0] == MONK.title:
-                                    stagger_damage = self.calculate_ai_damage(3, 5, 0)
-                                    unstaggerable_check = 0
-                                    if monk_stagger_damage_list1[1] == 0:
-                                        monk_stagger_damage_list1 = [math.ceil(stagger_damage / 3), 3]
+                                    bauble_damage = self.calculate_ai_damage(3, 5, 0)
+                                    unbaubleable_check = 0
+                                    if monk_bauble_damage_list1[1] == 0:
+                                        monk_bauble_damage_list1 = [math.ceil(bauble_damage / 3), 3]
                                     else:
-                                        if monk_stagger_damage_list2[1] == 0:
-                                            monk_stagger_damage_list2 = [math.ceil(stagger_damage / 3), 3]
+                                        if monk_bauble_damage_list2[1] == 0:
+                                            monk_bauble_damage_list2 = [math.ceil(bauble_damage / 3), 3]
                                         else:
-                                            if monk_stagger_damage_list3[1] == 0:
-                                                monk_stagger_damage_list3 = [math.ceil(stagger_damage / 3), 3]
+                                            if monk_bauble_damage_list3[1] == 0:
+                                                monk_bauble_damage_list3 = [math.ceil(bauble_damage / 3), 3]
                                             else:
-                                                unstaggerable_check = 1
+                                                unbaubleable_check = 1
                                     monk_damage_taken = 0
-                                    if monk_stagger_damage_list1[1] != 0:
-                                        monk_damage_taken = monk_damage_taken + monk_stagger_damage_list1[0]
-                                    if monk_stagger_damage_list2[1] != 0:
-                                        monk_damage_taken = monk_damage_taken + monk_stagger_damage_list2[0]
-                                    if monk_stagger_damage_list3[1] != 0:
-                                        monk_damage_taken = monk_damage_taken + monk_stagger_damage_list3[0]
-                                    if unstaggerable_check == 1:
-                                        monk_damage_taken = monk_damage_taken + stagger_damage
+                                    if monk_bauble_damage_list1[1] != 0:
+                                        monk_damage_taken = monk_damage_taken + monk_bauble_damage_list1[0]
+                                    if monk_bauble_damage_list2[1] != 0:
+                                        monk_damage_taken = monk_damage_taken + monk_bauble_damage_list2[0]
+                                    if monk_bauble_damage_list3[1] != 0:
+                                        monk_damage_taken = monk_damage_taken + monk_bauble_damage_list3[0]
+                                    if unbaubleable_check == 1:
+                                        monk_damage_taken = monk_damage_taken + bauble_damage
                                     champion3_hp = champion3_hp - math.ceil(monk_damage_taken)
                                     champion3_lastRoundDamageTaken_list.append(math.ceil(monk_damage_taken))
                                     if champion3_hp < 0:
@@ -13900,27 +13900,27 @@ class GameFrame(tk.Frame):
                                         elif immune == "Evasive Manoeuvres":
                                             self.apply_taunt(5, MASTER_FENCER.title, 1)
                                 elif CHAMPION_LIST[0] == MONK.title:
-                                    stagger_damage = self.calculate_ai_damage(4, 5, 0)
-                                    unstaggerable_check = 0
-                                    if monk_stagger_damage_list1[1] == 0:
-                                        monk_stagger_damage_list1 = [math.ceil(stagger_damage / 3), 3]
+                                    bauble_damage = self.calculate_ai_damage(4, 5, 0)
+                                    unbaubleable_check = 0
+                                    if monk_bauble_damage_list1[1] == 0:
+                                        monk_bauble_damage_list1 = [math.ceil(bauble_damage / 3), 3]
                                     else:
-                                        if monk_stagger_damage_list2[1] == 0:
-                                            monk_stagger_damage_list2 = [math.ceil(stagger_damage / 3), 3]
+                                        if monk_bauble_damage_list2[1] == 0:
+                                            monk_bauble_damage_list2 = [math.ceil(bauble_damage / 3), 3]
                                         else:
-                                            if monk_stagger_damage_list3[1] == 0:
-                                                monk_stagger_damage_list3 = [math.ceil(stagger_damage / 3), 3]
+                                            if monk_bauble_damage_list3[1] == 0:
+                                                monk_bauble_damage_list3 = [math.ceil(bauble_damage / 3), 3]
                                             else:
-                                                unstaggerable_check = 1
+                                                unbaubleable_check = 1
                                     monk_damage_taken = 0
-                                    if monk_stagger_damage_list1[1] != 0:
-                                        monk_damage_taken = monk_damage_taken + monk_stagger_damage_list1[0]
-                                    if monk_stagger_damage_list2[1] != 0:
-                                        monk_damage_taken = monk_damage_taken + monk_stagger_damage_list2[0]
-                                    if monk_stagger_damage_list3[1] != 0:
-                                        monk_damage_taken = monk_damage_taken + monk_stagger_damage_list3[0]
-                                    if unstaggerable_check == 1:
-                                        monk_damage_taken = monk_damage_taken + stagger_damage
+                                    if monk_bauble_damage_list1[1] != 0:
+                                        monk_damage_taken = monk_damage_taken + monk_bauble_damage_list1[0]
+                                    if monk_bauble_damage_list2[1] != 0:
+                                        monk_damage_taken = monk_damage_taken + monk_bauble_damage_list2[0]
+                                    if monk_bauble_damage_list3[1] != 0:
+                                        monk_damage_taken = monk_damage_taken + monk_bauble_damage_list3[0]
+                                    if unbaubleable_check == 1:
+                                        monk_damage_taken = monk_damage_taken + bauble_damage
                                     champion4_hp = champion4_hp - math.ceil(monk_damage_taken)
                                     champion4_lastRoundDamageTaken_list.append(math.ceil(monk_damage_taken))
                                     if champion4_hp < 0:
@@ -14015,27 +14015,27 @@ class GameFrame(tk.Frame):
                                         elif immune == "Evasive Manoeuvres":
                                             self.apply_taunt(5, MASTER_FENCER.title, 1)
                                 elif CHAMPION_LIST[0] == MONK.title:
-                                    stagger_damage = self.calculate_ai_damage(5, 5, 0)
-                                    unstaggerable_check = 0
-                                    if monk_stagger_damage_list1[1] == 0:
-                                        monk_stagger_damage_list1 = [math.ceil(stagger_damage / 3), 3]
+                                    bauble_damage = self.calculate_ai_damage(5, 5, 0)
+                                    unbaubleable_check = 0
+                                    if monk_bauble_damage_list1[1] == 0:
+                                        monk_bauble_damage_list1 = [math.ceil(bauble_damage / 3), 3]
                                     else:
-                                        if monk_stagger_damage_list2[1] == 0:
-                                            monk_stagger_damage_list2 = [math.ceil(stagger_damage / 3), 3]
+                                        if monk_bauble_damage_list2[1] == 0:
+                                            monk_bauble_damage_list2 = [math.ceil(bauble_damage / 3), 3]
                                         else:
-                                            if monk_stagger_damage_list3[1] == 0:
-                                                monk_stagger_damage_list3 = [math.ceil(stagger_damage / 3), 3]
+                                            if monk_bauble_damage_list3[1] == 0:
+                                                monk_bauble_damage_list3 = [math.ceil(bauble_damage / 3), 3]
                                             else:
-                                                unstaggerable_check = 1
+                                                unbaubleable_check = 1
                                     monk_damage_taken = 0
-                                    if monk_stagger_damage_list1[1] != 0:
-                                        monk_damage_taken = monk_damage_taken + monk_stagger_damage_list1[0]
-                                    if monk_stagger_damage_list2[1] != 0:
-                                        monk_damage_taken = monk_damage_taken + monk_stagger_damage_list2[0]
-                                    if monk_stagger_damage_list3[1] != 0:
-                                        monk_damage_taken = monk_damage_taken + monk_stagger_damage_list3[0]
-                                    if unstaggerable_check == 1:
-                                        monk_damage_taken = monk_damage_taken + stagger_damage
+                                    if monk_bauble_damage_list1[1] != 0:
+                                        monk_damage_taken = monk_damage_taken + monk_bauble_damage_list1[0]
+                                    if monk_bauble_damage_list2[1] != 0:
+                                        monk_damage_taken = monk_damage_taken + monk_bauble_damage_list2[0]
+                                    if monk_bauble_damage_list3[1] != 0:
+                                        monk_damage_taken = monk_damage_taken + monk_bauble_damage_list3[0]
+                                    if unbaubleable_check == 1:
+                                        monk_damage_taken = monk_damage_taken + bauble_damage
                                     champion5_hp = champion5_hp - math.ceil(monk_damage_taken)
                                     champion5_lastRoundDamageTaken_list.append(math.ceil(monk_damage_taken))
                                     if champion5_hp < 0:
@@ -14327,12 +14327,12 @@ class GameFrame(tk.Frame):
                 if ai5_taunt[1] == 0:
                     ai5_statuses.remove("Taunted")
             self.heal_overtime_tick()
-            if monk_stagger_damage_list1[1] != 0:
-                monk_stagger_damage_list1[1] = monk_stagger_damage_list1[1] - 1
-            if monk_stagger_damage_list2[1] != 0:
-                monk_stagger_damage_list2[1] = monk_stagger_damage_list2[1] - 1
-            if monk_stagger_damage_list3[1] != 0:
-                monk_stagger_damage_list3[1] = monk_stagger_damage_list3[1] - 1
+            if monk_bauble_damage_list1[1] != 0:
+                monk_bauble_damage_list1[1] = monk_bauble_damage_list1[1] - 1
+            if monk_bauble_damage_list2[1] != 0:
+                monk_bauble_damage_list2[1] = monk_bauble_damage_list2[1] - 1
+            if monk_bauble_damage_list3[1] != 0:
+                monk_bauble_damage_list3[1] = monk_bauble_damage_list3[1] - 1
             if MASTER_FENCER.title in CHAMPION_LIST:
                 if ai1_fencer_dodgechance > 30:
                     ai1_fencer_dodgechance = 30
@@ -15030,7 +15030,7 @@ class GameFrame(tk.Frame):
             champion1_muscleEnlarger, champion2_muscleEnlarger, champion3_muscleEnlarger, champion4_muscleEnlarger, champion5_muscleEnlarger, \
             champion1_nanobot, champion2_nanobot, champion3_nanobot, champion4_nanobot, champion5_nanobot, \
             champion1_blessing, champion2_blessing, champion3_blessing, champion4_blessing, champion5_blessing, \
-            monk_stagger_damage_list1, monk_stagger_damage_list2, monk_stagger_damage_list3, \
+            monk_bauble_damage_list1, monk_bauble_damage_list2, monk_bauble_damage_list3, \
             champion1_fortification, champion2_fortification, champion3_fortification, champion4_fortification, champion5_fortification, \
             champion1_pure_rage, champion2_pure_rage, champion3_pure_rage, champion4_pure_rage, champion5_pure_rage, \
             champion1_play_dead, champion2_play_dead, champion3_play_dead, champion4_play_dead, champion5_play_dead, \
@@ -18499,88 +18499,88 @@ class GameFrame(tk.Frame):
             special4_button_details.grid(row=21, column=3)
             from_special_button = 1
     def special_details_window(self, ability_name):
-        root = tk.Tk()
+        root = tk.Tk() #HEREHERE
         if ability_name == "Harmonize": 
-            special_ability_details = ""
+            special_ability_details = ["Reduce the damage inside all mind baubles by 50% and cancel out one round their damage"]
         elif ability_name == "Pressure Points":
-            special_ability_details = ""
+            special_ability_details = ["Target an enemy and if they're below 30% of their maximum health points, they instantly die\nOtherwise, they are stunned for 3 turns"]
         elif ability_name == "Challenging Shout":
-            special_ability_details = ""
+            special_ability_details = ["Force all enemies to attack you for two turns"]
         elif ability_name == "Impactful Boast":
-            special_ability_details = ""
+            special_ability_details = ["Heal 300 health points per enemy that is attacking you"]
         elif ability_name == "Fortification":
-            special_ability_details = ""
+            special_ability_details = ["Reduce all damage allies take by 15%"]
         elif ability_name == "Block":
-            special_ability_details = ""
+            special_ability_details = ["Protect an ally and take all the damage that they would've for one turn\nIf targetted at self, instead take 50% reduced damage"]
         elif ability_name == "Magic Reflection":
-            special_ability_details = ""
+            special_ability_details = ["If the enemy is using a magic based ability, reflect the damage right back at them and stun them for one turn"]
         elif ability_name == "Evasive Manoeuvres":
-            special_ability_details = ""
+            special_ability_details = ["Set your chance to dodge and the amount of damage you dodge for to 100%"]
         elif ability_name == "Pure Rage":
-            special_ability_details = ""
+            special_ability_details = ["Increase the damage you deal by 50%, but also increase the damage you take by 30%"]
         elif ability_name == "Reckless Flurry":
-            special_ability_details = ""
+            special_ability_details = ["Cause your next two attacks to hit all enemies instead of just one"]
         elif ability_name == "Garrote":
-            special_ability_details = ""
+            special_ability_details = ["Lash the enemy with a spiked garrote wire, they bleed for two turns"]
         elif ability_name == "Exploit Weakness":
-            special_ability_details = ""
+            special_ability_details = ["Deal damage to an enemy that increases by 30% for each status they are afflicted with"]
         elif ability_name == "Play Dead":
-            special_ability_details = ""
+            special_ability_details = ["Enemies who were attacking you will mistake you for being already dead and will now choose new targets to attack"]
         elif ability_name == "Survival Kit":
-            special_ability_details = ""
+            special_ability_details = ["Heal back 60% of your maximum health points and become 'Prepared'"]
         elif ability_name == "Arcane Brilliance":
-            special_ability_details = ""
+            special_ability_details = ["Cast randomly chosen Fireballs or Frost Bolts at enemies wildly 5 times"]
         elif ability_name == "Magical Barrier":
-            special_ability_details = ""
+            special_ability_details = ["Surround yourself with a magical barrier that will absorb the next 500 damage you take"]
         elif ability_name == "Barbed Bush Armour":
-            special_ability_details = ""
+            special_ability_details = ["Enchant an allies armour with a barbed brambles for five turns\nWhenever an enemy attacks an ally with the bush armour, they take 200 damage and are embedded with a thorn"]
         elif ability_name == "Burst N Bloom":
-            special_ability_details = ""
+            special_ability_details = ["All active thorns explode, destroying them, and enemies take 250 damage per thorn exploded this way"]
         elif ability_name == "Wound Fissure":
-            special_ability_details = ""
+            special_ability_details = ["Cause all damage overtime effects to instantly deal damage and lose duration up to two turns worth on an enemy"]
         elif ability_name == "Soul Tap":
-            special_ability_details = ""
+            special_ability_details = ["Convert up to 200 health points into equivalent mana"]
         elif ability_name == "Blood Boil":
-            special_ability_details = ""
+            special_ability_details = ["Erupt your blood to greatly empower the next ability you use\n View the details of your other abilities to see their empowered effects"]
         elif ability_name == "Enharden Nerves":
-            special_ability_details = ""
+            special_ability_details = ["Reduce damage you take by 40%\nEmpowered Effect: Additionally grant all your allies 'Enhardened Nerves'"]
         elif ability_name == "Damnation":
-            special_ability_details = ""
+            special_ability_details = ["Damn an enemy to take a high damage explosion after 3 turns"]
         elif ability_name == "Energise":
-            special_ability_details = ""
+            special_ability_details = ["Reset the cooldown of Electrical Expulsion and the next cast of it discharges double the polarised charges"]
         elif ability_name == "Superconductor":
-            special_ability_details = ""
+            special_ability_details = ["Cause all polarisation explosions to deal double damage to an enemy"]
         elif ability_name == "Muscle Enlarger":
-            special_ability_details = ""
+            special_ability_details = ["Increase an allies damage by 60% for 3 turns"]
         elif ability_name == "Mistic Bloom":
-            special_ability_details = ""
+            special_ability_details = ["Heal an ally"]
         elif ability_name == "Power Surge":
-            special_ability_details = ""
+            special_ability_details = ["Deal damage to all enemies and apply 'Weakness' to them for 2 turns"]
         elif ability_name == "Full Potential":
-            special_ability_details = ""
+            special_ability_details = ["Increase an allies damage by 200% for 3 turns"]
         elif ability_name == "Spring Waters":
-            special_ability_details = ""
+            special_ability_details = ["Heal two allies wounds, giving them 'Flowing Waters' that heals them each turn"]
         elif ability_name == "Ocean Tides":
-            special_ability_details = ""
+            special_ability_details = ["Heal all allies and extend the duration of any active 'Flowing Waters' buffs by 1 turn"]
         elif ability_name == "Boulder Cocoon":
-            special_ability_details = ""
+            special_ability_details = ["Protect one ally from all incoming damage for one turn."]
         elif ability_name == "Healing Light":
-            special_ability_details = ""
+            special_ability_details = ["Heal two allies and giving them 'Blessed' for 5 turns."]
         elif ability_name == "Diffracting Nova":
-            special_ability_details = ""
+            special_ability_details = ["Deal damage to all enemies and apply one turn of 'Blessed' to all allies"]
         elif ability_name == "Overclock Nanobots":
-            special_ability_details = ""
+            special_ability_details = ["Double the healing output of nanobots for 2 turns"]
         elif ability_name == "Reverse Wounds":
-            special_ability_details = ""
+            special_ability_details = ["Heal an ally of all damage they took since the previous turn"]
         elif ability_name == "Alter Time":
-            special_ability_details = ""
+            special_ability_details = ["Heal an ally to full health"]
         elif ability_name == "Bandages":
-            special_ability_details = ""
+            special_ability_details = ["Heal an allies wound, giving them 'Bandaged' that heals them each turn"]
         elif ability_name == "Tight Tourniquet":
-            special_ability_details = ""
+            special_ability_details = ["Reduce an allies damage taken by 20% for one turn\nOn following turns, they recieve a diminshed version for two turns"]
         elif ability_name == "Secret Remedy":
-            special_ability_details = ""
-    
+            special_ability_details = ["Increase an allies damage by 50% for one turn\nOn following turns, they recieve a diminshed version for two turns"]
+        
 
         status_effects_label = tk.Label(root, text=special_ability_details)
         status_effects_label.grid(row=2, column=1)
@@ -19299,7 +19299,7 @@ class GameFrame(tk.Frame):
                                 champion1_rp = champion1_rp + arcane_brilliance_requirements[1]
                                 damage_done = math.ceil(ACADEMIC_MAGE.ap * self.calculate_champion_damage(1))
                                 damage_done = math.ceil(ACADEMIC_MAGE.ap * self.calculate_champion_damage(1))
-                                ability_data = ["Arcane Brilliance", "enemy", "1T", damage_done]
+                                ability_data = ["Arcane Brilliance", "enemy", "AOE", damage_done]
                             else:
                                 return
                         if counter == 2:
@@ -19309,7 +19309,7 @@ class GameFrame(tk.Frame):
                                 champion2_rp = champion2_rp + arcane_brilliance_requirements[1]
                                 damage_done = math.ceil(ACADEMIC_MAGE.ap * self.calculate_champion_damage(2))
                                 damage_done = math.ceil(ACADEMIC_MAGE.ap * self.calculate_champion_damage(2))
-                                ability_data = ["Arcane Brilliance", "enemy", "1T", damage_done]
+                                ability_data = ["Arcane Brilliance", "enemy", "AOE", damage_done]
                             else:
                                 return
                         if counter == 3:
@@ -19319,7 +19319,7 @@ class GameFrame(tk.Frame):
                                 champion3_rp = champion3_rp + arcane_brilliance_requirements[1]
                                 damage_done = math.ceil(ACADEMIC_MAGE.ap * self.calculate_champion_damage(3))
                                 damage_done = math.ceil(ACADEMIC_MAGE.ap * self.calculate_champion_damage(3))
-                                ability_data = ["Arcane Brilliance", "enemy", "1T", damage_done]
+                                ability_data = ["Arcane Brilliance", "enemy", "AOE", damage_done]
                             else:
                                 return
                         if counter == 4:
@@ -19329,7 +19329,7 @@ class GameFrame(tk.Frame):
                                 champion4_rp = champion4_rp + arcane_brilliance_requirements[1]
                                 damage_done = math.ceil(ACADEMIC_MAGE.ap * self.calculate_champion_damage(4))
                                 damage_done = math.ceil(ACADEMIC_MAGE.ap * self.calculate_champion_damage(4))
-                                ability_data = ["Arcane Brilliance", "enemy", "1T", damage_done]
+                                ability_data = ["Arcane Brilliance", "enemy", "AOE", damage_done]
                             else:
                                 return
                         if counter == 5:
@@ -19339,7 +19339,7 @@ class GameFrame(tk.Frame):
                                 champion5_rp = champion5_rp + arcane_brilliance_requirements[1]
                                 damage_done = math.ceil(ACADEMIC_MAGE.ap * self.calculate_champion_damage(5))
                                 damage_done = math.ceil(ACADEMIC_MAGE.ap * self.calculate_champion_damage(5))
-                                ability_data = ["Arcane Brilliance", "enemy", "1T", damage_done]
+                                ability_data = ["Arcane Brilliance", "enemy", "AOE", damage_done]
                             else:
                                 return
                     counter += 1
@@ -21344,27 +21344,27 @@ class GameFrame(tk.Frame):
                 self.apply_stun(5, 1)
         elif ability_data[0] == "Pressure Points":
             if 1 in target_list:
-                if ai1_hp < AI_GROUP_HP * 0.6:
+                if ai1_hp < AI_GROUP_HP * 0.3:
                     ai1_hp = 0
                 else:
                     self.apply_stun(1, 3)
             if 2 in target_list:
-                if ai2_hp < AI_GROUP_HP * 0.6:
+                if ai2_hp < AI_GROUP_HP * 0.3:
                     ai2_hp = 0
                 else:
                     self.apply_stun(2, 3)
             if 3 in target_list:
-                if ai3_hp < AI_GROUP_HP * 0.6:
+                if ai3_hp < AI_GROUP_HP * 0.3:
                     ai3_hp = 0
                 else:
                     self.apply_stun(3, 3)
             if 4 in target_list:
-                if ai4_hp < AI_GROUP_HP * 0.6:
+                if ai4_hp < AI_GROUP_HP * 0.3:
                     ai4_hp = 0
                 else:
                     self.apply_stun(4, 3)
             if 5 in target_list:
-                if ai5_hp < AI_GROUP_HP * 0.6:
+                if ai5_hp < AI_GROUP_HP * 0.3:
                     ai5_hp = 0
                 else:
                     self.apply_stun(5, 3)
@@ -26092,17 +26092,16 @@ class GameFrame(tk.Frame):
             current_arrow_type
         counter = 0
         if ability_data[0] == "Harmonize":
-            global monk_stagger_damage_list1, monk_stagger_damage_list2, monk_stagger_damage_list3
-            if monk_stagger_damage_list1[1] != 0:
-                monk_stagger_damage_list1[1] = monk_stagger_damage_list1[1] - 1
-                monk_stagger_damage_list1[0] = monk_stagger_damage_list1[0] / 2
-            if monk_stagger_damage_list2[1] != 0:
-                monk_stagger_damage_list2[1] = monk_stagger_damage_list2[1] - 1
-                monk_stagger_damage_list2[0] = monk_stagger_damage_list2[0] / 2
-            if monk_stagger_damage_list3[1] != 0:
-                monk_stagger_damage_list3[1] = monk_stagger_damage_list3[1] - 1
-                monk_stagger_damage_list3[0] = monk_stagger_damage_list3[0] / 2
-
+            global monk_bauble_damage_list1, monk_bauble_damage_list2, monk_bauble_damage_list3
+            if monk_bauble_damage_list1[1] != 0:
+                monk_bauble_damage_list1[1] = monk_bauble_damage_list1[1] - 1
+                monk_bauble_damage_list1[0] = monk_bauble_damage_list1[0] / 2
+            if monk_bauble_damage_list2[1] != 0:
+                monk_bauble_damage_list2[1] = monk_bauble_damage_list2[1] - 1
+                monk_bauble_damage_list2[0] = monk_bauble_damage_list2[0] / 2
+            if monk_bauble_damage_list3[1] != 0:
+                monk_bauble_damage_list3[1] = monk_bauble_damage_list3[1] - 1
+                monk_bauble_damage_list3[0] = monk_bauble_damage_list3[0] / 2
         elif ability_data[0] == "Challenging Shout":
             if AI_SPAWNED == 1:
                 self.apply_taunt(1, BARBARIAN.title, 2)
