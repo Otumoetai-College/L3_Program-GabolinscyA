@@ -1317,7 +1317,7 @@ class GameFrame(tk.Frame):
         monk_bauble_damage_list1 = [0, 0]
         monk_bauble_damage_list2 = [0, 0]
         monk_bauble_damage_list3 = [0, 0]
-        # Barbarian Abiltities:
+        # Barbarian abilities:
         bloodthirst_requirements = [0, 30, 0, 0]
         pulverize_requirements = [20, 0, 0, 0]
         challenging_shout_requirements = [40, 20, 3, 0]
@@ -1337,15 +1337,15 @@ class GameFrame(tk.Frame):
         riposte_requirements = [0, 0, 2, 0]
         magic_reflection_requirements = [0, 0, 3, 0]
         evasive_manoeuvres_requirements = [0, 0, 3, 0]
-        global angering_strike_requirements, unbridled_rampagerequirements, pure_rage_requirements, reckless_flurry_requirements, \
+        global angering_strike_requirements, unbridled_rampage_requirements, pure_rage_requirements, reckless_flurry_requirements, \
             champion1_pure_rage, champion2_pure_rage, champion3_pure_rage, champion4_pure_rage, champion5_pure_rage, reckless_flurry_buff, \
             serrated_slash_requirements, eviscerate_requirements, garrote_requirements, exploit_weakness_requirements, \
             spear_thrust_requirements, scrap_bomb_requirements, play_dead_requirements, survival_kit_requirements, prepare_buff, \
             champion1_play_dead, champion2_play_dead, champion3_play_dead, champion4_play_dead, champion5_play_dead, \
-            tactical_punch_requirements, uppercut_requirements, knock_out_requirements, wide_swing_requirements
+            hard_hitter_requirements, uppercut_requirements, knock_out_requirements, wide_swing_requirements
         # Berserker Abilities
         angering_strike_requirements = [0, 40, 0, 0]
-        unbridled_rampagerequirements = [80, 0, 0, 0]
+        unbridled_rampage_requirements = [80, 0, 0, 0]
         pure_rage_requirements = [0, 30, 0, 0]
         reckless_flurry_requirements = [40, 0, 3, 0]
         champion1_pure_rage = 0
@@ -1371,7 +1371,7 @@ class GameFrame(tk.Frame):
         champion5_play_dead = 0
         prepare_buff = 0
         # Brawlist Abilties
-        tactical_punch_requirements = [0, 0, 0, 0]
+        hard_hitter_requirements = [0, 0, 0, 0]
         uppercut_requirements = [0, 0, 2, 0]
         knock_out_requirements = [0, 0, 3, 0]
         wide_swing_requirements = [0, 0, 1, 0]
@@ -16026,22 +16026,22 @@ class GameFrame(tk.Frame):
                                        command=lambda: self.champion_attacks(attack_button_text_list_temp[0]))
             attack1_button_details = tk.Button(dungeon_game_frame,
                                                text="{} Details".format(attack_button_text_list_temp[0]), width=38,
-                                               height=1)
+                                               height=1, command=lambda: self.attack_details_window(attack_button_text_list_temp[0]))
             attack2_button = tk.Button(dungeon_game_frame, text=attack_button_text_list[1], width=50, height=4,
                                        command=lambda: self.champion_attacks(attack_button_text_list_temp[1]))
             attack2_button_details = tk.Button(dungeon_game_frame,
                                                text="{} Details".format(attack_button_text_list_temp[1]), width=38,
-                                               height=1)
+                                               height=1, command=lambda: self.attack_details_window(attack_button_text_list_temp[1]))
             attack3_button = tk.Button(dungeon_game_frame, text=attack_button_text_list[2], width=50, height=4,
                                        command=lambda: self.champion_attacks(attack_button_text_list_temp[2]))
             attack3_button_details = tk.Button(dungeon_game_frame,
                                                text="{} Details".format(attack_button_text_list_temp[2]), width=38,
-                                               height=1)
+                                               height=1, command=lambda: self.attack_details_window(attack_button_text_list_temp[2]))
             attack4_button = tk.Button(dungeon_game_frame, text=attack_button_text_list[3], width=50, height=4,
                                        command=lambda: self.champion_attacks(attack_button_text_list_temp[3]))
             attack4_button_details = tk.Button(dungeon_game_frame,
                                                text="{} Details".format(attack_button_text_list_temp[3]), width=38,
-                                               height=1)
+                                               height=1, command=lambda: self.attack_details_window(attack_button_text_list_temp[3]))
             back_button = tk.Button(dungeon_game_frame, text="Back", command=self.player_combat_champion1)
             back_button.grid(row=20, column=2, pady=20)
             attack1_button.grid(row=18, column=1)
@@ -16061,22 +16061,22 @@ class GameFrame(tk.Frame):
                                        command=lambda: self.champion_attacks(attack_button_text_list_temp[0]))
             attack1_button_details = tk.Button(dungeon_game_frame,
                                                text="{} Details".format(attack_button_text_list_temp[0]), width=38,
-                                               height=1)
+                                               height=1, command=lambda: self.attack_details_window(attack_button_text_list_temp[0]))
             attack2_button = tk.Button(dungeon_game_frame, text=attack_button_text_list[1], width=50, height=4,
                                        command=lambda: self.champion_attacks(attack_button_text_list_temp[1]))
             attack2_button_details = tk.Button(dungeon_game_frame,
                                                text="{} Details".format(attack_button_text_list_temp[1]), width=38,
-                                               height=1)
+                                               height=1, command=lambda: self.attack_details_window(attack_button_text_list_temp[1]))
             attack3_button = tk.Button(dungeon_game_frame, text=attack_button_text_list[2], width=50, height=4,
                                        command=lambda: self.champion_attacks(attack_button_text_list_temp[2]))
             attack3_button_details = tk.Button(dungeon_game_frame,
                                                text="{} Details".format(attack_button_text_list_temp[2]), width=38,
-                                               height=1)
+                                               height=1, command=lambda: self.attack_details_window(attack_button_text_list_temp[2]))
             attack4_button = tk.Button(dungeon_game_frame, text=attack_button_text_list[3], width=50, height=4,
                                        command=lambda: self.champion_attacks(attack_button_text_list_temp[3]))
             attack4_button_details = tk.Button(dungeon_game_frame,
                                                text="{} Details".format(attack_button_text_list_temp[3]), width=38,
-                                               height=1)
+                                               height=1, command=lambda: self.attack_details_window(attack_button_text_list_temp[3]))
             back_button = tk.Button(dungeon_game_frame, text="Back", command=self.player_combat_champion2)
             back_button.grid(row=20, column=2, pady=20)
             attack1_button.grid(row=18, column=1)
@@ -16096,22 +16096,22 @@ class GameFrame(tk.Frame):
                                        command=lambda: self.champion_attacks(attack_button_text_list_temp[0]))
             attack1_button_details = tk.Button(dungeon_game_frame,
                                                text="{} Details".format(attack_button_text_list_temp[0]), width=38,
-                                               height=1)
+                                               height=1, command=lambda: self.attack_details_window(attack_button_text_list_temp[0]))
             attack2_button = tk.Button(dungeon_game_frame, text=attack_button_text_list[1], width=50, height=4,
                                        command=lambda: self.champion_attacks(attack_button_text_list_temp[1]))
             attack2_button_details = tk.Button(dungeon_game_frame,
                                                text="{} Details".format(attack_button_text_list_temp[1]), width=38,
-                                               height=1)
+                                               height=1, command=lambda: self.attack_details_window(attack_button_text_list_temp[1]))
             attack3_button = tk.Button(dungeon_game_frame, text=attack_button_text_list[2], width=50, height=4,
                                        command=lambda: self.champion_attacks(attack_button_text_list_temp[2]))
             attack3_button_details = tk.Button(dungeon_game_frame,
                                                text="{} Details".format(attack_button_text_list_temp[2]), width=38,
-                                               height=1)
+                                               height=1, command=lambda: self.attack_details_window(attack_button_text_list_temp[2]))
             attack4_button = tk.Button(dungeon_game_frame, text=attack_button_text_list[3], width=50, height=4,
                                        command=lambda: self.champion_attacks(attack_button_text_list_temp[3]))
             attack4_button_details = tk.Button(dungeon_game_frame,
                                                text="{} Details".format(attack_button_text_list_temp[3]), width=38,
-                                               height=1)
+                                               height=1, command=lambda: self.attack_details_window(attack_button_text_list_temp[3]))
             back_button = tk.Button(dungeon_game_frame, text="Back", command=self.player_combat_champion3)
             back_button.grid(row=20, column=2, pady=20)
             attack1_button.grid(row=18, column=1)
@@ -16131,22 +16131,22 @@ class GameFrame(tk.Frame):
                                        command=lambda: self.champion_attacks(attack_button_text_list_temp[0]))
             attack1_button_details = tk.Button(dungeon_game_frame,
                                                text="{} Details".format(attack_button_text_list_temp[0]), width=38,
-                                               height=1)
+                                               height=1, command=lambda: self.attack_details_window(attack_button_text_list_temp[0]))
             attack2_button = tk.Button(dungeon_game_frame, text=attack_button_text_list[1], width=50, height=4,
                                        command=lambda: self.champion_attacks(attack_button_text_list_temp[1]))
             attack2_button_details = tk.Button(dungeon_game_frame,
                                                text="{} Details".format(attack_button_text_list_temp[1]), width=38,
-                                               height=1)
+                                               height=1, command=lambda: self.attack_details_window(attack_button_text_list_temp[1]))
             attack3_button = tk.Button(dungeon_game_frame, text=attack_button_text_list[2], width=50, height=4,
                                        command=lambda: self.champion_attacks(attack_button_text_list_temp[2]))
             attack3_button_details = tk.Button(dungeon_game_frame,
                                                text="{} Details".format(attack_button_text_list_temp[2]), width=38,
-                                               height=1)
+                                               height=1, command=lambda: self.attack_details_window(attack_button_text_list_temp[2]))
             attack4_button = tk.Button(dungeon_game_frame, text=attack_button_text_list[3], width=50, height=4,
                                        command=lambda: self.champion_attacks(attack_button_text_list_temp[3]))
             attack4_button_details = tk.Button(dungeon_game_frame,
                                                text="{} Details".format(attack_button_text_list_temp[3]), width=38,
-                                               height=1)
+                                               height=1, command=lambda: self.attack_details_window(attack_button_text_list_temp[3]))
             back_button = tk.Button(dungeon_game_frame, text="Back", command=self.player_combat_champion4)
             back_button.grid(row=20, column=2, pady=20)
             attack1_button.grid(row=18, column=1)
@@ -16166,22 +16166,22 @@ class GameFrame(tk.Frame):
                                        command=lambda: self.champion_attacks(attack_button_text_list_temp[0]))
             attack1_button_details = tk.Button(dungeon_game_frame,
                                                text="{} Details".format(attack_button_text_list_temp[0]), width=38,
-                                               height=1)
+                                               height=1, command=lambda: self.attack_details_window(attack_button_text_list_temp[0]))
             attack2_button = tk.Button(dungeon_game_frame, text=attack_button_text_list[1], width=50, height=4,
                                        command=lambda: self.champion_attacks(attack_button_text_list_temp[1]))
             attack2_button_details = tk.Button(dungeon_game_frame,
                                                text="{} Details".format(attack_button_text_list_temp[1]), width=38,
-                                               height=1)
+                                               height=1, command=lambda: self.attack_details_window(attack_button_text_list_temp[1]))
             attack3_button = tk.Button(dungeon_game_frame, text=attack_button_text_list[2], width=50, height=4,
                                        command=lambda: self.champion_attacks(attack_button_text_list_temp[2]))
             attack3_button_details = tk.Button(dungeon_game_frame,
                                                text="{} Details".format(attack_button_text_list_temp[2]), width=38,
-                                               height=1)
+                                               height=1, command=lambda: self.attack_details_window(attack_button_text_list_temp[2]))
             attack4_button = tk.Button(dungeon_game_frame, text=attack_button_text_list[3], width=50, height=4,
                                        command=lambda: self.champion_attacks(attack_button_text_list_temp[3]))
             attack4_button_details = tk.Button(dungeon_game_frame,
                                                text="{} Details".format(attack_button_text_list_temp[3]), width=38,
-                                               height=1)
+                                               height=1, command=lambda: self.attack_details_window(attack_button_text_list_temp[3]))
             back_button = tk.Button(dungeon_game_frame, text="Back", command=self.player_combat_champion5)
             back_button.grid(row=20, column=2, pady=20)
             attack1_button.grid(row=18, column=1)
@@ -16681,51 +16681,51 @@ class GameFrame(tk.Frame):
             else:
                 return
         elif ability_name == "Unbridled Rampage":
-            global unbridled_rampagerequirements
-            if unbridled_rampagerequirements[3] == 0:
+            global unbridled_rampage_requirements
+            if unbridled_rampage_requirements[3] == 0:
                 for character in CHAMPION_LIST:
                     if character == BERSERKER.title:
                         if counter == 1:
-                            if unbridled_rampagerequirements[0] <= champion1_rp:
-                                champion1_rp = champion1_rp - unbridled_rampagerequirements[0]
-                                unbridled_rampagerequirements[3] = unbridled_rampagerequirements[2]
-                                champion1_rp = champion1_rp + unbridled_rampagerequirements[1]
+                            if unbridled_rampage_requirements[0] <= champion1_rp:
+                                champion1_rp = champion1_rp - unbridled_rampage_requirements[0]
+                                unbridled_rampage_requirements[3] = unbridled_rampage_requirements[2]
+                                champion1_rp = champion1_rp + unbridled_rampage_requirements[1]
                                 damage_done = math.ceil(BERSERKER.ap * self.calculate_champion_damage(1))
                                 ability_data = ["Unbridled Rampage", "enemy", "1T", damage_done]
                             else:
                                 return
                         if counter == 2:
-                            if unbridled_rampagerequirements[0] <= champion2_rp:
-                                champion2_rp = champion2_rp - unbridled_rampagerequirements[0]
-                                unbridled_rampagerequirements[3] = unbridled_rampagerequirements[2]
-                                champion2_rp = champion2_rp + unbridled_rampagerequirements[1]
+                            if unbridled_rampage_requirements[0] <= champion2_rp:
+                                champion2_rp = champion2_rp - unbridled_rampage_requirements[0]
+                                unbridled_rampage_requirements[3] = unbridled_rampage_requirements[2]
+                                champion2_rp = champion2_rp + unbridled_rampage_requirements[1]
                                 damage_done = math.ceil(BERSERKER.ap * self.calculate_champion_damage(2))
                                 ability_data = ["Unbridled Rampage", "enemy", "1T", damage_done]
                             else:
                                 return
                         if counter == 3:
-                            if unbridled_rampagerequirements[0] <= champion3_rp:
-                                champion3_rp = champion3_rp - unbridled_rampagerequirements[0]
-                                unbridled_rampagerequirements[3] = unbridled_rampagerequirements[2]
-                                champion3_rp = champion3_rp + unbridled_rampagerequirements[1]
+                            if unbridled_rampage_requirements[0] <= champion3_rp:
+                                champion3_rp = champion3_rp - unbridled_rampage_requirements[0]
+                                unbridled_rampage_requirements[3] = unbridled_rampage_requirements[2]
+                                champion3_rp = champion3_rp + unbridled_rampage_requirements[1]
                                 damage_done = math.ceil(BERSERKER.ap * self.calculate_champion_damage(3))
                                 ability_data = ["Unbridled Rampage", "enemy", "1T", damage_done]
                             else:
                                 return
                         if counter == 4:
-                            if unbridled_rampagerequirements[0] <= champion4_rp:
-                                champion4_rp = champion4_rp - unbridled_rampagerequirements[0]
-                                unbridled_rampagerequirements[3] = unbridled_rampagerequirements[2]
-                                champion4_rp = champion4_rp + unbridled_rampagerequirements[1]
+                            if unbridled_rampage_requirements[0] <= champion4_rp:
+                                champion4_rp = champion4_rp - unbridled_rampage_requirements[0]
+                                unbridled_rampage_requirements[3] = unbridled_rampage_requirements[2]
+                                champion4_rp = champion4_rp + unbridled_rampage_requirements[1]
                                 damage_done = math.ceil(BERSERKER.ap * self.calculate_champion_damage(4))
                                 ability_data = ["Unbridled Rampage", "enemy", "1T", damage_done]
                             else:
                                 return
                         if counter == 5:
-                            if unbridled_rampagerequirements[0] <= champion5_rp:
-                                champion5_rp = champion5_rp - unbridled_rampagerequirements[0]
-                                unbridled_rampagerequirements[3] = unbridled_rampagerequirements[2]
-                                champion5_rp = champion5_rp + unbridled_rampagerequirements[1]
+                            if unbridled_rampage_requirements[0] <= champion5_rp:
+                                champion5_rp = champion5_rp - unbridled_rampage_requirements[0]
+                                unbridled_rampage_requirements[3] = unbridled_rampage_requirements[2]
+                                champion5_rp = champion5_rp + unbridled_rampage_requirements[1]
                                 damage_done = math.ceil(BERSERKER.ap * self.calculate_champion_damage(5))
                                 ability_data = ["Unbridled Rampage", "enemy", "1T", damage_done]
                             else:
@@ -16946,51 +16946,51 @@ class GameFrame(tk.Frame):
             else:
                 return
         elif ability_name == "Hard Hitter":
-            global tactical_punch_requirements
-            if tactical_punch_requirements[3] == 0:
+            global hard_hitter_requirements
+            if hard_hitter_requirements[3] == 0:
                 for character in CHAMPION_LIST:
                     if character == BRAWLIST.title:
                         if counter == 1:
-                            if tactical_punch_requirements[0] <= champion1_rp:
-                                champion1_rp = champion1_rp - tactical_punch_requirements[0]
-                                tactical_punch_requirements[3] = tactical_punch_requirements[2]
-                                champion1_rp = champion1_rp + tactical_punch_requirements[1]
+                            if hard_hitter_requirements[0] <= champion1_rp:
+                                champion1_rp = champion1_rp - hard_hitter_requirements[0]
+                                hard_hitter_requirements[3] = hard_hitter_requirements[2]
+                                champion1_rp = champion1_rp + hard_hitter_requirements[1]
                                 damage_done = math.ceil(BRAWLIST.ap * self.calculate_champion_damage(1))
                                 ability_data = ["Hard Hitter", "enemy", "1T", damage_done]
                             else:
                                 return
                         if counter == 2:
-                            if tactical_punch_requirements[0] <= champion2_rp:
-                                champion2_rp = champion2_rp - tactical_punch_requirements[0]
-                                tactical_punch_requirements[3] = tactical_punch_requirements[2]
-                                champion2_rp = champion2_rp + tactical_punch_requirements[1]
+                            if hard_hitter_requirements[0] <= champion2_rp:
+                                champion2_rp = champion2_rp - hard_hitter_requirements[0]
+                                hard_hitter_requirements[3] = hard_hitter_requirements[2]
+                                champion2_rp = champion2_rp + hard_hitter_requirements[1]
                                 damage_done = math.ceil(BRAWLIST.ap * self.calculate_champion_damage(2))
                                 ability_data = ["Hard Hitter", "enemy", "1T", damage_done]
                             else:
                                 return
                         if counter == 3:
-                            if tactical_punch_requirements[0] <= champion3_rp:
-                                champion3_rp = champion3_rp - tactical_punch_requirements[0]
-                                tactical_punch_requirements[3] = tactical_punch_requirements[2]
-                                champion3_rp = champion3_rp + tactical_punch_requirements[1]
+                            if hard_hitter_requirements[0] <= champion3_rp:
+                                champion3_rp = champion3_rp - hard_hitter_requirements[0]
+                                hard_hitter_requirements[3] = hard_hitter_requirements[2]
+                                champion3_rp = champion3_rp + hard_hitter_requirements[1]
                                 damage_done = math.ceil(BRAWLIST.ap * self.calculate_champion_damage(3))
                                 ability_data = ["Hard Hitter", "enemy", "1T", damage_done]
                             else:
                                 return
                         if counter == 4:
-                            if tactical_punch_requirements[0] <= champion4_rp:
-                                champion4_rp = champion4_rp - tactical_punch_requirements[0]
-                                tactical_punch_requirements[3] = tactical_punch_requirements[2]
-                                champion4_rp = champion4_rp + tactical_punch_requirements[1]
+                            if hard_hitter_requirements[0] <= champion4_rp:
+                                champion4_rp = champion4_rp - hard_hitter_requirements[0]
+                                hard_hitter_requirements[3] = hard_hitter_requirements[2]
+                                champion4_rp = champion4_rp + hard_hitter_requirements[1]
                                 damage_done = math.ceil(BRAWLIST.ap * self.calculate_champion_damage(4))
                                 ability_data = ["Hard Hitter", "enemy", "1T", damage_done]
                             else:
                                 return
                         if counter == 5:
-                            if tactical_punch_requirements[0] <= champion5_rp:
-                                champion5_rp = champion5_rp - tactical_punch_requirements[0]
-                                tactical_punch_requirements[3] = tactical_punch_requirements[2]
-                                champion5_rp = champion5_rp + tactical_punch_requirements[1]
+                            if hard_hitter_requirements[0] <= champion5_rp:
+                                champion5_rp = champion5_rp - hard_hitter_requirements[0]
+                                hard_hitter_requirements[3] = hard_hitter_requirements[2]
+                                champion5_rp = champion5_rp + hard_hitter_requirements[1]
                                 damage_done = math.ceil(BRAWLIST.ap * self.calculate_champion_damage(5))
                                 ability_data = ["Hard Hitter", "enemy", "1T", damage_done]
                             else:
@@ -18319,7 +18319,300 @@ class GameFrame(tk.Frame):
             else:
                 return
         self.player_targetting_AI()
-
+    def attack_details_window(self, ability_name):
+        root = tk.Tk()
+        ability_cost = 0
+        ability_gain = 0
+        ability_cooldown = 0
+        ability_remaining_cooldown = 0
+        ability_resource = ""
+        attack_ability_details = ""
+        if ability_name == "Palm Strike":
+            attack_ability_details = "Strike an enemy, dealing damage and forcing them to attack you for one turn"
+            ability_cost = palm_strike_requirements[0]
+            ability_gain = palm_strike_requirements[1]
+            ability_cooldown = palm_strike_requirements[2]
+            ability_remaining_cooldown = palm_strike_requirements[3]
+            ability_resource = 'Focus'
+        if ability_name == "Leg Sweep":
+            attack_ability_details = "Trip up an enemy to stun them for one turn"
+            ability_cost = leg_sweep_requirements[0]
+            ability_gain = leg_sweep_requirements[1]
+            ability_cooldown = leg_sweep_requirements[2]
+            ability_remaining_cooldown = leg_sweep_requirements[3]
+            ability_resource = 'Focus'
+        if ability_name == "Bloodthirst":
+            attack_ability_details = "Rip at an enemy, dealing damage and healing for half the damage dealt"
+            ability_cost = bloodthirst_requirements[0]
+            ability_gain = bloodthirst_requirements[1]
+            ability_cooldown = bloodthirst_requirements[2]
+            ability_remaining_cooldown = bloodthirst_requirements[3]
+            ability_resource = 'Rage'
+        if ability_name == "Pulverize":
+            attack_ability_details = "Strike at two enemies, dealing damage and forcing them to attack you for one turn"
+            ability_cost = pulverize_requirements[0]
+            ability_gain = pulverize_requirements[1]
+            ability_cooldown = pulverize_requirements[2]
+            ability_remaining_cooldown = pulverize_requirements[3]
+            ability_resource = 'Rage'
+        if ability_name == "Shield Bash":
+            attack_ability_details = "Ram your shield into an enemy, dealing damage and applying 'Weakness' to them"
+            ability_cost = shield_bash_requirements[0]
+            ability_gain = shield_bash_requirements[1]
+            ability_cooldown = shield_bash_requirements[2]
+            ability_remaining_cooldown = shield_bash_requirements[3]
+        if ability_name == "Trainwreck":
+            attack_ability_details = "Smash an enemy, dealing damage for a lot of damage"
+            ability_cost = trainwreck_requirements[0]
+            ability_gain = trainwreck_requirements[1]
+            ability_cooldown = trainwreck_requirements[2]
+            ability_remaining_cooldown = trainwreck_requirements[3]
+        if ability_name == "Flanking Strikes":
+            attack_ability_details = "Slash at two enemies, dealing damage and if they were intending to attack you\nincrease your chance to dodge them by 40%"
+            ability_cost = flanking_strikes_requirements[0]
+            ability_gain = flanking_strikes_requirements[1]
+            ability_cooldown = flanking_strikes_requirements[2]
+            ability_remaining_cooldown = flanking_strikes_requirements[3]
+        if ability_name == "Riposte":
+            attack_ability_details = "Target an enemy and stun them\nif they were using a melee attack, reflect the damage back at them"
+            ability_cost = riposte_requirements[0]
+            ability_gain = riposte_requirements[1]
+            ability_cooldown = riposte_requirements[2]
+            ability_remaining_cooldown = riposte_requirements[3]
+        if ability_name == "Angering Strike":
+            attack_ability_details = "Attack your target, dealing damage"
+            ability_cost = angering_strike_requirements[0]
+            ability_gain = angering_strike_requirements[1]
+            ability_cooldown = angering_strike_requirements[2]
+            ability_remaining_cooldown = angering_strike_requirements[3]
+            ability_resource = 'Rage'
+        if ability_name == "Unbridled Rampage":
+            attack_ability_details = "Release a barrage of attacks your target, dealing huge damage"
+            ability_cost = unbridled_rampage_requirements[0]
+            ability_gain = unbridled_rampage_requirements[1]
+            ability_cooldown = unbridled_rampage_requirements[2]
+            ability_remaining_cooldown = unbridled_rampage_requirements[3]
+            ability_resource = 'Rage'
+        if ability_name == "Serrated Slash":
+            attack_ability_details = "Slash an enemy with a serrated blade, dealing damage and making them bleed for one turn"
+            ability_cost = serrated_slash_requirements[0]
+            ability_gain = serrated_slash_requirements[1]
+            ability_cooldown = serrated_slash_requirements[2]
+            ability_remaining_cooldown = serrated_slash_requirements[3]
+        if ability_name == "Eviscerate":
+            attack_ability_details = "Cut an enemies vital points, dealing damage and making them bleed heavily for three turns"
+            ability_cost = eviscerate_requirements[0]
+            ability_gain = eviscerate_requirements[1]
+            ability_cooldown = eviscerate_requirements[2]
+            ability_remaining_cooldown = eviscerate_requirements[3]
+        if ability_name == "Spear Thrust":
+            attack_ability_details = "Strike an enemy with your spear, dealing damage"
+            ability_cost = spear_thrust_requirements[0]
+            ability_gain = spear_thrust_requirements[1]
+            ability_cooldown = spear_thrust_requirements[2]
+            ability_remaining_cooldown = spear_thrust_requirements[3]
+        if ability_name == "Scrap Bomb":
+            attack_ability_details = "Chuck a makeshift bomb, dealing damage and applying 'Weakness' to all enemies"
+            ability_cost = scrap_bomb_requirements[0]
+            ability_gain = scrap_bomb_requirements[1]
+            ability_cooldown = scrap_bomb_requirements[2]
+            ability_remaining_cooldown = scrap_bomb_requirements[3]
+        if ability_name == "Hard Hitter":
+            attack_ability_details = "Punch an enemy, dealing damage"
+            ability_cost = [0]
+            ability_gain = hard_hitter_requirements[1]
+            ability_cooldown = hard_hitter_requirements[2]
+            ability_remaining_cooldown = hard_hitter_requirements[3]
+        if ability_name == "Wide Swing":
+            attack_ability_details = "Swipe a punch to hit three enemies, dealing damage to all hit"
+            ability_cost = wide_swing_requirements[0]
+            ability_gain = wide_swing_requirements[1]
+            ability_cooldown = wide_swing_requirements[2]
+            ability_remaining_cooldown = wide_swing_requirements[3]
+        if ability_name == "Uppercut":
+            attack_ability_details = "Strike an enemies vulenerable spot, dealing high damage"
+            ability_cost = uppercut_requirements[0]
+            ability_gain = uppercut_requirements[1]
+            ability_cooldown = uppercut_requirements[2]
+            ability_remaining_cooldown = uppercut_requirements[3]
+        if ability_name == "Knock Out":
+            attack_ability_details = "Go for the finishing blow, instantly killing an enemy depending on their size and remaining health points\nRequirements for a knockout: Tiny: 50%, Small: 40%, Medium: 30%, Large: 20%, Huge: 10%"
+            ability_cost = knock_out_requirements[0]
+            ability_gain = knock_out_requirements[1]
+            ability_cooldown = knock_out_requirements[2]
+            ability_remaining_cooldown = knock_out_requirements[3]
+        if ability_name == "Frost Bolt":
+            attack_ability_details = "Launch an magical icicle at an enemy, dealing damage and applying 'Brittle' to them"
+            ability_cost = frost_bolt_requirements[0]
+            ability_gain = frost_bolt_requirements[1]
+            ability_cooldown = frost_bolt_requirements[2]
+            ability_remaining_cooldown = frost_bolt_requirements[3]
+            ability_resource = 'Mana'
+        if ability_name == "Fireball":
+            attack_ability_details = "Shoot a flaming ball at an enemy, dealing damage and causing them to burn for two turns"
+            ability_cost = fireball_requirements[0]
+            ability_gain = fireball_requirements[1]
+            ability_cooldown = fireball_requirements[2]
+            ability_remaining_cooldown = fireball_requirements[3]
+            ability_resource = 'Mana'
+        if ability_name == "Vine-Swipe":
+            attack_ability_details = "Whip two vines strikes two enemies, dealing damage and applying embedding two thorns"
+            ability_cost = vine_swipe_requirements[0]
+            ability_gain = vine_swipe_requirements[1]
+            ability_cooldown = vine_swipe_requirements[2]
+            ability_remaining_cooldown = vine_swipe_requirements[3]
+        if ability_name == "Invigorate Thorns":
+            attack_ability_details = "Sprout thorns that jump out at all enemies, embedding one thorn"
+            ability_cost = invigorate_thorns_requirements[0]
+            ability_gain = invigorate_thorns_requirements[1]
+            ability_cooldown = invigorate_thorns_requirements[2]
+            ability_remaining_cooldown = invigorate_thorns_requirements[3]
+        if ability_name == "Black Bolt":
+            attack_ability_details = "Fire a corrupted bolt at an enemy, dealing damage and for every stack of 'Void Infused'\na devastating rot that is applied that consumes all void infusion and deals damage enhanced by each stack"
+            ability_cost = black_bolt_requirements[0]
+            ability_gain = black_bolt_requirements[1]
+            ability_cooldown = black_bolt_requirements[2]
+            ability_remaining_cooldown = black_bolt_requirements[3]
+            ability_resource = 'Mana'
+        if ability_name == "Void Infusion":
+            attack_ability_details = "Gain a stack of 'Void Infused' to be later used to apply a high damage dot to an enemy"
+            ability_cost = void_infusion_requirements[0]
+            ability_gain = void_infusion_requirements[1]
+            ability_cooldown = void_infusion_requirements[2]
+            ability_remaining_cooldown = void_infusion_requirements[3]
+            ability_resource = 'Mana'
+        if ability_name == "Drain Life":
+            attack_ability_details = "Drain the life force of an enemy, dealing damage and healing back 100% of it\nEmpowered Effect: Other allies are also healed for 30% of damage dealt"
+            ability_cost = drain_life_requirements[0]
+            ability_gain = drain_life_requirements[1]
+            ability_cooldown = drain_life_requirements[2]
+            ability_remaining_cooldown = drain_life_requirements[3]
+        if ability_name == "Blood Spike":
+            attack_ability_details = "Draw out your own blood to launch it at en enemy, dealing damage equal to the health drawn\nEmpowered Effect: Also draw out 20% of each other allies health, adding it to Blood Spikes damage"
+            ability_cost = blood_spike_requirements[0]
+            ability_gain = blood_spike_requirements[1]
+            ability_cooldown = blood_spike_requirements[2]
+            ability_remaining_cooldown = blood_spike_requirements[3]
+            ability_resource = 'Health'
+        if ability_name == "Holy Wrath":
+            attack_ability_details = "Bludgeon an enemy, dealing damage and causing your Holy Wraths to deal 20% extra damage permanently\nThis resets to 0% after attacking with a Holy Wrath that deals 100% additional damage"
+            ability_cost = holy_wrath_requirements[0]
+            ability_gain = holy_wrath_requirements[1]
+            ability_cooldown = holy_wrath_requirements[2]
+            ability_remaining_cooldown = holy_wrath_requirements[3]
+        if ability_name == "Righteous Blow":
+            attack_ability_details = "Smash an enemy, dealing damage and stunning them for two turns"
+            ability_cost = righteous_blow_requirements[0]
+            ability_gain = righteous_blow_requirements[1]
+            ability_cooldown = righteous_blow_requirements[2]
+            ability_remaining_cooldown = righteous_blow_requirements[3]
+        if ability_name == "Crusade":
+            attack_ability_details = "Infuse your weapon with light and hit an enemy, dealing damage and causing the light to explode\ndealing a small amount of damage to all other enemies"
+            ability_cost = crusade_requirements[0]
+            ability_gain = crusade_requirements[1]
+            ability_cooldown = crusade_requirements[2]
+            ability_remaining_cooldown = crusade_requirements[3]
+        if ability_name == "Steady Aim":
+            attack_ability_details = "Fire a precise arrow at an enemy, dealing damage and reducing the cooldowns of Power Shot and Ricochet Shot by 1\Enemies hit are affected by the currently equipped tip"
+            ability_cost = steady_aim_requirements[0]
+            ability_gain = steady_aim_requirements[1]
+            ability_cooldown = steady_aim_requirements[2]
+            ability_remaining_cooldown = steady_aim_requirements[3]
+        if ability_name == "Power Shot":
+            attack_ability_details = "Fire an fire with high power at an enemy, dealing damage and reducing the cooldown of Multi-shot by 2\nEnemies hit are affected two-fold by the currently equipped tip"
+            ability_cost = power_shot_requirements[0]
+            ability_gain = power_shot_requirements[1]
+            ability_cooldown = power_shot_requirements[2]
+            ability_remaining_cooldown = power_shot_requirements[3]
+        if ability_name == "Multi-shot":
+            attack_ability_details = "Fire two arrows hitting two enemies, dealing damage and reducing the cooldown of Ricochet Shot by 3\nEnemies hit are affected by the currently equipped tip"
+            ability_cost = multi_shot_requirements[0]
+            ability_gain = multi_shot_requirements[1]
+            ability_cooldown = multi_shot_requirements[2]
+            ability_remaining_cooldown = multi_shot_requirements[3]
+        if ability_name == "Ricochet Shot":
+            attack_ability_details = "Masterfully fire a rubbery arrow that bounces, hitting every enemy and dealing damage\nEnemies hit are affected by the currently equipped tip"
+            ability_cost = ricochet_shot_requirements[0]
+            ability_gain = ricochet_shot_requirements[1]
+            ability_cooldown = ricochet_shot_requirements[2]
+            ability_remaining_cooldown = ricochet_shot_requirements[3]
+        if ability_name == "Chain Bolts":
+            attack_ability_details = "Launch a duo-bolt at two enemies, dealing damage and charging them with a random polar charge"
+            ability_cost = chain_bolts_requirements[0]
+            ability_gain = chain_bolts_requirements[1]
+            ability_cooldown = chain_bolts_requirements[2]
+            ability_remaining_cooldown = chain_bolts_requirements[3]
+        if ability_name == "Electrical Expulsion":
+            attack_ability_details = "Wildly release polarization charges that latch onto random enemies\nIf you're energised, release 10 charges. Otherwise, release 5"
+            ability_cost = electrical_expulsion_requirements[0]
+            ability_gain = electrical_expulsion_requirements[1]
+            ability_cooldown = electrical_expulsion_requirements[2]
+            ability_remaining_cooldown = electrical_expulsion_requirements[3]
+        if ability_name == "Rock Barrage":
+            attack_ability_details = "Launch loose stones at an enemy, dealing damage."
+            ability_cost = rock_barrage_requirements[0]
+            ability_gain = rock_barrage_requirements[1]
+            ability_cooldown = rock_barrage_requirements[2]
+            ability_remaining_cooldown = rock_barrage_requirements[3]
+            ability_resource = 'Mana'
+        if ability_name == "Shimmering Bolt":
+            attack_ability_details = "Fire a glistening bolt of light at an enemy, dealing damage and sear them with heat"
+            ability_cost = harmonize_requirements[0]
+            ability_gain = harmonize_requirements[1]
+            ability_cooldown = harmonize_requirements[2]
+            ability_remaining_cooldown = harmonize_requirements[3]
+            ability_resource = 'Mana'
+        if ability_name == "Divine Smite":
+            attack_ability_details = "Blast an enemy with light, dealing damage and searing them with very hot heat"
+            ability_cost = divine_smite_requirements[0]
+            ability_gain = divine_smite_requirements[1]
+            ability_cooldown = divine_smite_requirements[2]
+            ability_remaining_cooldown = divine_smite_requirements[3]
+            ability_resource = 'Mana'
+        if ability_name == "Cybernetic Blast":
+            attack_ability_details = "Fire an energy blast from your cybernetics at an enemy, dealing damage"
+            ability_cost = cybernetic_blast_requirements[0]
+            ability_gain = cybernetic_blast_requirements[1]
+            ability_cooldown = cybernetic_blast_requirements[2]
+            ability_remaining_cooldown = cybernetic_blast_requirements[3]
+            ability_resource = 'Mana'
+        if ability_name == "Snip Snip":
+            attack_ability_details = "Slash your scissors at an enemy, dealing damage"
+            ability_cost = snip_snip_requirements[0]
+            ability_gain = snip_snip_requirements[1]
+            ability_cooldown = snip_snip_requirements[2]
+            ability_remaining_cooldown = snip_snip_requirements[3]
+        ability_title_label = tk.Label(root, text=ability_name)
+        ability_title_label.grid(row=0, column=1)
+        ability_description1 = ""
+        ability_description2 = ""
+        if ability_cost != 0:
+            if ability_gain != 0:
+                ability_description1 = "Ability Cost {} {} : Gain {} {}".format(ability_cost, ability_resource, ability_gain, ability_resource)
+            else:
+                ability_description1 = "Ability Cost {} {}".format(ability_cost, ability_resource)
+            ability_requirements1_label = tk.Label(root, text=ability_description1)
+            ability_requirements1_label.grid(row=1, column=1)
+        elif ability_gain != 0:
+            ability_description1 = "Gain {} {}".format(ability_gain, ability_resource)
+            ability_requirements1_label = tk.Label(root, text=ability_description1)
+            ability_requirements1_label.grid(row=1, column=1)
+        if ability_cooldown != 0:
+            if ability_remaining_cooldown != 0:
+                ability_description2 = "Ability Cooldown {} : Remaining Cooldown {}".format(ability_cooldown, ability_remaining_cooldown)
+            else:
+                ability_description2 = "Ability Cooldown {}".format(ability_cooldown)
+            ability_requirements2_label = tk.Label(root, text=ability_description2)
+            ability_requirements2_label.grid(row=2, column=1)
+            ability_description_label = tk.Label(root, text=attack_ability_details)
+            ability_description_label.grid(row=3, column=1)
+            close_button = tk.Button(root, text="Close", command=root.destroy)
+            close_button.grid(row=4, column=1)
+        else:
+            ability_description_label = tk.Label(root, text=attack_ability_details)
+            ability_description_label.grid(row=2, column=1)
+            close_button = tk.Button(root, text="Close", command=root.destroy)
+            close_button.grid(row=3, column=1)
     def special_button(self):
         global special1_button, special1_button_details, special2_button, special2_button_details, special3_button, special3_button_details, special4_button, special4_button_details, back_button, \
             from_special_button
@@ -18331,22 +18624,22 @@ class GameFrame(tk.Frame):
                                        command=lambda: self.champion_specials(special_button_text_list_temp[0]))
             special1_button_details = tk.Button(dungeon_game_frame,
                                                 text="{} Details".format(special_button_text_list_temp[0]), width=38,
-                                                height=1, command=lambda: self.special_details_window(special_button_text_list[0]))
+                                                height=1, command=lambda: self.special_details_window(special_button_text_list_temp[0]))
             special2_button = tk.Button(dungeon_game_frame, text=special_button_text_list[1], width=50, height=4,
                                        command=lambda: self.champion_specials(special_button_text_list_temp[1]))
             special2_button_details = tk.Button(dungeon_game_frame,
                                                 text="{} Details".format(special_button_text_list_temp[1]), width=38,
-                                                height=1, command=lambda: self.special_details_window(special_button_text_list[1]))
+                                                height=1, command=lambda: self.special_details_window(special_button_text_list_temp[1]))
             special3_button = tk.Button(dungeon_game_frame, text=special_button_text_list[2], width=50, height=4,
                                        command=lambda: self.champion_specials(special_button_text_list_temp[2]))
             special3_button_details = tk.Button(dungeon_game_frame,
                                                 text="{} Details".format(special_button_text_list_temp[2]), width=38,
-                                                height=1, command=lambda: self.special_details_window(special_button_text_list[2]))
+                                                height=1, command=lambda: self.special_details_window(special_button_text_list_temp[2]))
             special4_button = tk.Button(dungeon_game_frame, text=special_button_text_list[3], width=50, height=4,
                                        command=lambda: self.champion_specials(special_button_text_list_temp[3]))
             special4_button_details = tk.Button(dungeon_game_frame,
                                                 text="{} Details".format(special_button_text_list_temp[3]), width=38,
-                                                height=1, command=lambda: self.special_details_window(special_button_text_list[3]))
+                                                height=1, command=lambda: self.special_details_window(special_button_text_list_temp[3]))
             back_button = tk.Button(dungeon_game_frame, text="Back", command=self.player_combat_champion1)
             back_button.grid(row=20, column=2, pady=20)
             special1_button.grid(row=18, column=1)
@@ -18366,22 +18659,22 @@ class GameFrame(tk.Frame):
                                        command=lambda: self.champion_specials(special_button_text_list_temp[0]))
             special1_button_details = tk.Button(dungeon_game_frame,
                                                 text="{} Details".format(special_button_text_list_temp[0]), width=38,
-                                                height=1, command=lambda: self.special_details_window(special_button_text_list[0]))
+                                                height=1, command=lambda: self.special_details_window(special_button_text_list_temp[0]))
             special2_button = tk.Button(dungeon_game_frame, text=special_button_text_list[1], width=50, height=4,
                                        command=lambda: self.champion_specials(special_button_text_list_temp[1]))
             special2_button_details = tk.Button(dungeon_game_frame,
                                                 text="{} Details".format(special_button_text_list_temp[1]), width=38,
-                                                height=1, command=lambda: self.special_details_window(special_button_text_list[1]))
+                                                height=1, command=lambda: self.special_details_window(special_button_text_list_temp[1]))
             special3_button = tk.Button(dungeon_game_frame, text=special_button_text_list[2], width=50, height=4,
                                        command=lambda: self.champion_specials(special_button_text_list_temp[2]))
             special3_button_details = tk.Button(dungeon_game_frame,
                                                 text="{} Details".format(special_button_text_list_temp[2]), width=38,
-                                                height=1, command=lambda: self.special_details_window(special_button_text_list[2]))
+                                                height=1, command=lambda: self.special_details_window(special_button_text_list_temp[2]))
             special4_button = tk.Button(dungeon_game_frame, text=special_button_text_list[3], width=50, height=4,
                                        command=lambda: self.champion_specials(special_button_text_list_temp[3]))
             special4_button_details = tk.Button(dungeon_game_frame,
                                                 text="{} Details".format(special_button_text_list_temp[3]), width=38,
-                                                height=1, command=lambda: self.special_details_window(special_button_text_list[3]))
+                                                height=1, command=lambda: self.special_details_window(special_button_text_list_temp[3]))
             back_button = tk.Button(dungeon_game_frame, text="Back", command=self.player_combat_champion2)
             back_button.grid(row=20, column=2, pady=20)
             special1_button.grid(row=18, column=1)
@@ -18401,22 +18694,22 @@ class GameFrame(tk.Frame):
                                        command=lambda: self.champion_specials(special_button_text_list_temp[0]))
             special1_button_details = tk.Button(dungeon_game_frame,
                                                 text="{} Details".format(special_button_text_list_temp[0]), width=38,
-                                                height=1, command=lambda: self.special_details_window(special_button_text_list[0]))
+                                                height=1, command=lambda: self.special_details_window(special_button_text_list_temp[0]))
             special2_button = tk.Button(dungeon_game_frame, text=special_button_text_list[1], width=50, height=4,
                                        command=lambda: self.champion_specials(special_button_text_list_temp[1]))
             special2_button_details = tk.Button(dungeon_game_frame,
                                                 text="{} Details".format(special_button_text_list_temp[1]), width=38,
-                                                height=1, command=lambda: self.special_details_window(special_button_text_list[1]))
+                                                height=1, command=lambda: self.special_details_window(special_button_text_list_temp[1]))
             special3_button = tk.Button(dungeon_game_frame, text=special_button_text_list[2], width=50, height=4,
                                        command=lambda: self.champion_specials(special_button_text_list_temp[2]))
             special3_button_details = tk.Button(dungeon_game_frame,
                                                 text="{} Details".format(special_button_text_list_temp[2]), width=38,
-                                                height=1, command=lambda: self.special_details_window(special_button_text_list[2]))
+                                                height=1, command=lambda: self.special_details_window(special_button_text_list_temp[2]))
             special4_button = tk.Button(dungeon_game_frame, text=special_button_text_list[3], width=50, height=4,
                                        command=lambda: self.champion_specials(special_button_text_list_temp[3]))
             special4_button_details = tk.Button(dungeon_game_frame,
                                                 text="{} Details".format(special_button_text_list_temp[3]), width=38,
-                                                height=1, command=lambda: self.special_details_window(special_button_text_list[3]))
+                                                height=1, command=lambda: self.special_details_window(special_button_text_list_temp[3]))
             back_button = tk.Button(dungeon_game_frame, text="Back", command=self.player_combat_champion3)
             back_button.grid(row=20, column=2, pady=20)
             special1_button.grid(row=18, column=1)
@@ -18436,22 +18729,22 @@ class GameFrame(tk.Frame):
                                        command=lambda: self.champion_specials(special_button_text_list_temp[0]))
             special1_button_details = tk.Button(dungeon_game_frame,
                                                 text="{} Details".format(special_button_text_list_temp[0]), width=38,
-                                                height=1, command=lambda: self.special_details_window(special_button_text_list[0]))
+                                                height=1, command=lambda: self.special_details_window(special_button_text_list_temp[0]))
             special2_button = tk.Button(dungeon_game_frame, text=special_button_text_list[1], width=50, height=4,
                                        command=lambda: self.champion_specials(special_button_text_list_temp[1]))
             special2_button_details = tk.Button(dungeon_game_frame,
                                                 text="{} Details".format(special_button_text_list_temp[1]), width=38,
-                                                height=1, command=lambda: self.special_details_window(special_button_text_list[1]))
+                                                height=1, command=lambda: self.special_details_window(special_button_text_list_temp[1]))
             special3_button = tk.Button(dungeon_game_frame, text=special_button_text_list[2], width=50, height=4,
                                        command=lambda: self.champion_specials(special_button_text_list_temp[2]))
             special3_button_details = tk.Button(dungeon_game_frame,
                                                 text="{} Details".format(special_button_text_list_temp[2]), width=38,
-                                                height=1, command=lambda: self.special_details_window(special_button_text_list[2]))
+                                                height=1, command=lambda: self.special_details_window(special_button_text_list_temp[2]))
             special4_button = tk.Button(dungeon_game_frame, text=special_button_text_list[3], width=50, height=4,
                                        command=lambda: self.champion_specials(special_button_text_list_temp[3]))
             special4_button_details = tk.Button(dungeon_game_frame,
                                                 text="{} Details".format(special_button_text_list_temp[3]), width=38,
-                                                height=1, command=lambda: self.special_details_window(special_button_text_list[3]))
+                                                height=1, command=lambda: self.special_details_window(special_button_text_list_temp[3]))
             back_button = tk.Button(dungeon_game_frame, text="Back", command=self.player_combat_champion4)
             back_button.grid(row=20, column=2, pady=20)
             special1_button.grid(row=18, column=1)
@@ -18471,22 +18764,22 @@ class GameFrame(tk.Frame):
                                        command=lambda: self.champion_specials(special_button_text_list_temp[0]))
             special1_button_details = tk.Button(dungeon_game_frame,
                                                 text="{} Details".format(special_button_text_list_temp[0]), width=38,
-                                                height=1, command=lambda: self.special_details_window(special_button_text_list[0]))
+                                                height=1, command=lambda: self.special_details_window(special_button_text_list_temp[0]))
             special2_button = tk.Button(dungeon_game_frame, text=special_button_text_list[1], width=50, height=4,
                                        command=lambda: self.champion_specials(special_button_text_list_temp[1]))
             special2_button_details = tk.Button(dungeon_game_frame,
                                                 text="{} Details".format(special_button_text_list_temp[1]), width=38,
-                                                height=1, command=lambda: self.special_details_window(special_button_text_list[1]))
+                                                height=1, command=lambda: self.special_details_window(special_button_text_list_temp[1]))
             special3_button = tk.Button(dungeon_game_frame, text=special_button_text_list[2], width=50, height=4,
                                        command=lambda: self.champion_specials(special_button_text_list_temp[2]))
             special3_button_details = tk.Button(dungeon_game_frame,
                                                 text="{} Details".format(special_button_text_list_temp[2]), width=38,
-                                                height=1, command=lambda: self.special_details_window(special_button_text_list[2]))
+                                                height=1, command=lambda: self.special_details_window(special_button_text_list_temp[2]))
             special4_button = tk.Button(dungeon_game_frame, text=special_button_text_list[3], width=50, height=4,
                                        command=lambda: self.champion_specials(special_button_text_list_temp[3]))
             special4_button_details = tk.Button(dungeon_game_frame,
                                                 text="{} Details".format(special_button_text_list_temp[3]), width=38,
-                                                height=1, command=lambda: self.special_details_window(special_button_text_list[3]))
+                                                height=1, command=lambda: self.special_details_window(special_button_text_list_temp[3]))
             back_button = tk.Button(dungeon_game_frame, text="Back", command=self.player_combat_champion5)
             back_button.grid(row=20, column=2, pady=20)
             special1_button.grid(row=18, column=1)
@@ -18498,94 +18791,7 @@ class GameFrame(tk.Frame):
             special4_button.grid(row=20, column=3)
             special4_button_details.grid(row=21, column=3)
             from_special_button = 1
-    def special_details_window(self, ability_name):
-        root = tk.Tk() #HEREHERE
-        if ability_name == "Harmonize": 
-            special_ability_details = ["Reduce the damage inside all mind baubles by 50% and cancel out one round their damage"]
-        elif ability_name == "Pressure Points":
-            special_ability_details = ["Target an enemy and if they're below 30% of their maximum health points, they instantly die\nOtherwise, they are stunned for 3 turns"]
-        elif ability_name == "Challenging Shout":
-            special_ability_details = ["Force all enemies to attack you for two turns"]
-        elif ability_name == "Impactful Boast":
-            special_ability_details = ["Heal 300 health points per enemy that is attacking you"]
-        elif ability_name == "Fortification":
-            special_ability_details = ["Reduce all damage allies take by 15%"]
-        elif ability_name == "Block":
-            special_ability_details = ["Protect an ally and take all the damage that they would've for one turn\nIf targetted at self, instead take 50% reduced damage"]
-        elif ability_name == "Magic Reflection":
-            special_ability_details = ["If the enemy is using a magic based ability, reflect the damage right back at them and stun them for one turn"]
-        elif ability_name == "Evasive Manoeuvres":
-            special_ability_details = ["Set your chance to dodge and the amount of damage you dodge for to 100%"]
-        elif ability_name == "Pure Rage":
-            special_ability_details = ["Increase the damage you deal by 50%, but also increase the damage you take by 30%"]
-        elif ability_name == "Reckless Flurry":
-            special_ability_details = ["Cause your next two attacks to hit all enemies instead of just one"]
-        elif ability_name == "Garrote":
-            special_ability_details = ["Lash the enemy with a spiked garrote wire, they bleed for two turns"]
-        elif ability_name == "Exploit Weakness":
-            special_ability_details = ["Deal damage to an enemy that increases by 30% for each status they are afflicted with"]
-        elif ability_name == "Play Dead":
-            special_ability_details = ["Enemies who were attacking you will mistake you for being already dead and will now choose new targets to attack"]
-        elif ability_name == "Survival Kit":
-            special_ability_details = ["Heal back 60% of your maximum health points and become 'Prepared'"]
-        elif ability_name == "Arcane Brilliance":
-            special_ability_details = ["Cast randomly chosen Fireballs or Frost Bolts at enemies wildly 5 times"]
-        elif ability_name == "Magical Barrier":
-            special_ability_details = ["Surround yourself with a magical barrier that will absorb the next 500 damage you take"]
-        elif ability_name == "Barbed Bush Armour":
-            special_ability_details = ["Enchant an allies armour with a barbed brambles for five turns\nWhenever an enemy attacks an ally with the bush armour, they take 200 damage and are embedded with a thorn"]
-        elif ability_name == "Burst N Bloom":
-            special_ability_details = ["All active thorns explode, destroying them, and enemies take 250 damage per thorn exploded this way"]
-        elif ability_name == "Wound Fissure":
-            special_ability_details = ["Cause all damage overtime effects to instantly deal damage and lose duration up to two turns worth on an enemy"]
-        elif ability_name == "Soul Tap":
-            special_ability_details = ["Convert up to 200 health points into equivalent mana"]
-        elif ability_name == "Blood Boil":
-            special_ability_details = ["Erupt your blood to greatly empower the next ability you use\n View the details of your other abilities to see their empowered effects"]
-        elif ability_name == "Enharden Nerves":
-            special_ability_details = ["Reduce damage you take by 40%\nEmpowered Effect: Additionally grant all your allies 'Enhardened Nerves'"]
-        elif ability_name == "Damnation":
-            special_ability_details = ["Damn an enemy to take a high damage explosion after 3 turns"]
-        elif ability_name == "Energise":
-            special_ability_details = ["Reset the cooldown of Electrical Expulsion and the next cast of it discharges double the polarised charges"]
-        elif ability_name == "Superconductor":
-            special_ability_details = ["Cause all polarisation explosions to deal double damage to an enemy"]
-        elif ability_name == "Muscle Enlarger":
-            special_ability_details = ["Increase an allies damage by 60% for 3 turns"]
-        elif ability_name == "Mistic Bloom":
-            special_ability_details = ["Heal an ally"]
-        elif ability_name == "Power Surge":
-            special_ability_details = ["Deal damage to all enemies and apply 'Weakness' to them for 2 turns"]
-        elif ability_name == "Full Potential":
-            special_ability_details = ["Increase an allies damage by 200% for 3 turns"]
-        elif ability_name == "Spring Waters":
-            special_ability_details = ["Heal two allies wounds, giving them 'Flowing Waters' that heals them each turn"]
-        elif ability_name == "Ocean Tides":
-            special_ability_details = ["Heal all allies and extend the duration of any active 'Flowing Waters' buffs by 1 turn"]
-        elif ability_name == "Boulder Cocoon":
-            special_ability_details = ["Protect one ally from all incoming damage for one turn."]
-        elif ability_name == "Healing Light":
-            special_ability_details = ["Heal two allies and giving them 'Blessed' for 5 turns."]
-        elif ability_name == "Diffracting Nova":
-            special_ability_details = ["Deal damage to all enemies and apply one turn of 'Blessed' to all allies"]
-        elif ability_name == "Overclock Nanobots":
-            special_ability_details = ["Double the healing output of nanobots for 2 turns"]
-        elif ability_name == "Reverse Wounds":
-            special_ability_details = ["Heal an ally of all damage they took since the previous turn"]
-        elif ability_name == "Alter Time":
-            special_ability_details = ["Heal an ally to full health"]
-        elif ability_name == "Bandages":
-            special_ability_details = ["Heal an allies wound, giving them 'Bandaged' that heals them each turn"]
-        elif ability_name == "Tight Tourniquet":
-            special_ability_details = ["Reduce an allies damage taken by 20% for one turn\nOn following turns, they recieve a diminshed version for two turns"]
-        elif ability_name == "Secret Remedy":
-            special_ability_details = ["Increase an allies damage by 50% for one turn\nOn following turns, they recieve a diminshed version for two turns"]
-        
 
-        status_effects_label = tk.Label(root, text=special_ability_details)
-        status_effects_label.grid(row=2, column=1)
-        close_button = tk.Button(root, text="Close", command=root.destroy)
-        close_button.grid(row=3, column=1)
     def champion_specials(self, ability_name):
         global attack_to_target, special_to_target, ability_data, champion1_rp, champion2_rp, champion3_rp, champion4_rp, champion5_rp
         attack_to_target = 0
@@ -20651,6 +20857,306 @@ class GameFrame(tk.Frame):
             else:
                 return
         self.player_targetting_AI()
+    
+    def special_details_window(self, ability_name):
+        root = tk.Tk()
+        ability_cost = 0
+        ability_gain = 0
+        ability_cooldown = 0
+        ability_remaining_cooldown = 0
+        ability_resource = ""
+        special_ability_details = ""
+        if ability_name == "Harmonize": 
+            special_ability_details = "Reduce the damage inside all mind baubles by 50% and cancel out one round their damage"
+            ability_cost = harmonize_requirements[0]
+            ability_gain = harmonize_requirements[1]
+            ability_cooldown = harmonize_requirements[2]
+            ability_remaining_cooldown = harmonize_requirements[3]
+            ability_resource = 'Focus'
+        elif ability_name == "Pressure Points":
+            special_ability_details = "Target an enemy and if they're below 30% of their maximum health points, they instantly die\nOtherwise, they are stunned for 3 turns"
+            ability_cost = pressure_points_requirements[0]
+            ability_gain = pressure_points_requirements[1]
+            ability_cooldown = pressure_points_requirements[2]
+            ability_remaining_cooldown = pressure_points_requirements[3]
+            ability_resource = 'Focus'
+        elif ability_name == "Challenging Shout":
+            special_ability_details = "Force all enemies to attack you for two turns"
+            ability_cost = challenging_shout_requirements[0]
+            ability_gain = challenging_shout_requirements[1]
+            ability_cooldown = challenging_shout_requirements[2]
+            ability_remaining_cooldown = challenging_shout_requirements[3]
+            ability_resource = 'Rage'
+        elif ability_name == "Impactful Boast":
+            special_ability_details = "Heal 300 health points per enemy that is attacking you"
+            ability_cost = impactful_boast_requirements[0]
+            ability_gain = impactful_boast_requirements[1]
+            ability_cooldown = impactful_boast_requirements[2]
+            ability_remaining_cooldown = impactful_boast_requirements[3]
+            ability_resource = 'Rage'
+        elif ability_name == "Fortification":
+            special_ability_details = "Reduce all damage allies take by 15%"
+            ability_cost = fortification_requirements[0]
+            ability_gain = fortification_requirements[1]
+            ability_cooldown = fortification_requirements[2]
+            ability_remaining_cooldown = fortification_requirements[3]
+        elif ability_name == "Block":
+            special_ability_details = "Protect an ally and take all the damage that they would've for one turn\nIf targetted at self, instead take 50% reduced damage"
+            ability_cost = block_requirements[0]
+            ability_gain = block_requirements[1]
+            ability_cooldown = block_requirements[2]
+            ability_remaining_cooldown = block_requirements[3]
+        elif ability_name == "Magic Reflection":
+            special_ability_details = "Target an enemy and stun them\nif they were casting a magic spell, reflect the damage back at them"
+            ability_cost = magic_reflection_requirements[0]
+            ability_gain = magic_reflection_requirements[1]
+            ability_cooldown = magic_reflection_requirements[2]
+            ability_remaining_cooldown = magic_reflection_requirements[3]
+        elif ability_name == "Evasive Manoeuvres":
+            special_ability_details = "Set your chance to dodge and the amount of damage you dodge for to 100%"
+            ability_cost = evasive_manoeuvres_requirements[0]
+            ability_gain = evasive_manoeuvres_requirements[1]
+            ability_cooldown = evasive_manoeuvres_requirements[2]
+            ability_remaining_cooldown = evasive_manoeuvres_requirements[3]
+        elif ability_name == "Pure Rage":
+            special_ability_details = "Increase the damage you deal by 50%, but also increase the damage you take by 30%"
+            ability_cost = pure_rage_requirements[0]
+            ability_gain = pure_rage_requirements[1]
+            ability_cooldown = pure_rage_requirements[2]
+            ability_remaining_cooldown = pure_rage_requirements[3]
+        elif ability_name == "Reckless Flurry":
+            special_ability_details = "Cause your next two attacks to hit all enemies instead of just one"
+            ability_cost = reckless_flurry_requirements[0]
+            ability_gain = reckless_flurry_requirements[1]
+            ability_cooldown = reckless_flurry_requirements[2]
+            ability_remaining_cooldown = reckless_flurry_requirements[3]
+            ability_resource = 'Rage'
+        elif ability_name == "Garrote":
+            special_ability_details = "Lash the enemy with a spiked garrote wire, dealing damage and making them bleed for two turns"
+            ability_cost = garrote_requirements[0]
+            ability_gain = garrote_requirements[1]
+            ability_cooldown = garrote_requirements[2]
+            ability_remaining_cooldown = garrote_requirements[3]
+        elif ability_name == "Exploit Weakness":
+            special_ability_details = "Deal damage to an enemy that increases by 30% for each status they are afflicted with"
+            ability_cost = exploit_weakness_requirements[0]
+            ability_gain = exploit_weakness_requirements[1]
+            ability_cooldown = exploit_weakness_requirements[2]
+            ability_remaining_cooldown = exploit_weakness_requirements[3]
+        elif ability_name == "Play Dead":
+            special_ability_details = "Enemies who were attacking you will mistake you for being already dead\n and will choose new targets to attack"
+            ability_cost = play_dead_requirements[0]
+            ability_gain = play_dead_requirements[1]
+            ability_cooldown = play_dead_requirements[2]
+            ability_remaining_cooldown = play_dead_requirements[3]
+        elif ability_name == "Survival Kit":
+            special_ability_details = "Heal back 60% of your maximum health points and become 'Prepared'"
+            ability_cost = survival_kit_requirements[0]
+            ability_gain = survival_kit_requirements[1]
+            ability_cooldown = survival_kit_requirements[2]
+            ability_remaining_cooldown = survival_kit_requirements[3]
+        elif ability_name == "Arcane Brilliance":
+            special_ability_details = "Cast randomly chosen Fireballs or Frost Bolts at enemies wildly 5 times"
+            ability_cost = arcane_brilliance_requirements[0]
+            ability_gain = arcane_brilliance_requirements[1]
+            ability_cooldown = arcane_brilliance_requirements[2]
+            ability_remaining_cooldown = arcane_brilliance_requirements[3]
+            ability_resource = 'Mana'
+        elif ability_name == "Magical Barrier":
+            special_ability_details = "Surround yourself with a magical barrier that will absorb the next 500 damage you take"
+            ability_cost = magical_barrier_requirements[0]
+            ability_gain = magical_barrier_requirements[1]
+            ability_cooldown = magical_barrier_requirements[2]
+            ability_remaining_cooldown = magical_barrier_requirements[3]
+            ability_resource = 'Mana'
+        elif ability_name == "Barbed Bush Armour":
+            special_ability_details = "Enchant an allies armour with a barbed brambles for five turns\nWhenever an enemy attacks an ally with the bush armour, they take 200 damage and are embedded with a thorn"
+            ability_cost = barbed_bush_armour_requirements[0]
+            ability_gain = barbed_bush_armour_requirements[1]
+            ability_cooldown = barbed_bush_armour_requirements[2]
+            ability_remaining_cooldown = barbed_bush_armour_requirements[3]
+        elif ability_name == "Burst N Bloom":
+            special_ability_details = "All active thorns explode, destroying them, and enemies take 250 damage per thorn exploded this way"
+            ability_cost = burst_n_bloom_requirements[0]
+            ability_gain = burst_n_bloom_requirements[1]
+            ability_cooldown = burst_n_bloom_requirements[2]
+            ability_remaining_cooldown = burst_n_bloom_requirements[3]
+        elif ability_name == "Wound Fissure":
+            special_ability_details = "Cause all damage overtime effects to instantly deal damage\nthey lose duration for up to two turns worth on an enemy"
+            ability_cost = wound_fissure_requirements[0]
+            ability_gain = wound_fissure_requirements[1]
+            ability_cooldown = wound_fissure_requirements[2]
+            ability_remaining_cooldown = wound_fissure_requirements[3]
+            ability_resource = 'Mana'
+        elif ability_name == "Soul Tap":
+            special_ability_details = "Convert up to 200 health points into equivalent mana"
+            ability_cost = soul_tap_requirements[0]
+            ability_gain = soul_tap_requirements[1]
+            ability_cooldown = soul_tap_requirements[2]
+            ability_remaining_cooldown = soul_tap_requirements[3]
+        elif ability_name == "Blood Boil":
+            special_ability_details = "Erupt your blood to greatly empower the next ability you use\n View the details of your other abilities to see their empowered effects"
+            ability_cost = blood_boil_requirements[0]
+            ability_gain = blood_boil_requirements[1]
+            ability_cooldown = blood_boil_requirements[2]
+            ability_remaining_cooldown = blood_boil_requirements[3]
+        elif ability_name == "Enharden Nerves":
+            special_ability_details = "Reduce damage you take by 40%\nEmpowered Effect: Additionally grant all your allies 'Enhardened Nerves'"
+            ability_cost = enharden_nerves_requirements[0]
+            ability_gain = enharden_nerves_requirements[1]
+            ability_cooldown = enharden_nerves_requirements[2]
+            ability_remaining_cooldown = enharden_nerves_requirements[3]
+        elif ability_name == "Damnation":
+            special_ability_details = "Damn an enemy to take a high damage explosion after 3 turns"
+            ability_cost = damnation_requirements[0]
+            ability_gain = damnation_requirements[1]
+            ability_cooldown = damnation_requirements[2]
+            ability_remaining_cooldown = damnation_requirements[3]
+        elif ability_name == "Energise":
+            special_ability_details = "Reset the cooldown of Electrical Expulsion\nthe next cast of it discharges double the polarised charges"
+            ability_cost = energise_requirements[0]
+            ability_gain = energise_requirements[1]
+            ability_cooldown = energise_requirements[2]
+            ability_remaining_cooldown = energise_requirements[3]
+        elif ability_name == "Superconductor":
+            special_ability_details = "Cause all polarisation explosions to deal double damage to an enemy"
+            ability_cost = superconductor_requirements[0]
+            ability_gain = superconductor_requirements[1]
+            ability_cooldown = superconductor_requirements[2]
+            ability_remaining_cooldown = superconductor_requirements[3]
+        elif ability_name == "Muscle Enlarger":
+            special_ability_details = "Increase an allies damage by 60% for 3 turns"
+            ability_cost = muscle_enlarger_requirements[0]
+            ability_gain = muscle_enlarger_requirements[1]
+            ability_cooldown = muscle_enlarger_requirements[2]
+            ability_remaining_cooldown = muscle_enlarger_requirements[3]
+            ability_resource = 'Charge'
+        elif ability_name == "Mistic Bloom":
+            special_ability_details = ["Heal an ally"]
+            ability_cost = mistic_bloom_requirements[0]
+            ability_gain = mistic_bloom_requirements[1]
+            ability_cooldown = mistic_bloom_requirements[2]
+            ability_remaining_cooldown = mistic_bloom_requirements[3]
+            ability_resource = 'Charge'
+        elif ability_name == "Power Surge":
+            special_ability_details = "Deal damage to all enemies and apply 'Weakness' to them for 2 turns"
+            ability_cost = power_surge_requirements[0]
+            ability_gain = power_surge_requirements[1]
+            ability_cooldown = power_surge_requirements[2]
+            ability_remaining_cooldown = power_surge_requirements[3]
+            ability_resource = 'Charges'
+        elif ability_name == "Full Potential":
+            special_ability_details = "Increase an allies damage by 200% for 3 turns"
+            ability_cost = full_potential_requirements[0]
+            ability_gain = full_potential_requirements[1]
+            ability_cooldown = full_potential_requirements[2]
+            ability_remaining_cooldown = full_potential_requirements[3]
+            ability_resource = 'Charges'
+        elif ability_name == "Spring Waters":
+            special_ability_details = "Heal two allies wounds, giving them 'Flowing Waters' that heals them each turn"
+            ability_cost = spring_waters_requirements[0]
+            ability_gain = spring_waters_requirements[1]
+            ability_cooldown = spring_waters_requirements[2]
+            ability_remaining_cooldown = spring_waters_requirements[3]
+            ability_resource = 'Mana'
+        elif ability_name == "Ocean Tides":
+            special_ability_details = "Heal all allies and extend the duration of any active 'Flowing Waters' buffs by 1 turn"
+            ability_cost = ocean_tides_requirements[0]
+            ability_gain = ocean_tides_requirements[1]
+            ability_cooldown = ocean_tides_requirements[2]
+            ability_remaining_cooldown = ocean_tides_requirements[3]
+            ability_resource = 'Mana'
+        elif ability_name == "Boulder Cocoon":
+            special_ability_details = "Protect one ally from all incoming damage for one turn."
+            ability_cost = boulder_cocoon_requirements[0]
+            ability_gain = boulder_cocoon_requirements[1]
+            ability_cooldown = boulder_cocoon_requirements[2]
+            ability_remaining_cooldown = boulder_cocoon_requirements[3]
+            ability_resource = 'Mana'
+        elif ability_name == "Healing Light":
+            special_ability_details = "Heal two allies and giving them 'Blessed' for 5 turns."
+            ability_cost = healing_light_requirements[0]
+            ability_gain = healing_light_requirements[1]
+            ability_cooldown = healing_light_requirements[2]
+            ability_remaining_cooldown = healing_light_requirements[3]
+            ability_resource = 'Mana'
+        elif ability_name == "Diffracting Nova":
+            special_ability_details = "Deal damage to all enemies and apply one turn of 'Blessed' to all allies"
+            ability_cost = diffracting_nova_requirements[0]
+            ability_gain = diffracting_nova_requirements[1]
+            ability_cooldown = diffracting_nova_requirements[2]
+            ability_remaining_cooldown = diffracting_nova_requirements[3]
+            ability_resource = 'Mana'
+        elif ability_name == "Overclock Nanobots":
+            special_ability_details = "Double the healing output of nanobots for 2 turns"
+            ability_cost = overclock_nanobots_requirements[0]
+            ability_gain = overclock_nanobots_requirements[1]
+            ability_cooldown = overclock_nanobots_requirements[2]
+            ability_remaining_cooldown = overclock_nanobots_requirements[3]
+            ability_resource = 'Mana'
+        elif ability_name == "Reverse Wounds":
+            special_ability_details = "Heal an ally of all damage they took since the previous turn"
+            ability_cost = reverse_wounds_requirements[0]
+            ability_gain = reverse_wounds_requirements[1]
+            ability_cooldown = reverse_wounds_requirements[2]
+            ability_remaining_cooldown = reverse_wounds_requirements[3]
+            ability_resource = 'Mana'
+        elif ability_name == "Alter Time":
+            special_ability_details = "Heal an ally to full health"
+            ability_cost = alter_time_requirements[0]
+            ability_gain = alter_time_requirements[1]
+            ability_cooldown = alter_time_requirements[2]
+            ability_remaining_cooldown = alter_time_requirements[3]
+            ability_resource = 'Mana'
+        elif ability_name == "Bandages":
+            special_ability_details = "Heal an allies wound, giving them 'Bandaged' that heals them each turn"
+            ability_cost = bandages_requirements[0]
+            ability_gain = bandages_requirements[1]
+            ability_cooldown = bandages_requirements[2]
+            ability_remaining_cooldown = bandages_requirements[3]
+        elif ability_name == "Tight Tourniquet":
+            special_ability_details = "Reduce an allies damage taken by 20% for one turn\nOn following turns, they recieve a diminshed version for two turns"
+            ability_cost = tight_tourniquet_requirements[0]
+            ability_gain = tight_tourniquet_requirements[1]
+            ability_cooldown = tight_tourniquet_requirements[2]
+            ability_remaining_cooldown = tight_tourniquet_requirements[3]
+        elif ability_name == "Secret Remedy":
+            special_ability_details = "Increase an allies damage by 50% for one turn\nOn following turns, they recieve a diminshed version for two turns"
+            ability_cost = secret_remedy_requirements[0]
+            ability_gain = secret_remedy_requirements[1]
+            ability_cooldown = secret_remedy_requirements[2]
+            ability_remaining_cooldown = secret_remedy_requirements[3]
+        ability_title_label = tk.Label(root, text=ability_name)
+        ability_title_label.grid(row=0, column=1)
+        ability_description1 = ""
+        ability_description2 = ""
+        if ability_cost != 0:
+            if ability_gain != 0:
+                ability_description1 = "Ability Cost {} {} : Gain {} {}".format(ability_cost, ability_resource, ability_gain, ability_resource)
+            else:
+                ability_description1 = "Ability Cost {} {}".format(ability_cost, ability_resource)
+            ability_requirements1_label = tk.Label(root, text=ability_description1)
+            ability_requirements1_label.grid(row=1, column=1)
+        elif ability_gain != 0:
+            ability_description1 = "Gain {} {}".format(ability_gain, ability_resource)
+            ability_requirements1_label = tk.Label(root, text=ability_description1)
+            ability_requirements1_label.grid(row=1, column=1)
+        if ability_cooldown != 0:
+            if ability_remaining_cooldown != 0:
+                ability_description2 = "Ability Cooldown {} : Remaining Cooldown {}".format(ability_cooldown, ability_remaining_cooldown)
+            else:
+                ability_description2 = "Ability Cooldown {}".format(ability_cooldown)
+            ability_requirements2_label = tk.Label(root, text=ability_description2)
+            ability_requirements2_label.grid(row=2, column=1)
+            ability_description_label = tk.Label(root, text=special_ability_details)
+            ability_description_label.grid(row=3, column=1)
+            close_button = tk.Button(root, text="Close", command=root.destroy)
+            close_button.grid(row=4, column=1)
+        else:
+            ability_description_label = tk.Label(root, text=special_ability_details)
+            ability_description_label.grid(row=2, column=1)
+            close_button = tk.Button(root, text="Close", command=root.destroy)
+            close_button.grid(row=3, column=1)
     def champion_turn_switch(self, champion_position):
         global from_end_of_turn
         if from_end_of_turn == 1:
@@ -27257,23 +27763,33 @@ class GameFrame(tk.Frame):
             else:
                 return
     def check_brittle(self, target):
-        brittle_damage_modifier = 1
+        damage_modifier = 1
         if target == 1:
             if ai1_brittle != 0:
-                brittle_damage_modifier = 1.3
+                damage_modifier = damage_modifier + 0.3
+            if ai1_thornsDot[1] != 0:
+                damage_modifier = damage_modifier + (0.01 * ai1_thornsDot[1])
         if target == 2:
             if ai2_brittle != 0:
-                brittle_damage_modifier = 1.3
+                damage_modifier = damage_modifier + 0.3
+            if ai2_thornsDot[1] != 0:
+                damage_modifier = damage_modifier + (0.01 * ai2_thornsDot[1])
         if target == 3:
             if ai3_brittle != 0:
-                brittle_damage_modifier = 1.3
+                damage_modifier = damage_modifier + 0.3
+            if ai3_thornsDot[1] != 0:
+                damage_modifier = damage_modifier + (0.01 * ai3_thornsDot[1])
         if target == 4:
             if ai4_brittle != 0:
-                brittle_damage_modifier = 1.3
+                damage_modifier = damage_modifier + 0.3
+            if ai4_thornsDot[1] != 0:
+                damage_modifier = damage_modifier + (0.01 * ai4_thornsDot[1])
         if target == 5:
             if ai5_brittle != 0:
-                brittle_damage_modifier = 1.3
-        return brittle_damage_modifier
+                damage_modifier = damage_modifier + 0.3
+            if ai5_thornsDot[1] != 0:
+                damage_modifier = damage_modifier + (0.01 * ai5_thornsDot[1])
+        return damage_modifier
     def apply_shimmerDot(self, target, length):
         global ai1_shimmerDot, ai2_shimmerDot, ai3_shimmerDot, ai4_shimmerDot, ai5_shimmerDot, \
             ai1_statuses, ai2_statuses, ai3_statuses, ai4_statuses, ai5_statuses
@@ -28063,8 +28579,8 @@ class GameFrame(tk.Frame):
                 attack_button_text_list_temp.append(abilities)
             while len(attack_button_text_list_temp) < 4:
                 attack_button_text_list_temp.append("Empty")
-            for abiltities in CHAMPION1_SPECIALLIST:
-                special_button_text_list_temp.append(abiltities)
+            for abilities in CHAMPION1_SPECIALLIST:
+                special_button_text_list_temp.append(abilities)
             while len(special_button_text_list_temp) < 4:
                 special_button_text_list_temp.append("Empty")
         if champion_position == 2:
@@ -28072,8 +28588,8 @@ class GameFrame(tk.Frame):
                 attack_button_text_list_temp.append(abilities)
             while len(attack_button_text_list_temp) < 4:
                 attack_button_text_list_temp.append("Empty")
-            for abiltities in CHAMPION2_SPECIALLIST:
-                special_button_text_list_temp.append(abiltities)
+            for abilities in CHAMPION2_SPECIALLIST:
+                special_button_text_list_temp.append(abilities)
             while len(special_button_text_list_temp) < 4:
                 special_button_text_list_temp.append("Empty")
         if champion_position == 3:
@@ -28081,8 +28597,8 @@ class GameFrame(tk.Frame):
                 attack_button_text_list_temp.append(abilities)
             while len(attack_button_text_list_temp) < 4:
                 attack_button_text_list_temp.append("Empty")
-            for abiltities in CHAMPION3_SPECIALLIST:
-                special_button_text_list_temp.append(abiltities)
+            for abilities in CHAMPION3_SPECIALLIST:
+                special_button_text_list_temp.append(abilities)
             while len(special_button_text_list_temp) < 4:
                 special_button_text_list_temp.append("Empty")
         if champion_position == 4:
@@ -28090,8 +28606,8 @@ class GameFrame(tk.Frame):
                 attack_button_text_list_temp.append(abilities)
             while len(attack_button_text_list_temp) < 4:
                 attack_button_text_list_temp.append("Empty")
-            for abiltities in CHAMPION4_SPECIALLIST:
-                special_button_text_list_temp.append(abiltities)
+            for abilities in CHAMPION4_SPECIALLIST:
+                special_button_text_list_temp.append(abilities)
             while len(special_button_text_list_temp) < 4:
                 special_button_text_list_temp.append("Empty")
         if champion_position == 5:
@@ -28099,8 +28615,8 @@ class GameFrame(tk.Frame):
                 attack_button_text_list_temp.append(abilities)
             while len(attack_button_text_list_temp) < 4:
                 attack_button_text_list_temp.append("Empty")
-            for abiltities in CHAMPION5_SPECIALLIST:
-                special_button_text_list_temp.append(abiltities)
+            for abilities in CHAMPION5_SPECIALLIST:
+                special_button_text_list_temp.append(abilities)
             while len(special_button_text_list_temp) < 4:
                 special_button_text_list_temp.append("Empty")
         self.champions_ability_button_text()
@@ -28170,16 +28686,16 @@ class GameFrame(tk.Frame):
                 else:
                     attack_button_text_list.append(attack_name)
             elif attack_name == "Unbridled Rampage":
-                if unbridled_rampagerequirements[0] > 0:
-                    if unbridled_rampagerequirements[3] > 0:
-                        attack_text = "Rampage ({})\n{} {}".format(unbridled_rampagerequirements[3], BERSERKER.rp_name,
-                                                                   unbridled_rampagerequirements[0])
+                if unbridled_rampage_requirements[0] > 0:
+                    if unbridled_rampage_requirements[3] > 0:
+                        attack_text = "Rampage ({})\n{} {}".format(unbridled_rampage_requirements[3], BERSERKER.rp_name,
+                                                                   unbridled_rampage_requirements[0])
                         attack_button_text_list.append(attack_text)
                     else:
-                        attack_text = "Rampage\n{} {}".format(BERSERKER.rp_name, unbridled_rampagerequirements[0])
+                        attack_text = "Rampage\n{} {}".format(BERSERKER.rp_name, unbridled_rampage_requirements[0])
                         attack_button_text_list.append(attack_text)
-                elif unbridled_rampagerequirements[3] > 0:
-                    attack_text = "Rampage ({})".format(unbridled_rampagerequirements[3])
+                elif unbridled_rampage_requirements[3] > 0:
+                    attack_text = "Rampage ({})".format(unbridled_rampage_requirements[3])
                     attack_button_text_list.append(attack_text)
                 else:
                     attack_button_text_list.append(attack_name)
