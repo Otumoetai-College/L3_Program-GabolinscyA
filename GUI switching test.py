@@ -94,11 +94,7 @@ TIME_WALKER = Champions(1000, 200, 150, 'Zaqner, the Time Walker', "Time Walker"
 FIELD_MEDIC = Champions(1000, 0, 150, 'Curie, Field Medic', "Field Medic", "FDM", "null", ["Snip Snip"], ["Bandages", "Tight Tourniquet", "Secret Remedy"], "Experienced Healing")
 
 class Monsters:
-    def __init__(self, hp, ap, rp, rp_name, name, nickname, enter_word, attack_list, ai_spawned, size_class):
-        #Health Point
-        self.hp = hp
-        # Attack Power
-        self.ap = ap
+    def __init__(self, rp, rp_name, name, nickname, enter_word, attack_list, ai_spawned, size_class):
         #Resource Point
         self.rp = rp
         # Resource Power Name
@@ -115,15 +111,15 @@ class Monsters:
         self.ai_spawned = ai_spawned
         #Size Class of the monster
         self.size_class = size_class
-GROTHAK_THE_DESTROYER = Monsters(3000, 100, 0, "null", "Grothak the Destroyer", "Grothak", "", ["Club Slam"], 1, 'Huge')
+GROTHAK_THE_DESTROYER = Monsters(0, "null", "Grothak the Destroyer", "Grothak", "", ["Club Slam"], 1, 'Huge')
 
-WORMPULP_BROTHERS = Monsters(1500, 50, 100, "Scent", "Wormpulp Brothers", "Wormpulp Brother", "the", ["Violent Thrash"], 2, 'Large')
+WORMPULP_BROTHERS = Monsters(0, "null", "Wormpulp Brothers", "Wormpulp Brother", "the", ["Violent Thrash"], 2, 'Large')
 
-SIREN_TRIPLETS = Monsters(1000, 33, 200, "Mana", "Siren Triplets", "Triplet", "the", ["Twilight Beam"], 3, 'Medium')
+SIREN_TRIPLETS = Monsters(200, "Mana", "Siren Triplets", "Triplet", "the", ["Twilight Beam"], 3, 'Medium')
 
-VENOMSKIN_AMPHIBOIDS = Monsters(750, 25, 0, "null", "Venomskin Amphiboids", "Venomskin Amphiboid", "a gang of", ["Spear Thrust"], 4, 'Small')
+VENOMSKIN_AMPHIBOIDS = Monsters(0, "null", "Venomskin Amphiboids", "Venomskin Amphiboid", "a gang of", ["Spear Thrust"], 4, 'Small')
 
-GIANT_LOCUST_SWARM = Monsters(600, 20, 0, "null", "Giant Locust Swarm", "Giant Locust", "a", ["Bite"], 5, 'Tiny')
+GIANT_LOCUST_SWARM = Monsters(0, "null", "Giant Locust Swarm", "Giant Locust", "a", ["Bite"], 5, 'Tiny')
 
 #This class loads all Frames into one parent (container) and lets me call those Frames through the use of classes. I can call these class frames through the show.frame function
 class ParentClass(tk.Tk):
@@ -146,7 +142,7 @@ class ParentClass(tk.Tk):
         #Loads all frames on top of each other. The frame that is visible is the one called to go on top.
         for F in (
                 OpeningPage, MainMenu, DungeonDelve, CreateTeamPage, CreditPage, How2PlayPage, LeaderboardPage,
-                LoginMenu, RegisterMenu, DungeonManagement, TeamSelectionPage, GameFrame):
+                LoginMenu, RegisterMenu, DungeonExpeditions, TeamSelectionPage, GameFrame):
             page_name = F.__name__
             frame = F(parent=container, controller=self)
             self.frames[page_name] = frame
@@ -173,7 +169,7 @@ class ParentClass(tk.Tk):
         inputted_password = password_entry.get()
         inputted_password.strip()
         username_file = open(
-            "C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Data (DO NOT EDIT)/account_data_username.txt".format(computer_username), "r")
+            "C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Data (DO NOT EDIT)/account_data_users.txt".format(computer_username), "r")
         password_file = open(
             "C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Data (DO NOT EDIT)/account_data_password.txt".format(computer_username), "r")
         no_us_and_pw_warning = "Please enter a username and password"
@@ -233,30 +229,12 @@ class ParentClass(tk.Tk):
             "C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Data (DO NOT EDIT)/game_data_current_username.txt".format(computer_username), "w")
         current_user.write("{}".format(inputted_username))
         current_user.close()
-    #Reads the current_username file to return the plain name in the file
-    def get_user(self):
-        current_user = open(
-            "C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Data (DO NOT EDIT)/game_data_current_username.txt".format(computer_username), "r")
-        current_user_r = current_user.readline()
-        user = current_user_r
-        current_user.close()
-        return user
-
-    # Reads the current_username file to return the encoded version of the name in the file
-    def get_user_encoded(self):
-        current_user = open(
-            "C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Data (DO NOT EDIT)/game_data_current_username.txt".format(computer_username), "r")
-        current_user_r = current_user.readline()
-        user = current_user_r
-        user = user.encode("utf-8")
-        current_user.close()
-        return user
 
     # Checks username_entry and password_entry through the account_data_username/password text files to see whether or not
     # the inputted account exists already and displays a message through self.problem accordingly on if an input was empty or wrong or if that accounts password is already in use.
     def register_check_password(self, username_entry, password_entry, confirm_password_entry):
         global problem
-        global encode_username
+        global encoded_username
         global encode_password
         inputted_username = username_entry.get()
         inputted_username.strip()
@@ -265,7 +243,7 @@ class ParentClass(tk.Tk):
         inputted_confirm_password = confirm_password_entry.get()
         inputted_confirm_password.strip()
         username_file = open(
-            "C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Data (DO NOT EDIT)/account_data_username.txt".format(computer_username), "r")
+            "C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Data (DO NOT EDIT)/account_data_users.txt".format(computer_username), "r")
         password_file = open(
             "C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Data (DO NOT EDIT)/account_data_password.txt".format(computer_username), "r")
         no_us_and_pw_warning = "Username and Password cannot be empty"
@@ -293,7 +271,7 @@ class ParentClass(tk.Tk):
         elif inputted_confirm_password == inputted_password:
             password_encoder = "{}{}".format(inputted_username, inputted_password)
             username_encoder = inputted_username
-            encode_username = username_encoder.encode("utf-8")
+            encoded_username = username_encoder.encode("utf-8")
             encode_password = bcrypt.generate_password_hash(password_encoder).decode("utf-8")
             if inputted_username == "":
                 self.problem.destroy()
@@ -301,7 +279,7 @@ class ParentClass(tk.Tk):
                 self.problem.configure(text=no_us_warning)
                 self.problem.grid(row=3, column=0, padx=10, pady=10)
             else:
-                if str(encode_username) in username_file_r:
+                if str(encoded_username) in username_file_r:
                     self.problem.destroy()
                     self.problem = ttk.Label(self, text="")
                     self.problem.configure(text=un_unavailable)
@@ -319,24 +297,9 @@ class ParentClass(tk.Tk):
             self.problem.grid(row=3, column=0, padx=10, pady=10)
     #Writes the newly created password and usename into their respective text files
     def user_account_set(self):
-        file = open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Data (DO NOT EDIT)/account_data_username.txt".format(computer_username), "a")
+        file = open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Data (DO NOT EDIT)/account_data_users.txt".format(computer_username), "a")
         file.write("\n")
-        file.write(str(encode_username))
-        file.close()
-        file = open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Data (DO NOT EDIT)/account_data_championTeam_1.txt".format(computer_username),
-                    "a")
-        file.write("\n")
-        file.write(str(encode_username) + ", ")
-        file.close()
-        file = open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Data (DO NOT EDIT)/account_data_championTeam_2.txt".format(computer_username),
-                    "a")
-        file.write("\n")
-        file.write(str(encode_username) + ", ")
-        file.close()
-        file = open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Data (DO NOT EDIT)/account_data_championTeam_3.txt".format(computer_username),
-                    "a")
-        file.write("\n")
-        file.write(str(encode_username) + ", ")
+        file.write("{}, Empty:Empty:Empty:Empty:Empty, 0, Bronze".format(str(encoded_username)))
         file.close()
         file = open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Data (DO NOT EDIT)/account_data_password.txt".format(computer_username), "a")
         file.write("\n")
@@ -367,47 +330,31 @@ class ParentClass(tk.Tk):
         username_entry.delete(0, "end")
         password_entry.delete(0, "end")
         self.show_frame("OpeningPage")
-    #reads the users team codes and returns the string
-    def return_users_champion_team1(self, user):
-        team_line_1 = ""
-        champion_file_1 = open(
-            "C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Data (DO NOT EDIT)/account_data_championTeam_1.txt".format(computer_username), "r")
-        for line in champion_file_1:
-            try:
-                if str(user) in line:
-                    team_line_1 = line.replace("{}, ".format(str(user)), "")
-                    champion_file_1.close()
-                    return team_line_1
-            except:
-                breakpoint()
-
-    # reads the users team codes and returns the string
-    def return_users_champion_team2(self, user):
-        team_line_2 = ""
-        champion_file_2 = open(
-            "C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Data (DO NOT EDIT)/account_data_championTeam_2.txt".format(computer_username), "r")
-        for line in champion_file_2:
-            try:
-                if str(user) in line:
-                    team_line_2 = line.replace("{}, ".format(str(user)), "")
-                    champion_file_2.close()
-                    return team_line_2
-            except:
-                breakpoint()
-
-    # reads the users team codes and returns the string
-    def return_users_champion_team3(self, user):
-        team_line_3 = ""
-        champion_file_3 = open(
-            "C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Data (DO NOT EDIT)/account_data_championTeam_3.txt".format(computer_username), "r")
-        for line in champion_file_3:
-            try:
-                if str(user) in line:
-                    team_line_3 = line.replace("{}, ".format(str(user)), "")
-                    champion_file_3.close()
-                    return team_line_3
-            except:
-                breakpoint()
+    
+    def get_account_data(self, requested_data):
+        current_user = open(
+            "C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Data (DO NOT EDIT)/game_data_current_username.txt".format(computer_username), "r")
+        current_user_read = current_user.readline()
+        user = str(current_user_read)
+        encoded_user = user.encode("utf-8")
+        encoded_user = str(encoded_user)
+        current_user.close()
+        accounts_file = open(
+            "C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Data (DO NOT EDIT)/account_data_users.txt".format(computer_username), "r")
+        for line in accounts_file:
+            if encoded_user in line:
+                user_data_list = list(line.split(", "))
+                accounts_file.close()
+                if requested_data == "username":
+                    return user
+                elif requested_data == "encoded_username":
+                    return encoded_user
+                elif requested_data == "champion_list":
+                    return str(user_data_list[1])
+                elif requested_data == "emblems":
+                    return float(user_data_list[2])
+                elif requested_data == "rank":
+                    return str(user_data_list[3])
 
     def mainmenu_to_login(self, validate_user_button, current_user_label):
         validate_user_button.grid(row=7, column=2, pady=2, sticky="e")
@@ -418,22 +365,61 @@ class ParentClass(tk.Tk):
         CreateTeamPage.update_variables()
         self.show_frame("CreateTeamPage")
 
-    def cancel_new_team1(self):
-        TeamSelectionPage.clear_temp_party1(self)
+    def cancel_new_team(self):
+        TeamSelectionPage.clear_temp_party(self)
         self.show_frame("CreateTeamPage")
 
-    def finalise_new_team1(self, root):
-        TeamSelectionPage.save_new_team1(self, root)
+    def finalise_new_team(self, root):
+        TeamSelectionPage.save_new_team(self, root)
         ParentClass.show_frame(app, "CreateTeamPage")
 
     #writes the users chosen team into a file for later use
-    def set_dungeon_team(self, decoded_dungeoneer_team1, root):
+    def set_dungeon_team(self, decoded_dungeoneer_team, root):
         current_team = open(
             "C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Data (DO NOT EDIT)/game_data_dungeon_team.txt".format(computer_username), "w")
-        current_team.write(str(decoded_dungeoneer_team1))
+        current_team.write(str(decoded_dungeoneer_team))
         current_team.close()
         root.destroy()
         ParentClass.show_frame(app, "GameFrame")
+    
+    def update_account_emblems(self, new_emblem_total, rank_change_check):
+        i = -1
+        file = open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Data (DO NOT EDIT)/account_data_users.txt".format(computer_username),
+                    "r")
+        file_allLines = file.readlines()
+        user = self.get_account_data("encoded_username")
+        champion_list = self.get_account_data("champion_list")
+        if rank_change_check == 1:
+            if new_emblem_total >= 40:
+                if new_emblem_total >= 60:
+                    if new_emblem_total >= 80:
+                        if new_emblem_total >= 100:
+                            if new_emblem_total >= 120:
+                                rank = "Obsidian"
+                            else:
+                                rank = "Ruby"
+                        else:
+                            rank = "Diamond"
+                    else:
+                        rank = "Steel"
+                else:
+                    rank = "Gold"
+            else:
+                rank = "Silver"
+        else:
+            rank = self.get_account_data("rank")
+        user = str(user)
+        for line in file_allLines:
+            i += 1
+            if user in line:
+                new_line = "{}, {}, {}, {}\n".format(user, champion_list, new_emblem_total, rank)
+                file_allLines[i] = new_line
+                file_write = open(
+                    "C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Data (DO NOT EDIT)/account_data_users.txt".format(computer_username),
+                    "w")
+                file_write.writelines(file_allLines)
+                file.close()
+                file_write.close()
 
 #Window pop-up for confirming account creation
 class registery_window(tk.Toplevel):
@@ -468,6 +454,7 @@ class OpeningPage(tk.Frame):
         invis_label2.grid(column=1, row=1, padx=95)
         invis_label3.grid(column=1, row=2, padx=95)
         button.grid(row=3, column=2)
+        GameFrame.set_champion_abilities_default(self)
 
 #Login Frame
 class LoginMenu(tk.Frame):
@@ -562,8 +549,6 @@ class MainMenu(tk.Frame):
                               command=lambda: controller.show_frame("How2PlayPage"))
         buttonLeaderboard = tk.Button(self, text="Leaderboard (NYI)", padx=10, pady=10, font=controller.menu_button_font,
                                       command=lambda: controller.show_frame("LeaderboardPage"))
-        buttonLogout = tk.Button(self, text="Log Out", padx=10, pady=10, font=controller.menu_button_font,
-                                 command=lambda: controller.show_frame("LoginMenu"))
         buttonQuit = tk.Button(self, text="Exit game", padx=10, pady=10, font=controller.menu_button_font,
                                command=lambda: controller.breakcode())
         buttonDungeon.grid(row=1, column=2, pady=2, sticky="w")
@@ -571,8 +556,7 @@ class MainMenu(tk.Frame):
         buttonCredit.grid(row=5, column=2, pady=2, sticky="w")
         buttonH2P.grid(row=4, column=2, pady=2, sticky="w")
         buttonLeaderboard.grid(row=3, column=2, pady=2, sticky="w")
-        buttonLogout.grid(row=6, column=2, pady=2, sticky="w")
-        buttonQuit.grid(row=7, column=2, pady=2, sticky="w")
+        buttonQuit.grid(row=6, column=2, pady=2, sticky="w")
         invis_label1.grid(column=1, row=1, padx=50)
         invis_label2.grid(column=1, row=2, padx=50)
         invis_label3.grid(column=1, row=3, padx=50)
@@ -589,7 +573,7 @@ class DungeonDelve(tk.Frame):
         play_button = tk.Button(self, text="Enter the Dungeon", font=controller.menu_button_font,
                                 command=self.team_check)
         dungeon_settings_button = tk.Button(self, text="Dungeon Management", font=controller.menu_button_font,
-                                            command=lambda: controller.show_frame("DungeonManagement"))
+                                            command=lambda: controller.show_frame("DungeonExpeditions"))
         buttonReturn = tk.Button(self, text="Return to Menu", font=controller.menu_button_font,
                                  command=lambda: controller.show_frame("MainMenu"))
         invis_label1 = tk.Label(self)
@@ -602,14 +586,10 @@ class DungeonDelve(tk.Frame):
         invis_label2.grid(row=2, column=2, pady=50)
 
     def team_check(self):
-        user = ParentClass.get_user_encoded(self)
-        team_line_1 = []
-        team_line_1 = ParentClass.return_users_champion_team1(self, user)
-        team_line_1 = team_line_1.replace(",", "")
-        team_1_list_data = team_line_1.split()
-        CTP = CreateTeamPage
-        decoded_dungeoneer_team1 = CTP.team_1_decode(self, team_1_list_data)
-        if "Empty" in decoded_dungeoneer_team1:
+        team_line = ParentClass.get_account_data(self, "champion_list")
+        team_list_data = team_line.split(":")
+        decoded_dungeoneer_team = CreateTeamPage.team_decode(self, team_list_data)
+        if "Empty" in decoded_dungeoneer_team:
             root = tk.Tk()
             warning_label = tk.Label(root, text="You must have a full team before \n entering the dungeon")
             okButton = tk.Button(root, text="Ok", command=root.destroy)
@@ -619,181 +599,404 @@ class DungeonDelve(tk.Frame):
             self.enter_dungeon_confirmation()
 
     def enter_dungeon_confirmation(self):
+        global dungeon_settings, dungeon_name_text
         root = tk.Tk()
-        user = ParentClass.get_user_encoded(self)
-        team_line_1 = []
-        team_line_1 = ParentClass.return_users_champion_team1(self, user)
-        team_line_1 = team_line_1.replace(",", "")
-        team_1_list_data = team_line_1.split()
-        CTP = CreateTeamPage
-        SA = ParentClass
-        decoded_dungeoneer_team1 = CTP.team_1_decode(self, team_1_list_data)
-        message_label = tk.Label(root, text=":Are you sure you want to delve into the dungeon with:")
-        visual_team_label = tk.Label(root, text=self.display_team(decoded_dungeoneer_team1))
+        team_line = ParentClass.get_account_data(self, "champion_list")
+        team_list_data = team_line.split(":")
+        decoded_dungeoneer_team = CreateTeamPage.team_decode(self, team_list_data)
+        read_difficulty_file = open(
+            "C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Data (DO NOT EDIT)/game_data_dungeon_difficulty.txt".format(computer_username),
+            "r")
+        dungeon_settings = read_difficulty_file.readline()
+        if dungeon_settings == "Bronze":
+            dungeon_name_text = "The City Sewers"
+        elif dungeon_settings == "Silver":
+            dungeon_name_text = "The Royal Catacombs"
+        elif dungeon_settings == "Gold":
+            dungeon_name_text = "The Forgotten Mines"
+        elif dungeon_settings == "Steel":
+            dungeon_name_text = "The Hissing Caverns"
+        elif dungeon_settings == "Diamond":
+            dungeon_name_text = "The Deep Dark"
+        elif dungeon_settings == "Ruby":
+            dungeon_name_text = "The Void Zone"
+        elif dungeon_settings == "Obsidian":
+            dungeon_name_text = "The Abyss"
+        read_difficulty_file.close()
+        message_label = tk.Label(root, text=":Are you sure you want to delve into {} with:".format(dungeon_name_text))
+        visual_team_label = tk.Label(root, text=self.display_team(decoded_dungeoneer_team))
         yesButton = tk.Button(root, text="Yes",
-                              command=lambda: ParentClass.set_dungeon_team(self, decoded_dungeoneer_team1, root))
+                              command=lambda: ParentClass.set_dungeon_team(self, decoded_dungeoneer_team, root))
         noButton = tk.Button(root, text="No", command=root.destroy)
         message_label.grid(row=1, column=1)
         visual_team_label.grid(row=2, column=1)
         yesButton.grid(row=3, column=1, sticky="w", padx=100)
         noButton.grid(row=3, column=1, sticky="e", padx=100)
 
-    def display_team(self, decoded_dungeoneer_team1):
-        team_1_text = ""
+    def display_team(self, decoded_dungeoneer_team):
+        team_text = ""
         i = 0
-        for character in decoded_dungeoneer_team1:
+        for character in decoded_dungeoneer_team:
             if i == 3:
-                team_1_text += "\n"
-            team_1_text += "["
-            team_1_text += character
-            team_1_text += "]"
+                team_text += "\n"
+            team_text += "["
+            team_text += character
+            team_text += "]"
             i += 1
-        return team_1_text
+        return team_text
 
-
-class DungeonManagement(tk.Frame):
+class DungeonExpeditions(tk.Frame):
     def __init__(self, parent, controller):
-        global current_selected_dungeon
         tk.Frame.__init__(self, parent)
         self.controller = controller
-        smallish_text_font = tkfont.Font(size=12)
-        title_label = tk.Label(self, text="Dungeon Settings", font=controller.small_title_font)
+        self.smallish_text_font = tkfont.Font(size=12)
+        self.smallish_text_font_bold = tkfont.Font(size=12, weight="bold")
+        self.menu_button_font_bold = tkfont.Font(family='Helvetica', size=18, weight="bold")
+        self.small_title_font_bold = tkfont.Font(family='Times New Roman Baltic', size=80, weight="bold")
+        self.medium_text_font_bold = tkfont.Font(family='Times New Roman Baltic', size=50, weight="bold")
+        self.lesser_text_font = tkfont.Font(family='Times New Roman Baltic', size=35)
+        self.entering_expedition_board()
+#here
+    def entering_expedition_board(self):
+        for widget in self.winfo_children():
+            widget.destroy()
+        read_difficulty_file = open(
+            "C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Data (DO NOT EDIT)/game_data_dungeon_difficulty.txt".format(computer_username),
+            "r")
+        dungeon_settings = read_difficulty_file.readline()
+        if dungeon_settings == "Bronze":
+            dungeon_name_text = "The City Sewers"
+        elif dungeon_settings == "Silver":
+            dungeon_name_text = "The Royal Catacombs"
+        elif dungeon_settings == "Gold":
+            dungeon_name_text = "The Forgotten Mines"
+        elif dungeon_settings == "Steel":
+            dungeon_name_text = "The Hissing Caverns"
+        elif dungeon_settings == "Diamond":
+            dungeon_name_text = "The Deep Dark"
+        elif dungeon_settings == "Ruby":
+            dungeon_name_text = "The Void Zone"
+        elif dungeon_settings == "Obsidian":
+            dungeon_name_text = "The Abyss"
+        read_difficulty_file.close()
+        title_label = tk.Label(self, text="Expedition Selection Hall", font=self.medium_text_font_bold)
+        current_expedition_label = tk.Label(self, text="Current Dungeon Selected: {}".format(dungeon_name_text), font=self.lesser_text_font)
+        enter_expedition_board_button = tk.Button(self, text="View Expeditions", command=self.expedition_board, font=self.lesser_text_font)
         invis_label1 = tk.Label(self)
         invis_label2 = tk.Label(self)
-        easymode_label = tk.Label(self, text="The Catacombs", font=smallish_text_font)
-        easymode_button = tk.Button(self, text=":Easy Dungeon:\n"
-                                             "ATK Mod: 10% per Floor\n"
-                                             "HP Mod: 10% per Room", font=controller.menu_button_font,
-                                    command=lambda: self.set_new_dungeon_difficulty("easy"))
-        normalmode_label = tk.Label(self, text="The Deep Dark", font=smallish_text_font)
-        normalmode_button = tk.Button(self, text=":Normal Dungeon:\n"
-                                             "ATK Mod: 25% per Floor\n"
-                                             "HP Mod: 20% per Room", font=controller.menu_button_font,
-                                      command=lambda: self.set_new_dungeon_difficulty("normal"))
-        hardmode_label = tk.Label(self, text="The Abyss", font=smallish_text_font)
-        hardmode_button = tk.Button(self, text=":Hard Dungeon:\n"
-                                             "ATK Mod: 50% per Floor\n"
-                                             "HP Mod: 25% per Room", font=controller.menu_button_font,
-                                    command=lambda: self.set_new_dungeon_difficulty("hard"))
-        buttonReturn = tk.Button(self, text="Return to Dungeon", font=controller.menu_button_font,
-                                 command=lambda: controller.show_frame("DungeonDelve"))
-        title_label.grid(row=1, column=2)
-        invis_label1.grid(row=0, column=0, padx=80, pady=45)
-        invis_label2.grid(row=5, column=2, pady=60)
-        easymode_label.grid(row=3, column=2, sticky="w", padx=95)
-        easymode_button.grid(row=4, column=2, sticky="w")
-        normalmode_label.grid(row=3, column=2)
-        normalmode_button.grid(row=4, column=2)
-        hardmode_label.grid(row=3, column=2, sticky="e", padx=105)
-        hardmode_button.grid(row=4, column=2, sticky="e")
-        buttonReturn.grid(row=6, column=2)
-
+        invis_label3 = tk.Label(self)
+        back_button = tk.Button(self, text="Back to Dungeon Entrance", command=lambda: ParentClass.show_frame(app, "DungeonDelve"), font=self.lesser_text_font)
+        invis_label1.grid(row=0, column=0, padx=60, pady=15)
+        title_label.grid(row=1, column=1)
+        invis_label2.grid(row=2, column=1, pady=80)
+        current_expedition_label.grid(row=3, column=1)
+        enter_expedition_board_button.grid(row=4, column=1)
+        invis_label3.grid(row=5, column=1, pady=60)
+        back_button.grid(row=6, column=1)
+    def expedition_board(self):
+        for widget in self.winfo_children():
+            widget.destroy()
+        player_emblems = ParentClass.get_account_data(self, "emblems")
+        if player_emblems < 20:
+            silver_dungeon_text = "+{} needed".format(20 - player_emblems)
+        else:
+            silver_dungeon_text = "Available"
+        if player_emblems < 40:
+            gold_dungeon_text = "+{} needed".format(40 - player_emblems)
+        else:
+            gold_dungeon_text = "Available"
+        if player_emblems < 60:
+            steel_dungeon_text = "+{} needed".format(60 - player_emblems)
+        else:
+            steel_dungeon_text = "Available"
+        if player_emblems < 800:
+            diamond_dungeon_text = "+{} needed".format(80 - player_emblems)
+        else:
+            diamond_dungeon_text = "Available"
+        if player_emblems < 100:
+            ruby_dungeon_text = "+{} needed".format(100 - player_emblems)
+        else:
+            ruby_dungeon_text = "Available"
+        if player_emblems < 120:
+            obsidian_dungeon_text = "+{} needed".format(120 - player_emblems)
+        else:
+            obsidian_dungeon_text = "Available"
+        title_label = tk.Label(self, text="Expeditions Board", font=self.small_title_font_bold)
+        invis_label1 = tk.Label(self)
+        invis_label2 = tk.Label(self)
+        invis_label3 = tk.Label(self)
+        bronze_dungeon_label = tk.Label(self, text="Bronze Guild (Available)", font=self.smallish_text_font_bold)
+        bronze_dungeon_button = tk.Button(self, text=":The City Sewers:\n"
+                                             "Base HP (1500) : Base ATK (250)\nHP Increase (50 per Room)\n"
+                                             "ATK Increase (50 per Room)", font=self.smallish_text_font_bold,
+                                    command=lambda: self.set_new_dungeon_difficulty("Bronze"))
+        silver_dungeon_label = tk.Label(self, text="Silver Guild ({})".format(silver_dungeon_text), font=self.smallish_text_font_bold)
+        silver_dungeon_button = tk.Button(self, text=":The Royal Catacombs:\n"
+                                             "Base HP (1750) : Base ATK (275)\nHP Increase (75 per Room)\n"
+                                             "ATK Increase (55 per Room)", font=self.smallish_text_font_bold,
+                                    command=lambda: self.set_new_dungeon_difficulty("Silver"))
+        gold_dungeon_label = tk.Label(self, text="Gold Guild ({})".format(gold_dungeon_text), font=self.smallish_text_font_bold)
+        gold_dungeon_button = tk.Button(self, text=":The Forgotten Mines:\n"
+                                             "Base HP (2000) : Base ATK (300)\nHP Increase (100 per Room)\n"
+                                             "ATK Increase (60 per Room)", font=self.smallish_text_font_bold,
+                                    command=lambda: self.set_new_dungeon_difficulty("Gold"))
+        steel_dungeon_label = tk.Label(self, text="Steel Guild ({})".format(steel_dungeon_text), font=self.smallish_text_font_bold)
+        steel_dungeon_button = tk.Button(self, text=":The Hissing Caverns:\n"
+                                             "Base HP (2250) : Base ATK (325)\nHP Increase (125 per Room)\n"
+                                             "ATK Increase (65 per Room)", font=self.smallish_text_font_bold,
+                                    command=lambda: self.set_new_dungeon_difficulty("Steel"))
+        diamond_dungeon_label = tk.Label(self, text="Diamond Guild ({})".format(diamond_dungeon_text), font=self.smallish_text_font_bold)
+        diamond_dungeon_button = tk.Button(self, text=":The Deep Dark:\n"
+                                             "Base HP (2500) : Base ATK (350)\nHP Increase (150 per Room)\n"
+                                             "ATK Increase (70 per Room", font=self.smallish_text_font_bold,
+                                    command=lambda: self.set_new_dungeon_difficulty("Diamond"))
+        ruby_dungeon_label = tk.Label(self, text="Ruby Guild ({})".format(ruby_dungeon_text), font=self.smallish_text_font_bold)
+        ruby_dungeon_button = tk.Button(self, text=":The Void Zone:\n"
+                                             "Base HP (2750) : Base ATK (375)\nHP Increase (175 per Room)\n"
+                                             "ATK Increase (75 per Room)", font=self.smallish_text_font_bold,
+                                    command=lambda: self.set_new_dungeon_difficulty("Ruby"))
+        obsidian_dungeon_label = tk.Label(self, text="Obsidian Guild ({})".format(obsidian_dungeon_text), font=self.smallish_text_font_bold)
+        obsidian_dungeon_button = tk.Button(self, text=":The Abyss:\n"
+                                             "Base HP (3000) : Base ATK (400)\nHP Increase (175 per Room)\n"
+                                             "ATK Increase (80 per Room)", font=self.smallish_text_font_bold,
+                                    command=lambda: self.set_new_dungeon_difficulty("Obsidian"))
+        
+        buttonReturn = tk.Button(self, text="Back", font=self.menu_button_font_bold,
+                                 command=self.entering_expedition_board)
+        title_label.grid(row=1, column=1)
+        invis_label1.grid(row=0, column=0, padx=75)
+        invis_label2.grid(row=2, column=1, pady=20)
+        bronze_dungeon_label.grid(row=3, column=1, sticky="w", padx=33)
+        bronze_dungeon_button.grid(row=4, column=1, sticky="w")
+        silver_dungeon_label.grid(row=3, column=1)
+        silver_dungeon_button.grid(row=4, column=1)
+        gold_dungeon_label.grid(row=3, column=1, sticky="e", padx=33)
+        gold_dungeon_button.grid(row=4, column=1, sticky="e")
+        steel_dungeon_label.grid(row=5, column=1, sticky="w", padx=33)
+        steel_dungeon_button.grid(row=6, column=1, sticky="w")
+        diamond_dungeon_label.grid(row=5, column=1)
+        diamond_dungeon_button.grid(row=6, column=1)
+        ruby_dungeon_label.grid(row=5, column=1, sticky="e", padx=33)
+        ruby_dungeon_button.grid(row=6, column=1, sticky="e")
+        obsidian_dungeon_label.grid(row=7, column=1)
+        obsidian_dungeon_button.grid(row=8, column=1)
+        invis_label3.grid(row=9, column=1, pady=25)
+        buttonReturn.grid(row=10, column=1)
+        if player_emblems < float(120):
+            obsidian_dungeon_button["state"] = "disabled"
+        if player_emblems < float(100):
+            ruby_dungeon_button["state"] = "disabled"
+        if player_emblems < float(80):
+            diamond_dungeon_button["state"] = "disabled"
+        if player_emblems < float(60):
+            steel_dungeon_button["state"] = "disabled"
+        if player_emblems < float(40):
+            gold_dungeon_button["state"] = "disabled"
+        if player_emblems < float(20):
+            silver_dungeon_button["state"] = "disabled"
     def set_new_dungeon_difficulty(self, difficulty):
         global dungeon_difficulty
-        if difficulty == "easy":
+        if difficulty == "Bronze":
             dungeon_difficulty_file = open(
                 "C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Data (DO NOT EDIT)/game_data_dungeon_difficulty.txt".format(computer_username),
                 "w")
-            dungeon_difficulty_file.write("easy")
+            dungeon_difficulty_file.write("Bronze")
             dungeon_difficulty_file.close()
-        if difficulty == "normal":
+        elif difficulty == "Silver":
             dungeon_difficulty_file = open(
                 "C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Data (DO NOT EDIT)/game_data_dungeon_difficulty.txt".format(computer_username),
                 "w")
-            dungeon_difficulty_file.write("normal")
+            dungeon_difficulty_file.write("Silver")
             dungeon_difficulty_file.close()
-        if difficulty == "hard":
+        elif difficulty == "Gold":
             dungeon_difficulty_file = open(
                 "C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Data (DO NOT EDIT)/game_data_dungeon_difficulty.txt".format(computer_username),
                 "w")
-            dungeon_difficulty_file.write("hard")
+            dungeon_difficulty_file.write("Gold")
+            dungeon_difficulty_file.close()
+        elif difficulty == "Steel":
+            dungeon_difficulty_file = open(
+                "C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Data (DO NOT EDIT)/game_data_dungeon_difficulty.txt".format(computer_username),
+                "w")
+            dungeon_difficulty_file.write("Steel")
+            dungeon_difficulty_file.close()
+        elif difficulty == "Diamond":
+            dungeon_difficulty_file = open(
+                "C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Data (DO NOT EDIT)/game_data_dungeon_difficulty.txt".format(computer_username),
+                "w")
+            dungeon_difficulty_file.write("Diamond")
+            dungeon_difficulty_file.close()
+        elif difficulty == "Ruby":
+            dungeon_difficulty_file = open(
+                "C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Data (DO NOT EDIT)/game_data_dungeon_difficulty.txt".format(computer_username),
+                "w")
+            dungeon_difficulty_file.write("Ruby")
+            dungeon_difficulty_file.close()
+        elif difficulty == "Obsidian":
+            dungeon_difficulty_file = open(
+                "C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Data (DO NOT EDIT)/game_data_dungeon_difficulty.txt".format(computer_username),
+                "w")
+            dungeon_difficulty_file.write("Obsidian")
             dungeon_difficulty_file.close()
 
-    def get_easy_dungeon_modifiers(self):
-        HEALTH_MODIFIER = 0.10
-        ATTACKPOWER_MODIFIER = 0.10
-        EASY_DUNGEON_MODIFIERS = []
-        EASY_DUNGEON_MODIFIERS.append(HEALTH_MODIFIER)
-        EASY_DUNGEON_MODIFIERS.append(ATTACKPOWER_MODIFIER)
-        return EASY_DUNGEON_MODIFIERS
-
-    def get_medium_dungeon_modifiers(self):
-        HEALTH_MODIFIER = 0.20
-        ATTACKPOWER_MODIFIER = 0.25
-        MEDIUM_DUNGEON_MODIFIERS = []
-        MEDIUM_DUNGEON_MODIFIERS.append(HEALTH_MODIFIER)
-        MEDIUM_DUNGEON_MODIFIERS.append(ATTACKPOWER_MODIFIER)
-        return MEDIUM_DUNGEON_MODIFIERS
-
-    def get_hard_dungeon_modifiers(self):
-        HEALTH_MODIFIER = 0.25
-        ATTACKPOWER_MODIFIER = 0.5
-        HARD_DUNGEON_MODIFIERS = []
-        HARD_DUNGEON_MODIFIERS.append(HEALTH_MODIFIER)
-        HARD_DUNGEON_MODIFIERS.append(ATTACKPOWER_MODIFIER)
-        return HARD_DUNGEON_MODIFIERS
-
+    def get_bronze_dungeon_modifiers(self):
+        HEALTH_BASE = 1500
+        ATTACKPOWER_BASE = 250
+        HEALTH_MODIFIER = 50
+        ATTACKPOWER_MODIFIER = 50
+        BRONZE_DUNGEON_MODIFIERS = []
+        BRONZE_DUNGEON_MODIFIERS.append(HEALTH_BASE)
+        BRONZE_DUNGEON_MODIFIERS.append(ATTACKPOWER_BASE)
+        BRONZE_DUNGEON_MODIFIERS.append(HEALTH_MODIFIER)
+        BRONZE_DUNGEON_MODIFIERS.append(ATTACKPOWER_MODIFIER)
+        return BRONZE_DUNGEON_MODIFIERS
+    def get_silver_dungeon_modifiers(self):
+        HEALTH_BASE = 1750
+        ATTACKPOWER_BASE = 275
+        HEALTH_MODIFIER = 75
+        ATTACKPOWER_MODIFIER = 55
+        SILVER_DUNGEON_MODIFIERS = []
+        SILVER_DUNGEON_MODIFIERS.append(HEALTH_BASE)
+        SILVER_DUNGEON_MODIFIERS.append(ATTACKPOWER_BASE)
+        SILVER_DUNGEON_MODIFIERS.append(HEALTH_MODIFIER)
+        SILVER_DUNGEON_MODIFIERS.append(ATTACKPOWER_MODIFIER)
+        return SILVER_DUNGEON_MODIFIERS
+    def get_gold_dungeon_modifiers(self):
+        HEALTH_BASE = 2000
+        ATTACKPOWER_BASE = 300
+        HEALTH_MODIFIER = 100
+        ATTACKPOWER_MODIFIER = 60
+        GOLD_DUNGEON_MODIFIERS = []
+        GOLD_DUNGEON_MODIFIERS.append(HEALTH_BASE)
+        GOLD_DUNGEON_MODIFIERS.append(ATTACKPOWER_BASE)
+        GOLD_DUNGEON_MODIFIERS.append(HEALTH_MODIFIER)
+        GOLD_DUNGEON_MODIFIERS.append(ATTACKPOWER_MODIFIER)
+        return GOLD_DUNGEON_MODIFIERS
+    def get_steel_dungeon_modifiers(self):
+        HEALTH_BASE = 2250
+        ATTACKPOWER_BASE = 325
+        HEALTH_MODIFIER = 125
+        ATTACKPOWER_MODIFIER = 65
+        STEEL_DUNGEON_MODIFIERS = []
+        STEEL_DUNGEON_MODIFIERS.append(HEALTH_BASE)
+        STEEL_DUNGEON_MODIFIERS.append(ATTACKPOWER_BASE)
+        STEEL_DUNGEON_MODIFIERS.append(HEALTH_MODIFIER)
+        STEEL_DUNGEON_MODIFIERS.append(ATTACKPOWER_MODIFIER)
+        return STEEL_DUNGEON_MODIFIERS
+    def get_diamond_dungeon_modifiers(self):
+        HEALTH_BASE = 2500
+        ATTACKPOWER_BASE = 350
+        HEALTH_MODIFIER = 150
+        ATTACKPOWER_MODIFIER = 70
+        DIAMOND_DUNGEON_MODIFIERS = []
+        DIAMOND_DUNGEON_MODIFIERS.append(HEALTH_BASE)
+        DIAMOND_DUNGEON_MODIFIERS.append(ATTACKPOWER_BASE)
+        DIAMOND_DUNGEON_MODIFIERS.append(HEALTH_MODIFIER)
+        DIAMOND_DUNGEON_MODIFIERS.append(ATTACKPOWER_MODIFIER)
+        return DIAMOND_DUNGEON_MODIFIERS
+    def get_ruby_dungeon_modifiers(self):
+        HEALTH_BASE = 2750
+        ATTACKPOWER_BASE = 375
+        HEALTH_MODIFIER = 175
+        ATTACKPOWER_MODIFIER = 75
+        RUBY_DUNGEON_MODIFIERS = []
+        RUBY_DUNGEON_MODIFIERS.append(HEALTH_BASE)
+        RUBY_DUNGEON_MODIFIERS.append(ATTACKPOWER_BASE)
+        RUBY_DUNGEON_MODIFIERS.append(HEALTH_MODIFIER)
+        RUBY_DUNGEON_MODIFIERS.append(ATTACKPOWER_MODIFIER)
+        return RUBY_DUNGEON_MODIFIERS
+    def get_obsidian_dungeon_modifiers(self):
+        HEALTH_BASE = 3000
+        ATTACKPOWER_BASE = 400
+        HEALTH_MODIFIER = 200
+        ATTACKPOWER_MODIFIER = 80
+        OBSIDIAN_DUNGEON_MODIFIERS = []
+        OBSIDIAN_DUNGEON_MODIFIERS.append(HEALTH_BASE)
+        OBSIDIAN_DUNGEON_MODIFIERS.append(ATTACKPOWER_BASE)
+        OBSIDIAN_DUNGEON_MODIFIERS.append(HEALTH_MODIFIER)
+        OBSIDIAN_DUNGEON_MODIFIERS.append(ATTACKPOWER_MODIFIER)
+        return OBSIDIAN_DUNGEON_MODIFIERS
 
 class GameFrame(tk.Frame):
     def __init__(self, parent, controller):
         global start_ok_button, remember_label, beginning_label, start_invis_label1, beginning_check_interger
         tk.Frame.__init__(self, parent)
+        for widget in self.winfo_children():
+            widget.destroy()
         self.controller = controller
         self.title_font = tkfont.Font(family='Times New Roman Baltic', size=120, weight="bold")
         self.small_title_font = tkfont.Font(family='Times New Roman Baltic', size=80, weight="bold")
         self.medium_text_font_bold = tkfont.Font(family='Times New Roman Baltic', size=50, weight="bold")
+        self.lesser_text_font_bold = tkfont.Font(family='Times New Roman Baltic', size=35, weight="bold")
         self.menu_button_font = tkfont.Font(family='Helvetica', size=18, weight="bold")
         self.small_text_font = tkfont.Font(family='Times New Roman Baltic', size=20)
+        self.small_text_font_bold = tkfont.Font(family='Times New Roman Baltic', size=20, weight="bold")
         start_invis_label1 = tk.Label(self)
-        start_ok_button = tk.Button(self, text="Ok", font=controller.small_title_font, command=self.begin_dungeon_run)
-        remember_label = tk.Label(self, text=":REMEMBER:", font=controller.small_title_font)
-        beginning_label = tk.Label(self, text="You cannot save your progress\n You must complete the run in one go",
-                                   font=self.medium_text_font_bold)
+        start_ok_button = tk.Button(self, text="Accept", font=controller.medium_text_font_bold, command=self.begin_dungeon_run)
+        remember_label = tk.Label(self, text=":REMEMBER:", font=controller.medium_text_font_bold)
+        beginning_label = tk.Label(self, text="You cannot save your progress\nYou must complete the run in this current application",
+                                   font=self.small_text_font_bold)
         start_ok_button.grid(row=3, column=1)
         remember_label.grid(row=1, column=1)
         beginning_label.grid(row=2, column=1)
-        start_invis_label1.grid(row=0, column=0, padx=20, pady=20)
+        start_invis_label1.grid(row=0, column=0, padx=145, pady=80)
         beginning_check_interger = 1
 
     def begin_dungeon_run(self):
-        global beginning_check_interger, dungeon_name_label, delve_button, BDRinvisLabel1, BDR_check_interger, roomLevel, floorLevel, dungeon_settings, dungeon_name_text, permaHealthMod
+        global beginning_check_interger, dungeon_name_label, delve_button, BDRinvisLabel1, BDR_check_interger, dungeon_settings, dungeon_name_text
         if beginning_check_interger == 1:
-            start_ok_button.destroy()
-            remember_label.destroy()
-            beginning_label.destroy()
-            start_invis_label1.destroy()
+            for widget in self.winfo_children():
+                widget.destroy()
             beginning_check_interger = 0
         read_difficulty_file = open(
             "C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Data (DO NOT EDIT)/game_data_dungeon_difficulty.txt".format(computer_username),
             "r")
         dungeon_settings = read_difficulty_file.readline()
-        if dungeon_settings == "easy":
-            dungeon_name_text = "The Catacombs (Easy)"
-        if dungeon_settings == "normal":
-            dungeon_name_text = "The Deep Dark (Normal)"
-        if dungeon_settings == "hard":
-            dungeon_name_text = "The Abyss (Hard)"
+        if dungeon_settings == "Bronze":
+            dungeon_name_text = "The City Sewers"
+        elif dungeon_settings == "Silver":
+            dungeon_name_text = "The Royal Catacombs"
+        elif dungeon_settings == "Gold":
+            dungeon_name_text = "The Forgotten Mines"
+        elif dungeon_settings == "Steel":
+            dungeon_name_text = "The Hissing Caverns"
+        elif dungeon_settings == "Diamond":
+            dungeon_name_text = "The Deep Dark"
+        elif dungeon_settings == "Ruby":
+            dungeon_name_text = "The Void Zone"
+        elif dungeon_settings == "Obsidian":
+            dungeon_name_text = "The Abyss"
         read_difficulty_file.close()
         dungeon_name_label = tk.Label(self, text=dungeon_name_text, font=self.medium_text_font_bold)
-        delve_button = tk.Button(self, text="Start Floor 1", font=self.medium_text_font_bold,
-                                 command=self.set_dungeon_properties)
+        delve_button = tk.Button(self, text="Delve into the Dungeon (Begin Game)", font=self.lesser_text_font_bold,
+                                command=self.set_dungeon_properties)
+        main_menu_button = tk.Button(self, text="Walk Away (Main Menu)", font=self.lesser_text_font_bold,
+                                command=lambda: ParentClass.show_frame(app, "MainMenu"))
         BDRinvisLabel1 = tk.Label(self)
         dungeon_name_label.grid(row=1, column=1)
-        BDRinvisLabel1.grid(row=2, column=0, padx=155, pady=120)
+        BDRinvisLabel1.grid(row=2, column=0, padx=100, pady=175)
         delve_button.grid(row=3, column=1)
+        main_menu_button.grid(row=4, column=1)
         BDR_check_interger = 1
-        roomLevel = 1
-        floorLevel = 1
-        permaHealthMod = 0
 
     def set_dungeon_properties(self):
-        global MODIFERS, dungeon_floor_frame, dungeon_game_frame, from_combat
-        if dungeon_settings == "easy":
-            MODIFERS = DungeonManagement.get_easy_dungeon_modifiers(self)
-        elif dungeon_settings == "normal":
-            MODIFERS = DungeonManagement.get_medium_dungeon_modifiers(self)
-        elif dungeon_settings == "hard":
-            MODIFERS = DungeonManagement.get_hard_dungeon_modifiers(self)
+        global AI_MODIFERS, dungeon_floor_frame, dungeon_game_frame, from_combat, room_level, floor_level
+        if dungeon_settings == "Bronze":
+            AI_MODIFERS = DungeonExpeditions.get_bronze_dungeon_modifiers(self)
+        elif dungeon_settings == "Silver":
+            AI_MODIFERS = DungeonExpeditions.get_silver_dungeon_modifiers(self)
+        elif dungeon_settings == "Gold":
+            AI_MODIFERS = DungeonExpeditions.get_gold_dungeon_modifiers(self)
+        elif dungeon_settings == "Steel":
+            AI_MODIFERS = DungeonExpeditions.get_steel_dungeon_modifiers(self)
+        elif dungeon_settings == "Diamond":
+            AI_MODIFERS = DungeonExpeditions.get_diamond_dungeon_modifiers(self)
+        elif dungeon_settings == "Ruby":
+            AI_MODIFERS = DungeonExpeditions.get_ruby_dungeon_modifiers(self)
+        elif dungeon_settings == "Obsidian":
+            AI_MODIFERS = DungeonExpeditions.get_obsidian_dungeon_modifiers(self)
+        room_level = 1
+        floor_level = 1
         dungeon_floor_frame = ttk.Frame(self)
         dungeon_floor_frame.grid(row=0, column=0, sticky="NSEW")
         dungeon_game_frame = ttk.Frame(dungeon_floor_frame)
@@ -803,7 +1006,7 @@ class GameFrame(tk.Frame):
         self.dungeon_LabelFrame.grid(row=0, column=0)
         self.get_individual_champions()
         self.set_champions_stats()
-        self.set_up_beginning_champion_stats()
+        self.set_adjustable_champion_stats()
         self.DungeonFloorProgress()
 
     def get_individual_champions(self):
@@ -1100,8 +1303,8 @@ class GameFrame(tk.Frame):
         monster_ai = ai_type[0]
         if monster_ai == GROTHAK_THE_DESTROYER.name:
             AI_ATTACKS = GROTHAK_THE_DESTROYER.attack_list  # will add more later
-            AI_GROUP_HP = GROTHAK_THE_DESTROYER.hp
-            AI_ATTACKPOWER = GROTHAK_THE_DESTROYER.ap
+            AI_GROUP_HP = AI_MODIFERS[0]
+            AI_ATTACKPOWER = AI_MODIFERS[1]
             AI_SPAWNED = GROTHAK_THE_DESTROYER.ai_spawned
             AI_ENTRY_WORD = GROTHAK_THE_DESTROYER.enter_word
             AI_NICKNAME = GROTHAK_THE_DESTROYER.nickname
@@ -1111,8 +1314,8 @@ class GameFrame(tk.Frame):
             AI_SIZE = GROTHAK_THE_DESTROYER.size_class
         elif monster_ai == WORMPULP_BROTHERS.name:
             AI_ATTACKS = WORMPULP_BROTHERS.attack_list  # will add more later
-            AI_GROUP_HP = WORMPULP_BROTHERS.hp
-            AI_ATTACKPOWER = WORMPULP_BROTHERS.ap
+            AI_GROUP_HP = math.ceil(AI_MODIFERS[0] / 2)
+            AI_ATTACKPOWER = math.ceil(AI_MODIFERS[1] / 2)
             AI_SPAWNED = WORMPULP_BROTHERS.ai_spawned
             AI_ENTRY_WORD = WORMPULP_BROTHERS.enter_word
             AI_NICKNAME = WORMPULP_BROTHERS.nickname
@@ -1122,8 +1325,8 @@ class GameFrame(tk.Frame):
             AI_SIZE = WORMPULP_BROTHERS.size_class
         elif monster_ai == SIREN_TRIPLETS.name:
             AI_ATTACKS = SIREN_TRIPLETS.attack_list  # will add more later
-            AI_GROUP_HP = SIREN_TRIPLETS.hp
-            AI_ATTACKPOWER = SIREN_TRIPLETS.ap
+            AI_GROUP_HP = math.ceil(AI_MODIFERS[0] / 3)
+            AI_ATTACKPOWER = math.ceil(AI_MODIFERS[1] / 3)
             AI_SPAWNED = SIREN_TRIPLETS.ai_spawned
             AI_ENTRY_WORD = SIREN_TRIPLETS.enter_word
             AI_NICKNAME = SIREN_TRIPLETS.nickname
@@ -1133,8 +1336,8 @@ class GameFrame(tk.Frame):
             AI_SIZE = SIREN_TRIPLETS.size_class
         elif monster_ai == VENOMSKIN_AMPHIBOIDS.name:
             AI_ATTACKS = VENOMSKIN_AMPHIBOIDS.attack_list  # will add more later
-            AI_GROUP_HP = VENOMSKIN_AMPHIBOIDS.hp
-            AI_ATTACKPOWER = VENOMSKIN_AMPHIBOIDS.ap
+            AI_GROUP_HP = math.ceil(AI_MODIFERS[0] / 4)
+            AI_ATTACKPOWER = math.ceil(AI_MODIFERS[1] / 4)
             AI_SPAWNED = VENOMSKIN_AMPHIBOIDS.ai_spawned
             AI_ENTRY_WORD = VENOMSKIN_AMPHIBOIDS.enter_word
             AI_NICKNAME = VENOMSKIN_AMPHIBOIDS.nickname
@@ -1144,8 +1347,8 @@ class GameFrame(tk.Frame):
             AI_SIZE = VENOMSKIN_AMPHIBOIDS.size_class
         elif monster_ai == GIANT_LOCUST_SWARM.name:
             AI_ATTACKS = GIANT_LOCUST_SWARM.attack_list  # will add more later
-            AI_GROUP_HP = GIANT_LOCUST_SWARM.hp
-            AI_ATTACKPOWER = GIANT_LOCUST_SWARM.ap
+            AI_GROUP_HP = math.ceil(AI_MODIFERS[0] / 5)
+            AI_ATTACKPOWER = math.ceil(AI_MODIFERS[1] / 5)
             AI_SPAWNED = GIANT_LOCUST_SWARM.ai_spawned
             AI_ENTRY_WORD = GIANT_LOCUST_SWARM.enter_word
             AI_NICKNAME = GIANT_LOCUST_SWARM.nickname
@@ -1155,35 +1358,35 @@ class GameFrame(tk.Frame):
             AI_SIZE = GIANT_LOCUST_SWARM.size_class
         aiEnemyNA = 0
         if AI_SPAWNED == 1:
-            ai1_hp = math.ceil(AI_GROUP_HP * (1 + health_modifier))
+            ai1_hp = math.ceil(AI_GROUP_HP + ai_health_modifier)
             ai2_hp = aiEnemyNA
             ai3_hp = aiEnemyNA
             ai4_hp = aiEnemyNA
             ai5_hp = aiEnemyNA
         if AI_SPAWNED == 2:
-            ai1_hp = math.ceil(AI_GROUP_HP * (1 + health_modifier))
-            ai2_hp = math.ceil(AI_GROUP_HP * (1 + health_modifier))
+            ai1_hp = math.ceil(AI_GROUP_HP + ai_health_modifier)
+            ai2_hp = math.ceil(AI_GROUP_HP + ai_health_modifier)
             ai3_hp = aiEnemyNA
             ai4_hp = aiEnemyNA
             ai5_hp = aiEnemyNA
         if AI_SPAWNED == 3:
-            ai1_hp = math.ceil(AI_GROUP_HP * (1 + health_modifier))
-            ai2_hp = math.ceil(AI_GROUP_HP * (1 + health_modifier))
-            ai3_hp = math.ceil(AI_GROUP_HP * (1 + health_modifier))
+            ai1_hp = math.ceil(AI_GROUP_HP + ai_health_modifier)
+            ai2_hp = math.ceil(AI_GROUP_HP + ai_health_modifier)
+            ai3_hp = math.ceil(AI_GROUP_HP + ai_health_modifier)
             ai4_hp = aiEnemyNA
             ai5_hp = aiEnemyNA
         if AI_SPAWNED == 4:
-            ai1_hp = math.ceil(AI_GROUP_HP * (1 + health_modifier))
-            ai2_hp = math.ceil(AI_GROUP_HP * (1 + health_modifier))
-            ai3_hp = math.ceil(AI_GROUP_HP * (1 + health_modifier))
-            ai4_hp = math.ceil(AI_GROUP_HP * (1 + health_modifier))
+            ai1_hp = math.ceil(AI_GROUP_HP + ai_health_modifier)
+            ai2_hp = math.ceil(AI_GROUP_HP + ai_health_modifier)
+            ai3_hp = math.ceil(AI_GROUP_HP + ai_health_modifier)
+            ai4_hp = math.ceil(AI_GROUP_HP + ai_health_modifier)
             ai5_hp = aiEnemyNA
         if AI_SPAWNED == 5:
-            ai1_hp = math.ceil(AI_GROUP_HP * (1 + health_modifier))
-            ai2_hp = math.ceil(AI_GROUP_HP * (1 + health_modifier))
-            ai3_hp = math.ceil(AI_GROUP_HP * (1 + health_modifier))
-            ai4_hp = math.ceil(AI_GROUP_HP * (1 + health_modifier))
-            ai5_hp = math.ceil(AI_GROUP_HP * (1 + health_modifier))
+            ai1_hp = math.ceil(AI_GROUP_HP + ai_health_modifier)
+            ai2_hp = math.ceil(AI_GROUP_HP + ai_health_modifier)
+            ai3_hp = math.ceil(AI_GROUP_HP + ai_health_modifier)
+            ai4_hp = math.ceil(AI_GROUP_HP + ai_health_modifier)
+            ai5_hp = math.ceil(AI_GROUP_HP + ai_health_modifier)
         if AI_RESOURCE_NAME == "null":
             ai1_rp = "null"
             ai2_rp = "null"
@@ -1214,22 +1417,15 @@ class GameFrame(tk.Frame):
         if AI_NAME == "Giant Locust Swarm":
             bite_requirements = [0, 0, 0]
 
-    def set_up_beginning_champion_stats(self):
+    def set_adjustable_champion_stats(self):
         global champion1_hp, champion1_ap, champion1_rp, champion1_rpName, champion2_hp, champion2_ap, champion2_rp, champion2_rpName, \
             champion3_hp, champion3_ap, champion3_rp, champion3_rpName, champion4_hp, champion4_ap, champion4_rp, champion4_rpName, \
             champion5_hp, champion5_ap, champion5_rp, champion5_rpName, \
             champion2_small_external_buffs, champion2_big_external_buffs, champion3_small_external_buffs, champion3_big_external_buffs, \
             champion4_small_external_buffs, champion4_big_external_buffs, champion5_small_external_buffs, champion5_big_external_buffs, \
-            void_infusion_stacks, champion1_blessing, champion2_blessing, champion3_blessing, champion4_blessing, champion5_blessing, \
             legion_ranger_roundtracker, paladin_roundtracker
         champion1_hp = CHAMPION1_HP
         champion1_ap = CHAMPION1_AP
-        void_infusion_stacks = 0
-        champion1_blessing = 0
-        champion2_blessing = 0
-        champion3_blessing = 0
-        champion4_blessing = 0
-        champion5_blessing = 0
         legion_ranger_roundtracker = 0
         paladin_roundtracker = 0
         if CHAMPION1_RPNAME == "Mana":
@@ -1298,17 +1494,20 @@ class GameFrame(tk.Frame):
             champion3_statuses.append("Nano-repair Bots")
             champion4_statuses.append("Nano-repair Bots")
             champion5_statuses.append("Nano-repair Bots")
+        self.set_champion_abilities_default
+
+    def set_champion_abilities_default(self):
         global palm_strike_requirements, leg_sweep_requirements, harmonize_requirements, pressure_points_requirements, \
             monk_bauble_damage_list1, monk_bauble_damage_list2, monk_bauble_damage_list3, \
             bloodthirst_requirements, pulverize_requirements, challenging_shout_requirements, impactful_boast_requirements, \
             shield_bash_requirements, trainwreck_requirements, fortification_requirements, block_requirements, \
             champion1_fortification, champion2_fortification, champion3_fortification, champion4_fortification, champion5_fortification, \
             flanking_strikes_requirements, riposte_requirements, magic_reflection_requirements, evasive_manoeuvres_requirements
-        #Position: [0, 1, 2, 3] 
+        #Ability Requirement Position: [0, 1, 2, 3] 
         # 0 represents the cost of the ability
         # 1 represents the amount of resource the ability grants
         # 2 represents the cooldown the ability goes on when used
-        # 3 represents the storage of the cooldown (when used, this value is changed to #3 and will tick down)
+        # 3 represents the storage of the cooldown (when activated, this value is changed to the value at #2 and will tick down 1 per turn, the abiltiy is usable again once it reaches 0)
         # Monk Abilities:
         palm_strike_requirements = [0, 20, 0, 0]
         leg_sweep_requirements = [30, 0, 3, 0]
@@ -1379,7 +1578,7 @@ class GameFrame(tk.Frame):
             champion1_magical_barrier, champion2_magical_barrier, champion3_magical_barrier, champion4_magical_barrier, champion5_magical_barrier, \
             invigorate_thorns_requirements, vine_swipe_requirements, barbed_bush_armour_requirements, burst_n_bloom_requirements, \
             champion1_bush_armour, champion2_bush_armour, champion3_bush_armour, champion4_bush_armour, champion5_bush_armour, \
-            black_bolt_requirements, void_infusion_requirements, wound_fissure_requirements, soul_tap_requirements, \
+            black_bolt_requirements, void_infusion_requirements, wound_fissure_requirements, soul_tap_requirements, void_infusion_stacks, \
             drain_life_requirements, blood_spike_requirements, blood_boil_requirements, enharden_nerves_requirements, channelling_strength, \
             champion1_enhardened_nerves, champion2_enhardened_nerves, champion3_enhardened_nerves, champion4_enhardened_nerves, champion5_enhardened_nerves, \
             blood_boil_buff
@@ -1406,6 +1605,7 @@ class GameFrame(tk.Frame):
         # Warlock Abilities
         black_bolt_requirements = [25, 0, 0, 0]
         void_infusion_requirements = [100, 0, 0, 0]
+        void_infusion_stacks = 0
         wound_fissure_requirements = [50, 0, 4, 0]
         soul_tap_requirements = [0, 0, 0, 0]
         # Bloodmancer Abilities
@@ -1467,6 +1667,7 @@ class GameFrame(tk.Frame):
             champion1_springwaters, champion2_springwaters, champion3_springwaters, champion4_springwaters,champion5_springwaters, \
             champion1_oceantide, champion2_oceantide, champion3_oceantide, champion4_oceantide, champion5_oceantide, \
             shimmering_bolt_requirements, divine_smite_requirements, healing_light_requirements, diffracting_nova_requirements, \
+            champion1_blessing, champion2_blessing, champion3_blessing, champion4_blessing, champion5_blessing, \
             cybernetic_blast_requirements, overclock_nanobots_requirements, reverse_wounds_requirements, alter_time_requirements,\
             champion1_nanobot, champion2_nanobot, champion3_nanobot, champion4_nanobot, champion5_nanobot, nanobot_overclock, \
             champion1_lastRoundDamageTaken_list, champion2_lastRoundDamageTaken_list, champion3_lastRoundDamageTaken_list, champion4_lastRoundDamageTaken_list,champion5_lastRoundDamageTaken_list, \
@@ -1496,6 +1697,11 @@ class GameFrame(tk.Frame):
         divine_smite_requirements = [70, 0, 0, 0]
         healing_light_requirements = [20, 0, 0, 0]
         diffracting_nova_requirements = [100, 0, 0, 0]
+        champion1_blessing = 0
+        champion2_blessing = 0
+        champion3_blessing = 0
+        champion4_blessing = 0
+        champion5_blessing = 0
         # Time Walker Abilities
         cybernetic_blast_requirements = [0, 30, 0, 0]
         overclock_nanobots_requirements = [20, 0, 2, 0]
@@ -1554,7 +1760,7 @@ class GameFrame(tk.Frame):
             floor_room_modifiers_label.destroy()
             from_combat = 0
         current_dungeon_label = tk.Label(dungeon_floor_frame, text=dungeon_name_text, font=self.small_text_font)
-        current_floor_label = tk.Label(dungeon_floor_frame, text="Floor {} : Room {}".format(floorLevel, roomLevel),
+        current_floor_label = tk.Label(dungeon_floor_frame, text="Floor {} : Room {}".format(floor_level, room_level),
                                        font=self.medium_text_font_bold)
         teams_current_condition_label = tk.Label(dungeon_floor_frame, text=":Your Team's Current Condition:",
                                                  font=self.small_text_font)
@@ -1701,7 +1907,7 @@ class GameFrame(tk.Frame):
 
     def combat_monster_setup(self):
         global new_round, new_game, from_attack_button, from_special_button, from_turn_choice, from_end_of_turn, combat_results, current_floor_label, teams_current_condition_label, floor_room_modifiers_label, \
-            damage_modifier, health_modifier, current_turn, ai1_stun, ai2_stun, ai3_stun, ai4_stun, ai5_stun, ai1_taunt, ai2_taunt, ai3_taunt, ai4_taunt, ai5_taunt, \
+            ai_damage_modifier, ai_health_modifier, current_turn, ai1_stun, ai2_stun, ai3_stun, ai4_stun, ai5_stun, ai1_taunt, ai2_taunt, ai3_taunt, ai4_taunt, ai5_taunt, \
             ai1_brittle, ai2_brittle, ai3_brittle, ai4_brittle, ai5_brittle, ai1_weakness, ai2_weakness, ai3_weakness, ai4_weakness, ai5_weakness, \
             ai1_burnDot, ai2_burnDot, ai3_burnDot, ai4_burnDot, ai5_burnDot, ai1_serraSlashDot, ai2_serraSlashDot, ai3_serraSlashDot, \
             ai4_serraSlashDot, ai5_serraSlashDot, ai1_garroteDot, ai2_garroteDot, ai3_garroteDot, ai4_garroteDot, ai5_garroteDot, \
@@ -1724,8 +1930,8 @@ class GameFrame(tk.Frame):
             champion1_turnover, champion2_turnover, champion3_turnover, champion4_turnover, champion5_turnover, target_to_attack, target_to_special
         new_round = 1
         new_game = 1
-        damage_modifier = MODIFERS[1] * floorLevel
-        health_modifier = MODIFERS[0] * (roomLevel + (permaHealthMod * 2))
+        ai_damage_modifier = AI_MODIFERS[3] * (room_level + ((floor_level - 1) * 3))
+        ai_health_modifier = AI_MODIFERS[2] * (room_level + ((floor_level - 1) * 3))
         combat_results = ""
         ai1_attack_intention = ""
         ai2_attack_intention = ""
@@ -1870,12 +2076,11 @@ class GameFrame(tk.Frame):
             widget.destroy()
         teams_current_condition_label.destroy()
         current_floor_label.destroy()
-        current_floor_label = tk.Label(dungeon_floor_frame, text="Floor {} : Room {}".format(floorLevel, roomLevel),
+        current_floor_label = tk.Label(dungeon_floor_frame, text="Floor {} : Room {}".format(floor_level, room_level),
                                        font=self.small_text_font)
         current_floor_label.grid(row=1, column=0)
         floor_room_modifiers_label = tk.Label(dungeon_floor_frame,
-                                              text="Enemy Damage Modifier: +{}% Enemy Health Modifier: +{}%".format(
-                                                  (100 + (100 * damage_modifier)), (100 + (100 * health_modifier))))
+                                              text="Enemy Damage Modifier: +{} : Enemy Health Modifier: +{}".format(ai_damage_modifier, ai_health_modifier))
         floor_room_modifiers_label.grid(row=2, column=0)
         self.set_monster_encounter()
         self.next_turn()
@@ -1885,7 +2090,6 @@ class GameFrame(tk.Frame):
 
     def monster_attack_intentions(self):
         global ai1_attack, ai2_attack, ai3_attack, ai4_attack, ai5_attack
-        attack = []
         if ai1_hp == 0:
             ai1_attacking = 0
         else:
@@ -1941,7 +2145,7 @@ class GameFrame(tk.Frame):
             # Club_Slam
             club_slam_basenumber = [1, 1.3, 1.5]
             random.shuffle(club_slam_basenumber)
-            club_slam_damage = (club_slam_basenumber[0] * AI_ATTACKPOWER * (1 + damage_modifier))
+            club_slam_damage = (club_slam_basenumber[0] * (AI_ATTACKPOWER + ai_damage_modifier))
             if club_slam_requirements[1] == 0:
                 if club_slam_requirements[0] <= AI_RESOURCE:
                     attack.append("Club Slam")
@@ -1952,7 +2156,7 @@ class GameFrame(tk.Frame):
             # Violent Thrash
             violent_thrash_basenumber = [1, 1.1, 1.2]
             random.shuffle(violent_thrash_basenumber)
-            violent_thrash_damage = (violent_thrash_basenumber[0] * AI_ATTACKPOWER * (1 + damage_modifier))
+            violent_thrash_damage = (violent_thrash_basenumber[0] * (AI_ATTACKPOWER + ai_damage_modifier))
             if violent_thrash_requirements[1] == 0:
                 if violent_thrash_requirements[0] <= AI_RESOURCE:
                     attack.append("Violent Thrash")
@@ -1963,7 +2167,7 @@ class GameFrame(tk.Frame):
             # Twilight Beam
             twilight_beam_basenumber = [1.2, 1.4, 1.6]
             random.shuffle(twilight_beam_basenumber)
-            twilight_beam_damage = (twilight_beam_basenumber[0] * AI_ATTACKPOWER * (1 + damage_modifier))
+            twilight_beam_damage = (twilight_beam_basenumber[0] * (AI_ATTACKPOWER + ai_damage_modifier))
             if twilight_beam_requirements[1] == 0:
                 if twilight_beam_requirements[0] <= AI_RESOURCE:
                     attack.append("Twilight Beam")
@@ -1974,7 +2178,7 @@ class GameFrame(tk.Frame):
             # Spear Thrust
             spear_thrust_basenumber = [1.2, 1.4, 1.6]
             random.shuffle(spear_thrust_basenumber)
-            spear_thrust_damage = (spear_thrust_basenumber[0] * AI_ATTACKPOWER * (1 + damage_modifier))
+            spear_thrust_damage = (spear_thrust_basenumber[0] * (AI_ATTACKPOWER + ai_damage_modifier))
             if spear_stab_requirements[1] == 0:
                 if spear_stab_requirements[0] <= AI_RESOURCE:
                     attack.append("Spear Thrust")
@@ -1985,7 +2189,7 @@ class GameFrame(tk.Frame):
             # Bite
             bite_basenumber = [1.2, 1.4, 1.6]
             random.shuffle(bite_basenumber)
-            bite_damage = (bite_basenumber[0] * AI_ATTACKPOWER * (1 + damage_modifier))
+            bite_damage = (bite_basenumber[0] * (AI_ATTACKPOWER + ai_damage_modifier))
             if bite_requirements[1] == 0:
                 if bite_requirements[0] <= AI_RESOURCE:
                     attack.append("Bite")
@@ -3716,7 +3920,7 @@ class GameFrame(tk.Frame):
             status_effect_text += "\n"
         status_effects_label = tk.Label(root, text=status_effect_text)
         status_effects_label.grid(row=2, column=1)
-        close_button = tk.Button(root, text="Close", command=root.destroy)
+        close_button = tk.Button(root, text="Close Window", command=root.destroy)
         close_button.grid(row=3, column=1)
 
     def ai_choose_attack_targets(self):
@@ -4901,55 +5105,6 @@ class GameFrame(tk.Frame):
                 status_text = "Health Points: {}/{}\n{}: {}/{}".format(ai5_hp, ai5_max_hp, AI_RESOURCE_NAME, ai5_rp,
                                                                        AI_RESOURCE)
                 return status_text
-    def player_combat_champion1(self):
-        global attack_button_champion1, special_button_champion1, turn_choice_champion1, current_turn, new_round, from_attack_button, from_special_button, \
-            floorLevel, roomLevel, from_turn_choice
-        current_turn = "C1"
-        if from_attack_button == 1:
-            attack1_button.destroy()
-            attack1_button_details.destroy()
-            attack2_button.destroy()
-            attack2_button_details.destroy()
-            attack3_button.destroy()
-            attack3_button_details.destroy()
-            attack4_button.destroy()
-            attack4_button_details.destroy()
-            back_button.destroy()
-            from_attack_button = 0
-        if from_special_button == 1:
-            special1_button.destroy()
-            special1_button_details.destroy()
-            special2_button.destroy()
-            special2_button_details.destroy()
-            special3_button.destroy()
-            special3_button_details.destroy()
-            special4_button.destroy()
-            special4_button_details.destroy()
-            back_button.destroy()
-            from_special_button = 0
-        if from_turn_choice == 1:
-            turn_choice_text.destroy()
-            champion1_turn_button.destroy()
-            champion2_turn_button.destroy()
-            champion3_turn_button.destroy()
-            champion4_turn_button.destroy()
-            champion5_turn_button.destroy()
-            back_button.destroy()
-            from_turn_choice = 0
-        self.repeating_combatUI_refresh_function()
-        if champion1_hp == 0:
-            self.next_turn()
-        else:
-            self.get_champions_abiltity_button_data(1)
-            attack_button_champion1 = tk.Button(dungeon_game_frame, text=self.check_if_power_conduit_text(), width=59,
-                                                height=12, command=self.check_if_power_conduit_command)
-            special_button_champion1 = tk.Button(dungeon_game_frame, text=self.check_if_brawlist_text(), width=59, height=12,
-                                                command=self.check_if_brawlist_command)
-            turn_choice_champion1 = tk.Button(dungeon_game_frame, text="Change Champions", width=59, height=12,
-                                                command=self.turn_choice)
-            attack_button_champion1.grid(row=18, column=1)
-            special_button_champion1.grid(row=18, column=2)
-            turn_choice_champion1.grid(row=18, column=3)
     def next_turn(self):
         global combat_results, current_turn, new_round, from_end_of_turn, new_game,\
             champion1_turnover, champion2_turnover, champion3_turnover, champion4_turnover,champion5_turnover, \
@@ -4998,6 +5153,7 @@ class GameFrame(tk.Frame):
             if new_game == 1:
                 ranger_aura_completed = 0
                 paladin_aura_completed = 1
+                new_round = 0
                 self.before_round_choices()
             elif current_turn == "MN":
                 champion1_turnover = 0
@@ -5120,7 +5276,7 @@ class GameFrame(tk.Frame):
             ranger_aura_completed = 1
             paladin_aura_completed = 0
             self.before_round_choices()
-        if champion_identifier == "PALADIN":
+        elif champion_identifier == "PALADIN":
             if choice == "Power Aura":
                 paladin_aura = 1
                 if "Protection Aura" in champion1_statuses:
@@ -5152,11 +5308,58 @@ class GameFrame(tk.Frame):
             aura_choice_button2.destroy()
             paladin_aura_completed = 1
             self.before_round_choices()
-        
-        self.turn_choice()
+
+    def player_combat_champion1(self):
+        global attack_button_champion1, special_button_champion1, turn_choice_champion1, current_turn, new_round, from_attack_button, from_special_button, from_turn_choice
+        current_turn = "C1"
+        if from_attack_button == 1:
+            attack1_button.destroy()
+            attack1_button_details.destroy()
+            attack2_button.destroy()
+            attack2_button_details.destroy()
+            attack3_button.destroy()
+            attack3_button_details.destroy()
+            attack4_button.destroy()
+            attack4_button_details.destroy()
+            back_button.destroy()
+            from_attack_button = 0
+        if from_special_button == 1:
+            special1_button.destroy()
+            special1_button_details.destroy()
+            special2_button.destroy()
+            special2_button_details.destroy()
+            special3_button.destroy()
+            special3_button_details.destroy()
+            special4_button.destroy()
+            special4_button_details.destroy()
+            back_button.destroy()
+            from_special_button = 0
+        if from_turn_choice == 1:
+            turn_choice_text.destroy()
+            champion1_turn_button.destroy()
+            champion2_turn_button.destroy()
+            champion3_turn_button.destroy()
+            champion4_turn_button.destroy()
+            champion5_turn_button.destroy()
+            back_button.destroy()
+            from_turn_choice = 0
+        self.repeating_combatUI_refresh_function()
+        if champion1_hp == 0:
+            self.next_turn()
+        else:
+            self.get_champions_abiltity_button_data(1)
+            attack_button_champion1 = tk.Button(dungeon_game_frame, text=self.check_if_power_conduit_text(), width=59,
+                                                height=12, command=self.check_if_power_conduit_command)
+            special_button_champion1 = tk.Button(dungeon_game_frame, text=self.check_if_brawlist_text(), width=59, height=12,
+                                                command=self.check_if_brawlist_command)
+            turn_choice_champion1 = tk.Button(dungeon_game_frame, text="Change Champions", width=59, height=12,
+                                                command=self.turn_choice)
+            attack_button_champion1.grid(row=18, column=1)
+            special_button_champion1.grid(row=18, column=2)
+            turn_choice_champion1.grid(row=18, column=3)
+
     def player_combat_champion2(self):
-        global attack_button_champion2, special_button_champion2, turn_choice_champion2, current_turn, new_round, from_attack_button, from_special_button, \
-            roomLevel, floorLevel, from_turn_choice
+        global attack_button_champion2, special_button_champion2, turn_choice_champion2, current_turn, new_round, from_attack_button, from_special_button, from_turn_choice
         current_turn = "C2"
         if from_attack_button == 1:
             attack1_button.destroy()
@@ -5205,8 +5408,7 @@ class GameFrame(tk.Frame):
             turn_choice_champion2.grid(row=18, column=3)
 
     def player_combat_champion3(self):
-        global attack_button_champion3, special_button_champion3, turn_choice_champion3, current_turn, new_round, from_attack_button, from_special_button, \
-            roomLevel, floorLevel, from_turn_choice
+        global attack_button_champion3, special_button_champion3, turn_choice_champion3, current_turn, new_round, from_attack_button, from_special_button, from_turn_choice
         current_turn = "C3"
         if from_attack_button == 1:
             attack1_button.destroy()
@@ -5255,8 +5457,7 @@ class GameFrame(tk.Frame):
             turn_choice_champion3.grid(row=18, column=3)
 
     def player_combat_champion4(self):
-        global attack_button_champion4, special_button_champion4, turn_choice_champion4, current_turn, new_round, from_attack_button, from_special_button, \
-            roomLevel, floorLevel, from_turn_choice
+        global attack_button_champion4, special_button_champion4, turn_choice_champion4, current_turn, new_round, from_attack_button, from_special_button, from_turn_choice
         current_turn = "C4"
         if from_attack_button == 1:
             attack1_button.destroy()
@@ -5305,8 +5506,7 @@ class GameFrame(tk.Frame):
             turn_choice_champion4.grid(row=18, column=3)
 
     def player_combat_champion5(self):
-        global attack_button_champion5, special_button_champion5, turn_choice_champion5, current_turn, new_round, from_attack_button, from_special_button, \
-            roomLevel, floorLevel, from_turn_choice
+        global attack_button_champion5, special_button_champion5, turn_choice_champion5, current_turn, new_round, from_attack_button, from_special_button, from_turn_choice
         current_turn = "C5"
         if from_attack_button == 1:
             attack1_button.destroy()
@@ -5516,7 +5716,7 @@ class GameFrame(tk.Frame):
                                         self.apply_taunt(1, MASTER_FENCER.title, 1)
                             elif CHAMPION_LIST[0] == MONK.title:
                                 bauble_damage = self.calculate_ai_damage(1, 1, 0)
-                                unbaubleable_check = 0
+                                bauble_unavailable_check = 0
                                 if monk_bauble_damage_list1[1] == 0:
                                     monk_bauble_damage_list1 = [math.ceil(bauble_damage / 3), 3]
                                 else:
@@ -5526,7 +5726,7 @@ class GameFrame(tk.Frame):
                                         if monk_bauble_damage_list3[1] == 0:
                                             monk_bauble_damage_list3 = [math.ceil(bauble_damage / 3), 3]
                                         else:
-                                            unbaubleable_check = 1
+                                            bauble_unavailable_check = 1
                                 monk_damage_taken = 0
                                 if monk_bauble_damage_list1[1] != 0:
                                     monk_damage_taken = monk_damage_taken + monk_bauble_damage_list1[0]
@@ -5534,7 +5734,7 @@ class GameFrame(tk.Frame):
                                     monk_damage_taken = monk_damage_taken + monk_bauble_damage_list2[0]
                                 if monk_bauble_damage_list3[1] != 0:
                                     monk_damage_taken = monk_damage_taken + monk_bauble_damage_list3[0]
-                                if unbaubleable_check == 1:
+                                if bauble_unavailable_check == 1:
                                     monk_damage_taken = monk_damage_taken + bauble_damage
                                 champion1_hp = champion1_hp - math.ceil(monk_damage_taken)
                                 champion1_lastRoundDamageTaken_list.append(math.ceil(monk_damage_taken))
@@ -5614,7 +5814,7 @@ class GameFrame(tk.Frame):
                                         self.apply_taunt(1, MASTER_FENCER.title, 1)
                             elif CHAMPION_LIST[0] == MONK.title:
                                 bauble_damage = self.calculate_ai_damage(2, 1, 0)
-                                unbaubleable_check = 0
+                                bauble_unavailable_check = 0
                                 if monk_bauble_damage_list1[1] == 0:
                                     monk_bauble_damage_list1 = [math.ceil(bauble_damage / 3), 3]
                                 else:
@@ -5624,7 +5824,7 @@ class GameFrame(tk.Frame):
                                         if monk_bauble_damage_list3[1] == 0:
                                             monk_bauble_damage_list3 = [math.ceil(bauble_damage / 3), 3]
                                         else:
-                                            unbaubleable_check = 1
+                                            bauble_unavailable_check = 1
                                 monk_damage_taken = 0
                                 if monk_bauble_damage_list1[1] != 0:
                                     monk_damage_taken = monk_damage_taken + monk_bauble_damage_list1[0]
@@ -5632,7 +5832,7 @@ class GameFrame(tk.Frame):
                                     monk_damage_taken = monk_damage_taken + monk_bauble_damage_list2[0]
                                 if monk_bauble_damage_list3[1] != 0:
                                     monk_damage_taken = monk_damage_taken + monk_bauble_damage_list3[0]
-                                if unbaubleable_check == 1:
+                                if bauble_unavailable_check == 1:
                                     monk_damage_taken = monk_damage_taken + bauble_damage
                                 champion2_hp = champion2_hp - math.ceil(monk_damage_taken)
                                 champion2_lastRoundDamageTaken_list.append(math.ceil(monk_damage_taken))
@@ -5712,7 +5912,7 @@ class GameFrame(tk.Frame):
                                         self.apply_taunt(1, MASTER_FENCER.title, 1)
                             elif CHAMPION_LIST[0] == MONK.title:
                                 bauble_damage = self.calculate_ai_damage(3, 1)
-                                unbaubleable_check = 0
+                                bauble_unavailable_check = 0
                                 if monk_bauble_damage_list1[1] == 0:
                                     monk_bauble_damage_list1 = [math.ceil(bauble_damage / 3), 3]
                                 else:
@@ -5722,7 +5922,7 @@ class GameFrame(tk.Frame):
                                         if monk_bauble_damage_list3[1] == 0:
                                             monk_bauble_damage_list3 = [math.ceil(bauble_damage / 3), 3]
                                         else:
-                                            unbaubleable_check = 1
+                                            bauble_unavailable_check = 1
                                 monk_damage_taken = 0
                                 if monk_bauble_damage_list1[1] != 0:
                                     monk_damage_taken = monk_damage_taken + monk_bauble_damage_list1[0]
@@ -5730,7 +5930,7 @@ class GameFrame(tk.Frame):
                                     monk_damage_taken = monk_damage_taken + monk_bauble_damage_list2[0]
                                 if monk_bauble_damage_list3[1] != 0:
                                     monk_damage_taken = monk_damage_taken + monk_bauble_damage_list3[0]
-                                if unbaubleable_check == 1:
+                                if bauble_unavailable_check == 1:
                                     monk_damage_taken = monk_damage_taken + bauble_damage
                                 champion3_hp = champion3_hp - math.ceil(monk_damage_taken)
                                 champion3_lastRoundDamageTaken_list.append(math.ceil(monk_damage_taken))
@@ -5810,7 +6010,7 @@ class GameFrame(tk.Frame):
                                         self.apply_taunt(1, MASTER_FENCER.title, 1)
                             elif CHAMPION_LIST[0] == MONK.title:
                                 bauble_damage = self.calculate_ai_damage(4, 1, 0)
-                                unbaubleable_check = 0
+                                bauble_unavailable_check = 0
                                 if monk_bauble_damage_list1[1] == 0:
                                     monk_bauble_damage_list1 = [math.ceil(bauble_damage / 3), 3]
                                 else:
@@ -5820,7 +6020,7 @@ class GameFrame(tk.Frame):
                                         if monk_bauble_damage_list3[1] == 0:
                                             monk_bauble_damage_list3 = [math.ceil(bauble_damage / 3), 3]
                                         else:
-                                            unbaubleable_check = 1
+                                            bauble_unavailable_check = 1
                                 monk_damage_taken = 0
                                 if monk_bauble_damage_list1[1] != 0:
                                     monk_damage_taken = monk_damage_taken + monk_bauble_damage_list1[0]
@@ -5828,7 +6028,7 @@ class GameFrame(tk.Frame):
                                     monk_damage_taken = monk_damage_taken + monk_bauble_damage_list2[0]
                                 if monk_bauble_damage_list3[1] != 0:
                                     monk_damage_taken = monk_damage_taken + monk_bauble_damage_list3[0]
-                                if unbaubleable_check == 1:
+                                if bauble_unavailable_check == 1:
                                     monk_damage_taken = monk_damage_taken + bauble_damage
                                 champion4_hp = champion4_hp - math.ceil(monk_damage_taken)
                                 champion4_lastRoundDamageTaken_list.append(math.ceil(monk_damage_taken))
@@ -5908,7 +6108,7 @@ class GameFrame(tk.Frame):
                                         self.apply_taunt(1, MASTER_FENCER.title, 1)
                             elif CHAMPION_LIST[0] == MONK.title:
                                 bauble_damage = self.calculate_ai_damage(5, 1, 0)
-                                unbaubleable_check = 0
+                                bauble_unavailable_check = 0
                                 if monk_bauble_damage_list1[1] == 0:
                                     monk_bauble_damage_list1 = [math.ceil(bauble_damage / 3), 3]
                                 else:
@@ -5918,7 +6118,7 @@ class GameFrame(tk.Frame):
                                         if monk_bauble_damage_list3[1] == 0:
                                             monk_bauble_damage_list3 = [math.ceil(bauble_damage / 3), 3]
                                         else:
-                                            unbaubleable_check = 1
+                                            bauble_unavailable_check = 1
                                 monk_damage_taken = 0
                                 if monk_bauble_damage_list1[1] != 0:
                                     monk_damage_taken = monk_damage_taken + monk_bauble_damage_list1[0]
@@ -5926,7 +6126,7 @@ class GameFrame(tk.Frame):
                                     monk_damage_taken = monk_damage_taken + monk_bauble_damage_list2[0]
                                 if monk_bauble_damage_list3[1] != 0:
                                     monk_damage_taken = monk_damage_taken + monk_bauble_damage_list3[0]
-                                if unbaubleable_check == 1:
+                                if bauble_unavailable_check == 1:
                                     monk_damage_taken = monk_damage_taken + bauble_damage
                                 champion5_hp = champion5_hp - math.ceil(monk_damage_taken)
                                 champion5_lastRoundDamageTaken_list.append(math.ceil(monk_damage_taken))
@@ -6008,7 +6208,7 @@ class GameFrame(tk.Frame):
                                             self.apply_taunt(1, MASTER_FENCER.title, 1)
                                 elif CHAMPION_LIST[0] == MONK.title:
                                     bauble_damage = self.calculate_ai_damage(1, 1, 0)
-                                    unbaubleable_check = 0
+                                    bauble_unavailable_check = 0
                                     if monk_bauble_damage_list1[1] == 0:
                                         monk_bauble_damage_list1 = [math.ceil(bauble_damage / 3), 3]
                                     else:
@@ -6018,7 +6218,7 @@ class GameFrame(tk.Frame):
                                             if monk_bauble_damage_list3[1] == 0:
                                                 monk_bauble_damage_list3 = [math.ceil(bauble_damage / 3), 3]
                                             else:
-                                                unbaubleable_check = 1
+                                                bauble_unavailable_check = 1
                                     monk_damage_taken = 0
                                     if monk_bauble_damage_list1[1] != 0:
                                         monk_damage_taken = monk_damage_taken + monk_bauble_damage_list1[0]
@@ -6026,7 +6226,7 @@ class GameFrame(tk.Frame):
                                         monk_damage_taken = monk_damage_taken + monk_bauble_damage_list2[0]
                                     if monk_bauble_damage_list3[1] != 0:
                                         monk_damage_taken = monk_damage_taken + monk_bauble_damage_list3[0]
-                                    if unbaubleable_check == 1:
+                                    if bauble_unavailable_check == 1:
                                         monk_damage_taken = monk_damage_taken + bauble_damage
                                     champion1_hp = champion1_hp - math.ceil(monk_damage_taken)
                                     champion1_lastRoundDamageTaken_list.append(math.ceil(monk_damage_taken))
@@ -6124,7 +6324,7 @@ class GameFrame(tk.Frame):
                                             self.apply_taunt(2, MASTER_FENCER.title, 1)
                                 elif CHAMPION_LIST[0] == MONK.title:
                                     bauble_damage = self.calculate_ai_damage(2, 1, 0)
-                                    unbaubleable_check = 0
+                                    bauble_unavailable_check = 0
                                     if monk_bauble_damage_list1[1] == 0:
                                         monk_bauble_damage_list1 = [math.ceil(bauble_damage / 3), 3]
                                     else:
@@ -6134,7 +6334,7 @@ class GameFrame(tk.Frame):
                                             if monk_bauble_damage_list3[1] == 0:
                                                 monk_bauble_damage_list3 = [math.ceil(bauble_damage / 3), 3]
                                             else:
-                                                unbaubleable_check = 1
+                                                bauble_unavailable_check = 1
                                     monk_damage_taken = 0
                                     if monk_bauble_damage_list1[1] != 0:
                                         monk_damage_taken = monk_damage_taken + monk_bauble_damage_list1[0]
@@ -6142,7 +6342,7 @@ class GameFrame(tk.Frame):
                                         monk_damage_taken = monk_damage_taken + monk_bauble_damage_list2[0]
                                     if monk_bauble_damage_list3[1] != 0:
                                         monk_damage_taken = monk_damage_taken + monk_bauble_damage_list3[0]
-                                    if unbaubleable_check == 1:
+                                    if bauble_unavailable_check == 1:
                                         monk_damage_taken = monk_damage_taken + bauble_damage
                                     champion2_hp = champion2_hp - math.ceil(monk_damage_taken)
                                     champion2_lastRoundDamageTaken_list.append(math.ceil(monk_damage_taken))
@@ -6240,7 +6440,7 @@ class GameFrame(tk.Frame):
                                             self.apply_taunt(3, MASTER_FENCER.title, 1)
                                 elif CHAMPION_LIST[0] == MONK.title:
                                     bauble_damage = self.calculate_ai_damage(3, 1, 0)
-                                    unbaubleable_check = 0
+                                    bauble_unavailable_check = 0
                                     if monk_bauble_damage_list1[1] == 0:
                                         monk_bauble_damage_list1 = [math.ceil(bauble_damage / 3), 3]
                                     else:
@@ -6250,7 +6450,7 @@ class GameFrame(tk.Frame):
                                             if monk_bauble_damage_list3[1] == 0:
                                                 monk_bauble_damage_list3 = [math.ceil(bauble_damage / 3), 3]
                                             else:
-                                                unbaubleable_check = 1
+                                                bauble_unavailable_check = 1
                                     monk_damage_taken = 0
                                     if monk_bauble_damage_list1[1] != 0:
                                         monk_damage_taken = monk_damage_taken + monk_bauble_damage_list1[0]
@@ -6258,7 +6458,7 @@ class GameFrame(tk.Frame):
                                         monk_damage_taken = monk_damage_taken + monk_bauble_damage_list2[0]
                                     if monk_bauble_damage_list3[1] != 0:
                                         monk_damage_taken = monk_damage_taken + monk_bauble_damage_list3[0]
-                                    if unbaubleable_check == 1:
+                                    if bauble_unavailable_check == 1:
                                         monk_damage_taken = monk_damage_taken + bauble_damage
                                     champion3_hp = champion3_hp - math.ceil(monk_damage_taken)
                                     champion3_lastRoundDamageTaken_list.append(math.ceil(monk_damage_taken))
@@ -6356,7 +6556,7 @@ class GameFrame(tk.Frame):
                                             self.apply_taunt(4, MASTER_FENCER.title, 1)
                                 elif CHAMPION_LIST[0] == MONK.title:
                                     bauble_damage = self.calculate_ai_damage(4, 1, 0)
-                                    unbaubleable_check = 0
+                                    bauble_unavailable_check = 0
                                     if monk_bauble_damage_list1[1] == 0:
                                         monk_bauble_damage_list1 = [math.ceil(bauble_damage / 3), 3]
                                     else:
@@ -6366,7 +6566,7 @@ class GameFrame(tk.Frame):
                                             if monk_bauble_damage_list3[1] == 0:
                                                 monk_bauble_damage_list3 = [math.ceil(bauble_damage / 3), 3]
                                             else:
-                                                unbaubleable_check = 1
+                                                bauble_unavailable_check = 1
                                     monk_damage_taken = 0
                                     if monk_bauble_damage_list1[1] != 0:
                                         monk_damage_taken = monk_damage_taken + monk_bauble_damage_list1[0]
@@ -6374,7 +6574,7 @@ class GameFrame(tk.Frame):
                                         monk_damage_taken = monk_damage_taken + monk_bauble_damage_list2[0]
                                     if monk_bauble_damage_list3[1] != 0:
                                         monk_damage_taken = monk_damage_taken + monk_bauble_damage_list3[0]
-                                    if unbaubleable_check == 1:
+                                    if bauble_unavailable_check == 1:
                                         monk_damage_taken = monk_damage_taken + bauble_damage
                                     champion4_hp = champion4_hp - math.ceil(monk_damage_taken)
                                     champion4_lastRoundDamageTaken_list.append(math.ceil(monk_damage_taken))
@@ -6472,7 +6672,7 @@ class GameFrame(tk.Frame):
                                             self.apply_taunt(5, MASTER_FENCER.title, 1)
                                 elif CHAMPION_LIST[0] == MONK.title:
                                     bauble_damage = self.calculate_ai_damage(5, 1, 0)
-                                    unbaubleable_check = 0
+                                    bauble_unavailable_check = 0
                                     if monk_bauble_damage_list1[1] == 0:
                                         monk_bauble_damage_list1 = [math.ceil(bauble_damage / 3), 3]
                                     else:
@@ -6482,7 +6682,7 @@ class GameFrame(tk.Frame):
                                             if monk_bauble_damage_list3[1] == 0:
                                                 monk_bauble_damage_list3 = [math.ceil(bauble_damage / 3), 3]
                                             else:
-                                                unbaubleable_check = 1
+                                                bauble_unavailable_check = 1
                                     monk_damage_taken = 0
                                     if monk_bauble_damage_list1[1] != 0:
                                         monk_damage_taken = monk_damage_taken + monk_bauble_damage_list1[0]
@@ -6490,7 +6690,7 @@ class GameFrame(tk.Frame):
                                         monk_damage_taken = monk_damage_taken + monk_bauble_damage_list2[0]
                                     if monk_bauble_damage_list3[1] != 0:
                                         monk_damage_taken = monk_damage_taken + monk_bauble_damage_list3[0]
-                                    if unbaubleable_check == 1:
+                                    if bauble_unavailable_check == 1:
                                         monk_damage_taken = monk_damage_taken + bauble_damage
                                     champion5_hp = champion5_hp - math.ceil(monk_damage_taken)
                                     champion5_lastRoundDamageTaken_list.append(math.ceil(monk_damage_taken))
@@ -6589,7 +6789,7 @@ class GameFrame(tk.Frame):
                                             self.apply_taunt(1, MASTER_FENCER.title, 1)
                                 elif CHAMPION_LIST[0] == MONK.title:
                                     bauble_damage = self.calculate_ai_damage(1, 1, 0)
-                                    unbaubleable_check = 0
+                                    bauble_unavailable_check = 0
                                     if monk_bauble_damage_list1[1] == 0:
                                         monk_bauble_damage_list1 = [math.ceil(bauble_damage / 3), 3]
                                     else:
@@ -6599,7 +6799,7 @@ class GameFrame(tk.Frame):
                                             if monk_bauble_damage_list3[1] == 0:
                                                 monk_bauble_damage_list3 = [math.ceil(bauble_damage / 3), 3]
                                             else:
-                                                unbaubleable_check = 1
+                                                bauble_unavailable_check = 1
                                     monk_damage_taken = 0
                                     if monk_bauble_damage_list1[1] != 0:
                                         monk_damage_taken = monk_damage_taken + monk_bauble_damage_list1[0]
@@ -6607,7 +6807,7 @@ class GameFrame(tk.Frame):
                                         monk_damage_taken = monk_damage_taken + monk_bauble_damage_list2[0]
                                     if monk_bauble_damage_list3[1] != 0:
                                         monk_damage_taken = monk_damage_taken + monk_bauble_damage_list3[0]
-                                    if unbaubleable_check == 1:
+                                    if bauble_unavailable_check == 1:
                                         monk_damage_taken = monk_damage_taken + bauble_damage
                                     champion1_hp = champion1_hp - math.ceil(monk_damage_taken)
                                     champion1_lastRoundDamageTaken_list.append(math.ceil(monk_damage_taken))
@@ -6705,7 +6905,7 @@ class GameFrame(tk.Frame):
                                             self.apply_taunt(2, MASTER_FENCER.title, 1)
                                 elif CHAMPION_LIST[0] == MONK.title:
                                     bauble_damage = self.calculate_ai_damage(2, 1, 0)
-                                    unbaubleable_check = 0
+                                    bauble_unavailable_check = 0
                                     if monk_bauble_damage_list1[1] == 0:
                                         monk_bauble_damage_list1 = [math.ceil(bauble_damage / 3), 3]
                                     else:
@@ -6715,7 +6915,7 @@ class GameFrame(tk.Frame):
                                             if monk_bauble_damage_list3[1] == 0:
                                                 monk_bauble_damage_list3 = [math.ceil(bauble_damage / 3), 3]
                                             else:
-                                                unbaubleable_check = 1
+                                                bauble_unavailable_check = 1
                                     monk_damage_taken = 0
                                     if monk_bauble_damage_list1[1] != 0:
                                         monk_damage_taken = monk_damage_taken + monk_bauble_damage_list1[0]
@@ -6723,7 +6923,7 @@ class GameFrame(tk.Frame):
                                         monk_damage_taken = monk_damage_taken + monk_bauble_damage_list2[0]
                                     if monk_bauble_damage_list3[1] != 0:
                                         monk_damage_taken = monk_damage_taken + monk_bauble_damage_list3[0]
-                                    if unbaubleable_check == 1:
+                                    if bauble_unavailable_check == 1:
                                         monk_damage_taken = monk_damage_taken + bauble_damage
                                     champion2_hp = champion2_hp - math.ceil(monk_damage_taken)
                                     champion2_lastRoundDamageTaken_list.append(math.ceil(monk_damage_taken))
@@ -6821,7 +7021,7 @@ class GameFrame(tk.Frame):
                                             self.apply_taunt(3, MASTER_FENCER.title, 1)
                                 elif CHAMPION_LIST[0] == MONK.title:
                                     bauble_damage = self.calculate_ai_damage(3, 1, 0)
-                                    unbaubleable_check = 0
+                                    bauble_unavailable_check = 0
                                     if monk_bauble_damage_list1[1] == 0:
                                         monk_bauble_damage_list1 = [math.ceil(bauble_damage / 3), 3]
                                     else:
@@ -6831,7 +7031,7 @@ class GameFrame(tk.Frame):
                                             if monk_bauble_damage_list3[1] == 0:
                                                 monk_bauble_damage_list3 = [math.ceil(bauble_damage / 3), 3]
                                             else:
-                                                unbaubleable_check = 1
+                                                bauble_unavailable_check = 1
                                     monk_damage_taken = 0
                                     if monk_bauble_damage_list1[1] != 0:
                                         monk_damage_taken = monk_damage_taken + monk_bauble_damage_list1[0]
@@ -6839,7 +7039,7 @@ class GameFrame(tk.Frame):
                                         monk_damage_taken = monk_damage_taken + monk_bauble_damage_list2[0]
                                     if monk_bauble_damage_list3[1] != 0:
                                         monk_damage_taken = monk_damage_taken + monk_bauble_damage_list3[0]
-                                    if unbaubleable_check == 1:
+                                    if bauble_unavailable_check == 1:
                                         monk_damage_taken = monk_damage_taken + bauble_damage
                                     champion3_hp = champion3_hp - math.ceil(monk_damage_taken)
                                     champion3_lastRoundDamageTaken_list.append(math.ceil(monk_damage_taken))
@@ -6937,7 +7137,7 @@ class GameFrame(tk.Frame):
                                             self.apply_taunt(4, MASTER_FENCER.title, 1)
                                 elif CHAMPION_LIST[0] == MONK.title:
                                     bauble_damage = self.calculate_ai_damage(4, 1, 0)
-                                    unbaubleable_check = 0
+                                    bauble_unavailable_check = 0
                                     if monk_bauble_damage_list1[1] == 0:
                                         monk_bauble_damage_list1 = [math.ceil(bauble_damage / 3), 3]
                                     else:
@@ -6947,7 +7147,7 @@ class GameFrame(tk.Frame):
                                             if monk_bauble_damage_list3[1] == 0:
                                                 monk_bauble_damage_list3 = [math.ceil(bauble_damage / 3), 3]
                                             else:
-                                                unbaubleable_check = 1
+                                                bauble_unavailable_check = 1
                                     monk_damage_taken = 0
                                     if monk_bauble_damage_list1[1] != 0:
                                         monk_damage_taken = monk_damage_taken + monk_bauble_damage_list1[0]
@@ -6955,7 +7155,7 @@ class GameFrame(tk.Frame):
                                         monk_damage_taken = monk_damage_taken + monk_bauble_damage_list2[0]
                                     if monk_bauble_damage_list3[1] != 0:
                                         monk_damage_taken = monk_damage_taken + monk_bauble_damage_list3[0]
-                                    if unbaubleable_check == 1:
+                                    if bauble_unavailable_check == 1:
                                         monk_damage_taken = monk_damage_taken + bauble_damage
                                     champion4_hp = champion4_hp - math.ceil(monk_damage_taken)
                                     champion4_lastRoundDamageTaken_list.append(math.ceil(monk_damage_taken))
@@ -7053,7 +7253,7 @@ class GameFrame(tk.Frame):
                                             self.apply_taunt(5, MASTER_FENCER.title, 1)
                                 elif CHAMPION_LIST[0] == MONK.title:
                                     bauble_damage = self.calculate_ai_damage(5, 1, 0)
-                                    unbaubleable_check = 0
+                                    bauble_unavailable_check = 0
                                     if monk_bauble_damage_list1[1] == 0:
                                         monk_bauble_damage_list1 = [math.ceil(bauble_damage / 3), 3]
                                     else:
@@ -7063,7 +7263,7 @@ class GameFrame(tk.Frame):
                                             if monk_bauble_damage_list3[1] == 0:
                                                 monk_bauble_damage_list3 = [math.ceil(bauble_damage / 3), 3]
                                             else:
-                                                unbaubleable_check = 1
+                                                bauble_unavailable_check = 1
                                     monk_damage_taken = 0
                                     if monk_bauble_damage_list1[1] != 0:
                                         monk_damage_taken = monk_damage_taken + monk_bauble_damage_list1[0]
@@ -7071,7 +7271,7 @@ class GameFrame(tk.Frame):
                                         monk_damage_taken = monk_damage_taken + monk_bauble_damage_list2[0]
                                     if monk_bauble_damage_list3[1] != 0:
                                         monk_damage_taken = monk_damage_taken + monk_bauble_damage_list3[0]
-                                    if unbaubleable_check == 1:
+                                    if bauble_unavailable_check == 1:
                                         monk_damage_taken = monk_damage_taken + bauble_damage
                                     champion5_hp = champion5_hp - math.ceil(monk_damage_taken)
                                     champion5_lastRoundDamageTaken_list.append(math.ceil(monk_damage_taken))
@@ -7257,7 +7457,7 @@ class GameFrame(tk.Frame):
                                         self.apply_taunt(2, MASTER_FENCER.title, 1)
                             elif CHAMPION_LIST[0] == MONK.title:
                                 bauble_damage = self.calculate_ai_damage(1, 2, 0)
-                                unbaubleable_check = 0
+                                bauble_unavailable_check = 0
                                 if monk_bauble_damage_list1[1] == 0:
                                     monk_bauble_damage_list1 = [math.ceil(bauble_damage / 3), 3]
                                 else:
@@ -7267,7 +7467,7 @@ class GameFrame(tk.Frame):
                                         if monk_bauble_damage_list3[1] == 0:
                                             monk_bauble_damage_list3 = [math.ceil(bauble_damage / 3), 3]
                                         else:
-                                            unbaubleable_check = 1
+                                            bauble_unavailable_check = 1
                                 monk_damage_taken = 0
                                 if monk_bauble_damage_list1[1] != 0:
                                     monk_damage_taken = monk_damage_taken + monk_bauble_damage_list1[0]
@@ -7275,7 +7475,7 @@ class GameFrame(tk.Frame):
                                     monk_damage_taken = monk_damage_taken + monk_bauble_damage_list2[0]
                                 if monk_bauble_damage_list3[1] != 0:
                                     monk_damage_taken = monk_damage_taken + monk_bauble_damage_list3[0]
-                                if unbaubleable_check == 1:
+                                if bauble_unavailable_check == 1:
                                     monk_damage_taken = monk_damage_taken + bauble_damage
                                 champion1_hp = champion1_hp - math.ceil(monk_damage_taken)
                                 champion1_lastRoundDamageTaken_list.append(math.ceil(monk_damage_taken))
@@ -7355,7 +7555,7 @@ class GameFrame(tk.Frame):
                                         self.apply_taunt(2, MASTER_FENCER.title, 1)
                             elif CHAMPION_LIST[0] == MONK.title:
                                 bauble_damage = self.calculate_ai_damage(2, 2, 0)
-                                unbaubleable_check = 0
+                                bauble_unavailable_check = 0
                                 if monk_bauble_damage_list1[1] == 0:
                                     monk_bauble_damage_list1 = [math.ceil(bauble_damage / 3), 3]
                                 else:
@@ -7365,7 +7565,7 @@ class GameFrame(tk.Frame):
                                         if monk_bauble_damage_list3[1] == 0:
                                             monk_bauble_damage_list3 = [math.ceil(bauble_damage / 3), 3]
                                         else:
-                                            unbaubleable_check = 1
+                                            bauble_unavailable_check = 1
                                 monk_damage_taken = 0
                                 if monk_bauble_damage_list1[1] != 0:
                                     monk_damage_taken = monk_damage_taken + monk_bauble_damage_list1[0]
@@ -7373,7 +7573,7 @@ class GameFrame(tk.Frame):
                                     monk_damage_taken = monk_damage_taken + monk_bauble_damage_list2[0]
                                 if monk_bauble_damage_list3[1] != 0:
                                     monk_damage_taken = monk_damage_taken + monk_bauble_damage_list3[0]
-                                if unbaubleable_check == 1:
+                                if bauble_unavailable_check == 1:
                                     monk_damage_taken = monk_damage_taken + bauble_damage
                                 champion2_hp = champion2_hp - math.ceil(monk_damage_taken)
                                 champion2_lastRoundDamageTaken_list.append(math.ceil(monk_damage_taken))
@@ -7453,7 +7653,7 @@ class GameFrame(tk.Frame):
                                         self.apply_taunt(2, MASTER_FENCER.title, 1)
                             elif CHAMPION_LIST[0] == MONK.title:
                                 bauble_damage = self.calculate_ai_damage(3, 2)
-                                unbaubleable_check = 0
+                                bauble_unavailable_check = 0
                                 if monk_bauble_damage_list1[1] == 0:
                                     monk_bauble_damage_list1 = [math.ceil(bauble_damage / 3), 3]
                                 else:
@@ -7463,7 +7663,7 @@ class GameFrame(tk.Frame):
                                         if monk_bauble_damage_list3[1] == 0:
                                             monk_bauble_damage_list3 = [math.ceil(bauble_damage / 3), 3]
                                         else:
-                                            unbaubleable_check = 1
+                                            bauble_unavailable_check = 1
                                 monk_damage_taken = 0
                                 if monk_bauble_damage_list1[1] != 0:
                                     monk_damage_taken = monk_damage_taken + monk_bauble_damage_list1[0]
@@ -7471,7 +7671,7 @@ class GameFrame(tk.Frame):
                                     monk_damage_taken = monk_damage_taken + monk_bauble_damage_list2[0]
                                 if monk_bauble_damage_list3[1] != 0:
                                     monk_damage_taken = monk_damage_taken + monk_bauble_damage_list3[0]
-                                if unbaubleable_check == 1:
+                                if bauble_unavailable_check == 1:
                                     monk_damage_taken = monk_damage_taken + bauble_damage
                                 champion3_hp = champion3_hp - math.ceil(monk_damage_taken)
                                 champion3_lastRoundDamageTaken_list.append(math.ceil(monk_damage_taken))
@@ -7551,7 +7751,7 @@ class GameFrame(tk.Frame):
                                         self.apply_taunt(2, MASTER_FENCER.title, 1)
                             elif CHAMPION_LIST[0] == MONK.title:
                                 bauble_damage = self.calculate_ai_damage(4, 2, 0)
-                                unbaubleable_check = 0
+                                bauble_unavailable_check = 0
                                 if monk_bauble_damage_list1[1] == 0:
                                     monk_bauble_damage_list1 = [math.ceil(bauble_damage / 3), 3]
                                 else:
@@ -7561,7 +7761,7 @@ class GameFrame(tk.Frame):
                                         if monk_bauble_damage_list3[1] == 0:
                                             monk_bauble_damage_list3 = [math.ceil(bauble_damage / 3), 3]
                                         else:
-                                            unbaubleable_check = 1
+                                            bauble_unavailable_check = 1
                                 monk_damage_taken = 0
                                 if monk_bauble_damage_list1[1] != 0:
                                     monk_damage_taken = monk_damage_taken + monk_bauble_damage_list1[0]
@@ -7569,7 +7769,7 @@ class GameFrame(tk.Frame):
                                     monk_damage_taken = monk_damage_taken + monk_bauble_damage_list2[0]
                                 if monk_bauble_damage_list3[1] != 0:
                                     monk_damage_taken = monk_damage_taken + monk_bauble_damage_list3[0]
-                                if unbaubleable_check == 1:
+                                if bauble_unavailable_check == 1:
                                     monk_damage_taken = monk_damage_taken + bauble_damage
                                 champion4_hp = champion4_hp - math.ceil(monk_damage_taken)
                                 champion4_lastRoundDamageTaken_list.append(math.ceil(monk_damage_taken))
@@ -7649,7 +7849,7 @@ class GameFrame(tk.Frame):
                                         self.apply_taunt(2, MASTER_FENCER.title, 1)
                             elif CHAMPION_LIST[0] == MONK.title:
                                 bauble_damage = self.calculate_ai_damage(5, 2, 0)
-                                unbaubleable_check = 0
+                                bauble_unavailable_check = 0
                                 if monk_bauble_damage_list1[1] == 0:
                                     monk_bauble_damage_list1 = [math.ceil(bauble_damage / 3), 3]
                                 else:
@@ -7659,7 +7859,7 @@ class GameFrame(tk.Frame):
                                         if monk_bauble_damage_list3[1] == 0:
                                             monk_bauble_damage_list3 = [math.ceil(bauble_damage / 3), 3]
                                         else:
-                                            unbaubleable_check = 1
+                                            bauble_unavailable_check = 1
                                 monk_damage_taken = 0
                                 if monk_bauble_damage_list1[1] != 0:
                                     monk_damage_taken = monk_damage_taken + monk_bauble_damage_list1[0]
@@ -7667,7 +7867,7 @@ class GameFrame(tk.Frame):
                                     monk_damage_taken = monk_damage_taken + monk_bauble_damage_list2[0]
                                 if monk_bauble_damage_list3[1] != 0:
                                     monk_damage_taken = monk_damage_taken + monk_bauble_damage_list3[0]
-                                if unbaubleable_check == 1:
+                                if bauble_unavailable_check == 1:
                                     monk_damage_taken = monk_damage_taken + bauble_damage
                                 champion5_hp = champion5_hp - math.ceil(monk_damage_taken)
                                 champion5_lastRoundDamageTaken_list.append(math.ceil(monk_damage_taken))
@@ -7749,7 +7949,7 @@ class GameFrame(tk.Frame):
                                             self.apply_taunt(2, MASTER_FENCER.title, 1)
                                 elif CHAMPION_LIST[0] == MONK.title:
                                     bauble_damage = self.calculate_ai_damage(1, 2, 0)
-                                    unbaubleable_check = 0
+                                    bauble_unavailable_check = 0
                                     if monk_bauble_damage_list1[1] == 0:
                                         monk_bauble_damage_list1 = [math.ceil(bauble_damage / 3), 3]
                                     else:
@@ -7759,7 +7959,7 @@ class GameFrame(tk.Frame):
                                             if monk_bauble_damage_list3[1] == 0:
                                                 monk_bauble_damage_list3 = [math.ceil(bauble_damage / 3), 3]
                                             else:
-                                                unbaubleable_check = 1
+                                                bauble_unavailable_check = 1
                                     monk_damage_taken = 0
                                     if monk_bauble_damage_list1[1] != 0:
                                         monk_damage_taken = monk_damage_taken + monk_bauble_damage_list1[0]
@@ -7767,7 +7967,7 @@ class GameFrame(tk.Frame):
                                         monk_damage_taken = monk_damage_taken + monk_bauble_damage_list2[0]
                                     if monk_bauble_damage_list3[1] != 0:
                                         monk_damage_taken = monk_damage_taken + monk_bauble_damage_list3[0]
-                                    if unbaubleable_check == 1:
+                                    if bauble_unavailable_check == 1:
                                         monk_damage_taken = monk_damage_taken + bauble_damage
                                     champion1_hp = champion1_hp - math.ceil(monk_damage_taken)
                                     champion1_lastRoundDamageTaken_list.append(math.ceil(monk_damage_taken))
@@ -7865,7 +8065,7 @@ class GameFrame(tk.Frame):
                                             self.apply_taunt(2, MASTER_FENCER.title, 1)
                                 elif CHAMPION_LIST[0] == MONK.title:
                                     bauble_damage = self.calculate_ai_damage(2, 2, 0)
-                                    unbaubleable_check = 0
+                                    bauble_unavailable_check = 0
                                     if monk_bauble_damage_list1[1] == 0:
                                         monk_bauble_damage_list1 = [math.ceil(bauble_damage / 3), 3]
                                     else:
@@ -7875,7 +8075,7 @@ class GameFrame(tk.Frame):
                                             if monk_bauble_damage_list3[1] == 0:
                                                 monk_bauble_damage_list3 = [math.ceil(bauble_damage / 3), 3]
                                             else:
-                                                unbaubleable_check = 1
+                                                bauble_unavailable_check = 1
                                     monk_damage_taken = 0
                                     if monk_bauble_damage_list1[1] != 0:
                                         monk_damage_taken = monk_damage_taken + monk_bauble_damage_list1[0]
@@ -7883,7 +8083,7 @@ class GameFrame(tk.Frame):
                                         monk_damage_taken = monk_damage_taken + monk_bauble_damage_list2[0]
                                     if monk_bauble_damage_list3[1] != 0:
                                         monk_damage_taken = monk_damage_taken + monk_bauble_damage_list3[0]
-                                    if unbaubleable_check == 1:
+                                    if bauble_unavailable_check == 1:
                                         monk_damage_taken = monk_damage_taken + bauble_damage
                                     champion2_hp = champion2_hp - math.ceil(monk_damage_taken)
                                     champion2_lastRoundDamageTaken_list.append(math.ceil(monk_damage_taken))
@@ -7981,7 +8181,7 @@ class GameFrame(tk.Frame):
                                             self.apply_taunt(2, MASTER_FENCER.title, 1)
                                 elif CHAMPION_LIST[0] == MONK.title:
                                     bauble_damage = self.calculate_ai_damage(3, 2, 0)
-                                    unbaubleable_check = 0
+                                    bauble_unavailable_check = 0
                                     if monk_bauble_damage_list1[1] == 0:
                                         monk_bauble_damage_list1 = [math.ceil(bauble_damage / 3), 3]
                                     else:
@@ -7991,7 +8191,7 @@ class GameFrame(tk.Frame):
                                             if monk_bauble_damage_list3[1] == 0:
                                                 monk_bauble_damage_list3 = [math.ceil(bauble_damage / 3), 3]
                                             else:
-                                                unbaubleable_check = 1
+                                                bauble_unavailable_check = 1
                                     monk_damage_taken = 0
                                     if monk_bauble_damage_list1[1] != 0:
                                         monk_damage_taken = monk_damage_taken + monk_bauble_damage_list1[0]
@@ -7999,7 +8199,7 @@ class GameFrame(tk.Frame):
                                         monk_damage_taken = monk_damage_taken + monk_bauble_damage_list2[0]
                                     if monk_bauble_damage_list3[1] != 0:
                                         monk_damage_taken = monk_damage_taken + monk_bauble_damage_list3[0]
-                                    if unbaubleable_check == 1:
+                                    if bauble_unavailable_check == 1:
                                         monk_damage_taken = monk_damage_taken + bauble_damage
                                     champion3_hp = champion3_hp - math.ceil(monk_damage_taken)
                                     champion3_lastRoundDamageTaken_list.append(math.ceil(monk_damage_taken))
@@ -8097,7 +8297,7 @@ class GameFrame(tk.Frame):
                                             self.apply_taunt(2, MASTER_FENCER.title, 1)
                                 elif CHAMPION_LIST[0] == MONK.title:
                                     bauble_damage = self.calculate_ai_damage(4, 2, 0)
-                                    unbaubleable_check = 0
+                                    bauble_unavailable_check = 0
                                     if monk_bauble_damage_list1[1] == 0:
                                         monk_bauble_damage_list1 = [math.ceil(bauble_damage / 3), 3]
                                     else:
@@ -8107,7 +8307,7 @@ class GameFrame(tk.Frame):
                                             if monk_bauble_damage_list3[1] == 0:
                                                 monk_bauble_damage_list3 = [math.ceil(bauble_damage / 3), 3]
                                             else:
-                                                unbaubleable_check = 1
+                                                bauble_unavailable_check = 1
                                     monk_damage_taken = 0
                                     if monk_bauble_damage_list1[1] != 0:
                                         monk_damage_taken = monk_damage_taken + monk_bauble_damage_list1[0]
@@ -8115,7 +8315,7 @@ class GameFrame(tk.Frame):
                                         monk_damage_taken = monk_damage_taken + monk_bauble_damage_list2[0]
                                     if monk_bauble_damage_list3[1] != 0:
                                         monk_damage_taken = monk_damage_taken + monk_bauble_damage_list3[0]
-                                    if unbaubleable_check == 1:
+                                    if bauble_unavailable_check == 1:
                                         monk_damage_taken = monk_damage_taken + bauble_damage
                                     champion4_hp = champion4_hp - math.ceil(monk_damage_taken)
                                     champion4_lastRoundDamageTaken_list.append(math.ceil(monk_damage_taken))
@@ -8213,7 +8413,7 @@ class GameFrame(tk.Frame):
                                             self.apply_taunt(2, MASTER_FENCER.title, 1)
                                 elif CHAMPION_LIST[0] == MONK.title:
                                     bauble_damage = self.calculate_ai_damage(5, 2, 0)
-                                    unbaubleable_check = 0
+                                    bauble_unavailable_check = 0
                                     if monk_bauble_damage_list1[1] == 0:
                                         monk_bauble_damage_list1 = [math.ceil(bauble_damage / 3), 3]
                                     else:
@@ -8223,7 +8423,7 @@ class GameFrame(tk.Frame):
                                             if monk_bauble_damage_list3[1] == 0:
                                                 monk_bauble_damage_list3 = [math.ceil(bauble_damage / 3), 3]
                                             else:
-                                                unbaubleable_check = 1
+                                                bauble_unavailable_check = 1
                                     monk_damage_taken = 0
                                     if monk_bauble_damage_list1[1] != 0:
                                         monk_damage_taken = monk_damage_taken + monk_bauble_damage_list1[0]
@@ -8231,7 +8431,7 @@ class GameFrame(tk.Frame):
                                         monk_damage_taken = monk_damage_taken + monk_bauble_damage_list2[0]
                                     if monk_bauble_damage_list3[1] != 0:
                                         monk_damage_taken = monk_damage_taken + monk_bauble_damage_list3[0]
-                                    if unbaubleable_check == 1:
+                                    if bauble_unavailable_check == 1:
                                         monk_damage_taken = monk_damage_taken + bauble_damage
                                     champion5_hp = champion5_hp - math.ceil(monk_damage_taken)
                                     champion5_lastRoundDamageTaken_list.append(math.ceil(monk_damage_taken))
@@ -8330,7 +8530,7 @@ class GameFrame(tk.Frame):
                                             self.apply_taunt(2, MASTER_FENCER.title, 1)
                                 elif CHAMPION_LIST[0] == MONK.title:
                                     bauble_damage = self.calculate_ai_damage(1, 2, 0)
-                                    unbaubleable_check = 0
+                                    bauble_unavailable_check = 0
                                     if monk_bauble_damage_list1[1] == 0:
                                         monk_bauble_damage_list1 = [math.ceil(bauble_damage / 3), 3]
                                     else:
@@ -8340,7 +8540,7 @@ class GameFrame(tk.Frame):
                                             if monk_bauble_damage_list3[1] == 0:
                                                 monk_bauble_damage_list3 = [math.ceil(bauble_damage / 3), 3]
                                             else:
-                                                unbaubleable_check = 1
+                                                bauble_unavailable_check = 1
                                     monk_damage_taken = 0
                                     if monk_bauble_damage_list1[1] != 0:
                                         monk_damage_taken = monk_damage_taken + monk_bauble_damage_list1[0]
@@ -8348,7 +8548,7 @@ class GameFrame(tk.Frame):
                                         monk_damage_taken = monk_damage_taken + monk_bauble_damage_list2[0]
                                     if monk_bauble_damage_list3[1] != 0:
                                         monk_damage_taken = monk_damage_taken + monk_bauble_damage_list3[0]
-                                    if unbaubleable_check == 1:
+                                    if bauble_unavailable_check == 1:
                                         monk_damage_taken = monk_damage_taken + bauble_damage
                                     champion1_hp = champion1_hp - math.ceil(monk_damage_taken)
                                     champion1_lastRoundDamageTaken_list.append(math.ceil(monk_damage_taken))
@@ -8446,7 +8646,7 @@ class GameFrame(tk.Frame):
                                             self.apply_taunt(2, MASTER_FENCER.title, 1)
                                 elif CHAMPION_LIST[0] == MONK.title:
                                     bauble_damage = self.calculate_ai_damage(2, 2, 0)
-                                    unbaubleable_check = 0
+                                    bauble_unavailable_check = 0
                                     if monk_bauble_damage_list1[1] == 0:
                                         monk_bauble_damage_list1 = [math.ceil(bauble_damage / 3), 3]
                                     else:
@@ -8456,7 +8656,7 @@ class GameFrame(tk.Frame):
                                             if monk_bauble_damage_list3[1] == 0:
                                                 monk_bauble_damage_list3 = [math.ceil(bauble_damage / 3), 3]
                                             else:
-                                                unbaubleable_check = 1
+                                                bauble_unavailable_check = 1
                                     monk_damage_taken = 0
                                     if monk_bauble_damage_list1[1] != 0:
                                         monk_damage_taken = monk_damage_taken + monk_bauble_damage_list1[0]
@@ -8464,7 +8664,7 @@ class GameFrame(tk.Frame):
                                         monk_damage_taken = monk_damage_taken + monk_bauble_damage_list2[0]
                                     if monk_bauble_damage_list3[1] != 0:
                                         monk_damage_taken = monk_damage_taken + monk_bauble_damage_list3[0]
-                                    if unbaubleable_check == 1:
+                                    if bauble_unavailable_check == 1:
                                         monk_damage_taken = monk_damage_taken + bauble_damage
                                     champion2_hp = champion2_hp - math.ceil(monk_damage_taken)
                                     champion2_lastRoundDamageTaken_list.append(math.ceil(monk_damage_taken))
@@ -8562,7 +8762,7 @@ class GameFrame(tk.Frame):
                                             self.apply_taunt(2, MASTER_FENCER.title, 1)
                                 elif CHAMPION_LIST[0] == MONK.title:
                                     bauble_damage = self.calculate_ai_damage(3, 2, 0)
-                                    unbaubleable_check = 0
+                                    bauble_unavailable_check = 0
                                     if monk_bauble_damage_list1[1] == 0:
                                         monk_bauble_damage_list1 = [math.ceil(bauble_damage / 3), 3]
                                     else:
@@ -8572,7 +8772,7 @@ class GameFrame(tk.Frame):
                                             if monk_bauble_damage_list3[1] == 0:
                                                 monk_bauble_damage_list3 = [math.ceil(bauble_damage / 3), 3]
                                             else:
-                                                unbaubleable_check = 1
+                                                bauble_unavailable_check = 1
                                     monk_damage_taken = 0
                                     if monk_bauble_damage_list1[1] != 0:
                                         monk_damage_taken = monk_damage_taken + monk_bauble_damage_list1[0]
@@ -8580,7 +8780,7 @@ class GameFrame(tk.Frame):
                                         monk_damage_taken = monk_damage_taken + monk_bauble_damage_list2[0]
                                     if monk_bauble_damage_list3[1] != 0:
                                         monk_damage_taken = monk_damage_taken + monk_bauble_damage_list3[0]
-                                    if unbaubleable_check == 1:
+                                    if bauble_unavailable_check == 1:
                                         monk_damage_taken = monk_damage_taken + bauble_damage
                                     champion3_hp = champion3_hp - math.ceil(monk_damage_taken)
                                     champion3_lastRoundDamageTaken_list.append(math.ceil(monk_damage_taken))
@@ -8678,7 +8878,7 @@ class GameFrame(tk.Frame):
                                             self.apply_taunt(2, MASTER_FENCER.title, 1)
                                 elif CHAMPION_LIST[0] == MONK.title:
                                     bauble_damage = self.calculate_ai_damage(4, 2, 0)
-                                    unbaubleable_check = 0
+                                    bauble_unavailable_check = 0
                                     if monk_bauble_damage_list1[1] == 0:
                                         monk_bauble_damage_list1 = [math.ceil(bauble_damage / 3), 3]
                                     else:
@@ -8688,7 +8888,7 @@ class GameFrame(tk.Frame):
                                             if monk_bauble_damage_list3[1] == 0:
                                                 monk_bauble_damage_list3 = [math.ceil(bauble_damage / 3), 3]
                                             else:
-                                                unbaubleable_check = 1
+                                                bauble_unavailable_check = 1
                                     monk_damage_taken = 0
                                     if monk_bauble_damage_list1[1] != 0:
                                         monk_damage_taken = monk_damage_taken + monk_bauble_damage_list1[0]
@@ -8696,7 +8896,7 @@ class GameFrame(tk.Frame):
                                         monk_damage_taken = monk_damage_taken + monk_bauble_damage_list2[0]
                                     if monk_bauble_damage_list3[1] != 0:
                                         monk_damage_taken = monk_damage_taken + monk_bauble_damage_list3[0]
-                                    if unbaubleable_check == 1:
+                                    if bauble_unavailable_check == 1:
                                         monk_damage_taken = monk_damage_taken + bauble_damage
                                     champion4_hp = champion4_hp - math.ceil(monk_damage_taken)
                                     champion4_lastRoundDamageTaken_list.append(math.ceil(monk_damage_taken))
@@ -8794,7 +8994,7 @@ class GameFrame(tk.Frame):
                                             self.apply_taunt(2, MASTER_FENCER.title, 1)
                                 elif CHAMPION_LIST[0] == MONK.title:
                                     bauble_damage = self.calculate_ai_damage(5, 2, 0)
-                                    unbaubleable_check = 0
+                                    bauble_unavailable_check = 0
                                     if monk_bauble_damage_list1[1] == 0:
                                         monk_bauble_damage_list1 = [math.ceil(bauble_damage / 3), 3]
                                     else:
@@ -8804,7 +9004,7 @@ class GameFrame(tk.Frame):
                                             if monk_bauble_damage_list3[1] == 0:
                                                 monk_bauble_damage_list3 = [math.ceil(bauble_damage / 3), 3]
                                             else:
-                                                unbaubleable_check = 1
+                                                bauble_unavailable_check = 1
                                     monk_damage_taken = 0
                                     if monk_bauble_damage_list1[1] != 0:
                                         monk_damage_taken = monk_damage_taken + monk_bauble_damage_list1[0]
@@ -8812,7 +9012,7 @@ class GameFrame(tk.Frame):
                                         monk_damage_taken = monk_damage_taken + monk_bauble_damage_list2[0]
                                     if monk_bauble_damage_list3[1] != 0:
                                         monk_damage_taken = monk_damage_taken + monk_bauble_damage_list3[0]
-                                    if unbaubleable_check == 1:
+                                    if bauble_unavailable_check == 1:
                                         monk_damage_taken = monk_damage_taken + bauble_damage
                                     champion5_hp = champion5_hp - math.ceil(monk_damage_taken)
                                     champion5_lastRoundDamageTaken_list.append(math.ceil(monk_damage_taken))
@@ -8998,7 +9198,7 @@ class GameFrame(tk.Frame):
                                         self.apply_taunt(3, MASTER_FENCER.title, 1)
                             elif CHAMPION_LIST[0] == MONK.title:
                                 bauble_damage = self.calculate_ai_damage(1, 3, 0)
-                                unbaubleable_check = 0
+                                bauble_unavailable_check = 0
                                 if monk_bauble_damage_list1[1] == 0:
                                     monk_bauble_damage_list1 = [math.ceil(bauble_damage / 3), 3]
                                 else:
@@ -9008,7 +9208,7 @@ class GameFrame(tk.Frame):
                                         if monk_bauble_damage_list3[1] == 0:
                                             monk_bauble_damage_list3 = [math.ceil(bauble_damage / 3), 3]
                                         else:
-                                            unbaubleable_check = 1
+                                            bauble_unavailable_check = 1
                                 monk_damage_taken = 0
                                 if monk_bauble_damage_list1[1] != 0:
                                     monk_damage_taken = monk_damage_taken + monk_bauble_damage_list1[0]
@@ -9016,7 +9216,7 @@ class GameFrame(tk.Frame):
                                     monk_damage_taken = monk_damage_taken + monk_bauble_damage_list2[0]
                                 if monk_bauble_damage_list3[1] != 0:
                                     monk_damage_taken = monk_damage_taken + monk_bauble_damage_list3[0]
-                                if unbaubleable_check == 1:
+                                if bauble_unavailable_check == 1:
                                     monk_damage_taken = monk_damage_taken + bauble_damage
                                 champion1_hp = champion1_hp - math.ceil(monk_damage_taken)
                                 champion1_lastRoundDamageTaken_list.append(math.ceil(monk_damage_taken))
@@ -9096,7 +9296,7 @@ class GameFrame(tk.Frame):
                                         self.apply_taunt(3, MASTER_FENCER.title, 1)
                             elif CHAMPION_LIST[0] == MONK.title:
                                 bauble_damage = self.calculate_ai_damage(2, 3, 0)
-                                unbaubleable_check = 0
+                                bauble_unavailable_check = 0
                                 if monk_bauble_damage_list1[1] == 0:
                                     monk_bauble_damage_list1 = [math.ceil(bauble_damage / 3), 3]
                                 else:
@@ -9106,7 +9306,7 @@ class GameFrame(tk.Frame):
                                         if monk_bauble_damage_list3[1] == 0:
                                             monk_bauble_damage_list3 = [math.ceil(bauble_damage / 3), 3]
                                         else:
-                                            unbaubleable_check = 1
+                                            bauble_unavailable_check = 1
                                 monk_damage_taken = 0
                                 if monk_bauble_damage_list1[1] != 0:
                                     monk_damage_taken = monk_damage_taken + monk_bauble_damage_list1[0]
@@ -9114,7 +9314,7 @@ class GameFrame(tk.Frame):
                                     monk_damage_taken = monk_damage_taken + monk_bauble_damage_list2[0]
                                 if monk_bauble_damage_list3[1] != 0:
                                     monk_damage_taken = monk_damage_taken + monk_bauble_damage_list3[0]
-                                if unbaubleable_check == 1:
+                                if bauble_unavailable_check == 1:
                                     monk_damage_taken = monk_damage_taken + bauble_damage
                                 champion2_hp = champion2_hp - math.ceil(monk_damage_taken)
                                 champion2_lastRoundDamageTaken_list.append(math.ceil(monk_damage_taken))
@@ -9194,7 +9394,7 @@ class GameFrame(tk.Frame):
                                         self.apply_taunt(3, MASTER_FENCER.title, 1)
                             elif CHAMPION_LIST[0] == MONK.title:
                                 bauble_damage = self.calculate_ai_damage(3, 3)
-                                unbaubleable_check = 0
+                                bauble_unavailable_check = 0
                                 if monk_bauble_damage_list1[1] == 0:
                                     monk_bauble_damage_list1 = [math.ceil(bauble_damage / 3), 3]
                                 else:
@@ -9204,7 +9404,7 @@ class GameFrame(tk.Frame):
                                         if monk_bauble_damage_list3[1] == 0:
                                             monk_bauble_damage_list3 = [math.ceil(bauble_damage / 3), 3]
                                         else:
-                                            unbaubleable_check = 1
+                                            bauble_unavailable_check = 1
                                 monk_damage_taken = 0
                                 if monk_bauble_damage_list1[1] != 0:
                                     monk_damage_taken = monk_damage_taken + monk_bauble_damage_list1[0]
@@ -9212,7 +9412,7 @@ class GameFrame(tk.Frame):
                                     monk_damage_taken = monk_damage_taken + monk_bauble_damage_list2[0]
                                 if monk_bauble_damage_list3[1] != 0:
                                     monk_damage_taken = monk_damage_taken + monk_bauble_damage_list3[0]
-                                if unbaubleable_check == 1:
+                                if bauble_unavailable_check == 1:
                                     monk_damage_taken = monk_damage_taken + bauble_damage
                                 champion3_hp = champion3_hp - math.ceil(monk_damage_taken)
                                 champion3_lastRoundDamageTaken_list.append(math.ceil(monk_damage_taken))
@@ -9292,7 +9492,7 @@ class GameFrame(tk.Frame):
                                         self.apply_taunt(3, MASTER_FENCER.title, 1)
                             elif CHAMPION_LIST[0] == MONK.title:
                                 bauble_damage = self.calculate_ai_damage(4, 3, 0)
-                                unbaubleable_check = 0
+                                bauble_unavailable_check = 0
                                 if monk_bauble_damage_list1[1] == 0:
                                     monk_bauble_damage_list1 = [math.ceil(bauble_damage / 3), 3]
                                 else:
@@ -9302,7 +9502,7 @@ class GameFrame(tk.Frame):
                                         if monk_bauble_damage_list3[1] == 0:
                                             monk_bauble_damage_list3 = [math.ceil(bauble_damage / 3), 3]
                                         else:
-                                            unbaubleable_check = 1
+                                            bauble_unavailable_check = 1
                                 monk_damage_taken = 0
                                 if monk_bauble_damage_list1[1] != 0:
                                     monk_damage_taken = monk_damage_taken + monk_bauble_damage_list1[0]
@@ -9310,7 +9510,7 @@ class GameFrame(tk.Frame):
                                     monk_damage_taken = monk_damage_taken + monk_bauble_damage_list2[0]
                                 if monk_bauble_damage_list3[1] != 0:
                                     monk_damage_taken = monk_damage_taken + monk_bauble_damage_list3[0]
-                                if unbaubleable_check == 1:
+                                if bauble_unavailable_check == 1:
                                     monk_damage_taken = monk_damage_taken + bauble_damage
                                 champion4_hp = champion4_hp - math.ceil(monk_damage_taken)
                                 champion4_lastRoundDamageTaken_list.append(math.ceil(monk_damage_taken))
@@ -9390,7 +9590,7 @@ class GameFrame(tk.Frame):
                                         self.apply_taunt(3, MASTER_FENCER.title, 1)
                             elif CHAMPION_LIST[0] == MONK.title:
                                 bauble_damage = self.calculate_ai_damage(5, 3, 0)
-                                unbaubleable_check = 0
+                                bauble_unavailable_check = 0
                                 if monk_bauble_damage_list1[1] == 0:
                                     monk_bauble_damage_list1 = [math.ceil(bauble_damage / 3), 3]
                                 else:
@@ -9400,7 +9600,7 @@ class GameFrame(tk.Frame):
                                         if monk_bauble_damage_list3[1] == 0:
                                             monk_bauble_damage_list3 = [math.ceil(bauble_damage / 3), 3]
                                         else:
-                                            unbaubleable_check = 1
+                                            bauble_unavailable_check = 1
                                 monk_damage_taken = 0
                                 if monk_bauble_damage_list1[1] != 0:
                                     monk_damage_taken = monk_damage_taken + monk_bauble_damage_list1[0]
@@ -9408,7 +9608,7 @@ class GameFrame(tk.Frame):
                                     monk_damage_taken = monk_damage_taken + monk_bauble_damage_list2[0]
                                 if monk_bauble_damage_list3[1] != 0:
                                     monk_damage_taken = monk_damage_taken + monk_bauble_damage_list3[0]
-                                if unbaubleable_check == 1:
+                                if bauble_unavailable_check == 1:
                                     monk_damage_taken = monk_damage_taken + bauble_damage
                                 champion5_hp = champion5_hp - math.ceil(monk_damage_taken)
                                 champion5_lastRoundDamageTaken_list.append(math.ceil(monk_damage_taken))
@@ -9490,7 +9690,7 @@ class GameFrame(tk.Frame):
                                             self.apply_taunt(3, MASTER_FENCER.title, 1)
                                 elif CHAMPION_LIST[0] == MONK.title:
                                     bauble_damage = self.calculate_ai_damage(1, 3, 0)
-                                    unbaubleable_check = 0
+                                    bauble_unavailable_check = 0
                                     if monk_bauble_damage_list1[1] == 0:
                                         monk_bauble_damage_list1 = [math.ceil(bauble_damage / 3), 3]
                                     else:
@@ -9500,7 +9700,7 @@ class GameFrame(tk.Frame):
                                             if monk_bauble_damage_list3[1] == 0:
                                                 monk_bauble_damage_list3 = [math.ceil(bauble_damage / 3), 3]
                                             else:
-                                                unbaubleable_check = 1
+                                                bauble_unavailable_check = 1
                                     monk_damage_taken = 0
                                     if monk_bauble_damage_list1[1] != 0:
                                         monk_damage_taken = monk_damage_taken + monk_bauble_damage_list1[0]
@@ -9508,7 +9708,7 @@ class GameFrame(tk.Frame):
                                         monk_damage_taken = monk_damage_taken + monk_bauble_damage_list2[0]
                                     if monk_bauble_damage_list3[1] != 0:
                                         monk_damage_taken = monk_damage_taken + monk_bauble_damage_list3[0]
-                                    if unbaubleable_check == 1:
+                                    if bauble_unavailable_check == 1:
                                         monk_damage_taken = monk_damage_taken + bauble_damage
                                     champion1_hp = champion1_hp - math.ceil(monk_damage_taken)
                                     champion1_lastRoundDamageTaken_list.append(math.ceil(monk_damage_taken))
@@ -9606,7 +9806,7 @@ class GameFrame(tk.Frame):
                                             self.apply_taunt(3, MASTER_FENCER.title, 1)
                                 elif CHAMPION_LIST[0] == MONK.title:
                                     bauble_damage = self.calculate_ai_damage(2, 3, 0)
-                                    unbaubleable_check = 0
+                                    bauble_unavailable_check = 0
                                     if monk_bauble_damage_list1[1] == 0:
                                         monk_bauble_damage_list1 = [math.ceil(bauble_damage / 3), 3]
                                     else:
@@ -9616,7 +9816,7 @@ class GameFrame(tk.Frame):
                                             if monk_bauble_damage_list3[1] == 0:
                                                 monk_bauble_damage_list3 = [math.ceil(bauble_damage / 3), 3]
                                             else:
-                                                unbaubleable_check = 1
+                                                bauble_unavailable_check = 1
                                     monk_damage_taken = 0
                                     if monk_bauble_damage_list1[1] != 0:
                                         monk_damage_taken = monk_damage_taken + monk_bauble_damage_list1[0]
@@ -9624,7 +9824,7 @@ class GameFrame(tk.Frame):
                                         monk_damage_taken = monk_damage_taken + monk_bauble_damage_list2[0]
                                     if monk_bauble_damage_list3[1] != 0:
                                         monk_damage_taken = monk_damage_taken + monk_bauble_damage_list3[0]
-                                    if unbaubleable_check == 1:
+                                    if bauble_unavailable_check == 1:
                                         monk_damage_taken = monk_damage_taken + bauble_damage
                                     champion2_hp = champion2_hp - math.ceil(monk_damage_taken)
                                     champion2_lastRoundDamageTaken_list.append(math.ceil(monk_damage_taken))
@@ -9722,7 +9922,7 @@ class GameFrame(tk.Frame):
                                             self.apply_taunt(3, MASTER_FENCER.title, 1)
                                 elif CHAMPION_LIST[0] == MONK.title:
                                     bauble_damage = self.calculate_ai_damage(3, 3, 0)
-                                    unbaubleable_check = 0
+                                    bauble_unavailable_check = 0
                                     if monk_bauble_damage_list1[1] == 0:
                                         monk_bauble_damage_list1 = [math.ceil(bauble_damage / 3), 3]
                                     else:
@@ -9732,7 +9932,7 @@ class GameFrame(tk.Frame):
                                             if monk_bauble_damage_list3[1] == 0:
                                                 monk_bauble_damage_list3 = [math.ceil(bauble_damage / 3), 3]
                                             else:
-                                                unbaubleable_check = 1
+                                                bauble_unavailable_check = 1
                                     monk_damage_taken = 0
                                     if monk_bauble_damage_list1[1] != 0:
                                         monk_damage_taken = monk_damage_taken + monk_bauble_damage_list1[0]
@@ -9740,7 +9940,7 @@ class GameFrame(tk.Frame):
                                         monk_damage_taken = monk_damage_taken + monk_bauble_damage_list2[0]
                                     if monk_bauble_damage_list3[1] != 0:
                                         monk_damage_taken = monk_damage_taken + monk_bauble_damage_list3[0]
-                                    if unbaubleable_check == 1:
+                                    if bauble_unavailable_check == 1:
                                         monk_damage_taken = monk_damage_taken + bauble_damage
                                     champion3_hp = champion3_hp - math.ceil(monk_damage_taken)
                                     champion3_lastRoundDamageTaken_list.append(math.ceil(monk_damage_taken))
@@ -9838,7 +10038,7 @@ class GameFrame(tk.Frame):
                                             self.apply_taunt(3, MASTER_FENCER.title, 1)
                                 elif CHAMPION_LIST[0] == MONK.title:
                                     bauble_damage = self.calculate_ai_damage(4, 3, 0)
-                                    unbaubleable_check = 0
+                                    bauble_unavailable_check = 0
                                     if monk_bauble_damage_list1[1] == 0:
                                         monk_bauble_damage_list1 = [math.ceil(bauble_damage / 3), 3]
                                     else:
@@ -9848,7 +10048,7 @@ class GameFrame(tk.Frame):
                                             if monk_bauble_damage_list3[1] == 0:
                                                 monk_bauble_damage_list3 = [math.ceil(bauble_damage / 3), 3]
                                             else:
-                                                unbaubleable_check = 1
+                                                bauble_unavailable_check = 1
                                     monk_damage_taken = 0
                                     if monk_bauble_damage_list1[1] != 0:
                                         monk_damage_taken = monk_damage_taken + monk_bauble_damage_list1[0]
@@ -9856,7 +10056,7 @@ class GameFrame(tk.Frame):
                                         monk_damage_taken = monk_damage_taken + monk_bauble_damage_list2[0]
                                     if monk_bauble_damage_list3[1] != 0:
                                         monk_damage_taken = monk_damage_taken + monk_bauble_damage_list3[0]
-                                    if unbaubleable_check == 1:
+                                    if bauble_unavailable_check == 1:
                                         monk_damage_taken = monk_damage_taken + bauble_damage
                                     champion4_hp = champion4_hp - math.ceil(monk_damage_taken)
                                     champion4_lastRoundDamageTaken_list.append(math.ceil(monk_damage_taken))
@@ -9954,7 +10154,7 @@ class GameFrame(tk.Frame):
                                             self.apply_taunt(3, MASTER_FENCER.title, 1)
                                 elif CHAMPION_LIST[0] == MONK.title:
                                     bauble_damage = self.calculate_ai_damage(5, 3, 0)
-                                    unbaubleable_check = 0
+                                    bauble_unavailable_check = 0
                                     if monk_bauble_damage_list1[1] == 0:
                                         monk_bauble_damage_list1 = [math.ceil(bauble_damage / 3), 3]
                                     else:
@@ -9964,7 +10164,7 @@ class GameFrame(tk.Frame):
                                             if monk_bauble_damage_list3[1] == 0:
                                                 monk_bauble_damage_list3 = [math.ceil(bauble_damage / 3), 3]
                                             else:
-                                                unbaubleable_check = 1
+                                                bauble_unavailable_check = 1
                                     monk_damage_taken = 0
                                     if monk_bauble_damage_list1[1] != 0:
                                         monk_damage_taken = monk_damage_taken + monk_bauble_damage_list1[0]
@@ -9972,7 +10172,7 @@ class GameFrame(tk.Frame):
                                         monk_damage_taken = monk_damage_taken + monk_bauble_damage_list2[0]
                                     if monk_bauble_damage_list3[1] != 0:
                                         monk_damage_taken = monk_damage_taken + monk_bauble_damage_list3[0]
-                                    if unbaubleable_check == 1:
+                                    if bauble_unavailable_check == 1:
                                         monk_damage_taken = monk_damage_taken + bauble_damage
                                     champion5_hp = champion5_hp - math.ceil(monk_damage_taken)
                                     champion5_lastRoundDamageTaken_list.append(math.ceil(monk_damage_taken))
@@ -10071,7 +10271,7 @@ class GameFrame(tk.Frame):
                                             self.apply_taunt(3, MASTER_FENCER.title, 1)
                                 elif CHAMPION_LIST[0] == MONK.title:
                                     bauble_damage = self.calculate_ai_damage(1, 3, 0)
-                                    unbaubleable_check = 0
+                                    bauble_unavailable_check = 0
                                     if monk_bauble_damage_list1[1] == 0:
                                         monk_bauble_damage_list1 = [math.ceil(bauble_damage / 3), 3]
                                     else:
@@ -10081,7 +10281,7 @@ class GameFrame(tk.Frame):
                                             if monk_bauble_damage_list3[1] == 0:
                                                 monk_bauble_damage_list3 = [math.ceil(bauble_damage / 3), 3]
                                             else:
-                                                unbaubleable_check = 1
+                                                bauble_unavailable_check = 1
                                     monk_damage_taken = 0
                                     if monk_bauble_damage_list1[1] != 0:
                                         monk_damage_taken = monk_damage_taken + monk_bauble_damage_list1[0]
@@ -10089,7 +10289,7 @@ class GameFrame(tk.Frame):
                                         monk_damage_taken = monk_damage_taken + monk_bauble_damage_list2[0]
                                     if monk_bauble_damage_list3[1] != 0:
                                         monk_damage_taken = monk_damage_taken + monk_bauble_damage_list3[0]
-                                    if unbaubleable_check == 1:
+                                    if bauble_unavailable_check == 1:
                                         monk_damage_taken = monk_damage_taken + bauble_damage
                                     champion1_hp = champion1_hp - math.ceil(monk_damage_taken)
                                     champion1_lastRoundDamageTaken_list.append(math.ceil(monk_damage_taken))
@@ -10187,7 +10387,7 @@ class GameFrame(tk.Frame):
                                             self.apply_taunt(3, MASTER_FENCER.title, 1)
                                 elif CHAMPION_LIST[0] == MONK.title:
                                     bauble_damage = self.calculate_ai_damage(2, 3, 0)
-                                    unbaubleable_check = 0
+                                    bauble_unavailable_check = 0
                                     if monk_bauble_damage_list1[1] == 0:
                                         monk_bauble_damage_list1 = [math.ceil(bauble_damage / 3), 3]
                                     else:
@@ -10197,7 +10397,7 @@ class GameFrame(tk.Frame):
                                             if monk_bauble_damage_list3[1] == 0:
                                                 monk_bauble_damage_list3 = [math.ceil(bauble_damage / 3), 3]
                                             else:
-                                                unbaubleable_check = 1
+                                                bauble_unavailable_check = 1
                                     monk_damage_taken = 0
                                     if monk_bauble_damage_list1[1] != 0:
                                         monk_damage_taken = monk_damage_taken + monk_bauble_damage_list1[0]
@@ -10205,7 +10405,7 @@ class GameFrame(tk.Frame):
                                         monk_damage_taken = monk_damage_taken + monk_bauble_damage_list2[0]
                                     if monk_bauble_damage_list3[1] != 0:
                                         monk_damage_taken = monk_damage_taken + monk_bauble_damage_list3[0]
-                                    if unbaubleable_check == 1:
+                                    if bauble_unavailable_check == 1:
                                         monk_damage_taken = monk_damage_taken + bauble_damage
                                     champion2_hp = champion2_hp - math.ceil(monk_damage_taken)
                                     champion2_lastRoundDamageTaken_list.append(math.ceil(monk_damage_taken))
@@ -10303,7 +10503,7 @@ class GameFrame(tk.Frame):
                                             self.apply_taunt(3, MASTER_FENCER.title, 1)
                                 elif CHAMPION_LIST[0] == MONK.title:
                                     bauble_damage = self.calculate_ai_damage(3, 3, 0)
-                                    unbaubleable_check = 0
+                                    bauble_unavailable_check = 0
                                     if monk_bauble_damage_list1[1] == 0:
                                         monk_bauble_damage_list1 = [math.ceil(bauble_damage / 3), 3]
                                     else:
@@ -10313,7 +10513,7 @@ class GameFrame(tk.Frame):
                                             if monk_bauble_damage_list3[1] == 0:
                                                 monk_bauble_damage_list3 = [math.ceil(bauble_damage / 3), 3]
                                             else:
-                                                unbaubleable_check = 1
+                                                bauble_unavailable_check = 1
                                     monk_damage_taken = 0
                                     if monk_bauble_damage_list1[1] != 0:
                                         monk_damage_taken = monk_damage_taken + monk_bauble_damage_list1[0]
@@ -10321,7 +10521,7 @@ class GameFrame(tk.Frame):
                                         monk_damage_taken = monk_damage_taken + monk_bauble_damage_list2[0]
                                     if monk_bauble_damage_list3[1] != 0:
                                         monk_damage_taken = monk_damage_taken + monk_bauble_damage_list3[0]
-                                    if unbaubleable_check == 1:
+                                    if bauble_unavailable_check == 1:
                                         monk_damage_taken = monk_damage_taken + bauble_damage
                                     champion3_hp = champion3_hp - math.ceil(monk_damage_taken)
                                     champion3_lastRoundDamageTaken_list.append(math.ceil(monk_damage_taken))
@@ -10419,7 +10619,7 @@ class GameFrame(tk.Frame):
                                             self.apply_taunt(3, MASTER_FENCER.title, 1)
                                 elif CHAMPION_LIST[0] == MONK.title:
                                     bauble_damage = self.calculate_ai_damage(4, 3, 0)
-                                    unbaubleable_check = 0
+                                    bauble_unavailable_check = 0
                                     if monk_bauble_damage_list1[1] == 0:
                                         monk_bauble_damage_list1 = [math.ceil(bauble_damage / 3), 3]
                                     else:
@@ -10429,7 +10629,7 @@ class GameFrame(tk.Frame):
                                             if monk_bauble_damage_list3[1] == 0:
                                                 monk_bauble_damage_list3 = [math.ceil(bauble_damage / 3), 3]
                                             else:
-                                                unbaubleable_check = 1
+                                                bauble_unavailable_check = 1
                                     monk_damage_taken = 0
                                     if monk_bauble_damage_list1[1] != 0:
                                         monk_damage_taken = monk_damage_taken + monk_bauble_damage_list1[0]
@@ -10437,7 +10637,7 @@ class GameFrame(tk.Frame):
                                         monk_damage_taken = monk_damage_taken + monk_bauble_damage_list2[0]
                                     if monk_bauble_damage_list3[1] != 0:
                                         monk_damage_taken = monk_damage_taken + monk_bauble_damage_list3[0]
-                                    if unbaubleable_check == 1:
+                                    if bauble_unavailable_check == 1:
                                         monk_damage_taken = monk_damage_taken + bauble_damage
                                     champion4_hp = champion4_hp - math.ceil(monk_damage_taken)
                                     champion4_lastRoundDamageTaken_list.append(math.ceil(monk_damage_taken))
@@ -10535,7 +10735,7 @@ class GameFrame(tk.Frame):
                                             self.apply_taunt(3, MASTER_FENCER.title, 1)
                                 elif CHAMPION_LIST[0] == MONK.title:
                                     bauble_damage = self.calculate_ai_damage(5, 3, 0)
-                                    unbaubleable_check = 0
+                                    bauble_unavailable_check = 0
                                     if monk_bauble_damage_list1[1] == 0:
                                         monk_bauble_damage_list1 = [math.ceil(bauble_damage / 3), 3]
                                     else:
@@ -10545,7 +10745,7 @@ class GameFrame(tk.Frame):
                                             if monk_bauble_damage_list3[1] == 0:
                                                 monk_bauble_damage_list3 = [math.ceil(bauble_damage / 3), 3]
                                             else:
-                                                unbaubleable_check = 1
+                                                bauble_unavailable_check = 1
                                     monk_damage_taken = 0
                                     if monk_bauble_damage_list1[1] != 0:
                                         monk_damage_taken = monk_damage_taken + monk_bauble_damage_list1[0]
@@ -10553,7 +10753,7 @@ class GameFrame(tk.Frame):
                                         monk_damage_taken = monk_damage_taken + monk_bauble_damage_list2[0]
                                     if monk_bauble_damage_list3[1] != 0:
                                         monk_damage_taken = monk_damage_taken + monk_bauble_damage_list3[0]
-                                    if unbaubleable_check == 1:
+                                    if bauble_unavailable_check == 1:
                                         monk_damage_taken = monk_damage_taken + bauble_damage
                                     champion5_hp = champion5_hp - math.ceil(monk_damage_taken)
                                     champion5_lastRoundDamageTaken_list.append(math.ceil(monk_damage_taken))
@@ -10739,7 +10939,7 @@ class GameFrame(tk.Frame):
                                         self.apply_taunt(4, MASTER_FENCER.title, 1)
                             elif CHAMPION_LIST[0] == MONK.title:
                                 bauble_damage = self.calculate_ai_damage(1, 4, 0)
-                                unbaubleable_check = 0
+                                bauble_unavailable_check = 0
                                 if monk_bauble_damage_list1[1] == 0:
                                     monk_bauble_damage_list1 = [math.ceil(bauble_damage / 3), 3]
                                 else:
@@ -10749,7 +10949,7 @@ class GameFrame(tk.Frame):
                                         if monk_bauble_damage_list3[1] == 0:
                                             monk_bauble_damage_list3 = [math.ceil(bauble_damage / 3), 3]
                                         else:
-                                            unbaubleable_check = 1
+                                            bauble_unavailable_check = 1
                                 monk_damage_taken = 0
                                 if monk_bauble_damage_list1[1] != 0:
                                     monk_damage_taken = monk_damage_taken + monk_bauble_damage_list1[0]
@@ -10757,7 +10957,7 @@ class GameFrame(tk.Frame):
                                     monk_damage_taken = monk_damage_taken + monk_bauble_damage_list2[0]
                                 if monk_bauble_damage_list3[1] != 0:
                                     monk_damage_taken = monk_damage_taken + monk_bauble_damage_list3[0]
-                                if unbaubleable_check == 1:
+                                if bauble_unavailable_check == 1:
                                     monk_damage_taken = monk_damage_taken + bauble_damage
                                 champion1_hp = champion1_hp - math.ceil(monk_damage_taken)
                                 champion1_lastRoundDamageTaken_list.append(math.ceil(monk_damage_taken))
@@ -10837,7 +11037,7 @@ class GameFrame(tk.Frame):
                                         self.apply_taunt(4, MASTER_FENCER.title, 1)
                             elif CHAMPION_LIST[0] == MONK.title:
                                 bauble_damage = self.calculate_ai_damage(2, 4, 0)
-                                unbaubleable_check = 0
+                                bauble_unavailable_check = 0
                                 if monk_bauble_damage_list1[1] == 0:
                                     monk_bauble_damage_list1 = [math.ceil(bauble_damage / 3), 3]
                                 else:
@@ -10847,7 +11047,7 @@ class GameFrame(tk.Frame):
                                         if monk_bauble_damage_list3[1] == 0:
                                             monk_bauble_damage_list3 = [math.ceil(bauble_damage / 3), 3]
                                         else:
-                                            unbaubleable_check = 1
+                                            bauble_unavailable_check = 1
                                 monk_damage_taken = 0
                                 if monk_bauble_damage_list1[1] != 0:
                                     monk_damage_taken = monk_damage_taken + monk_bauble_damage_list1[0]
@@ -10855,7 +11055,7 @@ class GameFrame(tk.Frame):
                                     monk_damage_taken = monk_damage_taken + monk_bauble_damage_list2[0]
                                 if monk_bauble_damage_list3[1] != 0:
                                     monk_damage_taken = monk_damage_taken + monk_bauble_damage_list3[0]
-                                if unbaubleable_check == 1:
+                                if bauble_unavailable_check == 1:
                                     monk_damage_taken = monk_damage_taken + bauble_damage
                                 champion2_hp = champion2_hp - math.ceil(monk_damage_taken)
                                 champion2_lastRoundDamageTaken_list.append(math.ceil(monk_damage_taken))
@@ -10935,7 +11135,7 @@ class GameFrame(tk.Frame):
                                         self.apply_taunt(4, MASTER_FENCER.title, 1)
                             elif CHAMPION_LIST[0] == MONK.title:
                                 bauble_damage = self.calculate_ai_damage(3, 4)
-                                unbaubleable_check = 0
+                                bauble_unavailable_check = 0
                                 if monk_bauble_damage_list1[1] == 0:
                                     monk_bauble_damage_list1 = [math.ceil(bauble_damage / 3), 3]
                                 else:
@@ -10945,7 +11145,7 @@ class GameFrame(tk.Frame):
                                         if monk_bauble_damage_list3[1] == 0:
                                             monk_bauble_damage_list3 = [math.ceil(bauble_damage / 3), 3]
                                         else:
-                                            unbaubleable_check = 1
+                                            bauble_unavailable_check = 1
                                 monk_damage_taken = 0
                                 if monk_bauble_damage_list1[1] != 0:
                                     monk_damage_taken = monk_damage_taken + monk_bauble_damage_list1[0]
@@ -10953,7 +11153,7 @@ class GameFrame(tk.Frame):
                                     monk_damage_taken = monk_damage_taken + monk_bauble_damage_list2[0]
                                 if monk_bauble_damage_list3[1] != 0:
                                     monk_damage_taken = monk_damage_taken + monk_bauble_damage_list3[0]
-                                if unbaubleable_check == 1:
+                                if bauble_unavailable_check == 1:
                                     monk_damage_taken = monk_damage_taken + bauble_damage
                                 champion3_hp = champion3_hp - math.ceil(monk_damage_taken)
                                 champion3_lastRoundDamageTaken_list.append(math.ceil(monk_damage_taken))
@@ -11033,7 +11233,7 @@ class GameFrame(tk.Frame):
                                         self.apply_taunt(4, MASTER_FENCER.title, 1)
                             elif CHAMPION_LIST[0] == MONK.title:
                                 bauble_damage = self.calculate_ai_damage(4, 4, 0)
-                                unbaubleable_check = 0
+                                bauble_unavailable_check = 0
                                 if monk_bauble_damage_list1[1] == 0:
                                     monk_bauble_damage_list1 = [math.ceil(bauble_damage / 3), 3]
                                 else:
@@ -11043,7 +11243,7 @@ class GameFrame(tk.Frame):
                                         if monk_bauble_damage_list3[1] == 0:
                                             monk_bauble_damage_list3 = [math.ceil(bauble_damage / 3), 3]
                                         else:
-                                            unbaubleable_check = 1
+                                            bauble_unavailable_check = 1
                                 monk_damage_taken = 0
                                 if monk_bauble_damage_list1[1] != 0:
                                     monk_damage_taken = monk_damage_taken + monk_bauble_damage_list1[0]
@@ -11051,7 +11251,7 @@ class GameFrame(tk.Frame):
                                     monk_damage_taken = monk_damage_taken + monk_bauble_damage_list2[0]
                                 if monk_bauble_damage_list3[1] != 0:
                                     monk_damage_taken = monk_damage_taken + monk_bauble_damage_list3[0]
-                                if unbaubleable_check == 1:
+                                if bauble_unavailable_check == 1:
                                     monk_damage_taken = monk_damage_taken + bauble_damage
                                 champion4_hp = champion4_hp - math.ceil(monk_damage_taken)
                                 champion4_lastRoundDamageTaken_list.append(math.ceil(monk_damage_taken))
@@ -11131,7 +11331,7 @@ class GameFrame(tk.Frame):
                                         self.apply_taunt(4, MASTER_FENCER.title, 1)
                             elif CHAMPION_LIST[0] == MONK.title:
                                 bauble_damage = self.calculate_ai_damage(5, 4, 0)
-                                unbaubleable_check = 0
+                                bauble_unavailable_check = 0
                                 if monk_bauble_damage_list1[1] == 0:
                                     monk_bauble_damage_list1 = [math.ceil(bauble_damage / 3), 3]
                                 else:
@@ -11141,7 +11341,7 @@ class GameFrame(tk.Frame):
                                         if monk_bauble_damage_list3[1] == 0:
                                             monk_bauble_damage_list3 = [math.ceil(bauble_damage / 3), 3]
                                         else:
-                                            unbaubleable_check = 1
+                                            bauble_unavailable_check = 1
                                 monk_damage_taken = 0
                                 if monk_bauble_damage_list1[1] != 0:
                                     monk_damage_taken = monk_damage_taken + monk_bauble_damage_list1[0]
@@ -11149,7 +11349,7 @@ class GameFrame(tk.Frame):
                                     monk_damage_taken = monk_damage_taken + monk_bauble_damage_list2[0]
                                 if monk_bauble_damage_list3[1] != 0:
                                     monk_damage_taken = monk_damage_taken + monk_bauble_damage_list3[0]
-                                if unbaubleable_check == 1:
+                                if bauble_unavailable_check == 1:
                                     monk_damage_taken = monk_damage_taken + bauble_damage
                                 champion5_hp = champion5_hp - math.ceil(monk_damage_taken)
                                 champion5_lastRoundDamageTaken_list.append(math.ceil(monk_damage_taken))
@@ -11231,7 +11431,7 @@ class GameFrame(tk.Frame):
                                             self.apply_taunt(4, MASTER_FENCER.title, 1)
                                 elif CHAMPION_LIST[0] == MONK.title:
                                     bauble_damage = self.calculate_ai_damage(1, 4, 0)
-                                    unbaubleable_check = 0
+                                    bauble_unavailable_check = 0
                                     if monk_bauble_damage_list1[1] == 0:
                                         monk_bauble_damage_list1 = [math.ceil(bauble_damage / 3), 3]
                                     else:
@@ -11241,7 +11441,7 @@ class GameFrame(tk.Frame):
                                             if monk_bauble_damage_list3[1] == 0:
                                                 monk_bauble_damage_list3 = [math.ceil(bauble_damage / 3), 3]
                                             else:
-                                                unbaubleable_check = 1
+                                                bauble_unavailable_check = 1
                                     monk_damage_taken = 0
                                     if monk_bauble_damage_list1[1] != 0:
                                         monk_damage_taken = monk_damage_taken + monk_bauble_damage_list1[0]
@@ -11249,7 +11449,7 @@ class GameFrame(tk.Frame):
                                         monk_damage_taken = monk_damage_taken + monk_bauble_damage_list2[0]
                                     if monk_bauble_damage_list3[1] != 0:
                                         monk_damage_taken = monk_damage_taken + monk_bauble_damage_list3[0]
-                                    if unbaubleable_check == 1:
+                                    if bauble_unavailable_check == 1:
                                         monk_damage_taken = monk_damage_taken + bauble_damage
                                     champion1_hp = champion1_hp - math.ceil(monk_damage_taken)
                                     champion1_lastRoundDamageTaken_list.append(math.ceil(monk_damage_taken))
@@ -11347,7 +11547,7 @@ class GameFrame(tk.Frame):
                                             self.apply_taunt(4, MASTER_FENCER.title, 1)
                                 elif CHAMPION_LIST[0] == MONK.title:
                                     bauble_damage = self.calculate_ai_damage(2, 4, 0)
-                                    unbaubleable_check = 0
+                                    bauble_unavailable_check = 0
                                     if monk_bauble_damage_list1[1] == 0:
                                         monk_bauble_damage_list1 = [math.ceil(bauble_damage / 3), 3]
                                     else:
@@ -11357,7 +11557,7 @@ class GameFrame(tk.Frame):
                                             if monk_bauble_damage_list3[1] == 0:
                                                 monk_bauble_damage_list3 = [math.ceil(bauble_damage / 3), 3]
                                             else:
-                                                unbaubleable_check = 1
+                                                bauble_unavailable_check = 1
                                     monk_damage_taken = 0
                                     if monk_bauble_damage_list1[1] != 0:
                                         monk_damage_taken = monk_damage_taken + monk_bauble_damage_list1[0]
@@ -11365,7 +11565,7 @@ class GameFrame(tk.Frame):
                                         monk_damage_taken = monk_damage_taken + monk_bauble_damage_list2[0]
                                     if monk_bauble_damage_list3[1] != 0:
                                         monk_damage_taken = monk_damage_taken + monk_bauble_damage_list3[0]
-                                    if unbaubleable_check == 1:
+                                    if bauble_unavailable_check == 1:
                                         monk_damage_taken = monk_damage_taken + bauble_damage
                                     champion2_hp = champion2_hp - math.ceil(monk_damage_taken)
                                     champion2_lastRoundDamageTaken_list.append(math.ceil(monk_damage_taken))
@@ -11463,7 +11663,7 @@ class GameFrame(tk.Frame):
                                             self.apply_taunt(4, MASTER_FENCER.title, 1)
                                 elif CHAMPION_LIST[0] == MONK.title:
                                     bauble_damage = self.calculate_ai_damage(3, 4, 0)
-                                    unbaubleable_check = 0
+                                    bauble_unavailable_check = 0
                                     if monk_bauble_damage_list1[1] == 0:
                                         monk_bauble_damage_list1 = [math.ceil(bauble_damage / 3), 3]
                                     else:
@@ -11473,7 +11673,7 @@ class GameFrame(tk.Frame):
                                             if monk_bauble_damage_list3[1] == 0:
                                                 monk_bauble_damage_list3 = [math.ceil(bauble_damage / 3), 3]
                                             else:
-                                                unbaubleable_check = 1
+                                                bauble_unavailable_check = 1
                                     monk_damage_taken = 0
                                     if monk_bauble_damage_list1[1] != 0:
                                         monk_damage_taken = monk_damage_taken + monk_bauble_damage_list1[0]
@@ -11481,7 +11681,7 @@ class GameFrame(tk.Frame):
                                         monk_damage_taken = monk_damage_taken + monk_bauble_damage_list2[0]
                                     if monk_bauble_damage_list3[1] != 0:
                                         monk_damage_taken = monk_damage_taken + monk_bauble_damage_list3[0]
-                                    if unbaubleable_check == 1:
+                                    if bauble_unavailable_check == 1:
                                         monk_damage_taken = monk_damage_taken + bauble_damage
                                     champion3_hp = champion3_hp - math.ceil(monk_damage_taken)
                                     champion3_lastRoundDamageTaken_list.append(math.ceil(monk_damage_taken))
@@ -11579,7 +11779,7 @@ class GameFrame(tk.Frame):
                                             self.apply_taunt(4, MASTER_FENCER.title, 1)
                                 elif CHAMPION_LIST[0] == MONK.title:
                                     bauble_damage = self.calculate_ai_damage(4, 4, 0)
-                                    unbaubleable_check = 0
+                                    bauble_unavailable_check = 0
                                     if monk_bauble_damage_list1[1] == 0:
                                         monk_bauble_damage_list1 = [math.ceil(bauble_damage / 3), 3]
                                     else:
@@ -11589,7 +11789,7 @@ class GameFrame(tk.Frame):
                                             if monk_bauble_damage_list3[1] == 0:
                                                 monk_bauble_damage_list3 = [math.ceil(bauble_damage / 3), 3]
                                             else:
-                                                unbaubleable_check = 1
+                                                bauble_unavailable_check = 1
                                     monk_damage_taken = 0
                                     if monk_bauble_damage_list1[1] != 0:
                                         monk_damage_taken = monk_damage_taken + monk_bauble_damage_list1[0]
@@ -11597,7 +11797,7 @@ class GameFrame(tk.Frame):
                                         monk_damage_taken = monk_damage_taken + monk_bauble_damage_list2[0]
                                     if monk_bauble_damage_list3[1] != 0:
                                         monk_damage_taken = monk_damage_taken + monk_bauble_damage_list3[0]
-                                    if unbaubleable_check == 1:
+                                    if bauble_unavailable_check == 1:
                                         monk_damage_taken = monk_damage_taken + bauble_damage
                                     champion4_hp = champion4_hp - math.ceil(monk_damage_taken)
                                     champion4_lastRoundDamageTaken_list.append(math.ceil(monk_damage_taken))
@@ -11695,7 +11895,7 @@ class GameFrame(tk.Frame):
                                             self.apply_taunt(4, MASTER_FENCER.title, 1)
                                 elif CHAMPION_LIST[0] == MONK.title:
                                     bauble_damage = self.calculate_ai_damage(5, 4, 0)
-                                    unbaubleable_check = 0
+                                    bauble_unavailable_check = 0
                                     if monk_bauble_damage_list1[1] == 0:
                                         monk_bauble_damage_list1 = [math.ceil(bauble_damage / 3), 3]
                                     else:
@@ -11705,7 +11905,7 @@ class GameFrame(tk.Frame):
                                             if monk_bauble_damage_list3[1] == 0:
                                                 monk_bauble_damage_list3 = [math.ceil(bauble_damage / 3), 3]
                                             else:
-                                                unbaubleable_check = 1
+                                                bauble_unavailable_check = 1
                                     monk_damage_taken = 0
                                     if monk_bauble_damage_list1[1] != 0:
                                         monk_damage_taken = monk_damage_taken + monk_bauble_damage_list1[0]
@@ -11713,7 +11913,7 @@ class GameFrame(tk.Frame):
                                         monk_damage_taken = monk_damage_taken + monk_bauble_damage_list2[0]
                                     if monk_bauble_damage_list3[1] != 0:
                                         monk_damage_taken = monk_damage_taken + monk_bauble_damage_list3[0]
-                                    if unbaubleable_check == 1:
+                                    if bauble_unavailable_check == 1:
                                         monk_damage_taken = monk_damage_taken + bauble_damage
                                     champion5_hp = champion5_hp - math.ceil(monk_damage_taken)
                                     champion5_lastRoundDamageTaken_list.append(math.ceil(monk_damage_taken))
@@ -11812,7 +12012,7 @@ class GameFrame(tk.Frame):
                                             self.apply_taunt(4, MASTER_FENCER.title, 1)
                                 elif CHAMPION_LIST[0] == MONK.title:
                                     bauble_damage = self.calculate_ai_damage(1, 4, 0)
-                                    unbaubleable_check = 0
+                                    bauble_unavailable_check = 0
                                     if monk_bauble_damage_list1[1] == 0:
                                         monk_bauble_damage_list1 = [math.ceil(bauble_damage / 3), 3]
                                     else:
@@ -11822,7 +12022,7 @@ class GameFrame(tk.Frame):
                                             if monk_bauble_damage_list3[1] == 0:
                                                 monk_bauble_damage_list3 = [math.ceil(bauble_damage / 3), 3]
                                             else:
-                                                unbaubleable_check = 1
+                                                bauble_unavailable_check = 1
                                     monk_damage_taken = 0
                                     if monk_bauble_damage_list1[1] != 0:
                                         monk_damage_taken = monk_damage_taken + monk_bauble_damage_list1[0]
@@ -11830,7 +12030,7 @@ class GameFrame(tk.Frame):
                                         monk_damage_taken = monk_damage_taken + monk_bauble_damage_list2[0]
                                     if monk_bauble_damage_list3[1] != 0:
                                         monk_damage_taken = monk_damage_taken + monk_bauble_damage_list3[0]
-                                    if unbaubleable_check == 1:
+                                    if bauble_unavailable_check == 1:
                                         monk_damage_taken = monk_damage_taken + bauble_damage
                                     champion1_hp = champion1_hp - math.ceil(monk_damage_taken)
                                     champion1_lastRoundDamageTaken_list.append(math.ceil(monk_damage_taken))
@@ -11928,7 +12128,7 @@ class GameFrame(tk.Frame):
                                             self.apply_taunt(4, MASTER_FENCER.title, 1)
                                 elif CHAMPION_LIST[0] == MONK.title:
                                     bauble_damage = self.calculate_ai_damage(2, 4, 0)
-                                    unbaubleable_check = 0
+                                    bauble_unavailable_check = 0
                                     if monk_bauble_damage_list1[1] == 0:
                                         monk_bauble_damage_list1 = [math.ceil(bauble_damage / 3), 3]
                                     else:
@@ -11938,7 +12138,7 @@ class GameFrame(tk.Frame):
                                             if monk_bauble_damage_list3[1] == 0:
                                                 monk_bauble_damage_list3 = [math.ceil(bauble_damage / 3), 3]
                                             else:
-                                                unbaubleable_check = 1
+                                                bauble_unavailable_check = 1
                                     monk_damage_taken = 0
                                     if monk_bauble_damage_list1[1] != 0:
                                         monk_damage_taken = monk_damage_taken + monk_bauble_damage_list1[0]
@@ -11946,7 +12146,7 @@ class GameFrame(tk.Frame):
                                         monk_damage_taken = monk_damage_taken + monk_bauble_damage_list2[0]
                                     if monk_bauble_damage_list3[1] != 0:
                                         monk_damage_taken = monk_damage_taken + monk_bauble_damage_list3[0]
-                                    if unbaubleable_check == 1:
+                                    if bauble_unavailable_check == 1:
                                         monk_damage_taken = monk_damage_taken + bauble_damage
                                     champion2_hp = champion2_hp - math.ceil(monk_damage_taken)
                                     champion2_lastRoundDamageTaken_list.append(math.ceil(monk_damage_taken))
@@ -12044,7 +12244,7 @@ class GameFrame(tk.Frame):
                                             self.apply_taunt(4, MASTER_FENCER.title, 1)
                                 elif CHAMPION_LIST[0] == MONK.title:
                                     bauble_damage = self.calculate_ai_damage(3, 4, 0)
-                                    unbaubleable_check = 0
+                                    bauble_unavailable_check = 0
                                     if monk_bauble_damage_list1[1] == 0:
                                         monk_bauble_damage_list1 = [math.ceil(bauble_damage / 3), 3]
                                     else:
@@ -12054,7 +12254,7 @@ class GameFrame(tk.Frame):
                                             if monk_bauble_damage_list3[1] == 0:
                                                 monk_bauble_damage_list3 = [math.ceil(bauble_damage / 3), 3]
                                             else:
-                                                unbaubleable_check = 1
+                                                bauble_unavailable_check = 1
                                     monk_damage_taken = 0
                                     if monk_bauble_damage_list1[1] != 0:
                                         monk_damage_taken = monk_damage_taken + monk_bauble_damage_list1[0]
@@ -12062,7 +12262,7 @@ class GameFrame(tk.Frame):
                                         monk_damage_taken = monk_damage_taken + monk_bauble_damage_list2[0]
                                     if monk_bauble_damage_list3[1] != 0:
                                         monk_damage_taken = monk_damage_taken + monk_bauble_damage_list3[0]
-                                    if unbaubleable_check == 1:
+                                    if bauble_unavailable_check == 1:
                                         monk_damage_taken = monk_damage_taken + bauble_damage
                                     champion3_hp = champion3_hp - math.ceil(monk_damage_taken)
                                     champion3_lastRoundDamageTaken_list.append(math.ceil(monk_damage_taken))
@@ -12160,7 +12360,7 @@ class GameFrame(tk.Frame):
                                             self.apply_taunt(4, MASTER_FENCER.title, 1)
                                 elif CHAMPION_LIST[0] == MONK.title:
                                     bauble_damage = self.calculate_ai_damage(4, 4, 0)
-                                    unbaubleable_check = 0
+                                    bauble_unavailable_check = 0
                                     if monk_bauble_damage_list1[1] == 0:
                                         monk_bauble_damage_list1 = [math.ceil(bauble_damage / 3), 3]
                                     else:
@@ -12170,7 +12370,7 @@ class GameFrame(tk.Frame):
                                             if monk_bauble_damage_list3[1] == 0:
                                                 monk_bauble_damage_list3 = [math.ceil(bauble_damage / 3), 3]
                                             else:
-                                                unbaubleable_check = 1
+                                                bauble_unavailable_check = 1
                                     monk_damage_taken = 0
                                     if monk_bauble_damage_list1[1] != 0:
                                         monk_damage_taken = monk_damage_taken + monk_bauble_damage_list1[0]
@@ -12178,7 +12378,7 @@ class GameFrame(tk.Frame):
                                         monk_damage_taken = monk_damage_taken + monk_bauble_damage_list2[0]
                                     if monk_bauble_damage_list3[1] != 0:
                                         monk_damage_taken = monk_damage_taken + monk_bauble_damage_list3[0]
-                                    if unbaubleable_check == 1:
+                                    if bauble_unavailable_check == 1:
                                         monk_damage_taken = monk_damage_taken + bauble_damage
                                     champion4_hp = champion4_hp - math.ceil(monk_damage_taken)
                                     champion4_lastRoundDamageTaken_list.append(math.ceil(monk_damage_taken))
@@ -12276,7 +12476,7 @@ class GameFrame(tk.Frame):
                                             self.apply_taunt(4, MASTER_FENCER.title, 1)
                                 elif CHAMPION_LIST[0] == MONK.title:
                                     bauble_damage = self.calculate_ai_damage(5, 4, 0)
-                                    unbaubleable_check = 0
+                                    bauble_unavailable_check = 0
                                     if monk_bauble_damage_list1[1] == 0:
                                         monk_bauble_damage_list1 = [math.ceil(bauble_damage / 3), 3]
                                     else:
@@ -12286,7 +12486,7 @@ class GameFrame(tk.Frame):
                                             if monk_bauble_damage_list3[1] == 0:
                                                 monk_bauble_damage_list3 = [math.ceil(bauble_damage / 3), 3]
                                             else:
-                                                unbaubleable_check = 1
+                                                bauble_unavailable_check = 1
                                     monk_damage_taken = 0
                                     if monk_bauble_damage_list1[1] != 0:
                                         monk_damage_taken = monk_damage_taken + monk_bauble_damage_list1[0]
@@ -12294,7 +12494,7 @@ class GameFrame(tk.Frame):
                                         monk_damage_taken = monk_damage_taken + monk_bauble_damage_list2[0]
                                     if monk_bauble_damage_list3[1] != 0:
                                         monk_damage_taken = monk_damage_taken + monk_bauble_damage_list3[0]
-                                    if unbaubleable_check == 1:
+                                    if bauble_unavailable_check == 1:
                                         monk_damage_taken = monk_damage_taken + bauble_damage
                                     champion5_hp = champion5_hp - math.ceil(monk_damage_taken)
                                     champion5_lastRoundDamageTaken_list.append(math.ceil(monk_damage_taken))
@@ -12480,7 +12680,7 @@ class GameFrame(tk.Frame):
                                         self.apply_taunt(5, MASTER_FENCER.title, 1)
                             elif CHAMPION_LIST[0] == MONK.title:
                                 bauble_damage = self.calculate_ai_damage(1, 5, 0)
-                                unbaubleable_check = 0
+                                bauble_unavailable_check = 0
                                 if monk_bauble_damage_list1[1] == 0:
                                     monk_bauble_damage_list1 = [math.ceil(bauble_damage / 3), 3]
                                 else:
@@ -12490,7 +12690,7 @@ class GameFrame(tk.Frame):
                                         if monk_bauble_damage_list3[1] == 0:
                                             monk_bauble_damage_list3 = [math.ceil(bauble_damage / 3), 3]
                                         else:
-                                            unbaubleable_check = 1
+                                            bauble_unavailable_check = 1
                                 monk_damage_taken = 0
                                 if monk_bauble_damage_list1[1] != 0:
                                     monk_damage_taken = monk_damage_taken + monk_bauble_damage_list1[0]
@@ -12498,7 +12698,7 @@ class GameFrame(tk.Frame):
                                     monk_damage_taken = monk_damage_taken + monk_bauble_damage_list2[0]
                                 if monk_bauble_damage_list3[1] != 0:
                                     monk_damage_taken = monk_damage_taken + monk_bauble_damage_list3[0]
-                                if unbaubleable_check == 1:
+                                if bauble_unavailable_check == 1:
                                     monk_damage_taken = monk_damage_taken + bauble_damage
                                 champion1_hp = champion1_hp - math.ceil(monk_damage_taken)
                                 champion1_lastRoundDamageTaken_list.append(math.ceil(monk_damage_taken))
@@ -12578,7 +12778,7 @@ class GameFrame(tk.Frame):
                                         self.apply_taunt(5, MASTER_FENCER.title, 1)
                             elif CHAMPION_LIST[0] == MONK.title:
                                 bauble_damage = self.calculate_ai_damage(2, 5, 0)
-                                unbaubleable_check = 0
+                                bauble_unavailable_check = 0
                                 if monk_bauble_damage_list1[1] == 0:
                                     monk_bauble_damage_list1 = [math.ceil(bauble_damage / 3), 3]
                                 else:
@@ -12588,7 +12788,7 @@ class GameFrame(tk.Frame):
                                         if monk_bauble_damage_list3[1] == 0:
                                             monk_bauble_damage_list3 = [math.ceil(bauble_damage / 3), 3]
                                         else:
-                                            unbaubleable_check = 1
+                                            bauble_unavailable_check = 1
                                 monk_damage_taken = 0
                                 if monk_bauble_damage_list1[1] != 0:
                                     monk_damage_taken = monk_damage_taken + monk_bauble_damage_list1[0]
@@ -12596,7 +12796,7 @@ class GameFrame(tk.Frame):
                                     monk_damage_taken = monk_damage_taken + monk_bauble_damage_list2[0]
                                 if monk_bauble_damage_list3[1] != 0:
                                     monk_damage_taken = monk_damage_taken + monk_bauble_damage_list3[0]
-                                if unbaubleable_check == 1:
+                                if bauble_unavailable_check == 1:
                                     monk_damage_taken = monk_damage_taken + bauble_damage
                                 champion2_hp = champion2_hp - math.ceil(monk_damage_taken)
                                 champion2_lastRoundDamageTaken_list.append(math.ceil(monk_damage_taken))
@@ -12676,7 +12876,7 @@ class GameFrame(tk.Frame):
                                         self.apply_taunt(5, MASTER_FENCER.title, 1)
                             elif CHAMPION_LIST[0] == MONK.title:
                                 bauble_damage = self.calculate_ai_damage(3, 5)
-                                unbaubleable_check = 0
+                                bauble_unavailable_check = 0
                                 if monk_bauble_damage_list1[1] == 0:
                                     monk_bauble_damage_list1 = [math.ceil(bauble_damage / 3), 3]
                                 else:
@@ -12686,7 +12886,7 @@ class GameFrame(tk.Frame):
                                         if monk_bauble_damage_list3[1] == 0:
                                             monk_bauble_damage_list3 = [math.ceil(bauble_damage / 3), 3]
                                         else:
-                                            unbaubleable_check = 1
+                                            bauble_unavailable_check = 1
                                 monk_damage_taken = 0
                                 if monk_bauble_damage_list1[1] != 0:
                                     monk_damage_taken = monk_damage_taken + monk_bauble_damage_list1[0]
@@ -12694,7 +12894,7 @@ class GameFrame(tk.Frame):
                                     monk_damage_taken = monk_damage_taken + monk_bauble_damage_list2[0]
                                 if monk_bauble_damage_list3[1] != 0:
                                     monk_damage_taken = monk_damage_taken + monk_bauble_damage_list3[0]
-                                if unbaubleable_check == 1:
+                                if bauble_unavailable_check == 1:
                                     monk_damage_taken = monk_damage_taken + bauble_damage
                                 champion3_hp = champion3_hp - math.ceil(monk_damage_taken)
                                 champion3_lastRoundDamageTaken_list.append(math.ceil(monk_damage_taken))
@@ -12774,7 +12974,7 @@ class GameFrame(tk.Frame):
                                         self.apply_taunt(5, MASTER_FENCER.title, 1)
                             elif CHAMPION_LIST[0] == MONK.title:
                                 bauble_damage = self.calculate_ai_damage(4, 5, 0)
-                                unbaubleable_check = 0
+                                bauble_unavailable_check = 0
                                 if monk_bauble_damage_list1[1] == 0:
                                     monk_bauble_damage_list1 = [math.ceil(bauble_damage / 3), 3]
                                 else:
@@ -12784,7 +12984,7 @@ class GameFrame(tk.Frame):
                                         if monk_bauble_damage_list3[1] == 0:
                                             monk_bauble_damage_list3 = [math.ceil(bauble_damage / 3), 3]
                                         else:
-                                            unbaubleable_check = 1
+                                            bauble_unavailable_check = 1
                                 monk_damage_taken = 0
                                 if monk_bauble_damage_list1[1] != 0:
                                     monk_damage_taken = monk_damage_taken + monk_bauble_damage_list1[0]
@@ -12792,7 +12992,7 @@ class GameFrame(tk.Frame):
                                     monk_damage_taken = monk_damage_taken + monk_bauble_damage_list2[0]
                                 if monk_bauble_damage_list3[1] != 0:
                                     monk_damage_taken = monk_damage_taken + monk_bauble_damage_list3[0]
-                                if unbaubleable_check == 1:
+                                if bauble_unavailable_check == 1:
                                     monk_damage_taken = monk_damage_taken + bauble_damage
                                 champion4_hp = champion4_hp - math.ceil(monk_damage_taken)
                                 champion4_lastRoundDamageTaken_list.append(math.ceil(monk_damage_taken))
@@ -12872,7 +13072,7 @@ class GameFrame(tk.Frame):
                                         self.apply_taunt(5, MASTER_FENCER.title, 1)
                             elif CHAMPION_LIST[0] == MONK.title:
                                 bauble_damage = self.calculate_ai_damage(5, 5, 0)
-                                unbaubleable_check = 0
+                                bauble_unavailable_check = 0
                                 if monk_bauble_damage_list1[1] == 0:
                                     monk_bauble_damage_list1 = [math.ceil(bauble_damage / 3), 3]
                                 else:
@@ -12882,7 +13082,7 @@ class GameFrame(tk.Frame):
                                         if monk_bauble_damage_list3[1] == 0:
                                             monk_bauble_damage_list3 = [math.ceil(bauble_damage / 3), 3]
                                         else:
-                                            unbaubleable_check = 1
+                                            bauble_unavailable_check = 1
                                 monk_damage_taken = 0
                                 if monk_bauble_damage_list1[1] != 0:
                                     monk_damage_taken = monk_damage_taken + monk_bauble_damage_list1[0]
@@ -12890,7 +13090,7 @@ class GameFrame(tk.Frame):
                                     monk_damage_taken = monk_damage_taken + monk_bauble_damage_list2[0]
                                 if monk_bauble_damage_list3[1] != 0:
                                     monk_damage_taken = monk_damage_taken + monk_bauble_damage_list3[0]
-                                if unbaubleable_check == 1:
+                                if bauble_unavailable_check == 1:
                                     monk_damage_taken = monk_damage_taken + bauble_damage
                                 champion5_hp = champion5_hp - math.ceil(monk_damage_taken)
                                 champion5_lastRoundDamageTaken_list.append(math.ceil(monk_damage_taken))
@@ -12972,7 +13172,7 @@ class GameFrame(tk.Frame):
                                             self.apply_taunt(5, MASTER_FENCER.title, 1)
                                 elif CHAMPION_LIST[0] == MONK.title:
                                     bauble_damage = self.calculate_ai_damage(1, 5, 0)
-                                    unbaubleable_check = 0
+                                    bauble_unavailable_check = 0
                                     if monk_bauble_damage_list1[1] == 0:
                                         monk_bauble_damage_list1 = [math.ceil(bauble_damage / 3), 3]
                                     else:
@@ -12982,7 +13182,7 @@ class GameFrame(tk.Frame):
                                             if monk_bauble_damage_list3[1] == 0:
                                                 monk_bauble_damage_list3 = [math.ceil(bauble_damage / 3), 3]
                                             else:
-                                                unbaubleable_check = 1
+                                                bauble_unavailable_check = 1
                                     monk_damage_taken = 0
                                     if monk_bauble_damage_list1[1] != 0:
                                         monk_damage_taken = monk_damage_taken + monk_bauble_damage_list1[0]
@@ -12990,7 +13190,7 @@ class GameFrame(tk.Frame):
                                         monk_damage_taken = monk_damage_taken + monk_bauble_damage_list2[0]
                                     if monk_bauble_damage_list3[1] != 0:
                                         monk_damage_taken = monk_damage_taken + monk_bauble_damage_list3[0]
-                                    if unbaubleable_check == 1:
+                                    if bauble_unavailable_check == 1:
                                         monk_damage_taken = monk_damage_taken + bauble_damage
                                     champion1_hp = champion1_hp - math.ceil(monk_damage_taken)
                                     champion1_lastRoundDamageTaken_list.append(math.ceil(monk_damage_taken))
@@ -13088,7 +13288,7 @@ class GameFrame(tk.Frame):
                                             self.apply_taunt(5, MASTER_FENCER.title, 1)
                                 elif CHAMPION_LIST[0] == MONK.title:
                                     bauble_damage = self.calculate_ai_damage(2, 5, 0)
-                                    unbaubleable_check = 0
+                                    bauble_unavailable_check = 0
                                     if monk_bauble_damage_list1[1] == 0:
                                         monk_bauble_damage_list1 = [math.ceil(bauble_damage / 3), 3]
                                     else:
@@ -13098,7 +13298,7 @@ class GameFrame(tk.Frame):
                                             if monk_bauble_damage_list3[1] == 0:
                                                 monk_bauble_damage_list3 = [math.ceil(bauble_damage / 3), 3]
                                             else:
-                                                unbaubleable_check = 1
+                                                bauble_unavailable_check = 1
                                     monk_damage_taken = 0
                                     if monk_bauble_damage_list1[1] != 0:
                                         monk_damage_taken = monk_damage_taken + monk_bauble_damage_list1[0]
@@ -13106,7 +13306,7 @@ class GameFrame(tk.Frame):
                                         monk_damage_taken = monk_damage_taken + monk_bauble_damage_list2[0]
                                     if monk_bauble_damage_list3[1] != 0:
                                         monk_damage_taken = monk_damage_taken + monk_bauble_damage_list3[0]
-                                    if unbaubleable_check == 1:
+                                    if bauble_unavailable_check == 1:
                                         monk_damage_taken = monk_damage_taken + bauble_damage
                                     champion2_hp = champion2_hp - math.ceil(monk_damage_taken)
                                     champion2_lastRoundDamageTaken_list.append(math.ceil(monk_damage_taken))
@@ -13204,7 +13404,7 @@ class GameFrame(tk.Frame):
                                             self.apply_taunt(5, MASTER_FENCER.title, 1)
                                 elif CHAMPION_LIST[0] == MONK.title:
                                     bauble_damage = self.calculate_ai_damage(3, 5, 0)
-                                    unbaubleable_check = 0
+                                    bauble_unavailable_check = 0
                                     if monk_bauble_damage_list1[1] == 0:
                                         monk_bauble_damage_list1 = [math.ceil(bauble_damage / 3), 3]
                                     else:
@@ -13214,7 +13414,7 @@ class GameFrame(tk.Frame):
                                             if monk_bauble_damage_list3[1] == 0:
                                                 monk_bauble_damage_list3 = [math.ceil(bauble_damage / 3), 3]
                                             else:
-                                                unbaubleable_check = 1
+                                                bauble_unavailable_check = 1
                                     monk_damage_taken = 0
                                     if monk_bauble_damage_list1[1] != 0:
                                         monk_damage_taken = monk_damage_taken + monk_bauble_damage_list1[0]
@@ -13222,7 +13422,7 @@ class GameFrame(tk.Frame):
                                         monk_damage_taken = monk_damage_taken + monk_bauble_damage_list2[0]
                                     if monk_bauble_damage_list3[1] != 0:
                                         monk_damage_taken = monk_damage_taken + monk_bauble_damage_list3[0]
-                                    if unbaubleable_check == 1:
+                                    if bauble_unavailable_check == 1:
                                         monk_damage_taken = monk_damage_taken + bauble_damage
                                     champion3_hp = champion3_hp - math.ceil(monk_damage_taken)
                                     champion3_lastRoundDamageTaken_list.append(math.ceil(monk_damage_taken))
@@ -13320,7 +13520,7 @@ class GameFrame(tk.Frame):
                                             self.apply_taunt(5, MASTER_FENCER.title, 1)
                                 elif CHAMPION_LIST[0] == MONK.title:
                                     bauble_damage = self.calculate_ai_damage(4, 5, 0)
-                                    unbaubleable_check = 0
+                                    bauble_unavailable_check = 0
                                     if monk_bauble_damage_list1[1] == 0:
                                         monk_bauble_damage_list1 = [math.ceil(bauble_damage / 3), 3]
                                     else:
@@ -13330,7 +13530,7 @@ class GameFrame(tk.Frame):
                                             if monk_bauble_damage_list3[1] == 0:
                                                 monk_bauble_damage_list3 = [math.ceil(bauble_damage / 3), 3]
                                             else:
-                                                unbaubleable_check = 1
+                                                bauble_unavailable_check = 1
                                     monk_damage_taken = 0
                                     if monk_bauble_damage_list1[1] != 0:
                                         monk_damage_taken = monk_damage_taken + monk_bauble_damage_list1[0]
@@ -13338,7 +13538,7 @@ class GameFrame(tk.Frame):
                                         monk_damage_taken = monk_damage_taken + monk_bauble_damage_list2[0]
                                     if monk_bauble_damage_list3[1] != 0:
                                         monk_damage_taken = monk_damage_taken + monk_bauble_damage_list3[0]
-                                    if unbaubleable_check == 1:
+                                    if bauble_unavailable_check == 1:
                                         monk_damage_taken = monk_damage_taken + bauble_damage
                                     champion4_hp = champion4_hp - math.ceil(monk_damage_taken)
                                     champion4_lastRoundDamageTaken_list.append(math.ceil(monk_damage_taken))
@@ -13436,7 +13636,7 @@ class GameFrame(tk.Frame):
                                             self.apply_taunt(5, MASTER_FENCER.title, 1)
                                 elif CHAMPION_LIST[0] == MONK.title:
                                     bauble_damage = self.calculate_ai_damage(5, 5, 0)
-                                    unbaubleable_check = 0
+                                    bauble_unavailable_check = 0
                                     if monk_bauble_damage_list1[1] == 0:
                                         monk_bauble_damage_list1 = [math.ceil(bauble_damage / 3), 3]
                                     else:
@@ -13446,7 +13646,7 @@ class GameFrame(tk.Frame):
                                             if monk_bauble_damage_list3[1] == 0:
                                                 monk_bauble_damage_list3 = [math.ceil(bauble_damage / 3), 3]
                                             else:
-                                                unbaubleable_check = 1
+                                                bauble_unavailable_check = 1
                                     monk_damage_taken = 0
                                     if monk_bauble_damage_list1[1] != 0:
                                         monk_damage_taken = monk_damage_taken + monk_bauble_damage_list1[0]
@@ -13454,7 +13654,7 @@ class GameFrame(tk.Frame):
                                         monk_damage_taken = monk_damage_taken + monk_bauble_damage_list2[0]
                                     if monk_bauble_damage_list3[1] != 0:
                                         monk_damage_taken = monk_damage_taken + monk_bauble_damage_list3[0]
-                                    if unbaubleable_check == 1:
+                                    if bauble_unavailable_check == 1:
                                         monk_damage_taken = monk_damage_taken + bauble_damage
                                     champion5_hp = champion5_hp - math.ceil(monk_damage_taken)
                                     champion5_lastRoundDamageTaken_list.append(math.ceil(monk_damage_taken))
@@ -13553,7 +13753,7 @@ class GameFrame(tk.Frame):
                                             self.apply_taunt(5, MASTER_FENCER.title, 1)
                                 elif CHAMPION_LIST[0] == MONK.title:
                                     bauble_damage = self.calculate_ai_damage(1, 5, 0)
-                                    unbaubleable_check = 0
+                                    bauble_unavailable_check = 0
                                     if monk_bauble_damage_list1[1] == 0:
                                         monk_bauble_damage_list1 = [math.ceil(bauble_damage / 3), 3]
                                     else:
@@ -13563,7 +13763,7 @@ class GameFrame(tk.Frame):
                                             if monk_bauble_damage_list3[1] == 0:
                                                 monk_bauble_damage_list3 = [math.ceil(bauble_damage / 3), 3]
                                             else:
-                                                unbaubleable_check = 1
+                                                bauble_unavailable_check = 1
                                     monk_damage_taken = 0
                                     if monk_bauble_damage_list1[1] != 0:
                                         monk_damage_taken = monk_damage_taken + monk_bauble_damage_list1[0]
@@ -13571,7 +13771,7 @@ class GameFrame(tk.Frame):
                                         monk_damage_taken = monk_damage_taken + monk_bauble_damage_list2[0]
                                     if monk_bauble_damage_list3[1] != 0:
                                         monk_damage_taken = monk_damage_taken + monk_bauble_damage_list3[0]
-                                    if unbaubleable_check == 1:
+                                    if bauble_unavailable_check == 1:
                                         monk_damage_taken = monk_damage_taken + bauble_damage
                                     champion1_hp = champion1_hp - math.ceil(monk_damage_taken)
                                     champion1_lastRoundDamageTaken_list.append(math.ceil(monk_damage_taken))
@@ -13669,7 +13869,7 @@ class GameFrame(tk.Frame):
                                             self.apply_taunt(5, MASTER_FENCER.title, 1)
                                 elif CHAMPION_LIST[0] == MONK.title:
                                     bauble_damage = self.calculate_ai_damage(2, 5, 0)
-                                    unbaubleable_check = 0
+                                    bauble_unavailable_check = 0
                                     if monk_bauble_damage_list1[1] == 0:
                                         monk_bauble_damage_list1 = [math.ceil(bauble_damage / 3), 3]
                                     else:
@@ -13679,7 +13879,7 @@ class GameFrame(tk.Frame):
                                             if monk_bauble_damage_list3[1] == 0:
                                                 monk_bauble_damage_list3 = [math.ceil(bauble_damage / 3), 3]
                                             else:
-                                                unbaubleable_check = 1
+                                                bauble_unavailable_check = 1
                                     monk_damage_taken = 0
                                     if monk_bauble_damage_list1[1] != 0:
                                         monk_damage_taken = monk_damage_taken + monk_bauble_damage_list1[0]
@@ -13687,7 +13887,7 @@ class GameFrame(tk.Frame):
                                         monk_damage_taken = monk_damage_taken + monk_bauble_damage_list2[0]
                                     if monk_bauble_damage_list3[1] != 0:
                                         monk_damage_taken = monk_damage_taken + monk_bauble_damage_list3[0]
-                                    if unbaubleable_check == 1:
+                                    if bauble_unavailable_check == 1:
                                         monk_damage_taken = monk_damage_taken + bauble_damage
                                     champion2_hp = champion2_hp - math.ceil(monk_damage_taken)
                                     champion2_lastRoundDamageTaken_list.append(math.ceil(monk_damage_taken))
@@ -13785,7 +13985,7 @@ class GameFrame(tk.Frame):
                                             self.apply_taunt(5, MASTER_FENCER.title, 1)
                                 elif CHAMPION_LIST[0] == MONK.title:
                                     bauble_damage = self.calculate_ai_damage(3, 5, 0)
-                                    unbaubleable_check = 0
+                                    bauble_unavailable_check = 0
                                     if monk_bauble_damage_list1[1] == 0:
                                         monk_bauble_damage_list1 = [math.ceil(bauble_damage / 3), 3]
                                     else:
@@ -13795,7 +13995,7 @@ class GameFrame(tk.Frame):
                                             if monk_bauble_damage_list3[1] == 0:
                                                 monk_bauble_damage_list3 = [math.ceil(bauble_damage / 3), 3]
                                             else:
-                                                unbaubleable_check = 1
+                                                bauble_unavailable_check = 1
                                     monk_damage_taken = 0
                                     if monk_bauble_damage_list1[1] != 0:
                                         monk_damage_taken = monk_damage_taken + monk_bauble_damage_list1[0]
@@ -13803,7 +14003,7 @@ class GameFrame(tk.Frame):
                                         monk_damage_taken = monk_damage_taken + monk_bauble_damage_list2[0]
                                     if monk_bauble_damage_list3[1] != 0:
                                         monk_damage_taken = monk_damage_taken + monk_bauble_damage_list3[0]
-                                    if unbaubleable_check == 1:
+                                    if bauble_unavailable_check == 1:
                                         monk_damage_taken = monk_damage_taken + bauble_damage
                                     champion3_hp = champion3_hp - math.ceil(monk_damage_taken)
                                     champion3_lastRoundDamageTaken_list.append(math.ceil(monk_damage_taken))
@@ -13901,7 +14101,7 @@ class GameFrame(tk.Frame):
                                             self.apply_taunt(5, MASTER_FENCER.title, 1)
                                 elif CHAMPION_LIST[0] == MONK.title:
                                     bauble_damage = self.calculate_ai_damage(4, 5, 0)
-                                    unbaubleable_check = 0
+                                    bauble_unavailable_check = 0
                                     if monk_bauble_damage_list1[1] == 0:
                                         monk_bauble_damage_list1 = [math.ceil(bauble_damage / 3), 3]
                                     else:
@@ -13911,7 +14111,7 @@ class GameFrame(tk.Frame):
                                             if monk_bauble_damage_list3[1] == 0:
                                                 monk_bauble_damage_list3 = [math.ceil(bauble_damage / 3), 3]
                                             else:
-                                                unbaubleable_check = 1
+                                                bauble_unavailable_check = 1
                                     monk_damage_taken = 0
                                     if monk_bauble_damage_list1[1] != 0:
                                         monk_damage_taken = monk_damage_taken + monk_bauble_damage_list1[0]
@@ -13919,7 +14119,7 @@ class GameFrame(tk.Frame):
                                         monk_damage_taken = monk_damage_taken + monk_bauble_damage_list2[0]
                                     if monk_bauble_damage_list3[1] != 0:
                                         monk_damage_taken = monk_damage_taken + monk_bauble_damage_list3[0]
-                                    if unbaubleable_check == 1:
+                                    if bauble_unavailable_check == 1:
                                         monk_damage_taken = monk_damage_taken + bauble_damage
                                     champion4_hp = champion4_hp - math.ceil(monk_damage_taken)
                                     champion4_lastRoundDamageTaken_list.append(math.ceil(monk_damage_taken))
@@ -14016,7 +14216,7 @@ class GameFrame(tk.Frame):
                                             self.apply_taunt(5, MASTER_FENCER.title, 1)
                                 elif CHAMPION_LIST[0] == MONK.title:
                                     bauble_damage = self.calculate_ai_damage(5, 5, 0)
-                                    unbaubleable_check = 0
+                                    bauble_unavailable_check = 0
                                     if monk_bauble_damage_list1[1] == 0:
                                         monk_bauble_damage_list1 = [math.ceil(bauble_damage / 3), 3]
                                     else:
@@ -14026,7 +14226,7 @@ class GameFrame(tk.Frame):
                                             if monk_bauble_damage_list3[1] == 0:
                                                 monk_bauble_damage_list3 = [math.ceil(bauble_damage / 3), 3]
                                             else:
-                                                unbaubleable_check = 1
+                                                bauble_unavailable_check = 1
                                     monk_damage_taken = 0
                                     if monk_bauble_damage_list1[1] != 0:
                                         monk_damage_taken = monk_damage_taken + monk_bauble_damage_list1[0]
@@ -14034,7 +14234,7 @@ class GameFrame(tk.Frame):
                                         monk_damage_taken = monk_damage_taken + monk_bauble_damage_list2[0]
                                     if monk_bauble_damage_list3[1] != 0:
                                         monk_damage_taken = monk_damage_taken + monk_bauble_damage_list3[0]
-                                    if unbaubleable_check == 1:
+                                    if bauble_unavailable_check == 1:
                                         monk_damage_taken = monk_damage_taken + bauble_damage
                                     champion5_hp = champion5_hp - math.ceil(monk_damage_taken)
                                     champion5_lastRoundDamageTaken_list.append(math.ceil(monk_damage_taken))
@@ -14931,18 +15131,37 @@ class GameFrame(tk.Frame):
             return math.ceil(ai5_damage_done)
 
     def combat_to_progression(self):
-        global roomLevel, floorLevel, from_combat, permaHealthMod
+        global room_level, floor_level, from_combat
         self.champion_turn_ticker(1)
         self.champion_turn_ticker(2)
         self.champion_turn_ticker(3)
         self.champion_turn_ticker(4)
         self.champion_turn_ticker(5)
         self.heal_overtime_tick()
-        roomLevel += 1
-        if roomLevel > 5:
-            floorLevel += 1
-            roomLevel = 1
-            permaHealthMod += 1
+        room_level += 1
+        if room_level > 3:
+            floor_level += 1
+            room_level = 1
+        if CHAMPION1_RPNAME == "Mana":
+            champion1_rp = champion1_rp + 75
+            if champion1_rp > CHAMPION1_RP:
+                champion1_rp = CHAMPION1_RP
+        if CHAMPION2_RPNAME == "Mana":
+            champion2_rp = champion2_rp + 75
+            if champion2_rp > CHAMPION2_RP:
+                champion2_rp = CHAMPION2_RP
+        if CHAMPION3_RPNAME == "Mana":
+            champion3_rp = champion3_rp + 75
+            if champion3_rp > CHAMPION3_RP:
+                champion3_rp = CHAMPION3_RP
+        if CHAMPION4_RPNAME == "Mana":
+            champion4_rp = champion4_rp + 75
+            if champion4_rp > CHAMPION4_RP:
+                champion4_rp = CHAMPION4_RP
+        if CHAMPION5_RPNAME == "Mana":
+            champion5_rp = champion5_rp + 75
+            if champion5_rp > CHAMPION5_RP:
+                champion5_rp = CHAMPION5_RP
         for widget in dungeon_game_frame.winfo_children():
             widget.destroy()
         from_combat = 1
@@ -14950,8 +15169,7 @@ class GameFrame(tk.Frame):
 
     def combat_to_endgame(self):
         global current_dungeon_label
-        for widget in dungeon_game_frame.winfo_children():
-            widget.destroy()
+        dungeon_game_frame.destroy()
         current_dungeon_label.destroy()
         teams_current_condition_label.destroy()
         current_floor_label.destroy()
@@ -18508,19 +18726,19 @@ class GameFrame(tk.Frame):
             ability_cooldown = crusade_requirements[2]
             ability_remaining_cooldown = crusade_requirements[3]
         if ability_name == "Steady Aim":
-            attack_ability_details = "Fire a precise arrow at an enemy, dealing damage and reducing the cooldowns of Power Shot and Ricochet Shot by 1\Enemies hit are affected by the currently equipped tip"
+            attack_ability_details = "Fire a precise arrow at an enemy, dealing damage and reducing the cooldowns of Power Shot and Ricochet Shot by one\Enemies hit are affected by the currently equipped tip"
             ability_cost = steady_aim_requirements[0]
             ability_gain = steady_aim_requirements[1]
             ability_cooldown = steady_aim_requirements[2]
             ability_remaining_cooldown = steady_aim_requirements[3]
         if ability_name == "Power Shot":
-            attack_ability_details = "Fire an fire with high power at an enemy, dealing damage and reducing the cooldown of Multi-shot by 2\nEnemies hit are affected two-fold by the currently equipped tip"
+            attack_ability_details = "Fire an fire with high power at an enemy, dealing damage and reducing the cooldown of Multi-shot by two\nEnemies hit are affected two-fold by the currently equipped tip"
             ability_cost = power_shot_requirements[0]
             ability_gain = power_shot_requirements[1]
             ability_cooldown = power_shot_requirements[2]
             ability_remaining_cooldown = power_shot_requirements[3]
         if ability_name == "Multi-shot":
-            attack_ability_details = "Fire two arrows hitting two enemies, dealing damage and reducing the cooldown of Ricochet Shot by 3\nEnemies hit are affected by the currently equipped tip"
+            attack_ability_details = "Fire two arrows hitting two enemies, dealing damage and reducing the cooldown of Ricochet Shot by three\nEnemies hit are affected by the currently equipped tip"
             ability_cost = multi_shot_requirements[0]
             ability_gain = multi_shot_requirements[1]
             ability_cooldown = multi_shot_requirements[2]
@@ -18538,7 +18756,7 @@ class GameFrame(tk.Frame):
             ability_cooldown = chain_bolts_requirements[2]
             ability_remaining_cooldown = chain_bolts_requirements[3]
         if ability_name == "Electrical Expulsion":
-            attack_ability_details = "Wildly release polarization charges that latch onto random enemies\nIf you're energised, release 10 charges. Otherwise, release 5"
+            attack_ability_details = "Wildly release polarization charges that latch onto random enemies\nIf you're energised, release ten charges. Otherwise, release five"
             ability_cost = electrical_expulsion_requirements[0]
             ability_gain = electrical_expulsion_requirements[1]
             ability_cooldown = electrical_expulsion_requirements[2]
@@ -18552,10 +18770,10 @@ class GameFrame(tk.Frame):
             ability_resource = 'Mana'
         if ability_name == "Shimmering Bolt":
             attack_ability_details = "Fire a glistening bolt of light at an enemy, dealing damage and sear them with heat"
-            ability_cost = harmonize_requirements[0]
-            ability_gain = harmonize_requirements[1]
-            ability_cooldown = harmonize_requirements[2]
-            ability_remaining_cooldown = harmonize_requirements[3]
+            ability_cost = shimmering_bolt_requirements[0]
+            ability_gain = shimmering_bolt_requirements[1]
+            ability_cooldown = shimmering_bolt_requirements[2]
+            ability_remaining_cooldown = shimmering_bolt_requirements[3]
             ability_resource = 'Mana'
         if ability_name == "Divine Smite":
             attack_ability_details = "Blast an enemy with light, dealing damage and searing them with very hot heat"
@@ -18583,30 +18801,30 @@ class GameFrame(tk.Frame):
         ability_description2 = ""
         if ability_cost != 0:
             if ability_gain != 0:
-                ability_description1 = "Ability Cost {} {} : Gain {} {}".format(ability_cost, ability_resource, ability_gain, ability_resource)
+                ability_description1 = "Ability Cost ({} {}) : Gain ({} {})".format(ability_cost, ability_resource, ability_gain, ability_resource)
             else:
-                ability_description1 = "Ability Cost {} {}".format(ability_cost, ability_resource)
+                ability_description1 = "Ability Cost ({} {})".format(ability_cost, ability_resource)
             ability_requirements1_label = tk.Label(root, text=ability_description1)
             ability_requirements1_label.grid(row=1, column=1)
         elif ability_gain != 0:
-            ability_description1 = "Gain {} {}".format(ability_gain, ability_resource)
+            ability_description1 = "Gain ({} {})".format(ability_gain, ability_resource)
             ability_requirements1_label = tk.Label(root, text=ability_description1)
             ability_requirements1_label.grid(row=1, column=1)
         if ability_cooldown != 0:
             if ability_remaining_cooldown != 0:
-                ability_description2 = "Ability Cooldown {} : Remaining Cooldown {}".format(ability_cooldown, ability_remaining_cooldown)
+                ability_description2 = "Ability Cooldown ({}) : Remaining Cooldown ({})".format(ability_cooldown, ability_remaining_cooldown)
             else:
-                ability_description2 = "Ability Cooldown {}".format(ability_cooldown)
+                ability_description2 = "Ability Cooldown ({})".format(ability_cooldown)
             ability_requirements2_label = tk.Label(root, text=ability_description2)
             ability_requirements2_label.grid(row=2, column=1)
             ability_description_label = tk.Label(root, text=attack_ability_details)
             ability_description_label.grid(row=3, column=1)
-            close_button = tk.Button(root, text="Close", command=root.destroy)
+            close_button = tk.Button(root, text="Close Window", command=root.destroy)
             close_button.grid(row=4, column=1)
         else:
             ability_description_label = tk.Label(root, text=attack_ability_details)
             ability_description_label.grid(row=2, column=1)
-            close_button = tk.Button(root, text="Close", command=root.destroy)
+            close_button = tk.Button(root, text="Close Window", command=root.destroy)
             close_button.grid(row=3, column=1)
     def special_button(self):
         global special1_button, special1_button_details, special2_button, special2_button_details, special3_button, special3_button_details, special4_button, special4_button_details, back_button, \
@@ -19604,7 +19822,8 @@ class GameFrame(tk.Frame):
                                 champion1_rp = champion1_rp - barbed_bush_armour_requirements[0]
                                 barbed_bush_armour_requirements[3] = barbed_bush_armour_requirements[2]
                                 champion1_rp = champion1_rp + barbed_bush_armour_requirements[1]
-                                ability_data = ["Barbed Bush Armour", "ally", "1T"]
+                                damage_done = math.ceil(DRUID.ap * self.calculate_champion_damage(1))
+                                ability_data = ["Barbed Bush Armour", "ally", "1T", damage_done]
                             else:
                                 return
                         if counter == 2:
@@ -19612,7 +19831,8 @@ class GameFrame(tk.Frame):
                                 champion2_rp = champion2_rp - barbed_bush_armour_requirements[0]
                                 barbed_bush_armour_requirements[3] = barbed_bush_armour_requirements[2]
                                 champion2_rp = champion2_rp + barbed_bush_armour_requirements[1]
-                                ability_data = ["Barbed Bush Armour", "ally", "1T"]
+                                damage_done = math.ceil(DRUID.ap * self.calculate_champion_damage(2))
+                                ability_data = ["Barbed Bush Armour", "ally", "1T", damage_done]
                             else:
                                 return
                         if counter == 3:
@@ -19620,7 +19840,8 @@ class GameFrame(tk.Frame):
                                 champion3_rp = champion3_rp - barbed_bush_armour_requirements[0]
                                 barbed_bush_armour_requirements[3] = barbed_bush_armour_requirements[2]
                                 champion3_rp = champion3_rp + barbed_bush_armour_requirements[1]
-                                ability_data = ["Barbed Bush Armour", "ally", "1T"]
+                                damage_done = math.ceil(DRUID.ap * self.calculate_champion_damage(3))
+                                ability_data = ["Barbed Bush Armour", "ally", "1T", damage_done]
                             else:
                                 return
                         if counter == 4:
@@ -19628,7 +19849,8 @@ class GameFrame(tk.Frame):
                                 champion4_rp = champion4_rp - barbed_bush_armour_requirements[0]
                                 barbed_bush_armour_requirements[3] = barbed_bush_armour_requirements[2]
                                 champion4_rp = champion4_rp + barbed_bush_armour_requirements[1]
-                                ability_data = ["Barbed Bush Armour", "ally", "1T"]
+                                damage_done = math.ceil(DRUID.ap * self.calculate_champion_damage(4))
+                                ability_data = ["Barbed Bush Armour", "ally", "1T", damage_done]
                             else:
                                 return
                         if counter == 5:
@@ -19636,7 +19858,8 @@ class GameFrame(tk.Frame):
                                 champion5_rp = champion5_rp - barbed_bush_armour_requirements[0]
                                 barbed_bush_armour_requirements[3] = barbed_bush_armour_requirements[2]
                                 champion5_rp = champion5_rp + barbed_bush_armour_requirements[1]
-                                ability_data = ["Barbed Bush Armour", "ally", "1T"]
+                                damage_done = math.ceil(DRUID.ap * self.calculate_champion_damage(5))
+                                ability_data = ["Barbed Bush Armour", "ally", "1T", damage_done]
                             else:
                                 return
                     counter += 1
@@ -19653,7 +19876,6 @@ class GameFrame(tk.Frame):
                                 burst_n_bloom_requirements[3] = burst_n_bloom_requirements[2]
                                 champion1_rp = champion1_rp + burst_n_bloom_requirements[1]
                                 damage_done = math.ceil(DRUID.ap * self.calculate_champion_damage(1))
-                                damage_done = math.ceil(DRUID.ap * self.calculate_champion_damage(1))
                                 ability_data = ["Burst N Bloom", "enemy", "AOE", damage_done]
                             else:
                                 return
@@ -19662,7 +19884,6 @@ class GameFrame(tk.Frame):
                                 champion2_rp = champion2_rp - burst_n_bloom_requirements[0]
                                 burst_n_bloom_requirements[3] = burst_n_bloom_requirements[2]
                                 champion2_rp = champion2_rp + burst_n_bloom_requirements[1]
-                                damage_done = math.ceil(DRUID.ap * self.calculate_champion_damage(2))
                                 damage_done = math.ceil(DRUID.ap * self.calculate_champion_damage(2))
                                 ability_data = ["Burst N Bloom", "enemy", "AOE", damage_done]
                             else:
@@ -19673,7 +19894,6 @@ class GameFrame(tk.Frame):
                                 burst_n_bloom_requirements[3] = burst_n_bloom_requirements[2]
                                 champion3_rp = champion3_rp + burst_n_bloom_requirements[1]
                                 damage_done = math.ceil(DRUID.ap * self.calculate_champion_damage(3))
-                                damage_done = math.ceil(DRUID.ap * self.calculate_champion_damage(3))
                                 ability_data = ["Burst N Bloom", "enemy", "AOE", damage_done]
                             else:
                                 return
@@ -19683,7 +19903,6 @@ class GameFrame(tk.Frame):
                                 burst_n_bloom_requirements[3] = burst_n_bloom_requirements[2]
                                 champion4_rp = champion4_rp + burst_n_bloom_requirements[1]
                                 damage_done = math.ceil(DRUID.ap * self.calculate_champion_damage(4))
-                                damage_done = math.ceil(DRUID.ap * self.calculate_champion_damage(4))
                                 ability_data = ["Burst N Bloom", "enemy", "AOE", damage_done]
                             else:
                                 return
@@ -19692,7 +19911,6 @@ class GameFrame(tk.Frame):
                                 champion5_rp = champion5_rp - burst_n_bloom_requirements[0]
                                 burst_n_bloom_requirements[3] = burst_n_bloom_requirements[2]
                                 champion5_rp = champion5_rp + burst_n_bloom_requirements[1]
-                                damage_done = math.ceil(DRUID.ap * self.calculate_champion_damage(5))
                                 damage_done = math.ceil(DRUID.ap * self.calculate_champion_damage(5))
                                 ability_data = ["Burst N Bloom", "enemy", "AOE", damage_done]
                             else:
@@ -20869,7 +21087,7 @@ class GameFrame(tk.Frame):
             ability_remaining_cooldown = harmonize_requirements[3]
             ability_resource = 'Focus'
         elif ability_name == "Pressure Points":
-            special_ability_details = "Target an enemy and if they're below 30% of their maximum health points, they instantly die\nOtherwise, they are stunned for 3 turns"
+            special_ability_details = "Target an enemy and if they're below 30% of their maximum health points, they instantly die\nOtherwise, they are stunned for three turns"
             ability_cost = pressure_points_requirements[0]
             ability_gain = pressure_points_requirements[1]
             ability_cooldown = pressure_points_requirements[2]
@@ -20951,7 +21169,7 @@ class GameFrame(tk.Frame):
             ability_cooldown = survival_kit_requirements[2]
             ability_remaining_cooldown = survival_kit_requirements[3]
         elif ability_name == "Arcane Brilliance":
-            special_ability_details = "Cast randomly chosen Fireballs or Frost Bolts at enemies wildly 5 times"
+            special_ability_details = "Cast randomly chosen Fireballs or Frost Bolts at enemies wildly five times"
             ability_cost = arcane_brilliance_requirements[0]
             ability_gain = arcane_brilliance_requirements[1]
             ability_cooldown = arcane_brilliance_requirements[2]
@@ -21002,7 +21220,7 @@ class GameFrame(tk.Frame):
             ability_cooldown = enharden_nerves_requirements[2]
             ability_remaining_cooldown = enharden_nerves_requirements[3]
         elif ability_name == "Damnation":
-            special_ability_details = "Damn an enemy to take a high damage explosion after 3 turns"
+            special_ability_details = "Damn an enemy to take a high damage explosion after three turns"
             ability_cost = damnation_requirements[0]
             ability_gain = damnation_requirements[1]
             ability_cooldown = damnation_requirements[2]
@@ -21020,7 +21238,7 @@ class GameFrame(tk.Frame):
             ability_cooldown = superconductor_requirements[2]
             ability_remaining_cooldown = superconductor_requirements[3]
         elif ability_name == "Muscle Enlarger":
-            special_ability_details = "Increase an allies damage by 60% for 3 turns"
+            special_ability_details = "Increase an allies damage by 60% for three turns"
             ability_cost = muscle_enlarger_requirements[0]
             ability_gain = muscle_enlarger_requirements[1]
             ability_cooldown = muscle_enlarger_requirements[2]
@@ -21034,14 +21252,14 @@ class GameFrame(tk.Frame):
             ability_remaining_cooldown = mistic_bloom_requirements[3]
             ability_resource = 'Charge'
         elif ability_name == "Power Surge":
-            special_ability_details = "Deal damage to all enemies and apply 'Weakness' to them for 2 turns"
+            special_ability_details = "Deal damage to all enemies and apply 'Weakness' to them for two turns"
             ability_cost = power_surge_requirements[0]
             ability_gain = power_surge_requirements[1]
             ability_cooldown = power_surge_requirements[2]
             ability_remaining_cooldown = power_surge_requirements[3]
             ability_resource = 'Charges'
         elif ability_name == "Full Potential":
-            special_ability_details = "Increase an allies damage by 200% for 3 turns"
+            special_ability_details = "Increase an allies damage by 200% for three turns"
             ability_cost = full_potential_requirements[0]
             ability_gain = full_potential_requirements[1]
             ability_cooldown = full_potential_requirements[2]
@@ -21055,7 +21273,7 @@ class GameFrame(tk.Frame):
             ability_remaining_cooldown = spring_waters_requirements[3]
             ability_resource = 'Mana'
         elif ability_name == "Ocean Tides":
-            special_ability_details = "Heal all allies and extend the duration of any active 'Flowing Waters' buffs by 1 turn"
+            special_ability_details = "Heal all allies and extend the duration of any active 'Flowing Waters' buffs by one turn"
             ability_cost = ocean_tides_requirements[0]
             ability_gain = ocean_tides_requirements[1]
             ability_cooldown = ocean_tides_requirements[2]
@@ -21069,7 +21287,7 @@ class GameFrame(tk.Frame):
             ability_remaining_cooldown = boulder_cocoon_requirements[3]
             ability_resource = 'Mana'
         elif ability_name == "Healing Light":
-            special_ability_details = "Heal two allies and give them 'Blessed' for 5 turns."
+            special_ability_details = "Heal two allies and give them 'Blessed' for two turns."
             ability_cost = healing_light_requirements[0]
             ability_gain = healing_light_requirements[1]
             ability_cooldown = healing_light_requirements[2]
@@ -21083,7 +21301,7 @@ class GameFrame(tk.Frame):
             ability_remaining_cooldown = diffracting_nova_requirements[3]
             ability_resource = 'Mana'
         elif ability_name == "Overclock Nanobots":
-            special_ability_details = "Double the healing output of nanobots for 2 turns"
+            special_ability_details = "Double the healing output of nanobots for two turns"
             ability_cost = overclock_nanobots_requirements[0]
             ability_gain = overclock_nanobots_requirements[1]
             ability_cooldown = overclock_nanobots_requirements[2]
@@ -21127,30 +21345,30 @@ class GameFrame(tk.Frame):
         ability_description2 = ""
         if ability_cost != 0:
             if ability_gain != 0:
-                ability_description1 = "Ability Cost {} {} : Gain {} {}".format(ability_cost, ability_resource, ability_gain, ability_resource)
+                ability_description1 = "Ability Cost ({} {}) : Gain ({} {})".format(ability_cost, ability_resource, ability_gain, ability_resource)
             else:
-                ability_description1 = "Ability Cost {} {}".format(ability_cost, ability_resource)
+                ability_description1 = "Ability Cost ({} {})".format(ability_cost, ability_resource)
             ability_requirements1_label = tk.Label(root, text=ability_description1)
             ability_requirements1_label.grid(row=1, column=1)
         elif ability_gain != 0:
-            ability_description1 = "Gain {} {}".format(ability_gain, ability_resource)
+            ability_description1 = "Gain ({} {})".format(ability_gain, ability_resource)
             ability_requirements1_label = tk.Label(root, text=ability_description1)
             ability_requirements1_label.grid(row=1, column=1)
         if ability_cooldown != 0:
             if ability_remaining_cooldown != 0:
-                ability_description2 = "Ability Cooldown {} : Remaining Cooldown {}".format(ability_cooldown, ability_remaining_cooldown)
+                ability_description2 = "Ability Cooldown ({}) : Remaining Cooldown ({})".format(ability_cooldown, ability_remaining_cooldown)
             else:
-                ability_description2 = "Ability Cooldown {}".format(ability_cooldown)
+                ability_description2 = "Ability Cooldown ({})".format(ability_cooldown)
             ability_requirements2_label = tk.Label(root, text=ability_description2)
             ability_requirements2_label.grid(row=2, column=1)
             ability_description_label = tk.Label(root, text=special_ability_details)
             ability_description_label.grid(row=3, column=1)
-            close_button = tk.Button(root, text="Close", command=root.destroy)
+            close_button = tk.Button(root, text="Close Window", command=root.destroy)
             close_button.grid(row=4, column=1)
         else:
             ability_description_label = tk.Label(root, text=special_ability_details)
             ability_description_label.grid(row=2, column=1)
-            close_button = tk.Button(root, text="Close", command=root.destroy)
+            close_button = tk.Button(root, text="Close Window", command=root.destroy)
             close_button.grid(row=3, column=1)
     def passive_details_window(self, champion_name):
         root = tk.Tk()
@@ -21168,13 +21386,13 @@ class GameFrame(tk.Frame):
             passive_details = "You have a 30% chance to reduce the damage of attacks dependng on the enemies size class\nIf the damage is successfully reduced, the enemy is taunted for one turn\nAmount of damage reduced (Tiny > 50%, Small > 40%, Medium > 30%, Large > 20%, Huge > 15%)"
         elif champion_name == "Berserker": 
             passive_name = BERSERKER.passive
-            passive_details = "The Berserker deals more damage depending on the amount of enemies in combat, dealing more the less there are\n(5 Enemies > 100% : 4 Enemies > 110% : 3 Enemies > 120 : 2 Enemies > 135% : 1 Enemy > 150%)"
+            passive_details = "The Berserker deals more damage depending on the amount of enemies in combat, dealing more the less there are\n_________________________________________________________________________________________________________\n(5 Enemies > 100%)  (4 Enemies > 110%)  (3 Enemies > 120)  (2 Enemies > 135%)  (1 Enemy > 150%)"
         elif champion_name == "Rogue": 
             passive_name = ROGUE.passive
             passive_details = "The Rogues bleed damage is increased by 10% with each unquie bleed applied to the target\nBleeds that are applied by other champions also count towards this passive"
         elif champion_name == "Survivalist": 
             passive_name = SURVIVALIST.passive
-            passive_details = "After using a special, the Survivalist will gain 'Prepared'\nPrepared: Your next attack deals 50% extra damage"
+            passive_details = "After using a special, the Survivalist will gain 'Prepared'\n_______________________________________________________\nPrepared: Your next attack deals 50% extra damage"
         elif champion_name == "Brawlist": 
             passive_name = BRAWLIST.passive
             passive_details = "When the Brawlist attacks an enemy, the enemy takes extra damage from his next attack other than the one that left the debuff"
@@ -21186,13 +21404,13 @@ class GameFrame(tk.Frame):
             passive_details = "Enemies take 2% extra damage from all sources for each thorn embedded into them"
         elif champion_name == "Warlock": 
             passive_name = WARLOCK.passive
-            passive_details = "Whenever an enemy takes damage from the Warlock, they receive one stack of 'Touch of Corruption', up to 10 maximum\nTouch of Corruption: All damage dealt is reduced by 1% per stack"
+            passive_details = "Whenever an enemy takes damage from the Warlock, they receive one stack of 'Touch of Corruption', up to 10 maximum\n_______________________________________________________________________\nTouch of Corruption: All damage dealt is reduced by 1% per stack"
         elif champion_name == "Bloodmancer": 
             passive_name = BLOODMANCER.passive
             passive_details = "Whenever the Bloodmancer casts an empowered ability, the next ability an ally uses that heals or deals damage is amplified by 50%"
         elif champion_name == "Paladin": 
             passive_name = PALADIN.passive
-            passive_details = "Every two turns, the Paladin can choose to give all their allies either Power Aura or Protection Aura\n(Power Aura: Damage dealt is increased by 20%) (Protection Aura: Damage taken is reduced by 10%)"
+            passive_details = "Every two turns, the Paladin can choose to give all their allies either Power Aura or Protection Aura\n__________________________________________________________________________________________________________\n(Power Aura: Damage dealt is increased by 20%) (Protection Aura: Damage taken is reduced by 10%)"
         elif champion_name == "Ranger": 
             passive_name = LEGION_RANGER.passive
             passive_details = "Every three turns, the Ranger is given a choice of three random arrow tips that enhances their attacks\n"
@@ -21218,7 +21436,7 @@ class GameFrame(tk.Frame):
         passive_title_label.grid(row=0, column=1)
         passive_details_label = tk.Label(root, text=passive_details)
         passive_details_label.grid(row=1, column=1)
-        close_button = tk.Button(root, text="Close", command=root.destroy)
+        close_button = tk.Button(root, text="Close Window", command=root.destroy)
         close_button.grid(row=2, column=1)
     def champion_turn_switch(self, champion_position):
         global from_end_of_turn
@@ -21585,117 +21803,299 @@ class GameFrame(tk.Frame):
         target_list.append(target)
         if ability_data[2] == "1T":
             self.complete_turn()
-        elif ability_data[2] == "2T" or "3T":
+        else:
             self.clean_up()
             if ability_data[1] == "enemy":
-                if ability_data[2] == "3T":
-                    tt_confirmation_variable = 1
-                else:
-                    tt_confirmation_variable = 0
-                if AI_SPAWNED == 1:
-                    self.complete_turn()
-                elif AI_SPAWNED == 2:
-                    ai1_attacktarget_frame = tk.Button(dungeon_game_frame, text=self.target_frame_ai_champion_text("ai", 1),
-                                                    command=lambda: self.add_additonal_targets(1, tt_confirmation_variable))
-                    ai1_attacktarget_frame.grid(row=19, column=2, sticky="w")
-                    ai2_attacktarget_frame = tk.Button(dungeon_game_frame, text=self.target_frame_ai_champion_text("ai", 2),
-                                                    command=lambda: self.add_additonal_targets(2, tt_confirmation_variable))
-                    ai2_attacktarget_frame.grid(row=19, column=2, sticky="e")
-                    if ai1_hp == 0:
-                        ai1_attacktarget_frame["state"] = 'disable'
-                    elif target == 1:
-                        ai1_attacktarget_frame["state"] = 'disable'
-                    if ai2_hp == 0:
-                        ai2_attacktarget_frame["state"] = 'disable'
-                    elif target == 2:
-                        ai2_attacktarget_frame["state"] = 'disable'
-                elif AI_SPAWNED == 3:
-                    ai1_attacktarget_frame = tk.Button(dungeon_game_frame, text=self.target_frame_ai_champion_text("ai", 1),
-                                                    command=lambda: self.add_additonal_targets(1, tt_confirmation_variable))
-                    ai1_attacktarget_frame.grid(row=19, column=1)
-                    ai2_attacktarget_frame = tk.Button(dungeon_game_frame, text=self.target_frame_ai_champion_text("ai", 2),
-                                                    command=lambda: self.add_additonal_targets(2, tt_confirmation_variable))
-                    ai2_attacktarget_frame.grid(row=19, column=2)
-                    ai3_attacktarget_frame = tk.Button(dungeon_game_frame, text=self.target_frame_ai_champion_text("ai", 3),
-                                                    command=lambda: self.add_additonal_targets(3, tt_confirmation_variable))
-                    ai3_attacktarget_frame.grid(row=19, column=3)
-                    if ai1_hp == 0:
-                        ai1_attacktarget_frame["state"] = 'disable'
-                    elif target == 1:
-                        ai1_attacktarget_frame["state"] = 'disable'
-                    if ai2_hp == 0:
-                        ai2_attacktarget_frame["state"] = 'disable'
-                    elif target == 2:
-                        ai2_attacktarget_frame["state"] = 'disable'
-                    if ai3_hp == 0:
-                        ai3_attacktarget_frame["state"] = 'disable'
-                    elif target == 3:
-                        ai3_attacktarget_frame["state"] = 'disable'
-                elif AI_SPAWNED == 4:
-                    ai1_attacktarget_frame = tk.Button(dungeon_game_frame, text=self.target_frame_ai_champion_text("ai", 1),
-                                                    command=lambda: self.add_additonal_targets(1, tt_confirmation_variable))
-                    ai1_attacktarget_frame.grid(row=19, column=1, sticky="e")
-                    ai2_attacktarget_frame = tk.Button(dungeon_game_frame, text=self.target_frame_ai_champion_text("ai", 2),
-                                                    command=lambda: self.add_additonal_targets(2, tt_confirmation_variable))
-                    ai2_attacktarget_frame.grid(row=19, column=3, sticky="w")
-                    ai3_attacktarget_frame = tk.Button(dungeon_game_frame, text=self.target_frame_ai_champion_text("ai", 3),
-                                                    command=lambda: self.add_additonal_targets(3, tt_confirmation_variable))
-                    ai3_attacktarget_frame.grid(row=20, column=1, sticky="e")
-                    ai4_attacktarget_frame = tk.Button(dungeon_game_frame, text=self.target_frame_ai_champion_text("ai", 4),
-                                                    command=lambda: self.add_additonal_targets(4, tt_confirmation_variable))
-                    ai4_attacktarget_frame.grid(row=20, column=3, sticky="w")
-                    if ai1_hp == 0:
-                        ai1_attacktarget_frame["state"] = 'disable'
-                    elif target == 1:
-                        ai1_attacktarget_frame["state"] = 'disable'
-                    if ai2_hp == 0:
-                        ai2_attacktarget_frame["state"] = 'disable'
-                    elif target == 2:
-                        ai2_attacktarget_frame["state"] = 'disable'
-                    if ai3_hp == 0:
-                        ai3_attacktarget_frame["state"] = 'disable'
-                    elif target == 3:
-                        ai3_attacktarget_frame["state"] = 'disable'
-                    if ai4_hp == 0:
-                        ai4_attacktarget_frame["state"] = 'disable'
-                    elif target == 4:
-                        ai4_attacktarget_frame["state"] = 'disable'
-                elif AI_SPAWNED == 5:
-                    ai1_attacktarget_frame = tk.Button(dungeon_game_frame, text=self.target_frame_ai_champion_text("ai", 1),
-                                                    command=lambda: self.add_additonal_targets(1, tt_confirmation_variable))
-                    ai1_attacktarget_frame.grid(row=19, column=1)
-                    ai2_attacktarget_frame = tk.Button(dungeon_game_frame, text=self.target_frame_ai_champion_text("ai", 2),
-                                                    command=lambda: self.add_additonal_targets(2, tt_confirmation_variable))
-                    ai2_attacktarget_frame.grid(row=19, column=1, sticky="e")
-                    ai3_attacktarget_frame = tk.Button(dungeon_game_frame, text=self.target_frame_ai_champion_text("ai", 3),
-                                                    command=lambda: self.add_additonal_targets(3, tt_confirmation_variable))
-                    ai3_attacktarget_frame.grid(row=19, column=2)
-                    ai4_attacktarget_frame = tk.Button(dungeon_game_frame, text=self.target_frame_ai_champion_text("ai", 4),
-                                                    command=lambda: self.add_additonal_targets(4, tt_confirmation_variable))
-                    ai4_attacktarget_frame.grid(row=19, column=3, sticky="w")
-                    ai5_attacktarget_frame = tk.Button(dungeon_game_frame, text=self.target_frame_ai_champion_text("ai", 5),
-                                                    command=lambda: self.add_additonal_targets(5, tt_confirmation_variable))
-                    ai5_attacktarget_frame.grid(row=19, column=3)
-                    if ai1_hp == 0:
-                        ai1_attacktarget_frame["state"] = 'disable'
-                    elif target == 1:
-                        ai1_attacktarget_frame["state"] = 'disable'
-                    if ai2_hp == 0:
-                        ai2_attacktarget_frame["state"] = 'disable'
-                    elif target == 2:
-                        ai2_attacktarget_frame["state"] = 'disable'
-                    if ai3_hp == 0:
-                        ai3_attacktarget_frame["state"] = 'disable'
-                    elif target == 3:
-                        ai3_attacktarget_frame["state"] = 'disable'
-                    if ai4_hp == 0:
-                        ai4_attacktarget_frame["state"] = 'disable'
-                    elif target == 4:
-                        ai4_attacktarget_frame["state"] = 'disable'
-                    if ai5_hp == 0:
-                        ai5_attacktarget_frame["state"] = 'disable'
-                    elif target == 5:
-                        ai5_attacktarget_frame["state"] = 'disable'
+                if ability_data[2] == "2T":
+                    if AI_SPAWNED == 1:
+                        self.complete_turn()
+                    elif AI_SPAWNED == 2:
+                        disabled_frame_counter = 0
+                        ai1_attacktarget_frame = tk.Button(dungeon_game_frame, text=self.target_frame_ai_champion_text("ai", 1),
+                                                        command=lambda: self.add_additonal_targets(1))
+                        ai1_attacktarget_frame.grid(row=19, column=2, sticky="w")
+                        ai2_attacktarget_frame = tk.Button(dungeon_game_frame, text=self.target_frame_ai_champion_text("ai", 2),
+                                                        command=lambda: self.add_additonal_targets(2))
+                        ai2_attacktarget_frame.grid(row=19, column=2, sticky="e")
+                        if ai1_hp == 0:
+                            ai1_attacktarget_frame["state"] = 'disable'
+                            disabled_frame_counter = disabled_frame_counter + 1
+                        elif 1 in target_list:
+                            ai1_attacktarget_frame["state"] = 'disable'
+                            disabled_frame_counter = disabled_frame_counter + 1
+                        if ai2_hp == 0:
+                            ai2_attacktarget_frame["state"] = 'disable'
+                            disabled_frame_counter = disabled_frame_counter + 1
+                        elif 2 in target_list:
+                            ai2_attacktarget_frame["state"] = 'disable'
+                            disabled_frame_counter = disabled_frame_counter + 1
+                        if disabled_frame_counter == AI_SPAWNED:
+                            self.complete_turn()
+                    elif AI_SPAWNED == 3:
+                        disabled_frame_counter = 0
+                        ai1_attacktarget_frame = tk.Button(dungeon_game_frame, text=self.target_frame_ai_champion_text("ai", 1),
+                                                        command=lambda: self.add_additonal_targets(1))
+                        ai1_attacktarget_frame.grid(row=19, column=1)
+                        ai2_attacktarget_frame = tk.Button(dungeon_game_frame, text=self.target_frame_ai_champion_text("ai", 2),
+                                                        command=lambda: self.add_additonal_targets(2))
+                        ai2_attacktarget_frame.grid(row=19, column=2)
+                        ai3_attacktarget_frame = tk.Button(dungeon_game_frame, text=self.target_frame_ai_champion_text("ai", 3),
+                                                        command=lambda: self.add_additonal_targets(3))
+                        ai3_attacktarget_frame.grid(row=19, column=3)
+                        if ai1_hp == 0:
+                            ai1_attacktarget_frame["state"] = 'disable'
+                            disabled_frame_counter = disabled_frame_counter + 1
+                        elif 1 in target_list:
+                            ai1_attacktarget_frame["state"] = 'disable'
+                            disabled_frame_counter = disabled_frame_counter + 1
+                        if ai2_hp == 0:
+                            ai2_attacktarget_frame["state"] = 'disable'
+                            disabled_frame_counter = disabled_frame_counter + 1
+                        elif 2 in target_list:
+                            ai2_attacktarget_frame["state"] = 'disable'
+                            disabled_frame_counter = disabled_frame_counter + 1
+                        if ai3_hp == 0:
+                            ai3_attacktarget_frame["state"] = 'disable'
+                            disabled_frame_counter = disabled_frame_counter + 1
+                        elif 3 in target_list:
+                            ai3_attacktarget_frame["state"] = 'disable'
+                            disabled_frame_counter = disabled_frame_counter + 1
+                        if disabled_frame_counter == AI_SPAWNED:
+                            self.complete_turn()
+                    elif AI_SPAWNED == 4:
+                        disabled_frame_counter = 0
+                        ai1_attacktarget_frame = tk.Button(dungeon_game_frame, text=self.target_frame_ai_champion_text("ai", 1),
+                                                        command=lambda: self.add_additonal_targets(1))
+                        ai1_attacktarget_frame.grid(row=19, column=1, sticky="e")
+                        ai2_attacktarget_frame = tk.Button(dungeon_game_frame, text=self.target_frame_ai_champion_text("ai", 2),
+                                                        command=lambda: self.add_additonal_targets(2))
+                        ai2_attacktarget_frame.grid(row=19, column=3, sticky="w")
+                        ai3_attacktarget_frame = tk.Button(dungeon_game_frame, text=self.target_frame_ai_champion_text("ai", 3),
+                                                        command=lambda: self.add_additonal_targets(3))
+                        ai3_attacktarget_frame.grid(row=20, column=1, sticky="e")
+                        ai4_attacktarget_frame = tk.Button(dungeon_game_frame, text=self.target_frame_ai_champion_text("ai", 4),
+                                                        command=lambda: self.add_additonal_targets(4))
+                        ai4_attacktarget_frame.grid(row=20, column=3, sticky="w")
+                        if ai1_hp == 0:
+                            ai1_attacktarget_frame["state"] = 'disable'
+                            disabled_frame_counter = disabled_frame_counter + 1
+                        elif 1 in target_list:
+                            ai1_attacktarget_frame["state"] = 'disable'
+                            disabled_frame_counter = disabled_frame_counter + 1
+                        if ai2_hp == 0:
+                            ai2_attacktarget_frame["state"] = 'disable'
+                            disabled_frame_counter = disabled_frame_counter + 1
+                        elif 2 in target_list:
+                            ai2_attacktarget_frame["state"] = 'disable'
+                            disabled_frame_counter = disabled_frame_counter + 1
+                        if ai3_hp == 0:
+                            ai3_attacktarget_frame["state"] = 'disable'
+                            disabled_frame_counter = disabled_frame_counter + 1
+                        elif 3 in target_list:
+                            ai3_attacktarget_frame["state"] = 'disable'
+                            disabled_frame_counter = disabled_frame_counter + 1
+                        if ai4_hp == 0:
+                            ai4_attacktarget_frame["state"] = 'disable'
+                            disabled_frame_counter = disabled_frame_counter + 1
+                        elif 4 in target_list:
+                            ai4_attacktarget_frame["state"] = 'disable'
+                            disabled_frame_counter = disabled_frame_counter + 1
+                        if disabled_frame_counter == AI_SPAWNED:
+                            self.complete_turn()
+                    elif AI_SPAWNED == 5:
+                        disabled_frame_counter = 0
+                        ai1_attacktarget_frame = tk.Button(dungeon_game_frame, text=self.target_frame_ai_champion_text("ai", 1),
+                                                        command=lambda: self.add_additonal_targets(1))
+                        ai1_attacktarget_frame.grid(row=19, column=1)
+                        ai2_attacktarget_frame = tk.Button(dungeon_game_frame, text=self.target_frame_ai_champion_text("ai", 2),
+                                                        command=lambda: self.add_additonal_targets(2))
+                        ai2_attacktarget_frame.grid(row=19, column=1, sticky="e")
+                        ai3_attacktarget_frame = tk.Button(dungeon_game_frame, text=self.target_frame_ai_champion_text("ai", 3),
+                                                        command=lambda: self.add_additonal_targets(3))
+                        ai3_attacktarget_frame.grid(row=19, column=2)
+                        ai4_attacktarget_frame = tk.Button(dungeon_game_frame, text=self.target_frame_ai_champion_text("ai", 4),
+                                                        command=lambda: self.add_additonal_targets(4))
+                        ai4_attacktarget_frame.grid(row=19, column=3, sticky="w")
+                        ai5_attacktarget_frame = tk.Button(dungeon_game_frame, text=self.target_frame_ai_champion_text("ai", 5),
+                                                        command=lambda: self.add_additonal_targets(5))
+                        ai5_attacktarget_frame.grid(row=19, column=3)
+                        if ai1_hp == 0:
+                            ai1_attacktarget_frame["state"] = 'disable'
+                            disabled_frame_counter = disabled_frame_counter + 1
+                        elif 1 in target_list:
+                            ai1_attacktarget_frame["state"] = 'disable'
+                            disabled_frame_counter = disabled_frame_counter + 1
+                        if ai2_hp == 0:
+                            ai2_attacktarget_frame["state"] = 'disable'
+                            disabled_frame_counter = disabled_frame_counter + 1
+                        elif 2 in target_list:
+                            ai2_attacktarget_frame["state"] = 'disable'
+                            disabled_frame_counter = disabled_frame_counter + 1
+                        if ai3_hp == 0:
+                            ai3_attacktarget_frame["state"] = 'disable'
+                            disabled_frame_counter = disabled_frame_counter + 1
+                        elif 3 in target_list:
+                            ai3_attacktarget_frame["state"] = 'disable'
+                            disabled_frame_counter = disabled_frame_counter + 1
+                        if ai4_hp == 0:
+                            ai4_attacktarget_frame["state"] = 'disable'
+                            disabled_frame_counter = disabled_frame_counter + 1
+                        elif 4 in target_list:
+                            ai4_attacktarget_frame["state"] = 'disable'
+                            disabled_frame_counter = disabled_frame_counter + 1
+                        if ai5_hp == 0:
+                            ai5_attacktarget_frame["state"] = 'disable'
+                            disabled_frame_counter = disabled_frame_counter + 1
+                        elif 5 in target_list:
+                            ai5_attacktarget_frame["state"] = 'disable'
+                            disabled_frame_counter = disabled_frame_counter + 1
+                        if disabled_frame_counter == AI_SPAWNED:
+                            self.complete_turn()
+                elif ability_data[2] == "3T":
+                    if AI_SPAWNED == 1:
+                        self.complete_turn()
+                    elif AI_SPAWNED == 2:
+                        disabled_frame_counter = 0
+                        ai1_attacktarget_frame = tk.Button(dungeon_game_frame, text=self.target_frame_ai_champion_text("ai", 1),
+                                                        command=lambda: self.add_additonal_targets(1))
+                        ai1_attacktarget_frame.grid(row=19, column=2, sticky="w")
+                        ai2_attacktarget_frame = tk.Button(dungeon_game_frame, text=self.target_frame_ai_champion_text("ai", 2),
+                                                        command=lambda: self.add_additonal_targets(2))
+                        ai2_attacktarget_frame.grid(row=19, column=2, sticky="e")
+                        if ai1_hp == 0:
+                            ai1_attacktarget_frame["state"] = 'disable'
+                            disabled_frame_counter = disabled_frame_counter + 1
+                        elif 1 in target_list:
+                            ai1_attacktarget_frame["state"] = 'disable'
+                            disabled_frame_counter = disabled_frame_counter + 1
+                        if ai2_hp == 0:
+                            ai2_attacktarget_frame["state"] = 'disable'
+                            disabled_frame_counter = disabled_frame_counter + 1
+                        elif 2 in target_list:
+                            ai2_attacktarget_frame["state"] = 'disable'
+                            disabled_frame_counter = disabled_frame_counter + 1
+                        if disabled_frame_counter == AI_SPAWNED:
+                            self.complete_turn()
+                    elif AI_SPAWNED == 3:
+                        disabled_frame_counter = 0
+                        ai1_attacktarget_frame = tk.Button(dungeon_game_frame, text=self.target_frame_ai_champion_text("ai", 1),
+                                                        command=lambda: self.add_additonal_targets(1))
+                        ai1_attacktarget_frame.grid(row=19, column=1)
+                        ai2_attacktarget_frame = tk.Button(dungeon_game_frame, text=self.target_frame_ai_champion_text("ai", 2),
+                                                        command=lambda: self.add_additonal_targets(2))
+                        ai2_attacktarget_frame.grid(row=19, column=2)
+                        ai3_attacktarget_frame = tk.Button(dungeon_game_frame, text=self.target_frame_ai_champion_text("ai", 3),
+                                                        command=lambda: self.add_additonal_targets(3))
+                        ai3_attacktarget_frame.grid(row=19, column=3)
+                        if ai1_hp == 0:
+                            ai1_attacktarget_frame["state"] = 'disable'
+                            disabled_frame_counter = disabled_frame_counter + 1
+                        elif 1 in target_list:
+                            ai1_attacktarget_frame["state"] = 'disable'
+                            disabled_frame_counter = disabled_frame_counter + 1
+                        if ai2_hp == 0:
+                            ai2_attacktarget_frame["state"] = 'disable'
+                            disabled_frame_counter = disabled_frame_counter + 1
+                        elif 2 in target_list:
+                            ai2_attacktarget_frame["state"] = 'disable'
+                            disabled_frame_counter = disabled_frame_counter + 1
+                        if ai3_hp == 0:
+                            ai3_attacktarget_frame["state"] = 'disable'
+                            disabled_frame_counter = disabled_frame_counter + 1
+                        elif 3 in target_list:
+                            ai3_attacktarget_frame["state"] = 'disable'
+                            disabled_frame_counter = disabled_frame_counter + 1
+                        if disabled_frame_counter == AI_SPAWNED:
+                            self.complete_turn()
+                    elif AI_SPAWNED == 4:
+                        disabled_frame_counter = 0
+                        ai1_attacktarget_frame = tk.Button(dungeon_game_frame, text=self.target_frame_ai_champion_text("ai", 1),
+                                                        command=lambda: self.add_additonal_targets(1))
+                        ai1_attacktarget_frame.grid(row=19, column=1, sticky="e")
+                        ai2_attacktarget_frame = tk.Button(dungeon_game_frame, text=self.target_frame_ai_champion_text("ai", 2),
+                                                        command=lambda: self.add_additonal_targets(2))
+                        ai2_attacktarget_frame.grid(row=19, column=3, sticky="w")
+                        ai3_attacktarget_frame = tk.Button(dungeon_game_frame, text=self.target_frame_ai_champion_text("ai", 3),
+                                                        command=lambda: self.add_additonal_targets(3))
+                        ai3_attacktarget_frame.grid(row=20, column=1, sticky="e")
+                        ai4_attacktarget_frame = tk.Button(dungeon_game_frame, text=self.target_frame_ai_champion_text("ai", 4),
+                                                        command=lambda: self.add_additonal_targets(4))
+                        ai4_attacktarget_frame.grid(row=20, column=3, sticky="w")
+                        if ai1_hp == 0:
+                            ai1_attacktarget_frame["state"] = 'disable'
+                            disabled_frame_counter = disabled_frame_counter + 1
+                        elif 1 in target_list:
+                            ai1_attacktarget_frame["state"] = 'disable'
+                            disabled_frame_counter = disabled_frame_counter + 1
+                        if ai2_hp == 0:
+                            ai2_attacktarget_frame["state"] = 'disable'
+                            disabled_frame_counter = disabled_frame_counter + 1
+                        elif 2 in target_list:
+                            ai2_attacktarget_frame["state"] = 'disable'
+                            disabled_frame_counter = disabled_frame_counter + 1
+                        if ai3_hp == 0:
+                            ai3_attacktarget_frame["state"] = 'disable'
+                            disabled_frame_counter = disabled_frame_counter + 1
+                        elif 3 in target_list:
+                            ai3_attacktarget_frame["state"] = 'disable'
+                            disabled_frame_counter = disabled_frame_counter + 1
+                        if ai4_hp == 0:
+                            ai4_attacktarget_frame["state"] = 'disable'
+                            disabled_frame_counter = disabled_frame_counter + 1
+                        elif 4 in target_list:
+                            ai4_attacktarget_frame["state"] = 'disable'
+                            disabled_frame_counter = disabled_frame_counter + 1
+                        if disabled_frame_counter == AI_SPAWNED:
+                            self.complete_turn()
+                    elif AI_SPAWNED == 5:
+                        disabled_frame_counter = 0
+                        ai1_attacktarget_frame = tk.Button(dungeon_game_frame, text=self.target_frame_ai_champion_text("ai", 1),
+                                                        command=lambda: self.add_additonal_targets(1))
+                        ai1_attacktarget_frame.grid(row=19, column=1)
+                        ai2_attacktarget_frame = tk.Button(dungeon_game_frame, text=self.target_frame_ai_champion_text("ai", 2),
+                                                        command=lambda: self.add_additonal_targets(2))
+                        ai2_attacktarget_frame.grid(row=19, column=1, sticky="e")
+                        ai3_attacktarget_frame = tk.Button(dungeon_game_frame, text=self.target_frame_ai_champion_text("ai", 3),
+                                                        command=lambda: self.add_additonal_targets(3))
+                        ai3_attacktarget_frame.grid(row=19, column=2)
+                        ai4_attacktarget_frame = tk.Button(dungeon_game_frame, text=self.target_frame_ai_champion_text("ai", 4),
+                                                        command=lambda: self.add_additonal_targets(4))
+                        ai4_attacktarget_frame.grid(row=19, column=3, sticky="w")
+                        ai5_attacktarget_frame = tk.Button(dungeon_game_frame, text=self.target_frame_ai_champion_text("ai", 5),
+                                                        command=lambda: self.add_additonal_targets(5))
+                        ai5_attacktarget_frame.grid(row=19, column=3)
+                        if ai1_hp == 0:
+                            ai1_attacktarget_frame["state"] = 'disable'
+                            disabled_frame_counter = disabled_frame_counter + 1
+                        elif 1 in target_list:
+                            ai1_attacktarget_frame["state"] = 'disable'
+                            disabled_frame_counter = disabled_frame_counter + 1
+                        if ai2_hp == 0:
+                            ai2_attacktarget_frame["state"] = 'disable'
+                            disabled_frame_counter = disabled_frame_counter + 1
+                        elif 2 in target_list:
+                            ai2_attacktarget_frame["state"] = 'disable'
+                            disabled_frame_counter = disabled_frame_counter + 1
+                        if ai3_hp == 0:
+                            ai3_attacktarget_frame["state"] = 'disable'
+                            disabled_frame_counter = disabled_frame_counter + 1
+                        elif 3 in target_list:
+                            ai3_attacktarget_frame["state"] = 'disable'
+                            disabled_frame_counter = disabled_frame_counter + 1
+                        if ai4_hp == 0:
+                            ai4_attacktarget_frame["state"] = 'disable'
+                            disabled_frame_counter = disabled_frame_counter + 1
+                        elif 4 in target_list:
+                            ai4_attacktarget_frame["state"] = 'disable'
+                            disabled_frame_counter = disabled_frame_counter + 1
+                        if ai5_hp == 0:
+                            ai5_attacktarget_frame["state"] = 'disable'
+                            disabled_frame_counter = disabled_frame_counter + 1
+                        elif 5 in target_list:
+                            ai5_attacktarget_frame["state"] = 'disable'
+                            disabled_frame_counter = disabled_frame_counter + 1
+                        if disabled_frame_counter == AI_SPAWNED:
+                            self.complete_turn()
             elif ability_data[1] == "ally":
                 if champion1_hp and champion2_hp and champion3_hp and champion4_hp == 0:
                     self.complete_turn()
@@ -21743,105 +22143,138 @@ class GameFrame(tk.Frame):
                         champion5_supporttarget_frame["state"] = 'disable'
                     elif target == 5:
                         champion5_supporttarget_frame["state"] = 'disable'
-            
-    def add_additonal_targets(self, next_target, confirm_new_target):
+    def add_additonal_targets(self, next_target):
         global target_list
         target_list.append(next_target)
-        if confirm_new_target == 0:
+        if ability_data[2] == "2T":
             self.complete_turn()
-        if confirm_new_target == 1:
-            self.clean_up()
-            if AI_SPAWNED == 1:
-                self.complete_turn()
-            elif AI_SPAWNED == 2:
-                self.complete_turn()
-            elif AI_SPAWNED == 3:
+        elif ability_data[2] == "3T":
+            if len(target_list) < 3:
+                self.clean_up()
+                if AI_SPAWNED == 1:
+                    self.complete_turn()
+                elif AI_SPAWNED == 2:
+                    self.complete_turn()
+                elif AI_SPAWNED == 3:
+                    disabled_frame_counter = 0
                     ai1_attacktarget_frame = tk.Button(dungeon_game_frame, text=self.target_frame_ai_champion_text("ai", 1),
-                                                    command=lambda: self.add_additonal_targets(1, 0))
+                                                    command=lambda: self.add_additonal_targets(1))
                     ai1_attacktarget_frame.grid(row=19, column=1)
                     ai2_attacktarget_frame = tk.Button(dungeon_game_frame, text=self.target_frame_ai_champion_text("ai", 2),
-                                                    command=lambda: self.add_additonal_targets(2, 0))
+                                                    command=lambda: self.add_additonal_targets(2))
                     ai2_attacktarget_frame.grid(row=19, column=2)
                     ai3_attacktarget_frame = tk.Button(dungeon_game_frame, text=self.target_frame_ai_champion_text("ai", 3),
-                                                    command=lambda: self.add_additonal_targets(3, 0))
+                                                    command=lambda: self.add_additonal_targets(3))
                     ai3_attacktarget_frame.grid(row=19, column=3)
                     if ai1_hp == 0:
                         ai1_attacktarget_frame["state"] = 'disable'
+                        disabled_frame_counter = disabled_frame_counter + 1
                     elif 1 in target_list:
                         ai1_attacktarget_frame["state"] = 'disable'
+                        disabled_frame_counter = disabled_frame_counter + 1
                     if ai2_hp == 0:
                         ai2_attacktarget_frame["state"] = 'disable'
+                        disabled_frame_counter = disabled_frame_counter + 1
                     elif 2 in target_list:
                         ai2_attacktarget_frame["state"] = 'disable'
+                        disabled_frame_counter = disabled_frame_counter + 1
                     if ai3_hp == 0:
                         ai3_attacktarget_frame["state"] = 'disable'
+                        disabled_frame_counter = disabled_frame_counter + 1
                     elif 3 in target_list:
                         ai3_attacktarget_frame["state"] = 'disable'
-            elif AI_SPAWNED == 4:
+                        disabled_frame_counter = disabled_frame_counter + 1
+                    if disabled_frame_counter == AI_SPAWNED:
+                        self.complete_turn()
+                elif AI_SPAWNED == 4:
+                    disabled_frame_counter = 0
                     ai1_attacktarget_frame = tk.Button(dungeon_game_frame, text=self.target_frame_ai_champion_text("ai", 1),
-                                                    command=lambda: self.add_additonal_targets(1, 0))
+                                                    command=lambda: self.add_additonal_targets(1))
                     ai1_attacktarget_frame.grid(row=19, column=1, sticky="e")
                     ai2_attacktarget_frame = tk.Button(dungeon_game_frame, text=self.target_frame_ai_champion_text("ai", 2),
-                                                    command=lambda: self.add_additonal_targets(2, 0))
+                                                    command=lambda: self.add_additonal_targets(2))
                     ai2_attacktarget_frame.grid(row=19, column=3, sticky="w")
                     ai3_attacktarget_frame = tk.Button(dungeon_game_frame, text=self.target_frame_ai_champion_text("ai", 3),
-                                                    command=lambda: self.add_additonal_targets(3, 0))
+                                                    command=lambda: self.add_additonal_targets(3))
                     ai3_attacktarget_frame.grid(row=20, column=1, sticky="e")
                     ai4_attacktarget_frame = tk.Button(dungeon_game_frame, text=self.target_frame_ai_champion_text("ai", 4),
-                                                    command=lambda: self.add_additonal_targets(4, 0))
+                                                    command=lambda: self.add_additonal_targets(4))
                     ai4_attacktarget_frame.grid(row=20, column=3, sticky="w")
                     if ai1_hp == 0:
                         ai1_attacktarget_frame["state"] = 'disable'
+                        disabled_frame_counter = disabled_frame_counter + 1
                     elif 1 in target_list:
                         ai1_attacktarget_frame["state"] = 'disable'
+                        disabled_frame_counter = disabled_frame_counter + 1
                     if ai2_hp == 0:
                         ai2_attacktarget_frame["state"] = 'disable'
+                        disabled_frame_counter = disabled_frame_counter + 1
                     elif 2 in target_list:
                         ai2_attacktarget_frame["state"] = 'disable'
+                        disabled_frame_counter = disabled_frame_counter + 1
                     if ai3_hp == 0:
                         ai3_attacktarget_frame["state"] = 'disable'
+                        disabled_frame_counter = disabled_frame_counter + 1
                     elif 3 in target_list:
                         ai3_attacktarget_frame["state"] = 'disable'
+                        disabled_frame_counter = disabled_frame_counter + 1
                     if ai4_hp == 0:
                         ai4_attacktarget_frame["state"] = 'disable'
+                        disabled_frame_counter = disabled_frame_counter + 1
                     elif 4 in target_list:
                         ai4_attacktarget_frame["state"] = 'disable'
-            elif AI_SPAWNED == 5:
+                        disabled_frame_counter = disabled_frame_counter + 1
+                    if disabled_frame_counter == AI_SPAWNED:
+                        self.complete_turn()
+                elif AI_SPAWNED == 5:
+                    disabled_frame_counter = 0
                     ai1_attacktarget_frame = tk.Button(dungeon_game_frame, text=self.target_frame_ai_champion_text("ai", 1),
-                                                    command=lambda: self.add_additonal_targets(1, 0))
+                                            command=lambda: self.add_additonal_targets(1))
                     ai1_attacktarget_frame.grid(row=19, column=1)
                     ai2_attacktarget_frame = tk.Button(dungeon_game_frame, text=self.target_frame_ai_champion_text("ai", 2),
-                                                    command=lambda: self.add_additonal_targets(2, 0))
+                                            command=lambda: self.add_additonal_targets(2))
                     ai2_attacktarget_frame.grid(row=19, column=1, sticky="e")
                     ai3_attacktarget_frame = tk.Button(dungeon_game_frame, text=self.target_frame_ai_champion_text("ai", 3),
-                                                    command=lambda: self.add_additonal_targets(3, 0))
+                                            command=lambda: self.add_additonal_targets(3))
                     ai3_attacktarget_frame.grid(row=19, column=2)
                     ai4_attacktarget_frame = tk.Button(dungeon_game_frame, text=self.target_frame_ai_champion_text("ai", 4),
-                                                    command=lambda: self.add_additonal_targets(4, 0))
+                                            command=lambda: self.add_additonal_targets(4))
                     ai4_attacktarget_frame.grid(row=19, column=3, sticky="w")
                     ai5_attacktarget_frame = tk.Button(dungeon_game_frame, text=self.target_frame_ai_champion_text("ai", 5),
-                                                    command=lambda: self.add_additonal_targets(5, 0))
+                                            command=lambda: self.add_additonal_targets(5))
                     ai5_attacktarget_frame.grid(row=19, column=3)
                     if ai1_hp == 0:
                         ai1_attacktarget_frame["state"] = 'disable'
+                        disabled_frame_counter = disabled_frame_counter + 1
                     elif 1 in target_list:
                         ai1_attacktarget_frame["state"] = 'disable'
+                        disabled_frame_counter = disabled_frame_counter + 1
                     if ai2_hp == 0:
                         ai2_attacktarget_frame["state"] = 'disable'
+                        disabled_frame_counter = disabled_frame_counter + 1
                     elif 2 in target_list:
                         ai2_attacktarget_frame["state"] = 'disable'
+                        disabled_frame_counter = disabled_frame_counter + 1
                     if ai3_hp == 0:
                         ai3_attacktarget_frame["state"] = 'disable'
+                        disabled_frame_counter = disabled_frame_counter + 1
                     elif 3 in target_list:
                         ai3_attacktarget_frame["state"] = 'disable'
+                        disabled_frame_counter = disabled_frame_counter + 1
                     if ai4_hp == 0:
                         ai4_attacktarget_frame["state"] = 'disable'
+                        disabled_frame_counter = disabled_frame_counter + 1
                     elif 4 in target_list:
                         ai4_attacktarget_frame["state"] = 'disable'
+                        disabled_frame_counter = disabled_frame_counter + 1
                     if ai5_hp == 0:
                         ai5_attacktarget_frame["state"] = 'disable'
+                        disabled_frame_counter = disabled_frame_counter + 1
                     elif 5 in target_list:
                         ai5_attacktarget_frame["state"] = 'disable'
+                        disabled_frame_counter = disabled_frame_counter + 1
+                    if disabled_frame_counter == AI_SPAWNED:
+                        self.complete_turn()
 
     def complete_turn(self):
         global champion1_turnover, champion2_turnover, champion3_turnover, champion4_turnover, champion5_turnover, from_end_of_turn
@@ -21867,7 +22300,7 @@ class GameFrame(tk.Frame):
 
     def finalise_damage_dealt(self):
         global ai1_hp, ai2_hp, ai3_hp, ai4_hp, ai5_hp, champion1_hp, champion2_hp, champion3_hp, champion4_hp, champion5_hp, \
-            reckless_flurry_buff, ai1_statuses, ai2_statuses, ai3_statuses, ai4_statuses, ai5_statuses, \
+            reckless_flurry_buff, berserker_passive, ai1_statuses, ai2_statuses, ai3_statuses, ai4_statuses, ai5_statuses, \
             ai1_rottingDot, ai2_rottingDot, ai3_rottingDot, ai4_rottingDot, ai5_rottingDot, prepare_buff, \
             ai1_hh_db, ai2_hh_db, ai3_hh_db, ai4_hh_db, ai5_hh_db, \
             ai1_ws_db, ai2_ws_db, ai3_ws_db, ai4_ws_db, ai5_ws_db, \
@@ -21881,59 +22314,59 @@ class GameFrame(tk.Frame):
             channelling_strength = 0
         if ability_data[0] == "Palm Strike":
             if 1 in target_list:
-                ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1))
+                ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(1))
                 self.apply_taunt(1, MONK.title, 2)
             if 2 in target_list:
-                ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2))
+                ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(2))
                 self.apply_taunt(2, MONK.title, 2)
             if 3 in target_list:
-                ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3))
+                ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(3))
                 self.apply_taunt(3, MONK.title, 2)
             if 4 in target_list:
-                ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4))
+                ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(4))
                 self.apply_taunt(4, MONK.title, 2)
             if 5 in target_list:
-                ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5))
+                ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(5))
                 self.apply_taunt(5, MONK.title, 2)
         elif ability_data[0] == "Leg Sweep":
             if 1 in target_list:
-                ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1))
+                ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(1))
                 self.apply_stun(1, 1)
             if 2 in target_list:
-                ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2))
+                ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(2))
                 self.apply_stun(2, 1)
             if 3 in target_list:
-                ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3))
+                ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(3))
                 self.apply_stun(3, 1)
             if 4 in target_list:
-                ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4))
+                ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(4))
                 self.apply_stun(4, 1)
             if 5 in target_list:
-                ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5))
+                ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(5))
                 self.apply_stun(5, 1)
         elif ability_data[0] == "Pressure Points":
             if 1 in target_list:
-                if ai1_hp < AI_GROUP_HP * 0.3:
+                if ai1_hp < (AI_GROUP_HP + ai_health_modifier) * 0.3:
                     ai1_hp = 0
                 else:
                     self.apply_stun(1, 3)
             if 2 in target_list:
-                if ai2_hp < AI_GROUP_HP * 0.3:
+                if ai2_hp < (AI_GROUP_HP + ai_health_modifier) * 0.3:
                     ai2_hp = 0
                 else:
                     self.apply_stun(2, 3)
             if 3 in target_list:
-                if ai3_hp < AI_GROUP_HP * 0.3:
+                if ai3_hp < (AI_GROUP_HP + ai_health_modifier) * 0.3:
                     ai3_hp = 0
                 else:
                     self.apply_stun(3, 3)
             if 4 in target_list:
-                if ai4_hp < AI_GROUP_HP * 0.3:
+                if ai4_hp < (AI_GROUP_HP + ai_health_modifier) * 0.3:
                     ai4_hp = 0
                 else:
                     self.apply_stun(4, 3)
             if 5 in target_list:
-                if ai5_hp < AI_GROUP_HP * 0.3:
+                if ai5_hp < (AI_GROUP_HP + ai_health_modifier) * 0.3:
                     ai5_hp = 0
                 else:
                     self.apply_stun(5, 3)
@@ -21980,128 +22413,128 @@ class GameFrame(tk.Frame):
             else:
                 ability_data[3] = ability_data[3]
             if 1 in target_list:
-                ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1))
+                ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(1))
                 for champions in CHAMPION_LIST:
                     counter += 1
                     if champions == BARBARIAN.title:
                         if counter == 1:
-                            champion1_hp = champion1_hp + math.ceil(ability_data[3] * self.check_brittle(1) / 2)
+                            champion1_hp = champion1_hp + math.ceil(ability_data[3] * self.check_enemy_vunerability(1) / 2)
                             if champion1_hp > CHAMPION1_HP:
                                  champion1_hp = CHAMPION1_HP
                         elif counter == 2:
-                            champion2_hp = champion2_hp + math.ceil(ability_data[3] * self.check_brittle(1) / 2)
+                            champion2_hp = champion2_hp + math.ceil(ability_data[3] * self.check_enemy_vunerability(1) / 2)
                             if champion2_hp > CHAMPION2_HP:
                                  champion2_hp = CHAMPION2_HP
                         elif counter == 3:
-                            champion3_hp = champion3_hp + math.ceil(ability_data[3] * self.check_brittle(1) / 2)
+                            champion3_hp = champion3_hp + math.ceil(ability_data[3] * self.check_enemy_vunerability(1) / 2)
                             if champion3_hp > CHAMPION3_HP:
                                  champion3_hp = CHAMPION3_HP
                         elif counter == 4:
-                            champion4_hp = champion4_hp + math.ceil(ability_data[3] * self.check_brittle(1) / 2)
+                            champion4_hp = champion4_hp + math.ceil(ability_data[3] * self.check_enemy_vunerability(1) / 2)
                             if champion4_hp > CHAMPION4_HP:
                                  champion4_hp = CHAMPION4_HP
                         elif counter == 5:
-                            champion5_hp = champion5_hp + math.ceil(ability_data[3] * self.check_brittle(1) / 2)
+                            champion5_hp = champion5_hp + math.ceil(ability_data[3] * self.check_enemy_vunerability(1) / 2)
                             if champion5_hp > CHAMPION5_HP:
                                 champion5_hp = CHAMPION5_HP
             if 2 in target_list:
-                ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2))
+                ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(2))
                 for champions in CHAMPION_LIST:
                     counter += 1
                     if champions == BARBARIAN.title:
                         if counter == 1:
-                            champion1_hp = champion1_hp + math.ceil(math.ceil(ability_data[3] * self.check_brittle(2)) / 2)
+                            champion1_hp = champion1_hp + math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(2)) / 2)
                             if champion1_hp > CHAMPION1_HP:
                                 champion1_hp = CHAMPION1_HP
                         elif counter == 2:
-                            champion2_hp = champion2_hp + math.ceil(math.ceil(ability_data[3] * self.check_brittle(2)) / 2)
+                            champion2_hp = champion2_hp + math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(2)) / 2)
                             if champion2_hp > CHAMPION2_HP:
                                 champion2_hp = CHAMPION2_HP
                         elif counter == 3:
-                            champion3_hp = champion3_hp + math.ceil(math.ceil(ability_data[3] * self.check_brittle(2)) / 2)
+                            champion3_hp = champion3_hp + math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(2)) / 2)
                             if champion3_hp > CHAMPION3_HP:
                                 champion3_hp = CHAMPION3_HP
                         elif counter == 4:
-                            champion4_hp = champion4_hp + math.ceil(math.ceil(ability_data[3] * self.check_brittle(2)) / 2)
+                            champion4_hp = champion4_hp + math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(2)) / 2)
                             if champion4_hp > CHAMPION4_HP:
                                 champion4_hp = CHAMPION4_HP
                         elif counter == 5:
-                            champion5_hp = champion5_hp + math.ceil(math.ceil(ability_data[3] * self.check_brittle(2)) / 2)
+                            champion5_hp = champion5_hp + math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(2)) / 2)
                             if champion5_hp > CHAMPION5_HP:
                                 champion5_hp = CHAMPION5_HP
             if 3 in target_list:
-                ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3))
+                ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(3))
                 for champions in CHAMPION_LIST:
                     counter += 1
                     if champions == BARBARIAN.title:
                         if counter == 1:
-                            champion1_hp = champion1_hp + math.ceil(math.ceil(ability_data[3] * self.check_brittle(3)) / 2)
+                            champion1_hp = champion1_hp + math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(3)) / 2)
                             if champion1_hp > CHAMPION1_HP:
                                 champion1_hp = CHAMPION1_HP
                         elif counter == 2:
-                            champion2_hp = champion2_hp + math.ceil(math.ceil(ability_data[3] * self.check_brittle(3)) / 2)
+                            champion2_hp = champion2_hp + math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(3)) / 2)
                             if champion2_hp > CHAMPION2_HP:
                                 champion2_hp = CHAMPION2_HP
                         elif counter == 3:
-                            champion3_hp = champion3_hp + math.ceil(math.ceil(ability_data[3] * self.check_brittle(3)) / 2)
+                            champion3_hp = champion3_hp + math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(3)) / 2)
                             if champion3_hp > CHAMPION3_HP:
                                 champion3_hp = CHAMPION3_HP
                         elif counter == 4:
-                            champion4_hp = champion4_hp + math.ceil(math.ceil(ability_data[3] * self.check_brittle(3)) / 2)
+                            champion4_hp = champion4_hp + math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(3)) / 2)
                             if champion4_hp > CHAMPION4_HP:
                                 champion4_hp = CHAMPION4_HP
                         elif counter == 5:
-                            champion5_hp = champion5_hp + math.ceil(math.ceil(ability_data[3] * self.check_brittle(3)) / 2)
+                            champion5_hp = champion5_hp + math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(3)) / 2)
                             if champion5_hp > CHAMPION5_HP:
                                 champion5_hp = CHAMPION5_HP
             if 4 in target_list:
-                ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4))
+                ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(4))
                 for champions in CHAMPION_LIST:
                     counter += 1
                     if champions == BARBARIAN.title:
                         if counter == 1:
-                            champion1_hp = champion1_hp + math.ceil(math.ceil(ability_data[3] * self.check_brittle(4)) / 2)
+                            champion1_hp = champion1_hp + math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(4)) / 2)
                             if champion1_hp > CHAMPION1_HP:
                                 champion1_hp = CHAMPION1_HP
                         elif counter == 2:
-                            champion2_hp = champion2_hp + math.ceil(math.ceil(ability_data[3] * self.check_brittle(4)) / 2)
+                            champion2_hp = champion2_hp + math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(4)) / 2)
                             if champion2_hp > CHAMPION2_HP:
                                 champion2_hp = CHAMPION2_HP
                         elif counter == 3:
-                            champion3_hp = champion3_hp + math.ceil(math.ceil(ability_data[3] * self.check_brittle(4)) / 2)
+                            champion3_hp = champion3_hp + math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(4)) / 2)
                             if champion3_hp > CHAMPION3_HP:
                                 champion3_hp = CHAMPION3_HP
                         elif counter == 4:
-                            champion4_hp = champion4_hp + math.ceil(math.ceil(ability_data[3] * self.check_brittle(4)) / 2)
+                            champion4_hp = champion4_hp + math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(4)) / 2)
                             if champion4_hp > CHAMPION4_HP:
                                 champion4_hp = CHAMPION4_HP
                         elif counter == 5:
-                            champion5_hp = champion5_hp + math.ceil(math.ceil(ability_data[3] * self.check_brittle(4)) / 2)
+                            champion5_hp = champion5_hp + math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(4)) / 2)
                             if champion5_hp > CHAMPION5_HP:
                                 champion5_hp = CHAMPION5_HP
             if 5 in target_list:
-                ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5))
+                ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(5))
                 for champions in CHAMPION_LIST:
                     counter += 1
                     if champions == BARBARIAN.title:
                         if counter == 1:
-                            champion1_hp = champion1_hp + math.ceil(math.ceil(ability_data[3] * self.check_brittle(5)) / 2)
+                            champion1_hp = champion1_hp + math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(5)) / 2)
                             if champion1_hp > CHAMPION1_HP:
                                 champion1_hp = CHAMPION1_HP
                         elif counter == 2:
-                            champion2_hp = champion2_hp + math.ceil(math.ceil(ability_data[3] * self.check_brittle(5)) / 2)
+                            champion2_hp = champion2_hp + math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(5)) / 2)
                             if champion2_hp > CHAMPION2_HP:
                                 champion2_hp = CHAMPION2_HP
                         elif counter == 3:
-                            champion3_hp = champion3_hp + math.ceil(math.ceil(ability_data[3] * self.check_brittle(5)) / 2)
+                            champion3_hp = champion3_hp + math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(5)) / 2)
                             if champion3_hp > CHAMPION3_HP:
                                 champion3_hp = CHAMPION3_HP
                         elif counter == 4:
-                            champion4_hp = champion4_hp + math.ceil(math.ceil(ability_data[3] * self.check_brittle(5)) / 2)
+                            champion4_hp = champion4_hp + math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(5)) / 2)
                             if champion4_hp > CHAMPION4_HP:
                                 champion4_hp = CHAMPION4_HP
                         elif counter == 5:
-                            champion5_hp = champion5_hp + math.ceil(math.ceil(ability_data[3] * self.check_brittle(5)) / 2)
+                            champion5_hp = champion5_hp + math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(5)) / 2)
                             if champion5_hp > CHAMPION5_HP:
                                 champion5_hp = CHAMPION5_HP
             ability_data[3] = temp_ability_data
@@ -22148,68 +22581,68 @@ class GameFrame(tk.Frame):
             else:
                 ability_data[3] = ability_data[3]
             if 1 in target_list:
-                ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1))
+                ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(1))
                 self.apply_taunt(1, BARBARIAN.title, 1)
             if 2 in target_list:
-                ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2))
+                ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(2))
                 self.apply_taunt(2, BARBARIAN.title, 1)
             if 3 in target_list:
-                ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3))
+                ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(3))
                 self.apply_taunt(3, BARBARIAN.title, 1)
             if 4 in target_list:
-                ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4))
+                ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(4))
                 self.apply_taunt(4, BARBARIAN.title, 1)
             if 5 in target_list:
-                ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5))
+                ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(5))
                 self.apply_taunt(5, BARBARIAN.title, 1)
             ability_data[3] = temp_ability_data
         elif ability_data[0] == "Shield Bash":
             if 1 in target_list:
-                ai1_hp = ai1_hp -math.ceil(ability_data[3] * self.check_brittle(1))
+                ai1_hp = ai1_hp -math.ceil(ability_data[3] * self.check_enemy_vunerability(1))
                 self.apply_weakness(1, 2)
             if 2 in target_list:
-                ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2))
+                ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(2))
                 self.apply_weakness(2, 2)
             if 3 in target_list:
-                ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3))
+                ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(3))
                 self.apply_weakness(3, 2)
             if 4 in target_list:
-                ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4))
+                ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(4))
                 self.apply_weakness(4, 2)
             if 5 in target_list:
-                ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5))
+                ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(5))
                 self.apply_weakness(5, 2)
         elif ability_data[0] == "Trainwreck":
             if 1 in target_list:
-                ai1_hp = ai1_hp -math.ceil(ability_data[3] * self.check_brittle(1)) * 3
+                ai1_hp = ai1_hp -math.ceil(ability_data[3] * self.check_enemy_vunerability(1)) * 3
             if 2 in target_list:
-                ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2)) * 3
+                ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(2)) * 3
             if 3 in target_list:
-                ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3)) * 3
+                ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(3)) * 3
             if 4 in target_list:
-                ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4)) * 3
+                ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(4)) * 3
             if 5 in target_list:
-                ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5)) * 3
+                ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(5)) * 3
         elif ability_data[0] == "Flanking Strikes":
             global ai1_fencer_dodgechance, ai2_fencer_dodgechance, ai3_fencer_dodgechance, ai4_fencer_dodgechance, ai5_fencer_dodgechance
             if 1 in target_list:
-                ai1_hp = ai1_hp -math.ceil(ability_data[3] * self.check_brittle(1))
+                ai1_hp = ai1_hp -math.ceil(ability_data[3] * self.check_enemy_vunerability(1))
                 if MASTER_FENCER.title in ai1_attack_intention:
                     ai1_fencer_dodgechance = ai1_fencer_dodgechance + 40
             if 2 in target_list:
-                ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2))
+                ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(2))
                 if MASTER_FENCER.title in ai2_attack_intention:
                     ai2_fencer_dodgechance = ai2_fencer_dodgechance + 40
             if 3 in target_list:
-                ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3))
+                ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(3))
                 if MASTER_FENCER.title in ai3_attack_intention:
                     ai3_fencer_dodgechance = ai3_fencer_dodgechance + 40
             if 4 in target_list:
-                ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4))
+                ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(4))
                 if MASTER_FENCER.title in ai4_attack_intention:
                     ai4_fencer_dodgechance = ai4_fencer_dodgechance + 40
             if 5 in target_list:
-                ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5))
+                ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(5))
                 if MASTER_FENCER.title in ai5_attack_intention:
                     ai5_fencer_dodgechance = ai5_fencer_dodgechance + 40
         elif ability_data[0] == "Riposte":
@@ -22360,37 +22793,37 @@ class GameFrame(tk.Frame):
                     berserker_passive = 1
             if reckless_flurry_buff != 0:
                 if AI_SPAWNED == 1:
-                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1) * berserker_passive)
+                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(1) * berserker_passive)
                 if AI_SPAWNED == 2:
-                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1) * berserker_passive)
-                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2) * berserker_passive)
+                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(1) * berserker_passive)
+                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(2) * berserker_passive)
                 if AI_SPAWNED == 3:
-                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1) * berserker_passive)
-                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2) * berserker_passive)
-                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3) * berserker_passive)
+                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(1) * berserker_passive)
+                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(2) * berserker_passive)
+                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(3) * berserker_passive)
                 if AI_SPAWNED == 4:
-                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1) * berserker_passive)
-                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2) * berserker_passive)
-                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3) * berserker_passive)
-                    ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4) * berserker_passive)
+                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(1) * berserker_passive)
+                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(2) * berserker_passive)
+                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(3) * berserker_passive)
+                    ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(4) * berserker_passive)
                 if AI_SPAWNED == 5:
-                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1) * berserker_passive)
-                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2) * berserker_passive)
-                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3) * berserker_passive)
-                    ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4) * berserker_passive)
-                    ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5) * berserker_passive)
+                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(1) * berserker_passive)
+                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(2) * berserker_passive)
+                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(3) * berserker_passive)
+                    ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(4) * berserker_passive)
+                    ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(5) * berserker_passive)
                 reckless_flurry_buff = reckless_flurry_buff - 1
             else:
                 if 1 in target_list:
-                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1) * berserker_passive)
+                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(1) * berserker_passive)
                 if 2 in target_list:
-                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2) * berserker_passive)
+                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(2) * berserker_passive)
                 if 3 in target_list:
-                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3) * berserker_passive)
+                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(3) * berserker_passive)
                 if 4 in target_list:
-                    ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4) * berserker_passive)
+                    ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(4) * berserker_passive)
                 if 5 in target_list:
-                    ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5) * berserker_passive)
+                    ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(5) * berserker_passive)
         elif ability_data[0] == "Unbridled Rampage":
             counter = 0
             if AI_SPAWNED == 1:
@@ -22457,84 +22890,84 @@ class GameFrame(tk.Frame):
                     berserker_passive = 1
             if reckless_flurry_buff != 0:
                 if AI_SPAWNED == 1:
-                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1) * berserker_passive * 2.5)
+                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(1) * berserker_passive * 2.5)
                 if AI_SPAWNED == 2:
-                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1) * berserker_passive * 2.5)
-                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2) * berserker_passive * 2.5)
+                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(1) * berserker_passive * 2.5)
+                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(2) * berserker_passive * 2.5)
                 if AI_SPAWNED == 3:
-                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1) * berserker_passive * 2.5)
-                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2) * berserker_passive * 2.5)
-                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3) * berserker_passive * 2.5)
+                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(1) * berserker_passive * 2.5)
+                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(2) * berserker_passive * 2.5)
+                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(3) * berserker_passive * 2.5)
                 if AI_SPAWNED == 4:
-                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1) * berserker_passive * 2.5)
-                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2) * berserker_passive * 2.5)
-                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3) * berserker_passive * 2.5)
+                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(1) * berserker_passive * 2.5)
+                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(2) * berserker_passive * 2.5)
+                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(3) * berserker_passive * 2.5)
                     ai4_hp = ai4_hp - ability_data[3]
                 if AI_SPAWNED == 5:
-                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1) * berserker_passive * 2.5)
-                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2) * berserker_passive * 2.5)
-                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3) * berserker_passive * 2.5)
-                    ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4) * berserker_passive * 2.5)
-                    ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5) * berserker_passive * 2.5)
+                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(1) * berserker_passive * 2.5)
+                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(2) * berserker_passive * 2.5)
+                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(3) * berserker_passive * 2.5)
+                    ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(4) * berserker_passive * 2.5)
+                    ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(5) * berserker_passive * 2.5)
                 reckless_flurry_buff = reckless_flurry_buff - 1
             else:
                 if 1 in target_list:
-                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1) * berserker_passive * 2.5)
+                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(1) * berserker_passive * 2.5)
                 if 2 in target_list:
-                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2) * berserker_passive * 2.5)
+                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(2) * berserker_passive * 2.5)
                 if 3 in target_list:
-                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3) * berserker_passive * 2.5)
+                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(3) * berserker_passive * 2.5)
                 if 4 in target_list:
-                    ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4) * berserker_passive * 2.5)
+                    ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(4) * berserker_passive * 2.5)
                 if 5 in target_list:
-                    ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5) * berserker_passive * 2.5)
+                    ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(5) * berserker_passive * 2.5)
         elif ability_data[0] == "Serrated Slash":
             if 1 in target_list:
-                ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1))
+                ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(1))
                 self.apply_serratedSlashDot(1, 1)
             if 2 in target_list:
-                ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2))
+                ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(2))
                 self.apply_serratedSlashDot(2, 1)
             if 3 in target_list:
-                ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3))
+                ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(3))
                 self.apply_serratedSlashDot(3, 1)
             if 4 in target_list:
-                ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4))
+                ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(4))
                 self.apply_serratedSlashDot(4, 1)
             if 5 in target_list:
-                ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5))
+                ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(5))
                 self.apply_serratedSlashDot(5, 1)
         elif ability_data[0] == "Eviscerate":
             if 1 in target_list:
-                ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1)) * 1.5
+                ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(1)) * 1.5
                 self.apply_eviscerateDot(1, 3)
             if 2 in target_list:
-                ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2)) * 1.5
+                ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(2)) * 1.5
                 self.apply_eviscerateDot(2, 3)
             if 3 in target_list:
-                ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3)) * 1.5
+                ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(3)) * 1.5
                 self.apply_eviscerateDot(3, 3)
             if 4 in target_list:
-                ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4)) * 1.5
+                ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(4)) * 1.5
                 self.apply_eviscerateDot(4, 3)
             if 5 in target_list:
-                ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5)) * 1.5
+                ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(5)) * 1.5
                 self.apply_eviscerateDot(5, 3)
         elif ability_data[0] == "Garrote":
             if 1 in target_list:
-                ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1))
+                ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(1))
                 self.apply_garroteDot(1, 2)
             if 2 in target_list:
-                ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2))
+                ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(2))
                 self.apply_garroteDot(2, 2)
             if 3 in target_list:
-                ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3))
+                ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(3))
                 self.apply_garroteDot(3, 2)
             if 4 in target_list:
-                ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4))
+                ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(4))
                 self.apply_garroteDot(4, 2)
             if 5 in target_list:
-                ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5))
+                ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(5))
                 self.apply_garroteDot(5, 2)
         elif ability_data[0] == "Exploit Weakness":
             damage_multipler = 0
@@ -22542,38 +22975,38 @@ class GameFrame(tk.Frame):
                 if len(ai1_statuses) != 0:
                     for status_effect in ai1_statuses:
                         damage_multipler += 1
-                ai1_hp = ai1_hp - (math.ceil(ability_data[3] * self.check_brittle(1)) * (1 + (damage_multipler * 0.3)))
+                ai1_hp = ai1_hp - (math.ceil(ability_data[3] * self.check_enemy_vunerability(1)) * (1 + (damage_multipler * 0.3)))
             if 2 in target_list:
                 for status_effect in ai2_statuses:
                     damage_multipler += 1
-                ai2_hp = ai2_hp - (math.ceil(ability_data[3] * self.check_brittle(2)) * (1 + (damage_multipler * 0.3)))
+                ai2_hp = ai2_hp - (math.ceil(ability_data[3] * self.check_enemy_vunerability(2)) * (1 + (damage_multipler * 0.3)))
             if 3 in target_list:
                 for status_effect in ai3_statuses:
                     damage_multipler += 1
-                ai3_hp = ai3_hp - (math.ceil(ability_data[3] * self.check_brittle(3)) * (1 + (damage_multipler * 0.3)))
+                ai3_hp = ai3_hp - (math.ceil(ability_data[3] * self.check_enemy_vunerability(3)) * (1 + (damage_multipler * 0.3)))
             if 4 in target_list:
                 for status_effect in ai4_statuses:
                     damage_multipler += 1
-                ai4_hp = ai4_hp - (math.ceil(ability_data[3] * self.check_brittle(4)) * (1 + (damage_multipler * 0.3)))
+                ai4_hp = ai4_hp - (math.ceil(ability_data[3] * self.check_enemy_vunerability(4)) * (1 + (damage_multipler * 0.3)))
             if 5 in target_list:
                 for status_effect in ai5_statuses:
                     damage_multipler += 1
-                ai5_hp = ai5_hp - (math.ceil(ability_data[3] * self.check_brittle(5)) * (1 + (damage_multipler * 0.3)))
+                ai5_hp = ai5_hp - (math.ceil(ability_data[3] * self.check_enemy_vunerability(5)) * (1 + (damage_multipler * 0.3)))
         elif ability_data[0] == "Spear Thrust":
             prep_extra_damage = 1
             if prepare_buff != 0:
                 prep_extra_damage = 1.5
                 prepare_buff = 0
             if 1 in target_list:
-                ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1)) * 1.4 * prep_extra_damage
+                ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(1)) * 1.4 * prep_extra_damage
             if 2 in target_list:
-                ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2)) * 1.4 * prep_extra_damage
+                ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(2)) * 1.4 * prep_extra_damage
             if 3 in target_list:
-                ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3)) * 1.4 * prep_extra_damage
+                ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(3)) * 1.4 * prep_extra_damage
             if 4 in target_list:
-                ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4)) * 1.4 * prep_extra_damage
+                ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(4)) * 1.4 * prep_extra_damage
             if 5 in target_list:
-                ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5)) * 1.4 * prep_extra_damage
+                ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(5)) * 1.4 * prep_extra_damage
             prep_extra_damage = 1
         elif ability_data[0] == "Scrap Bomb":
             prep_extra_damage = 1
@@ -22581,35 +23014,35 @@ class GameFrame(tk.Frame):
                 prep_extra_damage = 1.5
                 prepare_buff = 0
             if AI_SPAWNED == 1:
-                ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1) * prep_extra_damage)
+                ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(1) * prep_extra_damage)
                 self.apply_weakness(1, 2)
             if AI_SPAWNED == 2:
-                ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1)* prep_extra_damage)
-                ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2)* prep_extra_damage)
+                ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(1)* prep_extra_damage)
+                ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(2)* prep_extra_damage)
                 self.apply_weakness(1, 2)
                 self.apply_weakness(2, 2)
             if AI_SPAWNED == 3:
-                ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1)* prep_extra_damage)
-                ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2)* prep_extra_damage)
-                ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3)* prep_extra_damage)
+                ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(1)* prep_extra_damage)
+                ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(2)* prep_extra_damage)
+                ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(3)* prep_extra_damage)
                 self.apply_weakness(1, 2)
                 self.apply_weakness(2, 2)
                 self.apply_weakness(3, 2)
             if AI_SPAWNED == 4:
-                ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1)* prep_extra_damage)
-                ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2)* prep_extra_damage)
-                ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3)* prep_extra_damage)
-                ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4)* prep_extra_damage)
+                ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(1)* prep_extra_damage)
+                ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(2)* prep_extra_damage)
+                ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(3)* prep_extra_damage)
+                ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(4)* prep_extra_damage)
                 self.apply_weakness(1, 2)
                 self.apply_weakness(2, 2)
                 self.apply_weakness(3, 2)
                 self.apply_weakness(4, 2)
             if AI_SPAWNED == 5:
-                ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1)* prep_extra_damage)
-                ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2)* prep_extra_damage)
-                ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3)* prep_extra_damage)
-                ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4)* prep_extra_damage)
-                ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5)* prep_extra_damage)
+                ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(1)* prep_extra_damage)
+                ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(2)* prep_extra_damage)
+                ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(3)* prep_extra_damage)
+                ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(4)* prep_extra_damage)
+                ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(5)* prep_extra_damage)
                 self.apply_weakness(1, 2)
                 self.apply_weakness(2, 2)
                 self.apply_weakness(3, 2)
@@ -22629,7 +23062,7 @@ class GameFrame(tk.Frame):
                     UCDB = 1.5
                     ai1_statuses.remove("UpperCutDB")
                     ai1_uc_db = 0
-                ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1)) * (1 * WSDB * UCDB)
+                ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(1)) * (1 * WSDB * UCDB)
                 ai1_statuses.append("HardHitterDB")
                 ai1_hh_db = 1
             if 2 in target_list:
@@ -22641,7 +23074,7 @@ class GameFrame(tk.Frame):
                     UCDB = 1.5
                     ai2_statuses.remove("UpperCutDB")
                     ai2_uc_db = 0
-                ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2)) * (1 * WSDB * UCDB)
+                ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(2)) * (1 * WSDB * UCDB)
                 ai2_statuses.append("HardHitterDB")
                 ai2_hh_db = 1
             if 3 in target_list:
@@ -22653,7 +23086,7 @@ class GameFrame(tk.Frame):
                     UCDB = 1.5
                     ai3_statuses.remove("UpperCutDB")
                     ai3_uc_db = 0
-                ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3)) * (1 * WSDB * UCDB)
+                ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(3)) * (1 * WSDB * UCDB)
                 ai3_statuses.append("HardHitterDB")
                 ai3_hh_db = 1
             if 4 in target_list:
@@ -22665,7 +23098,7 @@ class GameFrame(tk.Frame):
                     UCDB = 1.5
                     ai4_statuses.remove("UpperCutDB")
                     ai4_uc_db = 0
-                ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4)) * (1 * WSDB * UCDB)
+                ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(4)) * (1 * WSDB * UCDB)
                 ai4_statuses.append("HardHitterDB")
                 ai4_hh_db = 1
             if 5 in target_list:
@@ -22677,7 +23110,7 @@ class GameFrame(tk.Frame):
                     UCDB = 1.5
                     ai5_statuses.remove("UpperCutDB")
                     ai5_uc_db = 0
-                ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5)) * (1 * WSDB * UCDB)
+                ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(5)) * (1 * WSDB * UCDB)
                 ai5_statuses.append("HardHitterDB")
                 ai5_hh_db = 1
         elif ability_data[0] == "Wide Swing":
@@ -22692,7 +23125,7 @@ class GameFrame(tk.Frame):
                     UCDB = 1.5
                     ai1_statuses.remove("UpperCutDB")
                     ai1_uc_db = 0
-                ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1)) * 0.5 * (1 * HHDB * UCDB)
+                ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(1)) * 0.5 * (1 * HHDB * UCDB)
                 ai1_statuses.append("WideSwingDB")
                 ai1_ws_db = 1
             if 2 in target_list:
@@ -22704,7 +23137,7 @@ class GameFrame(tk.Frame):
                     UCDB = 1.5
                     ai2_statuses.remove("UpperCutDB")
                     ai2_uc_db = 0
-                ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2)) * 0.5 * (1 * HHDB * UCDB)
+                ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(2)) * 0.5 * (1 * HHDB * UCDB)
                 ai2_statuses.append("WideSwingDB")
                 ai2_ws_db = 1
             if 3 in target_list:
@@ -22716,7 +23149,7 @@ class GameFrame(tk.Frame):
                     UCDB = 1.5
                     ai3_statuses.remove("UpperCutDB")
                     ai3_uc_db = 0
-                ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3)) * 0.5 * (1 * HHDB * UCDB)
+                ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(3)) * 0.5 * (1 * HHDB * UCDB)
                 ai3_statuses.append("WideSwingDB")
                 ai3_ws_db = 1
             if 4 in target_list:
@@ -22728,7 +23161,7 @@ class GameFrame(tk.Frame):
                     UCDB = 1.5
                     ai4_statuses.remove("UpperCutDB")
                     ai4_uc_db = 0
-                ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4)) * 0.5 * (1 * HHDB * UCDB)
+                ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(4)) * 0.5 * (1 * HHDB * UCDB)
                 ai4_statuses.append("WideSwingDB")
                 ai4_ws_db = 1
             if 5 in target_list:
@@ -22740,7 +23173,7 @@ class GameFrame(tk.Frame):
                     UCDB = 1.5
                     ai5_statuses.remove("UpperCutDB")
                     ai5_uc_db = 0
-                ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5)) * 0.5 * (1 * HHDB * UCDB)
+                ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(5)) * 0.5 * (1 * HHDB * UCDB)
                 ai5_statuses.append("WideSwingDB")
                 ai5_ws_db = 1
         elif ability_data[0] == "Uppercut":
@@ -22755,7 +23188,7 @@ class GameFrame(tk.Frame):
                     WSDB = 1.25
                     ai1_statuses.remove("WideSwingDB")
                     ai1_ws_db = 0
-                ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1)) * 1.8 * (1 * HHDB * WSDB)
+                ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(1)) * 1.8 * (1 * HHDB * WSDB)
                 ai1_statuses.append("UpperCutDB")
                 ai1_uc_db = 1
             if 2 in target_list:
@@ -22767,7 +23200,7 @@ class GameFrame(tk.Frame):
                     WSDB = 1.25
                     ai2_statuses.remove("WideSwingDB")
                     ai2_ws_db = 0
-                ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2)) * 1.8 * (1 * HHDB * WSDB)
+                ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(2)) * 1.8 * (1 * HHDB * WSDB)
                 ai2_statuses.append("UpperCutDB")
                 ai2_uc_db = 1
             if 3 in target_list:
@@ -22779,7 +23212,7 @@ class GameFrame(tk.Frame):
                     WSDB = 1.25
                     ai3_statuses.remove("WideSwingDB")
                     ai3_ws_db = 0
-                ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3)) * 1.8 * (1 * HHDB * WSDB)
+                ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(3)) * 1.8 * (1 * HHDB * WSDB)
                 ai3_statuses.append("UpperCutDB")
                 ai3_uc_db = 1
             if 4 in target_list:
@@ -22791,7 +23224,7 @@ class GameFrame(tk.Frame):
                     WSDB = 1.25
                     ai4_statuses.remove("WideSwingDB")
                     ai4_ws_db = 0
-                ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4)) * 1.8 * (1 * HHDB * WSDB)
+                ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(4)) * 1.8 * (1 * HHDB * WSDB)
                 ai4_statuses.append("UpperCutDB")
                 ai4_uc_db = 1
             if 5 in target_list:
@@ -22803,105 +23236,105 @@ class GameFrame(tk.Frame):
                     WSDB = 1.25
                     ai5_statuses.remove("WideSwingDB")
                     ai5_ws_db = 0
-                ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5)) * 1.8 * (1 * HHDB * WSDB)
+                ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(5)) * 1.8 * (1 * HHDB * WSDB)
                 ai5_statuses.append("UpperCutDB")
                 ai5_uc_db = 1
         elif ability_data[0] == "Knock Out":
             if 1 in target_list:
                 if AI_SIZE == "Tiny":
-                    if ai1_hp < 0.5 * AI_GROUP_HP:
+                    if ai1_hp < 0.5 * (AI_GROUP_HP + ai_health_modifier):
                         ai1_hp = 0
                 if AI_SIZE == "Small":
-                    if ai1_hp < 0.4 * AI_GROUP_HP:
+                    if ai1_hp < 0.4 * (AI_GROUP_HP + ai_health_modifier):
                         ai1_hp = 0
                 if AI_SIZE == "Medium":
-                    if ai1_hp < 0.3 * AI_GROUP_HP:
+                    if ai1_hp < 0.3 * (AI_GROUP_HP + ai_health_modifier):
                         ai1_hp = 0
                 if AI_SIZE == "Large":
-                    if ai1_hp < 0.2 * AI_GROUP_HP:
+                    if ai1_hp < 0.2 * (AI_GROUP_HP + ai_health_modifier):
                         ai1_hp = 0
                 if AI_SIZE == "Huge":
-                    if ai1_hp < 0.1 * AI_GROUP_HP:
+                    if ai1_hp < 0.1 * (AI_GROUP_HP + ai_health_modifier):
                         ai1_hp = 0
             if 2 in target_list:
                 if AI_SIZE == "Tiny":
-                    if ai2_hp < 0.5 * AI_GROUP_HP:
+                    if ai2_hp < 0.5 * (AI_GROUP_HP + ai_health_modifier):
                         ai2_hp = 0
                 if AI_SIZE == "Small":
-                    if ai2_hp < 0.4 * AI_GROUP_HP:
+                    if ai2_hp < 0.4 * (AI_GROUP_HP + ai_health_modifier):
                         ai2_hp = 0
                 if AI_SIZE == "Medium":
-                    if ai2_hp < 0.3 * AI_GROUP_HP:
+                    if ai2_hp < 0.3 * (AI_GROUP_HP + ai_health_modifier):
                         ai2_hp = 0
                 if AI_SIZE == "Large":
-                    if ai2_hp < 0.2 * AI_GROUP_HP:
+                    if ai2_hp < 0.2 * (AI_GROUP_HP + ai_health_modifier):
                         ai2_hp = 0
                 if AI_SIZE == "Huge":
-                    if ai2_hp < 0.1 * AI_GROUP_HP:
+                    if ai2_hp < 0.1 * (AI_GROUP_HP + ai_health_modifier):
                         ai2_hp = 0
             if 3 in target_list:
                 if AI_SIZE == "Tiny":
-                    if ai3_hp < 0.5 * AI_GROUP_HP:
+                    if ai3_hp < 0.5 * (AI_GROUP_HP + ai_health_modifier):
                         ai3_hp = 0
                 if AI_SIZE == "Small":
-                    if ai3_hp < 0.4 * AI_GROUP_HP:
+                    if ai3_hp < 0.4 * (AI_GROUP_HP + ai_health_modifier):
                         ai3_hp = 0
                 if AI_SIZE == "Medium":
-                    if ai3_hp < 0.3 * AI_GROUP_HP:
+                    if ai3_hp < 0.3 * (AI_GROUP_HP + ai_health_modifier):
                         ai3_hp = 0
                 if AI_SIZE == "Large":
-                    if ai3_hp < 0.2 * AI_GROUP_HP:
+                    if ai3_hp < 0.2 * (AI_GROUP_HP + ai_health_modifier):
                         ai3_hp = 0
                 if AI_SIZE == "Huge":
-                    if ai3_hp < 0.1 * AI_GROUP_HP:
+                    if ai3_hp < 0.1 * (AI_GROUP_HP + ai_health_modifier):
                         ai3_hp = 0
             if 4 in target_list:
                 if AI_SIZE == "Tiny":
-                    if ai4_hp < 0.5 * AI_GROUP_HP:
+                    if ai4_hp < 0.5 * (AI_GROUP_HP + ai_health_modifier):
                         ai4_hp = 0
                 if AI_SIZE == "Small":
-                    if ai4_hp < 0.4 * AI_GROUP_HP:
+                    if ai4_hp < 0.4 * (AI_GROUP_HP + ai_health_modifier):
                         ai4_hp = 0
                 if AI_SIZE == "Medium":
-                    if ai4_hp < 0.3 * AI_GROUP_HP:
+                    if ai4_hp < 0.3 * (AI_GROUP_HP + ai_health_modifier):
                         ai4_hp = 0
                 if AI_SIZE == "Large":
-                    if ai4_hp < 0.2 * AI_GROUP_HP:
+                    if ai4_hp < 0.2 * (AI_GROUP_HP + ai_health_modifier):
                         ai4_hp = 0
                 if AI_SIZE == "Huge":
-                    if ai4_hp < 0.1 * AI_GROUP_HP:
+                    if ai4_hp < 0.1 * (AI_GROUP_HP + ai_health_modifier):
                         ai4_hp = 0
             if 5 in target_list:
                 if AI_SIZE == "Tiny":
-                    if ai5_hp < 0.5 * AI_GROUP_HP:
+                    if ai5_hp < 0.5 * (AI_GROUP_HP + ai_health_modifier):
                         ai5_hp = 0
                 if AI_SIZE == "Small":
-                    if ai5_hp < 0.4 * AI_GROUP_HP:
+                    if ai5_hp < 0.4 * (AI_GROUP_HP + ai_health_modifier):
                         ai5_hp = 0
                 if AI_SIZE == "Medium":
-                    if ai5_hp < 0.3 * AI_GROUP_HP:
+                    if ai5_hp < 0.3 * (AI_GROUP_HP + ai_health_modifier):
                         ai5_hp = 0
                 if AI_SIZE == "Large":
-                    if ai5_hp < 0.2 * AI_GROUP_HP:
+                    if ai5_hp < 0.2 * (AI_GROUP_HP + ai_health_modifier):
                         ai5_hp = 0
                 if AI_SIZE == "Huge":
-                    if ai5_hp < 0.1 * AI_GROUP_HP:
+                    if ai5_hp < 0.1 * (AI_GROUP_HP + ai_health_modifier):
                         ai5_hp = 0
         elif ability_data[0] == "Frost Bolt":
             if 1 in target_list:
-                ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1))
+                ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(1))
                 self.apply_brittle(1, 2)
             if 2 in target_list:
-                ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2))
+                ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(2))
                 self.apply_brittle(2, 2)
             if 3 in target_list:
-                ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3))
+                ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(3))
                 self.apply_brittle(3, 2)
             if 4 in target_list:
-                ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4))
+                ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(4))
                 self.apply_brittle(4, 2)
             if 5 in target_list:
-                ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5))
+                ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(5))
                 self.apply_brittle(5, 2)
             if CHAMPION1_RPNAME == "Mana":
                 champion1_rp = champion1_rp + 20
@@ -22925,19 +23358,19 @@ class GameFrame(tk.Frame):
                     champion5_rp = CHAMPION5_RP
         elif ability_data[0] == "Fireball":
             if 1 in target_list:
-                ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1))
+                ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(1))
                 self.apply_burnDot(1, 2)
             if 2 in target_list:
-                ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2))
+                ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(2))
                 self.apply_burnDot(2, 2)
             if 3 in target_list:
-                ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3))
+                ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(3))
                 self.apply_burnDot(3, 2)
             if 4 in target_list:
-                ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4))
+                ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(4))
                 self.apply_burnDot(4, 2)
             if 5 in target_list:
-                ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5))
+                ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(5))
                 self.apply_burnDot(5, 2)
             if CHAMPION1_RPNAME == "Mana":
                 champion1_rp = champion1_rp + 20
@@ -23006,38 +23439,38 @@ class GameFrame(tk.Frame):
                 random.shuffle(attacks)
                 if ai_list[0] == 1:
                     if attacks[0] == "Frost Bolt":
-                        ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1))
+                        ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(1))
                         self.apply_brittle(1, 2)
                     if attacks[0] == "Fireball":
                         self.apply_burnDot(1, 2)
-                        ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1))
+                        ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(1))
                 if ai_list[0] == 2:
                     if attacks[0] == "Frost Bolt":
-                        ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2))
+                        ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(2))
                         self.apply_brittle(2, 2)
                     if attacks[0] == "Fireball":
-                        ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2))
+                        ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(2))
                         self.apply_burnDot(2, 2)
                 if ai_list[0] == 3:
                     if attacks[0] == "Frost Bolt":
-                        ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3))
+                        ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(3))
                         self.apply_brittle(3, 2)
                         if attacks[0] == "Fireball":
-                            ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3))
+                            ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(3))
                             self.apply_burnDot(3, 2)
                 if ai_list[0] == 4:
                     if attacks[0] == "Frost Bolt":
-                        ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4))
+                        ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(4))
                         self.apply_brittle(4, 2)
                         if attacks[0] == "Fireball":
-                            ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4))
+                            ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(4))
                             self.apply_burnDot(4, 2)
                 if ai_list[0] == 5:
                     if attacks[0] == "Frost Bolt":
-                        ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5))
+                        ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(5))
                         self.apply_brittle(5, 2)
                         if attacks[0] == "Fireball":
-                            ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5))
+                            ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(5))
                             self.apply_burnDot(5, 2)
             if CHAMPION1_RPNAME == "Mana":
                 champion1_rp = champion1_rp + 100
@@ -23082,19 +23515,19 @@ class GameFrame(tk.Frame):
                 self.apply_thornsDot(5, 1)
         elif ability_data[0] == "Vine-Swipe":
             if 1 in target_list:
-                ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1))
+                ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(1))
                 self.apply_thornsDot(1, 2)
             if 2 in target_list:
-                ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2))
+                ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(2))
                 self.apply_thornsDot(2, 2)
             if 3 in target_list:
-                ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3))
+                ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(3))
                 self.apply_thornsDot(3, 2)
             if 4 in target_list:
-                ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4))
+                ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(4))
                 self.apply_thornsDot(4, 2)
             if 5 in target_list:
-                ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5))
+                ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(5))
                 self.apply_thornsDot(5, 2)
         elif ability_data[0] == "Burst N Bloom":
             if AI_SPAWNED == 1:
@@ -23180,7 +23613,7 @@ class GameFrame(tk.Frame):
         elif ability_data[0] == "Black Bolt":
             global void_infusion_stacks
             if 1 in target_list:
-                ai1_hp = ai1_hp - (math.ceil(ability_data[3] * self.check_brittle(1)))
+                ai1_hp = ai1_hp - (math.ceil(ability_data[3] * self.check_enemy_vunerability(1)))
                 self.apply_toc(1)
                 if ai1_rottingDot[1] > 0:
                     if AI_SPAWNED == 1:
@@ -23240,7 +23673,7 @@ class GameFrame(tk.Frame):
                 if void_infusion_stacks > 0:
                     self.apply_rottingDot(1, 3, void_infusion_stacks)
             if 2 in target_list:
-                ai2_hp = ai2_hp - (math.ceil(ability_data[3] * self.check_brittle(2)))
+                ai2_hp = ai2_hp - (math.ceil(ability_data[3] * self.check_enemy_vunerability(2)))
                 self.apply_toc(2)
                 if ai2_rottingDot[1] > 0:
                     if AI_SPAWNED == 2:
@@ -23298,7 +23731,7 @@ class GameFrame(tk.Frame):
                 if void_infusion_stacks > 0:
                     self.apply_rottingDot(2, 3, void_infusion_stacks)
             if 3 in target_list:
-                ai3_hp = ai3_hp - (math.ceil(ability_data[3] * self.check_brittle(3)))
+                ai3_hp = ai3_hp - (math.ceil(ability_data[3] * self.check_enemy_vunerability(3)))
                 self.apply_toc(3)
                 if ai3_rottingDot[1] > 0:
                     if AI_SPAWNED == 3:
@@ -23349,7 +23782,7 @@ class GameFrame(tk.Frame):
                 if void_infusion_stacks > 0:
                     self.apply_rottingDot(3, 3, void_infusion_stacks)
             if 4 in target_list:
-                ai4_hp = ai4_hp - (math.ceil(ability_data[3] * self.check_brittle(4)))
+                ai4_hp = ai4_hp - (math.ceil(ability_data[3] * self.check_enemy_vunerability(4)))
                 self.apply_toc(4)
                 if ai4_rottingDot[1] > 0:
                     if AI_SPAWNED == 4:
@@ -23389,7 +23822,7 @@ class GameFrame(tk.Frame):
                 if void_infusion_stacks > 0:
                     self.apply_rottingDot(4, 3, void_infusion_stacks)
             if 5 in target_list:
-                ai5_hp = ai5_hp - (math.ceil(ability_data[3] * self.check_brittle(5)))
+                ai5_hp = ai5_hp - (math.ceil(ability_data[3] * self.check_enemy_vunerability(5)))
                 self.apply_toc(5)
                 if ai5_rottingDot[1] > 0:
                     if AI_SPAWNED == 5:
@@ -24095,21 +24528,21 @@ class GameFrame(tk.Frame):
         elif ability_data[0] == "Drain Life":
             global blood_boil_buff
             if 1 in target_list:
-                ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1))
+                ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(1))
                 if blood_boil_buff == 1:
-                    champion1_hp = champion1_hp + math.ceil((ability_data[3] * self.check_brittle(1))*0.3)
+                    champion1_hp = champion1_hp + math.ceil((ability_data[3] * self.check_enemy_vunerability(1))*0.3)
                     if champion1_hp > CHAMPION1_HP:
                         champion1_hp = CHAMPION1_HP
-                    champion2_hp = champion2_hp + math.ceil((ability_data[3] * self.check_brittle(1))*0.3)
+                    champion2_hp = champion2_hp + math.ceil((ability_data[3] * self.check_enemy_vunerability(1))*0.3)
                     if champion2_hp > CHAMPION2_HP:
                         champion2_hp = CHAMPION2_HP
-                    champion3_hp = champion3_hp + math.ceil((ability_data[3] * self.check_brittle(1))*0.3)
+                    champion3_hp = champion3_hp + math.ceil((ability_data[3] * self.check_enemy_vunerability(1))*0.3)
                     if champion3_hp > CHAMPION3_HP:
                         champion3_hp = CHAMPION3_HP
-                    champion4_hp = champion4_hp + math.ceil((ability_data[3] * self.check_brittle(1))*0.3)
+                    champion4_hp = champion4_hp + math.ceil((ability_data[3] * self.check_enemy_vunerability(1))*0.3)
                     if champion4_hp > CHAMPION4_HP:
                         champion4_hp = CHAMPION4_HP
-                    champion5_hp = champion5_hp + math.ceil((ability_data[3] * self.check_brittle(1))*0.3)
+                    champion5_hp = champion5_hp + math.ceil((ability_data[3] * self.check_enemy_vunerability(1))*0.3)
                     if champion5_hp > CHAMPION5_HP:
                         champion5_hp = CHAMPION5_HP
                     blood_boil_buff = 0
@@ -24118,41 +24551,41 @@ class GameFrame(tk.Frame):
                         counter += 1
                         if champions == BLOODMANCER.title:
                             if counter == 1:
-                                champion1_hp = champion1_hp + math.ceil((ability_data[3] * self.check_brittle(1)))
+                                champion1_hp = champion1_hp + math.ceil((ability_data[3] * self.check_enemy_vunerability(1)))
                                 if champion1_hp > CHAMPION1_HP:
                                     champion1_hp = CHAMPION1_HP
                             elif counter == 2:
-                                champion2_hp = champion2_hp + math.ceil((ability_data[3] * self.check_brittle(1)))
+                                champion2_hp = champion2_hp + math.ceil((ability_data[3] * self.check_enemy_vunerability(1)))
                                 if champion2_hp > CHAMPION2_HP:
                                     champion2_hp = CHAMPION2_HP
                             elif counter == 3:
-                                champion3_hp = champion3_hp + math.ceil((ability_data[3] * self.check_brittle(1)))
+                                champion3_hp = champion3_hp + math.ceil((ability_data[3] * self.check_enemy_vunerability(1)))
                                 if champion3_hp > CHAMPION3_HP:
                                     champion3_hp = CHAMPION3_HP
                             elif counter == 4:
-                                champion4_hp = champion4_hp + math.ceil((ability_data[3] * self.check_brittle(1)))
+                                champion4_hp = champion4_hp + math.ceil((ability_data[3] * self.check_enemy_vunerability(1)))
                                 if champion4_hp > CHAMPION4_HP:
                                     champion4_hp = CHAMPION4_HP
                             elif counter == 5:
-                                champion5_hp = champion5_hp + math.ceil((ability_data[3] * self.check_brittle(1)))
+                                champion5_hp = champion5_hp + math.ceil((ability_data[3] * self.check_enemy_vunerability(1)))
                                 if champion5_hp > CHAMPION5_HP:
                                     champion5_hp = CHAMPION5_HP
             if 2 in target_list:
-                ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2))
+                ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(2))
                 if blood_boil_buff == 1:
-                    champion1_hp = champion1_hp + math.ceil((ability_data[3] * self.check_brittle(2))*0.3)
+                    champion1_hp = champion1_hp + math.ceil((ability_data[3] * self.check_enemy_vunerability(2))*0.3)
                     if champion1_hp > CHAMPION1_HP:
                         champion1_hp = CHAMPION1_HP
-                    champion2_hp = champion2_hp + math.ceil((ability_data[3] * self.check_brittle(2))*0.3)
+                    champion2_hp = champion2_hp + math.ceil((ability_data[3] * self.check_enemy_vunerability(2))*0.3)
                     if champion2_hp > CHAMPION2_HP:
                         champion2_hp = CHAMPION2_HP
-                    champion3_hp = champion3_hp + math.ceil((ability_data[3] * self.check_brittle(2))*0.3)
+                    champion3_hp = champion3_hp + math.ceil((ability_data[3] * self.check_enemy_vunerability(2))*0.3)
                     if champion3_hp > CHAMPION3_HP:
                         champion3_hp = CHAMPION3_HP
-                    champion4_hp = champion4_hp + math.ceil((ability_data[3] * self.check_brittle(2))*0.3)
+                    champion4_hp = champion4_hp + math.ceil((ability_data[3] * self.check_enemy_vunerability(2))*0.3)
                     if champion4_hp > CHAMPION4_HP:
                         champion4_hp = CHAMPION4_HP
-                    champion5_hp = champion5_hp + math.ceil((ability_data[3] * self.check_brittle(2))*0.3)
+                    champion5_hp = champion5_hp + math.ceil((ability_data[3] * self.check_enemy_vunerability(2))*0.3)
                     if champion5_hp > CHAMPION5_HP:
                         champion5_hp = CHAMPION5_HP
                     blood_boil_buff = 0
@@ -24161,41 +24594,41 @@ class GameFrame(tk.Frame):
                         counter += 1
                         if champions == BLOODMANCER.title:
                             if counter == 1:
-                                champion1_hp = champion1_hp + math.ceil((ability_data[3] * self.check_brittle(2)))
+                                champion1_hp = champion1_hp + math.ceil((ability_data[3] * self.check_enemy_vunerability(2)))
                                 if champion1_hp > CHAMPION1_HP:
                                     champion1_hp = CHAMPION1_HP
                             elif counter == 2:
-                                champion2_hp = champion2_hp + math.ceil((ability_data[3] * self.check_brittle(2)))
+                                champion2_hp = champion2_hp + math.ceil((ability_data[3] * self.check_enemy_vunerability(2)))
                                 if champion2_hp > CHAMPION2_HP:
                                     champion2_hp = CHAMPION2_HP
                             elif counter == 3:
-                                champion3_hp = champion3_hp + math.ceil((ability_data[3] * self.check_brittle(2)))
+                                champion3_hp = champion3_hp + math.ceil((ability_data[3] * self.check_enemy_vunerability(2)))
                                 if champion3_hp > CHAMPION3_HP:
                                     champion3_hp = CHAMPION3_HP
                             elif counter == 4:
-                                champion4_hp = champion4_hp + math.ceil((ability_data[3] * self.check_brittle(2)))
+                                champion4_hp = champion4_hp + math.ceil((ability_data[3] * self.check_enemy_vunerability(2)))
                                 if champion4_hp > CHAMPION4_HP:
                                     champion4_hp = CHAMPION4_HP
                             elif counter == 5:
-                                champion5_hp = champion5_hp + math.ceil((ability_data[3] * self.check_brittle(2)))
+                                champion5_hp = champion5_hp + math.ceil((ability_data[3] * self.check_enemy_vunerability(2)))
                                 if champion5_hp > CHAMPION5_HP:
                                     champion5_hp = CHAMPION5_HP
             if 3 in target_list:
-                ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3))
+                ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(3))
                 if blood_boil_buff == 1:
-                    champion1_hp = champion1_hp + math.ceil((ability_data[3] * self.check_brittle(3))*0.3)
+                    champion1_hp = champion1_hp + math.ceil((ability_data[3] * self.check_enemy_vunerability(3))*0.3)
                     if champion1_hp > CHAMPION1_HP:
                         champion1_hp = CHAMPION1_HP
-                    champion2_hp = champion2_hp + math.ceil((ability_data[3] * self.check_brittle(3))*0.3)
+                    champion2_hp = champion2_hp + math.ceil((ability_data[3] * self.check_enemy_vunerability(3))*0.3)
                     if champion2_hp > CHAMPION2_HP:
                         champion2_hp = CHAMPION2_HP
-                    champion3_hp = champion3_hp + math.ceil((ability_data[3] * self.check_brittle(3))*0.3)
+                    champion3_hp = champion3_hp + math.ceil((ability_data[3] * self.check_enemy_vunerability(3))*0.3)
                     if champion3_hp > CHAMPION3_HP:
                         champion3_hp = CHAMPION3_HP
-                    champion4_hp = champion4_hp + math.ceil((ability_data[3] * self.check_brittle(3))*0.3)
+                    champion4_hp = champion4_hp + math.ceil((ability_data[3] * self.check_enemy_vunerability(3))*0.3)
                     if champion4_hp > CHAMPION4_HP:
                         champion4_hp = CHAMPION4_HP
-                    champion5_hp = champion5_hp + math.ceil((ability_data[3] * self.check_brittle(3))*0.3)
+                    champion5_hp = champion5_hp + math.ceil((ability_data[3] * self.check_enemy_vunerability(3))*0.3)
                     if champion5_hp > CHAMPION5_HP:
                         champion5_hp = CHAMPION5_HP
                     blood_boil_buff = 0
@@ -24204,41 +24637,41 @@ class GameFrame(tk.Frame):
                         counter += 1
                         if champions == BLOODMANCER.title:
                             if counter == 1:
-                                champion1_hp = champion1_hp + math.ceil((ability_data[3] * self.check_brittle(3)))
+                                champion1_hp = champion1_hp + math.ceil((ability_data[3] * self.check_enemy_vunerability(3)))
                                 if champion1_hp > CHAMPION1_HP:
                                     champion1_hp = CHAMPION1_HP
                             elif counter == 2:
-                                champion2_hp = champion2_hp + math.ceil((ability_data[3] * self.check_brittle(3)))
+                                champion2_hp = champion2_hp + math.ceil((ability_data[3] * self.check_enemy_vunerability(3)))
                                 if champion2_hp > CHAMPION2_HP:
                                     champion2_hp = CHAMPION2_HP
                             elif counter == 3:
-                                champion3_hp = champion3_hp + math.ceil((ability_data[3] * self.check_brittle(3)))
+                                champion3_hp = champion3_hp + math.ceil((ability_data[3] * self.check_enemy_vunerability(3)))
                                 if champion3_hp > CHAMPION3_HP:
                                     champion3_hp = CHAMPION3_HP
                             elif counter == 4:
-                                champion4_hp = champion4_hp + math.ceil((ability_data[3] * self.check_brittle(3)))
+                                champion4_hp = champion4_hp + math.ceil((ability_data[3] * self.check_enemy_vunerability(3)))
                                 if champion4_hp > CHAMPION4_HP:
                                     champion4_hp = CHAMPION4_HP
                             elif counter == 5:
-                                champion5_hp = champion5_hp + math.ceil((ability_data[3] * self.check_brittle(3)))
+                                champion5_hp = champion5_hp + math.ceil((ability_data[3] * self.check_enemy_vunerability(3)))
                                 if champion5_hp > CHAMPION5_HP:
                                     champion5_hp = CHAMPION5_HP
             if 4 in target_list:
-                ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4))
+                ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(4))
                 if blood_boil_buff == 1:
-                    champion1_hp = champion1_hp + math.ceil((ability_data[3] * self.check_brittle(4))*0.3)
+                    champion1_hp = champion1_hp + math.ceil((ability_data[3] * self.check_enemy_vunerability(4))*0.3)
                     if champion1_hp > CHAMPION1_HP:
                         champion1_hp = CHAMPION1_HP
-                    champion2_hp = champion2_hp + math.ceil((ability_data[3] * self.check_brittle(4))*0.3)
+                    champion2_hp = champion2_hp + math.ceil((ability_data[3] * self.check_enemy_vunerability(4))*0.3)
                     if champion2_hp > CHAMPION2_HP:
                         champion2_hp = CHAMPION2_HP
-                    champion3_hp = champion3_hp + math.ceil((ability_data[3] * self.check_brittle(4))*0.3)
+                    champion3_hp = champion3_hp + math.ceil((ability_data[3] * self.check_enemy_vunerability(4))*0.3)
                     if champion3_hp > CHAMPION3_HP:
                         champion3_hp = CHAMPION3_HP
-                    champion4_hp = champion4_hp + math.ceil((ability_data[3] * self.check_brittle(4))*0.3)
+                    champion4_hp = champion4_hp + math.ceil((ability_data[3] * self.check_enemy_vunerability(4))*0.3)
                     if champion4_hp > CHAMPION4_HP:
                         champion4_hp = CHAMPION4_HP
-                    champion5_hp = champion5_hp + math.ceil((ability_data[3] * self.check_brittle(4))*0.3)
+                    champion5_hp = champion5_hp + math.ceil((ability_data[3] * self.check_enemy_vunerability(4))*0.3)
                     if champion5_hp > CHAMPION5_HP:
                         champion5_hp = CHAMPION5_HP
                     blood_boil_buff = 0
@@ -24247,41 +24680,41 @@ class GameFrame(tk.Frame):
                         counter += 1
                         if champions == BLOODMANCER.title:
                             if counter == 1:
-                                champion1_hp = champion1_hp + math.ceil((ability_data[3] * self.check_brittle(4)))
+                                champion1_hp = champion1_hp + math.ceil((ability_data[3] * self.check_enemy_vunerability(4)))
                                 if champion1_hp > CHAMPION1_HP:
                                     champion1_hp = CHAMPION1_HP
                             elif counter == 2:
-                                champion2_hp = champion2_hp + math.ceil((ability_data[3] * self.check_brittle(4)))
+                                champion2_hp = champion2_hp + math.ceil((ability_data[3] * self.check_enemy_vunerability(4)))
                                 if champion2_hp > CHAMPION2_HP:
                                     champion2_hp = CHAMPION2_HP
                             elif counter == 3:
-                                champion3_hp = champion3_hp + math.ceil((ability_data[3] * self.check_brittle(4)))
+                                champion3_hp = champion3_hp + math.ceil((ability_data[3] * self.check_enemy_vunerability(4)))
                                 if champion3_hp > CHAMPION3_HP:
                                     champion3_hp = CHAMPION3_HP
                             elif counter == 4:
-                                champion4_hp = champion4_hp + math.ceil((ability_data[3] * self.check_brittle(4)))
+                                champion4_hp = champion4_hp + math.ceil((ability_data[3] * self.check_enemy_vunerability(4)))
                                 if champion4_hp > CHAMPION4_HP:
                                     champion4_hp = CHAMPION4_HP
                             elif counter == 5:
-                                champion5_hp = champion5_hp + math.ceil((ability_data[3] * self.check_brittle(4)))
+                                champion5_hp = champion5_hp + math.ceil((ability_data[3] * self.check_enemy_vunerability(4)))
                                 if champion5_hp > CHAMPION5_HP:
                                     champion5_hp = CHAMPION5_HP
             if 5 in target_list:
-                ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5))
+                ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(5))
                 if blood_boil_buff == 1:
-                    champion1_hp = champion1_hp + math.ceil((ability_data[3] * self.check_brittle(5))*0.3)
+                    champion1_hp = champion1_hp + math.ceil((ability_data[3] * self.check_enemy_vunerability(5))*0.3)
                     if champion1_hp > CHAMPION1_HP:
                         champion1_hp = CHAMPION1_HP
-                    champion2_hp = champion2_hp + math.ceil((ability_data[3] * self.check_brittle(5))*0.3)
+                    champion2_hp = champion2_hp + math.ceil((ability_data[3] * self.check_enemy_vunerability(5))*0.3)
                     if champion2_hp > CHAMPION2_HP:
                         champion2_hp = CHAMPION2_HP
-                    champion3_hp = champion3_hp + math.ceil((ability_data[3] * self.check_brittle(5))*0.3)
+                    champion3_hp = champion3_hp + math.ceil((ability_data[3] * self.check_enemy_vunerability(5))*0.3)
                     if champion3_hp > CHAMPION3_HP:
                         champion3_hp = CHAMPION3_HP
-                    champion4_hp = champion4_hp + math.ceil((ability_data[3] * self.check_brittle(5))*0.3)
+                    champion4_hp = champion4_hp + math.ceil((ability_data[3] * self.check_enemy_vunerability(5))*0.3)
                     if champion4_hp > CHAMPION4_HP:
                         champion4_hp = CHAMPION4_HP
-                    champion5_hp = champion5_hp + math.ceil((ability_data[3] * self.check_brittle(5))*0.3)
+                    champion5_hp = champion5_hp + math.ceil((ability_data[3] * self.check_enemy_vunerability(5))*0.3)
                     if champion5_hp > CHAMPION5_HP:
                         champion5_hp = CHAMPION5_HP
                     blood_boil_buff = 0
@@ -24290,23 +24723,23 @@ class GameFrame(tk.Frame):
                         counter += 1
                         if champions == BLOODMANCER.title:
                             if counter == 1:
-                                champion1_hp = champion1_hp + math.ceil((ability_data[3] * self.check_brittle(5)))
+                                champion1_hp = champion1_hp + math.ceil((ability_data[3] * self.check_enemy_vunerability(5)))
                                 if champion1_hp > CHAMPION1_HP:
                                     champion1_hp = CHAMPION1_HP
                             elif counter == 2:
-                                champion2_hp = champion2_hp + math.ceil((ability_data[3] * self.check_brittle(5)))
+                                champion2_hp = champion2_hp + math.ceil((ability_data[3] * self.check_enemy_vunerability(5)))
                                 if champion2_hp > CHAMPION2_HP:
                                     champion2_hp = CHAMPION2_HP
                             elif counter == 3:
-                                champion3_hp = champion3_hp + math.ceil((ability_data[3] * self.check_brittle(5)))
+                                champion3_hp = champion3_hp + math.ceil((ability_data[3] * self.check_enemy_vunerability(5)))
                                 if champion3_hp > CHAMPION3_HP:
                                     champion3_hp = CHAMPION3_HP
                             elif counter == 4:
-                                champion4_hp = champion4_hp + math.ceil((ability_data[3] * self.check_brittle(5)))
+                                champion4_hp = champion4_hp + math.ceil((ability_data[3] * self.check_enemy_vunerability(5)))
                                 if champion4_hp > CHAMPION4_HP:
                                     champion4_hp = CHAMPION4_HP
                             elif counter == 5:
-                                champion5_hp = champion5_hp + math.ceil((ability_data[3] * self.check_brittle(5)))
+                                champion5_hp = champion5_hp + math.ceil((ability_data[3] * self.check_enemy_vunerability(5)))
                                 if champion5_hp > CHAMPION5_HP:
                                     champion5_hp = CHAMPION5_HP
         elif ability_data[0] == "Blood Spike":
@@ -24355,15 +24788,15 @@ class GameFrame(tk.Frame):
                 total_drained = champion1_drained+champion2_drained+champion3_drained+champion4_drained+champion5_drained
                 channelling_strength = 1
             if 1 in target_list:
-                ai1_hp = ai1_hp - ((math.ceil(ability_data[3] + total_drained) * self.check_brittle(1)))
+                ai1_hp = ai1_hp - ((math.ceil(ability_data[3] + total_drained) * self.check_enemy_vunerability(1)))
             if 2 in target_list:
-                ai2_hp = ai2_hp - ((math.ceil(ability_data[3] + total_drained) * self.check_brittle(2)))
+                ai2_hp = ai2_hp - ((math.ceil(ability_data[3] + total_drained) * self.check_enemy_vunerability(2)))
             if 3 in target_list:
-                ai3_hp = ai3_hp - ((math.ceil(ability_data[3] + total_drained) * self.check_brittle(3)))
+                ai3_hp = ai3_hp - ((math.ceil(ability_data[3] + total_drained) * self.check_enemy_vunerability(3)))
             if 4 in target_list:
-                ai4_hp = ai4_hp - ((math.ceil(ability_data[3] + total_drained) * self.check_brittle(4)))
+                ai4_hp = ai4_hp - ((math.ceil(ability_data[3] + total_drained) * self.check_enemy_vunerability(4)))
             if 5 in target_list:
-                ai5_hp = ai5_hp - ((math.ceil(ability_data[3] + total_drained) * self.check_brittle(5)))
+                ai5_hp = ai5_hp - ((math.ceil(ability_data[3] + total_drained) * self.check_enemy_vunerability(5)))
             if blood_boil_buff == 1:
                 blood_boil_buff = 0
             else:
@@ -24398,114 +24831,114 @@ class GameFrame(tk.Frame):
         elif ability_data[0] == "Holy Wrath":
             global holywrath_multiplier
             if 1 in target_list:
-                ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1) * (1 + (0.2 * holywrath_multiplier)))
+                ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(1) * (1 + (0.2 * holywrath_multiplier)))
                 if holywrath_multiplier < 5:
                     holywrath_multiplier = holywrath_multiplier + 1
                 else:
                     holywrath_multiplier = 1
             if 2 in target_list:
-                ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2) * (1 + (0.2 * holywrath_multiplier)))
+                ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(2) * (1 + (0.2 * holywrath_multiplier)))
                 if holywrath_multiplier < 5:
                     holywrath_multiplier = holywrath_multiplier + 1
                 else:
                     holywrath_multiplier = 1
             if 3 in target_list:
-                ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3) * (1 + (0.2 * holywrath_multiplier)))
+                ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(3) * (1 + (0.2 * holywrath_multiplier)))
                 if holywrath_multiplier < 5:
                     holywrath_multiplier = holywrath_multiplier + 1
                 else:
                     holywrath_multiplier = 1
             if 4 in target_list:
-                ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4) * (1 + (0.2 * holywrath_multiplier)))
+                ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(4) * (1 + (0.2 * holywrath_multiplier)))
                 if holywrath_multiplier < 5:
                     holywrath_multiplier = holywrath_multiplier + 1
                 else:
                     holywrath_multiplier = 1
             if 5 in target_list:
-                ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5) * (1 + (0.2 * holywrath_multiplier)))
+                ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(5) * (1 + (0.2 * holywrath_multiplier)))
                 if holywrath_multiplier < 5:
                     holywrath_multiplier = holywrath_multiplier + 1
                 else:
                     holywrath_multiplier = 1
         elif ability_data[0] == "Righteous Blow":
             if 1 in target_list:
-                ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1))
+                ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(1))
                 self.apply_stun(1, 2)
             if 2 in target_list:
-                ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2))
+                ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(2))
                 self.apply_stun(2, 2)
             if 3 in target_list:
-                ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3))
+                ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(3))
                 self.apply_stun(3, 2)
             if 4 in target_list:
-                ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4))
+                ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(4))
                 self.apply_stun(4, 2)
             if 5 in target_list:
-                ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5))
+                ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(5))
         elif ability_data[0] == "Crusade":
             if 1 in target_list:
-                ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1))
+                ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(1))
                 if AI_SPAWNED == 2:
-                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2) * 0.3)
+                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(2) * 0.3)
                 if AI_SPAWNED == 3:
-                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2) * 0.3)
-                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3) * 0.3)
+                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(2) * 0.3)
+                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(3) * 0.3)
                 if AI_SPAWNED == 4:
-                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2) * 0.3)
-                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3) * 0.3)
-                    ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4) * 0.3)
+                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(2) * 0.3)
+                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(3) * 0.3)
+                    ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(4) * 0.3)
                 if AI_SPAWNED == 5:
-                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2) * 0.3)
-                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3) * 0.3)
-                    ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4) * 0.3)
-                    ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5) * 0.3)
+                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(2) * 0.3)
+                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(3) * 0.3)
+                    ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(4) * 0.3)
+                    ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(5) * 0.3)
             if 2 in target_list:
-                ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2))
+                ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(2))
                 if AI_SPAWNED == 2:
-                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1) * 0.3)
+                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(1) * 0.3)
                 if AI_SPAWNED == 3:
-                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1) * 0.3)
-                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3) * 0.3)
+                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(1) * 0.3)
+                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(3) * 0.3)
                 if AI_SPAWNED == 4:
-                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1) * 0.3)
-                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3) * 0.3)
-                    ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4) * 0.3)
+                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(1) * 0.3)
+                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(3) * 0.3)
+                    ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(4) * 0.3)
                 if AI_SPAWNED == 5:
-                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1) * 0.3)
-                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3) * 0.3)
-                    ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4) * 0.3)
-                    ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5) * 0.3)
+                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(1) * 0.3)
+                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(3) * 0.3)
+                    ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(4) * 0.3)
+                    ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(5) * 0.3)
             if 3 in target_list:
-                ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3))
+                ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(3))
                 if AI_SPAWNED == 3:
-                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1) * 0.3)
-                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2) * 0.3)
+                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(1) * 0.3)
+                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(2) * 0.3)
                 if AI_SPAWNED == 4:
-                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1) * 0.3)
-                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2) * 0.3)
-                    ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4) * 0.3)
+                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(1) * 0.3)
+                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(2) * 0.3)
+                    ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(4) * 0.3)
                 if AI_SPAWNED == 5:
-                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1) * 0.3)
-                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2) * 0.3)
-                    ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4) * 0.3)
-                    ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5) * 0.3)
+                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(1) * 0.3)
+                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(2) * 0.3)
+                    ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(4) * 0.3)
+                    ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(5) * 0.3)
             if 4 in target_list:
-                ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4))
+                ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(4))
                 if AI_SPAWNED == 4:
-                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1) * 0.3)
-                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2) * 0.3)
-                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3) * 0.3)
+                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(1) * 0.3)
+                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(2) * 0.3)
+                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(3) * 0.3)
                 if AI_SPAWNED == 5:
-                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1) * 0.3)
-                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2) * 0.3)
-                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3) * 0.3)
-                    ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5) * 0.3)
+                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(1) * 0.3)
+                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(2) * 0.3)
+                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(3) * 0.3)
+                    ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(5) * 0.3)
             if 5 in target_list:
-                ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1) * 0.3)
-                ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2) * 0.3)
-                ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3) * 0.3)
-                ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4) * 0.3)
-                ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5))
+                ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(1) * 0.3)
+                ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(2) * 0.3)
+                ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(3) * 0.3)
+                ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(4) * 0.3)
+                ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(5))
         elif ability_data[0] == "Damnation":
             global ai1_damnation, ai2_damnation, ai3_damnation, ai4_damnation, ai5_damnation
             damnation_damage = ability_data[3] * 3
@@ -24527,76 +24960,76 @@ class GameFrame(tk.Frame):
         elif ability_data[0] == "Steady Aim":
             if current_arrow_type == "Heavy Iron Tip":
                 if 1 in target_list:
-                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1) * 1.5)
+                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(1) * 1.5)
                     if ai1_hp < 0:
                         ai1_hp = 0
                 if 2 in target_list:
-                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2) * 1.5)
+                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(2) * 1.5)
                     if ai2_hp < 0:
                         ai2_hp = 0
                 if 3 in target_list:
-                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3) * 1.5)
+                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(3) * 1.5)
                     if ai3_hp < 0:
                         ai3_hp = 0
                 if 4 in target_list:
-                    ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4) * 1.5)
+                    ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(4) * 1.5)
                     if ai4_hp < 0:
                         ai4_hp = 0
                 if 5 in target_list:
-                    ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5) * 1.5)
+                    ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(5) * 1.5)
                     if ai5_hp < 0:
                         ai5_hp = 0
             if current_arrow_type == "Barbed Tip":
                 if 1 in target_list:
-                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1))
+                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(1))
                     if ai1_hp < 0:
                         ai1_hp = 0
                     else:
                         self.apply_barbedArrowDot(1, 3)
                 if 2 in target_list:
-                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2))
+                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(2))
                     if ai2_hp < 0:
                         ai2_hp = 0
                     else:
                         self.apply_barbedArrowDot(2, 3)
                 if 3 in target_list:
-                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3))
+                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(3))
                     if ai3_hp < 0:
                         ai3_hp = 0
                     else:
                         self.apply_barbedArrowDot(3, 3)
                 if 4 in target_list:
-                    ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4))
+                    ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(4))
                     if ai4_hp < 0:
                         ai4_hp = 0
                     else:
                         self.apply_barbedArrowDot(4, 3)
                 if 5 in target_list:
-                    ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5))
+                    ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(5))
                     if ai5_hp < 0:
                         ai5_hp = 0
                     else:
                         self.apply_barbedArrowDot(5, 3)
             if current_arrow_type == "Shrapnel Tip":
                 if 1 in target_list:
-                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1))
+                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(1))
                     if ai1_hp < 0:
                         ai1_hp = 0
                     if AI_SPAWNED == 2:
-                        ai2_hp = ai2_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(2)) * 0.2)
+                        ai2_hp = ai2_hp - math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(2)) * 0.2)
                         if ai2_hp < 0:
                             ai2_hp = 0
                     if AI_SPAWNED == 3:
-                        ai2_hp = ai2_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(2)) * 0.2)
-                        ai3_hp = ai3_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(3)) * 0.2)
+                        ai2_hp = ai2_hp - math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(2)) * 0.2)
+                        ai3_hp = ai3_hp - math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(3)) * 0.2)
                         if ai2_hp < 0:
                             ai2_hp = 0
                         if ai3_hp < 0:
                             ai3_hp = 0
                     if AI_SPAWNED == 4:
-                        ai2_hp = ai2_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(2)) * 0.2)
-                        ai3_hp = ai3_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(3)) * 0.2)
-                        ai4_hp = ai4_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(4)) * 0.2)
+                        ai2_hp = ai2_hp - math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(2)) * 0.2)
+                        ai3_hp = ai3_hp - math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(3)) * 0.2)
+                        ai4_hp = ai4_hp - math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(4)) * 0.2)
                         if ai2_hp < 0:
                             ai2_hp = 0
                         if ai3_hp < 0:
@@ -24604,10 +25037,10 @@ class GameFrame(tk.Frame):
                         if ai4_hp < 0:
                             ai4_hp = 0
                     if AI_SPAWNED == 5:
-                        ai2_hp = ai2_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(2)) * 0.2)
-                        ai3_hp = ai3_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(3)) * 0.2)
-                        ai4_hp = ai4_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(4)) * 0.2)
-                        ai5_hp = ai5_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(5)) * 0.2)
+                        ai2_hp = ai2_hp - math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(2)) * 0.2)
+                        ai3_hp = ai3_hp - math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(3)) * 0.2)
+                        ai4_hp = ai4_hp - math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(4)) * 0.2)
+                        ai5_hp = ai5_hp - math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(5)) * 0.2)
                         if ai2_hp < 0:
                             ai2_hp = 0
                         if ai3_hp < 0:
@@ -24617,16 +25050,16 @@ class GameFrame(tk.Frame):
                         if ai5_hp < 0:
                             ai5_hp = 0
                 if 2 in target_list:
-                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2))
+                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(2))
                     if AI_SPAWNED == 2:
-                        ai1_hp = ai1_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(1)) * 0.2)
+                        ai1_hp = ai1_hp - math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(1)) * 0.2)
                         if ai1_hp < 0:
                             ai1_hp = 0
                         if ai2_hp < 0:
                             ai2_hp = 0
                     if AI_SPAWNED == 3:
-                        ai1_hp = ai1_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(1)) * 0.2)
-                        ai3_hp = ai3_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(3)) * 0.2)
+                        ai1_hp = ai1_hp - math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(1)) * 0.2)
+                        ai3_hp = ai3_hp - math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(3)) * 0.2)
                         if ai1_hp < 0:
                             ai1_hp = 0
                         if ai2_hp < 0:
@@ -24634,9 +25067,9 @@ class GameFrame(tk.Frame):
                         if ai3_hp < 0:
                             ai3_hp = 0
                     if AI_SPAWNED == 4:
-                        ai1_hp = ai1_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(1)) * 0.2)
-                        ai3_hp = ai3_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(3)) * 0.2)
-                        ai4_hp = ai4_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(4)) * 0.2)
+                        ai1_hp = ai1_hp - math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(1)) * 0.2)
+                        ai3_hp = ai3_hp - math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(3)) * 0.2)
+                        ai4_hp = ai4_hp - math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(4)) * 0.2)
                         if ai1_hp < 0:
                             ai1_hp = 0
                         if ai2_hp < 0:
@@ -24646,10 +25079,10 @@ class GameFrame(tk.Frame):
                         if ai4_hp < 0:
                             ai4_hp = 0
                     if AI_SPAWNED == 5:
-                        ai1_hp = ai1_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(1)) * 0.2)
-                        ai3_hp = ai3_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(3)) * 0.2)
-                        ai4_hp = ai4_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(4)) * 0.2)
-                        ai5_hp = ai5_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(5)) * 0.2)
+                        ai1_hp = ai1_hp - math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(1)) * 0.2)
+                        ai3_hp = ai3_hp - math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(3)) * 0.2)
+                        ai4_hp = ai4_hp - math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(4)) * 0.2)
+                        ai5_hp = ai5_hp - math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(5)) * 0.2)
                         if ai1_hp < 0:
                             ai1_hp = 0
                         if ai2_hp < 0:
@@ -24661,10 +25094,10 @@ class GameFrame(tk.Frame):
                         if ai5_hp < 0:
                             ai5_hp = 0
                 if 3 in target_list:
-                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3))
+                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(3))
                     if AI_SPAWNED == 3:
-                        ai1_hp = ai1_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(1)) * 0.2)
-                        ai2_hp = ai2_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(2)) * 0.2)
+                        ai1_hp = ai1_hp - math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(1)) * 0.2)
+                        ai2_hp = ai2_hp - math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(2)) * 0.2)
                         if ai1_hp < 0:
                             ai1_hp = 0
                         if ai2_hp < 0:
@@ -24672,9 +25105,9 @@ class GameFrame(tk.Frame):
                         if ai3_hp < 0:
                             ai3_hp = 0
                     if AI_SPAWNED == 4:
-                        ai1_hp = ai1_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(1)) * 0.2)
-                        ai2_hp = ai2_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(2)) * 0.2)
-                        ai4_hp = ai4_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(4)) * 0.2)
+                        ai1_hp = ai1_hp - math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(1)) * 0.2)
+                        ai2_hp = ai2_hp - math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(2)) * 0.2)
+                        ai4_hp = ai4_hp - math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(4)) * 0.2)
                         if ai1_hp < 0:
                             ai1_hp = 0
                         if ai2_hp < 0:
@@ -24684,10 +25117,10 @@ class GameFrame(tk.Frame):
                         if ai4_hp < 0:
                             ai4_hp = 0
                     if AI_SPAWNED == 5:
-                        ai1_hp = ai1_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(1)) * 0.2)
-                        ai2_hp = ai2_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(2)) * 0.2)
-                        ai4_hp = ai4_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(3)) * 0.2)
-                        ai5_hp = ai5_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(5)) * 0.2)
+                        ai1_hp = ai1_hp - math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(1)) * 0.2)
+                        ai2_hp = ai2_hp - math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(2)) * 0.2)
+                        ai4_hp = ai4_hp - math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(3)) * 0.2)
+                        ai5_hp = ai5_hp - math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(5)) * 0.2)
                         if ai1_hp < 0:
                             ai1_hp = 0
                         if ai2_hp < 0:
@@ -24699,11 +25132,11 @@ class GameFrame(tk.Frame):
                         if ai5_hp < 0:
                             ai5_hp = 0
                 if 4 in target_list:
-                    ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4))
+                    ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(4))
                     if AI_SPAWNED == 4:
-                        ai1_hp = ai1_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(1)) * 0.2)
-                        ai2_hp = ai2_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(2)) * 0.2)
-                        ai3_hp = ai3_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(4)) * 0.2)
+                        ai1_hp = ai1_hp - math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(1)) * 0.2)
+                        ai2_hp = ai2_hp - math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(2)) * 0.2)
+                        ai3_hp = ai3_hp - math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(4)) * 0.2)
                         if ai1_hp < 0:
                             ai1_hp = 0
                         if ai2_hp < 0:
@@ -24713,10 +25146,10 @@ class GameFrame(tk.Frame):
                         if ai4_hp < 0:
                             ai4_hp = 0
                     if AI_SPAWNED == 5:
-                        ai1_hp = ai1_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(1)) * 0.2)
-                        ai2_hp = ai2_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(2)) * 0.2)
-                        ai3_hp = ai3_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(3)) * 0.2)
-                        ai5_hp = ai5_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(5)) * 0.2)
+                        ai1_hp = ai1_hp - math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(1)) * 0.2)
+                        ai2_hp = ai2_hp - math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(2)) * 0.2)
+                        ai3_hp = ai3_hp - math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(3)) * 0.2)
+                        ai5_hp = ai5_hp - math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(5)) * 0.2)
                         if ai1_hp < 0:
                             ai1_hp = 0
                         if ai2_hp < 0:
@@ -24728,11 +25161,11 @@ class GameFrame(tk.Frame):
                         if ai5_hp < 0:
                             ai5_hp = 0
                 if 5 in target_list:
-                    ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5))
-                    ai1_hp = ai1_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(1)) * 0.2)
-                    ai2_hp = ai2_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(2)) * 0.2)
-                    ai3_hp = ai3_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(3)) * 0.2)
-                    ai4_hp = ai4_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(4)) * 0.2)
+                    ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(5))
+                    ai1_hp = ai1_hp - math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(1)) * 0.2)
+                    ai2_hp = ai2_hp - math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(2)) * 0.2)
+                    ai3_hp = ai3_hp - math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(3)) * 0.2)
+                    ai4_hp = ai4_hp - math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(4)) * 0.2)
                     if ai1_hp < 0:
                         ai1_hp = 0
                     if ai2_hp < 0:
@@ -24745,93 +25178,93 @@ class GameFrame(tk.Frame):
                         ai5_hp = 0
             if current_arrow_type == "Venom Tip":
                 if 1 in target_list:
-                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1))
+                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(1))
                     if ai1_hp < 0:
                         ai1_hp = 0
                     else:
                         self.apply_weakness(1, 2)
                 if 2 in target_list:
-                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2))
+                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(2))
                     if ai2_hp < 0:
                         ai2_hp = 0
                     else:
                         self.apply_weakness(2, 2)
                 if 3 in target_list:
-                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3))
+                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(3))
                     if ai3_hp < 0:
                         ai3_hp = 0
                     else:
                         self.apply_weakness(3, 2)
                 if 4 in target_list:
-                    ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4))
+                    ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(4))
                     if ai4_hp < 0:
                         ai4_hp = 0
                     else:
                         self.apply_weakness(4, 2)
                 if 5 in target_list:
-                    ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5))
+                    ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(5))
                     if ai5_hp < 0:
                         ai5_hp = 0
                     else:
                         self.apply_weakness(5, 2)
             if current_arrow_type == "Bola Tip":
                 if 1 in target_list:
-                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1))
+                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(1))
                     if ai1_hp < 0:
                         ai1_hp = 0
                     else:
                         self.apply_stun(1, 1)
                 if 2 in target_list:
-                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2))
+                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(2))
                     if ai2_hp < 0:
                         ai2_hp = 0
                     else:
                         self.apply_stun(2, 1)
                 if 3 in target_list:
-                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3))
+                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(3))
                     if ai3_hp < 0:
                         ai3_hp = 0
                     else:
                         self.apply_stun(3, 1)
                 if 4 in target_list:
-                    ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4))
+                    ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(4))
                     if ai4_hp < 0:
                         ai4_hp = 0
                     else:
                         self.apply_stun(4, 1)
                 if 5 in target_list:
-                    ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5))
+                    ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(5))
                     if ai5_hp < 0:
                         ai5_hp = 0
                     else:
                         self.apply_stun(5, 1)
             if current_arrow_type == "Vein Sensitizer Tip":
                 if 1 in target_list:
-                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1))
+                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(1))
                     if ai1_hp < 0:
                         ai1_hp = 0
                     else:
                         self.apply_brittle(1, 2)
                 if 2 in target_list:
-                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2))
+                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(2))
                     if ai2_hp < 0:
                         ai2_hp = 0
                     else:
                         self.apply_brittle(2, 2)
                 if 3 in target_list:
-                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3))
+                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(3))
                     if ai3_hp < 0:
                         ai3_hp = 0
                     else:
                         self.apply_brittle(3, 2)
                 if 4 in target_list:
-                    ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4))
+                    ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(4))
                     if ai4_hp < 0:
                         ai4_hp = 0
                     else:
                         self.apply_brittle(4, 2)
                 if 5 in target_list:
-                    ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5))
+                    ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(5))
                     if ai5_hp < 0:
                         ai5_hp = 0
                     else:
@@ -24843,76 +25276,76 @@ class GameFrame(tk.Frame):
         elif ability_data[0] == "Power Shot":
             if current_arrow_type == "Heavy Iron Tip":
                 if 1 in target_list:
-                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1) * 3)
+                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(1) * 3)
                     if ai1_hp < 0:
                         ai1_hp = 0
                 if 2 in target_list:
-                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2) * 3)
+                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(2) * 3)
                     if ai2_hp < 0:
                         ai2_hp = 0
                 if 3 in target_list:
-                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3) * 3)
+                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(3) * 3)
                     if ai3_hp < 0:
                         ai3_hp = 0
                 if 4 in target_list:
-                    ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4) * 3)
+                    ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(4) * 3)
                     if ai4_hp < 0:
                         ai4_hp = 0
                 if 5 in target_list:
-                    ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5) * 3)
+                    ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(5) * 3)
                     if ai5_hp < 0:
                         ai5_hp = 0
             if current_arrow_type == "Barbed Tip":
                 if 1 in target_list:
-                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1) * 1.5)
+                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(1) * 1.5)
                     if ai1_hp < 0:
                         ai1_hp = 0
                     else:
                         self.apply_barbedArrowDot(1, 6)
                 if 2 in target_list:
-                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2) * 1.5)
+                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(2) * 1.5)
                     if ai2_hp < 0:
                         ai2_hp = 0
                     else:
                         self.apply_barbedArrowDot(2, 6)
                 if 3 in target_list:
-                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3) * 1.5)
+                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(3) * 1.5)
                     if ai3_hp < 0:
                         ai3_hp = 0
                     else:
                         self.apply_barbedArrowDot(3, 6)
                 if 4 in target_list:
-                    ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4) * 1.5)
+                    ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(4) * 1.5)
                     if ai4_hp < 0:
                         ai4_hp = 0
                     else:
                         self.apply_barbedArrowDot(4, 6)
                 if 5 in target_list:
-                    ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5) * 1.5)
+                    ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(5) * 1.5)
                     if ai5_hp < 0:
                         ai5_hp = 0
                     else:
                         self.apply_barbedArrowDot(5, 6)
             if current_arrow_type == "Shrapnel Tip":
                 if 1 in target_list:
-                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1) * 1.5)
+                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(1) * 1.5)
                     if ai1_hp < 0:
                         ai1_hp = 0
                     if AI_SPAWNED == 2:
-                        ai2_hp = ai2_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(2)) * 0.75)
+                        ai2_hp = ai2_hp - math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(2)) * 0.75)
                         if ai2_hp < 0:
                             ai2_hp = 0
                     if AI_SPAWNED == 3:
-                        ai2_hp = ai2_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(2)) * 0.75)
-                        ai3_hp = ai3_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(3)) * 0.75)
+                        ai2_hp = ai2_hp - math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(2)) * 0.75)
+                        ai3_hp = ai3_hp - math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(3)) * 0.75)
                         if ai2_hp < 0:
                             ai2_hp = 0
                         if ai3_hp < 0:
                             ai3_hp = 0
                     if AI_SPAWNED == 4:
-                        ai2_hp = ai2_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(2)) * 0.75)
-                        ai3_hp = ai3_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(3)) * 0.75)
-                        ai4_hp = ai4_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(4)) * 0.75)
+                        ai2_hp = ai2_hp - math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(2)) * 0.75)
+                        ai3_hp = ai3_hp - math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(3)) * 0.75)
+                        ai4_hp = ai4_hp - math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(4)) * 0.75)
                         if ai2_hp < 0:
                             ai2_hp = 0
                         if ai3_hp < 0:
@@ -24920,10 +25353,10 @@ class GameFrame(tk.Frame):
                         if ai4_hp < 0:
                             ai4_hp = 0
                     if AI_SPAWNED == 5:
-                        ai2_hp = ai2_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(2)) * 0.75)
-                        ai3_hp = ai3_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(3)) * 0.75)
-                        ai4_hp = ai4_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(4)) * 0.75)
-                        ai5_hp = ai5_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(5)) * 0.75)
+                        ai2_hp = ai2_hp - math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(2)) * 0.75)
+                        ai3_hp = ai3_hp - math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(3)) * 0.75)
+                        ai4_hp = ai4_hp - math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(4)) * 0.75)
+                        ai5_hp = ai5_hp - math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(5)) * 0.75)
                         if ai2_hp < 0:
                             ai2_hp = 0
                         if ai3_hp < 0:
@@ -24933,16 +25366,16 @@ class GameFrame(tk.Frame):
                         if ai5_hp < 0:
                             ai5_hp = 0
                 if 2 in target_list:
-                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2) * 1.5)
+                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(2) * 1.5)
                     if AI_SPAWNED == 2:
-                        ai1_hp = ai1_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(1)) * 0.75)
+                        ai1_hp = ai1_hp - math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(1)) * 0.75)
                         if ai1_hp < 0:
                             ai1_hp = 0
                         if ai2_hp < 0:
                             ai2_hp = 0
                     if AI_SPAWNED == 3:
-                        ai1_hp = ai1_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(1)) * 0.75)
-                        ai3_hp = ai3_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(3)) * 0.75)
+                        ai1_hp = ai1_hp - math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(1)) * 0.75)
+                        ai3_hp = ai3_hp - math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(3)) * 0.75)
                         if ai1_hp < 0:
                             ai1_hp = 0
                         if ai2_hp < 0:
@@ -24950,9 +25383,9 @@ class GameFrame(tk.Frame):
                         if ai3_hp < 0:
                             ai3_hp = 0
                     if AI_SPAWNED == 4:
-                        ai1_hp = ai1_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(1)) * 0.75)
-                        ai3_hp = ai3_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(3)) * 0.75)
-                        ai4_hp = ai4_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(4)) * 0.75)
+                        ai1_hp = ai1_hp - math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(1)) * 0.75)
+                        ai3_hp = ai3_hp - math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(3)) * 0.75)
+                        ai4_hp = ai4_hp - math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(4)) * 0.75)
                         if ai1_hp < 0:
                             ai1_hp = 0
                         if ai2_hp < 0:
@@ -24962,10 +25395,10 @@ class GameFrame(tk.Frame):
                         if ai4_hp < 0:
                             ai4_hp = 0
                     if AI_SPAWNED == 5:
-                        ai1_hp = ai1_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(1)) * 0.75)
-                        ai3_hp = ai3_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(3)) * 0.75)
-                        ai4_hp = ai4_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(4)) * 0.75)
-                        ai5_hp = ai5_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(5)) * 0.75)
+                        ai1_hp = ai1_hp - math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(1)) * 0.75)
+                        ai3_hp = ai3_hp - math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(3)) * 0.75)
+                        ai4_hp = ai4_hp - math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(4)) * 0.75)
+                        ai5_hp = ai5_hp - math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(5)) * 0.75)
                         if ai1_hp < 0:
                             ai1_hp = 0
                         if ai2_hp < 0:
@@ -24977,10 +25410,10 @@ class GameFrame(tk.Frame):
                         if ai5_hp < 0:
                             ai5_hp = 0
                 if 3 in target_list:
-                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3) * 1.5)
+                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(3) * 1.5)
                     if AI_SPAWNED == 3:
-                        ai1_hp = ai1_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(1)) * 0.75)
-                        ai2_hp = ai2_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(2)) * 0.75)
+                        ai1_hp = ai1_hp - math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(1)) * 0.75)
+                        ai2_hp = ai2_hp - math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(2)) * 0.75)
                         if ai1_hp < 0:
                             ai1_hp = 0
                         if ai2_hp < 0:
@@ -24988,9 +25421,9 @@ class GameFrame(tk.Frame):
                         if ai3_hp < 0:
                             ai3_hp = 0
                     if AI_SPAWNED == 4:
-                        ai1_hp = ai1_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(1)) * 0.75)
-                        ai2_hp = ai2_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(2)) * 0.75)
-                        ai4_hp = ai4_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(4)) * 0.75)
+                        ai1_hp = ai1_hp - math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(1)) * 0.75)
+                        ai2_hp = ai2_hp - math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(2)) * 0.75)
+                        ai4_hp = ai4_hp - math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(4)) * 0.75)
                         if ai1_hp < 0:
                             ai1_hp = 0
                         if ai2_hp < 0:
@@ -25000,10 +25433,10 @@ class GameFrame(tk.Frame):
                         if ai4_hp < 0:
                             ai4_hp = 0
                     if AI_SPAWNED == 5:
-                        ai1_hp = ai1_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(1)) * 0.75)
-                        ai2_hp = ai2_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(2)) * 0.75)
-                        ai4_hp = ai4_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(3)) * 0.75)
-                        ai5_hp = ai5_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(5)) * 0.75)
+                        ai1_hp = ai1_hp - math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(1)) * 0.75)
+                        ai2_hp = ai2_hp - math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(2)) * 0.75)
+                        ai4_hp = ai4_hp - math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(3)) * 0.75)
+                        ai5_hp = ai5_hp - math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(5)) * 0.75)
                         if ai1_hp < 0:
                             ai1_hp = 0
                         if ai2_hp < 0:
@@ -25015,11 +25448,11 @@ class GameFrame(tk.Frame):
                         if ai5_hp < 0:
                             ai5_hp = 0
                 if 4 in target_list:
-                    ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4) * 1.5)
+                    ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(4) * 1.5)
                     if AI_SPAWNED == 4:
-                        ai1_hp = ai1_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(1)) * 0.75)
-                        ai2_hp = ai2_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(2)) * 0.75)
-                        ai3_hp = ai3_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(4)) * 0.75)
+                        ai1_hp = ai1_hp - math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(1)) * 0.75)
+                        ai2_hp = ai2_hp - math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(2)) * 0.75)
+                        ai3_hp = ai3_hp - math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(4)) * 0.75)
                         if ai1_hp < 0:
                             ai1_hp = 0
                         if ai2_hp < 0:
@@ -25029,10 +25462,10 @@ class GameFrame(tk.Frame):
                         if ai4_hp < 0:
                             ai4_hp = 0
                     if AI_SPAWNED == 5:
-                        ai1_hp = ai1_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(1)) * 0.75)
-                        ai2_hp = ai2_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(2)) * 0.75)
-                        ai3_hp = ai3_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(3)) * 0.75)
-                        ai5_hp = ai5_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(5)) * 0.75)
+                        ai1_hp = ai1_hp - math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(1)) * 0.75)
+                        ai2_hp = ai2_hp - math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(2)) * 0.75)
+                        ai3_hp = ai3_hp - math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(3)) * 0.75)
+                        ai5_hp = ai5_hp - math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(5)) * 0.75)
                         if ai1_hp < 0:
                             ai1_hp = 0
                         if ai2_hp < 0:
@@ -25044,11 +25477,11 @@ class GameFrame(tk.Frame):
                         if ai5_hp < 0:
                             ai5_hp = 0
                 if 5 in target_list:
-                    ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5) * 1.5)
-                    ai1_hp = ai1_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(1)) * 0.75)
-                    ai2_hp = ai2_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(2)) * 0.75)
-                    ai3_hp = ai3_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(3)) * 0.75)
-                    ai4_hp = ai4_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(4)) * 0.75)
+                    ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(5) * 1.5)
+                    ai1_hp = ai1_hp - math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(1)) * 0.75)
+                    ai2_hp = ai2_hp - math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(2)) * 0.75)
+                    ai3_hp = ai3_hp - math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(3)) * 0.75)
+                    ai4_hp = ai4_hp - math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(4)) * 0.75)
                     if ai1_hp < 0:
                         ai1_hp = 0
                     if ai2_hp < 0:
@@ -25061,93 +25494,93 @@ class GameFrame(tk.Frame):
                         ai5_hp = 0
             if current_arrow_type == "Venom Tip":
                 if 1 in target_list:
-                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1) * 1.5)
+                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(1) * 1.5)
                     if ai1_hp < 0:
                         ai1_hp = 0
                     else:
                         self.apply_weakness(1, 4)
                 if 2 in target_list:
-                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2) * 1.5)
+                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(2) * 1.5)
                     if ai2_hp < 0:
                         ai2_hp = 0
                     else:
                         self.apply_weakness(2, 4)
                 if 3 in target_list:
-                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3) * 1.5)
+                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(3) * 1.5)
                     if ai3_hp < 0:
                         ai3_hp = 0
                     else:
                         self.apply_weakness(3, 4)
                 if 4 in target_list:
-                    ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4) * 1.5)
+                    ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(4) * 1.5)
                     if ai4_hp < 0:
                         ai4_hp = 0
                     else:
                         self.apply_weakness(4, 4)
                 if 5 in target_list:
-                    ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5) * 1.5)
+                    ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(5) * 1.5)
                     if ai5_hp < 0:
                         ai5_hp = 0
                     else:
                         self.apply_weakness(5, 4)
             if current_arrow_type == "Bola Tip":
                 if 1 in target_list:
-                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1) * 1.5)
+                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(1) * 1.5)
                     if ai1_hp < 0:
                         ai1_hp = 0
                     else:
                         self.apply_stun(1, 2)
                 if 2 in target_list:
-                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2) * 1.5)
+                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(2) * 1.5)
                     if ai2_hp < 0:
                         ai2_hp = 0
                     else:
                         self.apply_stun(2, 2)
                 if 3 in target_list:
-                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3) * 1.5)
+                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(3) * 1.5)
                     if ai3_hp < 0:
                         ai3_hp = 0
                     else:
                         self.apply_stun(3, 2)
                 if 4 in target_list:
-                    ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4) * 1.5)
+                    ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(4) * 1.5)
                     if ai4_hp < 0:
                         ai4_hp = 0
                     else:
                         self.apply_stun(4, 2)
                 if 5 in target_list:
-                    ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5) * 1.5)
+                    ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(5) * 1.5)
                     if ai5_hp < 0:
                         ai5_hp = 0
                     else:
                         self.apply_stun(5, 2)
             if current_arrow_type == "Vein Sensitizer Tip":
                 if 1 in target_list:
-                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1) * 1.5)
+                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(1) * 1.5)
                     if ai1_hp < 0:
                         ai1_hp = 0
                     else:
                         self.apply_brittle(1, 4)
                 if 2 in target_list:
-                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2) * 1.5)
+                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(2) * 1.5)
                     if ai2_hp < 0:
                         ai2_hp = 0
                     else:
                         self.apply_brittle(2, 4)
                 if 3 in target_list:
-                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3) * 1.5)
+                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(3) * 1.5)
                     if ai3_hp < 0:
                         ai3_hp = 0
                     else:
                         self.apply_brittle(3, 4)
                 if 4 in target_list:
-                    ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4) * 1.5)
+                    ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(4) * 1.5)
                     if ai4_hp < 0:
                         ai4_hp = 0
                     else:
                         self.apply_brittle(4, 4)
                 if 5 in target_list:
-                    ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5) * 1.5)
+                    ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(5) * 1.5)
                     if ai5_hp < 0:
                         ai5_hp = 0
                     else:
@@ -25159,76 +25592,76 @@ class GameFrame(tk.Frame):
         elif ability_data[0] == "Multi-shot":
             if current_arrow_type == "Heavy Iron Tip":
                 if 1 in target_list:
-                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1) * 1.5)
+                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(1) * 1.5)
                     if ai1_hp < 0:
                         ai1_hp = 0
                 if 2 in target_list:
-                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2) * 1.5)
+                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(2) * 1.5)
                     if ai2_hp < 0:
                         ai2_hp = 0
                 if 3 in target_list:
-                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3) * 1.5)
+                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(3) * 1.5)
                     if ai3_hp < 0:
                         ai3_hp = 0
                 if 4 in target_list:
-                    ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4) * 1.5)
+                    ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(4) * 1.5)
                     if ai4_hp < 0:
                         ai4_hp = 0
                 if 5 in target_list:
-                    ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5) * 1.5)
+                    ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(5) * 1.5)
                     if ai5_hp < 0:
                         ai5_hp = 0
             if current_arrow_type == "Barbed Tip":
                 if 1 in target_list:
-                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1))
+                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(1))
                     if ai1_hp < 0:
                         ai1_hp = 0
                     else:
                         self.apply_barbedArrowDot(1, 3)
                 if 2 in target_list:
-                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2))
+                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(2))
                     if ai2_hp < 0:
                         ai2_hp = 0
                     else:
                         self.apply_barbedArrowDot(2, 3)
                 if 3 in target_list:
-                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3))
+                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(3))
                     if ai3_hp < 0:
                         ai3_hp = 0
                     else:
                         self.apply_barbedArrowDot(3, 3)
                 if 4 in target_list:
-                    ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4))
+                    ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(4))
                     if ai4_hp < 0:
                         ai4_hp = 0
                     else:
                         self.apply_barbedArrowDot(4, 3)
                 if 5 in target_list:
-                    ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5))
+                    ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(5))
                     if ai5_hp < 0:
                         ai5_hp = 0
                     else:
                         self.apply_barbedArrowDot(5, 3)
             if current_arrow_type == "Shrapnel Tip":
                 if 1 in target_list:
-                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1))
+                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(1))
                     if ai1_hp < 0:
                         ai1_hp = 0
                     if AI_SPAWNED == 2:
-                        ai2_hp = ai2_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(2)) * 0.2)
+                        ai2_hp = ai2_hp - math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(2)) * 0.2)
                         if ai2_hp < 0:
                             ai2_hp = 0
                     if AI_SPAWNED == 3:
-                        ai2_hp = ai2_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(2)) * 0.2)
-                        ai3_hp = ai3_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(3)) * 0.2)
+                        ai2_hp = ai2_hp - math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(2)) * 0.2)
+                        ai3_hp = ai3_hp - math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(3)) * 0.2)
                         if ai2_hp < 0:
                             ai2_hp = 0
                         if ai3_hp < 0:
                             ai3_hp = 0
                     if AI_SPAWNED == 4:
-                        ai2_hp = ai2_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(2)) * 0.2)
-                        ai3_hp = ai3_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(3)) * 0.2)
-                        ai4_hp = ai4_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(4)) * 0.2)
+                        ai2_hp = ai2_hp - math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(2)) * 0.2)
+                        ai3_hp = ai3_hp - math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(3)) * 0.2)
+                        ai4_hp = ai4_hp - math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(4)) * 0.2)
                         if ai2_hp < 0:
                             ai2_hp = 0
                         if ai3_hp < 0:
@@ -25236,10 +25669,10 @@ class GameFrame(tk.Frame):
                         if ai4_hp < 0:
                             ai4_hp = 0
                     if AI_SPAWNED == 5:
-                        ai2_hp = ai2_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(2)) * 0.2)
-                        ai3_hp = ai3_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(3)) * 0.2)
-                        ai4_hp = ai4_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(4)) * 0.2)
-                        ai5_hp = ai5_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(5)) * 0.2)
+                        ai2_hp = ai2_hp - math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(2)) * 0.2)
+                        ai3_hp = ai3_hp - math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(3)) * 0.2)
+                        ai4_hp = ai4_hp - math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(4)) * 0.2)
+                        ai5_hp = ai5_hp - math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(5)) * 0.2)
                         if ai2_hp < 0:
                             ai2_hp = 0
                         if ai3_hp < 0:
@@ -25249,16 +25682,16 @@ class GameFrame(tk.Frame):
                         if ai5_hp < 0:
                             ai5_hp = 0
                 if 2 in target_list:
-                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2))
+                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(2))
                     if AI_SPAWNED == 2:
-                        ai1_hp = ai1_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(1)) * 0.2)
+                        ai1_hp = ai1_hp - math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(1)) * 0.2)
                         if ai1_hp < 0:
                             ai1_hp = 0
                         if ai2_hp < 0:
                             ai2_hp = 0
                     if AI_SPAWNED == 3:
-                        ai1_hp = ai1_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(1)) * 0.2)
-                        ai3_hp = ai3_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(3)) * 0.2)
+                        ai1_hp = ai1_hp - math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(1)) * 0.2)
+                        ai3_hp = ai3_hp - math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(3)) * 0.2)
                         if ai1_hp < 0:
                             ai1_hp = 0
                         if ai2_hp < 0:
@@ -25266,9 +25699,9 @@ class GameFrame(tk.Frame):
                         if ai3_hp < 0:
                             ai3_hp = 0
                     if AI_SPAWNED == 4:
-                        ai1_hp = ai1_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(1)) * 0.2)
-                        ai3_hp = ai3_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(3)) * 0.2)
-                        ai4_hp = ai4_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(4)) * 0.2)
+                        ai1_hp = ai1_hp - math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(1)) * 0.2)
+                        ai3_hp = ai3_hp - math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(3)) * 0.2)
+                        ai4_hp = ai4_hp - math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(4)) * 0.2)
                         if ai1_hp < 0:
                             ai1_hp = 0
                         if ai2_hp < 0:
@@ -25278,10 +25711,10 @@ class GameFrame(tk.Frame):
                         if ai4_hp < 0:
                             ai4_hp = 0
                     if AI_SPAWNED == 5:
-                        ai1_hp = ai1_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(1)) * 0.2)
-                        ai3_hp = ai3_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(3)) * 0.2)
-                        ai4_hp = ai4_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(4)) * 0.2)
-                        ai5_hp = ai5_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(5)) * 0.2)
+                        ai1_hp = ai1_hp - math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(1)) * 0.2)
+                        ai3_hp = ai3_hp - math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(3)) * 0.2)
+                        ai4_hp = ai4_hp - math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(4)) * 0.2)
+                        ai5_hp = ai5_hp - math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(5)) * 0.2)
                         if ai1_hp < 0:
                             ai1_hp = 0
                         if ai2_hp < 0:
@@ -25293,10 +25726,10 @@ class GameFrame(tk.Frame):
                         if ai5_hp < 0:
                             ai5_hp = 0
                 if 3 in target_list:
-                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3))
+                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(3))
                     if AI_SPAWNED == 3:
-                        ai1_hp = ai1_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(1)) * 0.2)
-                        ai2_hp = ai2_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(2)) * 0.2)
+                        ai1_hp = ai1_hp - math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(1)) * 0.2)
+                        ai2_hp = ai2_hp - math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(2)) * 0.2)
                         if ai1_hp < 0:
                             ai1_hp = 0
                         if ai2_hp < 0:
@@ -25304,9 +25737,9 @@ class GameFrame(tk.Frame):
                         if ai3_hp < 0:
                             ai3_hp = 0
                     if AI_SPAWNED == 4:
-                        ai1_hp = ai1_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(1)) * 0.2)
-                        ai2_hp = ai2_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(2)) * 0.2)
-                        ai4_hp = ai4_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(4)) * 0.2)
+                        ai1_hp = ai1_hp - math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(1)) * 0.2)
+                        ai2_hp = ai2_hp - math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(2)) * 0.2)
+                        ai4_hp = ai4_hp - math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(4)) * 0.2)
                         if ai1_hp < 0:
                             ai1_hp = 0
                         if ai2_hp < 0:
@@ -25316,10 +25749,10 @@ class GameFrame(tk.Frame):
                         if ai4_hp < 0:
                             ai4_hp = 0
                     if AI_SPAWNED == 5:
-                        ai1_hp = ai1_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(1)) * 0.2)
-                        ai2_hp = ai2_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(2)) * 0.2)
-                        ai4_hp = ai4_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(3)) * 0.2)
-                        ai5_hp = ai5_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(5)) * 0.2)
+                        ai1_hp = ai1_hp - math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(1)) * 0.2)
+                        ai2_hp = ai2_hp - math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(2)) * 0.2)
+                        ai4_hp = ai4_hp - math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(3)) * 0.2)
+                        ai5_hp = ai5_hp - math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(5)) * 0.2)
                         if ai1_hp < 0:
                             ai1_hp = 0
                         if ai2_hp < 0:
@@ -25331,11 +25764,11 @@ class GameFrame(tk.Frame):
                         if ai5_hp < 0:
                             ai5_hp = 0
                 if 4 in target_list:
-                    ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4))
+                    ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(4))
                     if AI_SPAWNED == 4:
-                        ai1_hp = ai1_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(1)) * 0.2)
-                        ai2_hp = ai2_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(2)) * 0.2)
-                        ai3_hp = ai3_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(4)) * 0.2)
+                        ai1_hp = ai1_hp - math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(1)) * 0.2)
+                        ai2_hp = ai2_hp - math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(2)) * 0.2)
+                        ai3_hp = ai3_hp - math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(4)) * 0.2)
                         if ai1_hp < 0:
                             ai1_hp = 0
                         if ai2_hp < 0:
@@ -25345,10 +25778,10 @@ class GameFrame(tk.Frame):
                         if ai4_hp < 0:
                             ai4_hp = 0
                     if AI_SPAWNED == 5:
-                        ai1_hp = ai1_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(1)) * 0.2)
-                        ai2_hp = ai2_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(2)) * 0.2)
-                        ai3_hp = ai3_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(3)) * 0.2)
-                        ai5_hp = ai5_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(5)) * 0.2)
+                        ai1_hp = ai1_hp - math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(1)) * 0.2)
+                        ai2_hp = ai2_hp - math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(2)) * 0.2)
+                        ai3_hp = ai3_hp - math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(3)) * 0.2)
+                        ai5_hp = ai5_hp - math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(5)) * 0.2)
                         if ai1_hp < 0:
                             ai1_hp = 0
                         if ai2_hp < 0:
@@ -25360,11 +25793,11 @@ class GameFrame(tk.Frame):
                         if ai5_hp < 0:
                             ai5_hp = 0
                 if 5 in target_list:
-                    ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5))
-                    ai1_hp = ai1_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(1)) * 0.2)
-                    ai2_hp = ai2_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(2)) * 0.2)
-                    ai3_hp = ai3_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(3)) * 0.2)
-                    ai4_hp = ai4_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(4)) * 0.2)
+                    ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(5))
+                    ai1_hp = ai1_hp - math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(1)) * 0.2)
+                    ai2_hp = ai2_hp - math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(2)) * 0.2)
+                    ai3_hp = ai3_hp - math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(3)) * 0.2)
+                    ai4_hp = ai4_hp - math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(4)) * 0.2)
                     if ai1_hp < 0:
                         ai1_hp = 0
                     if ai2_hp < 0:
@@ -25377,93 +25810,93 @@ class GameFrame(tk.Frame):
                         ai5_hp = 0
             if current_arrow_type == "Venom Tip":
                 if 1 in target_list:
-                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1))
+                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(1))
                     if ai1_hp < 0:
                         ai1_hp = 0
                     else:
                         self.apply_weakness(1, 2)
                 if 2 in target_list:
-                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2))
+                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(2))
                     if ai2_hp < 0:
                         ai2_hp = 0
                     else:
                         self.apply_weakness(2, 2)
                 if 3 in target_list:
-                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3))
+                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(3))
                     if ai3_hp < 0:
                         ai3_hp = 0
                     else:
                         self.apply_weakness(3, 2)
                 if 4 in target_list:
-                    ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4))
+                    ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(4))
                     if ai4_hp < 0:
                         ai4_hp = 0
                     else:
                         self.apply_weakness(4, 2)
                 if 5 in target_list:
-                    ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5))
+                    ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(5))
                     if ai5_hp < 0:
                         ai5_hp = 0
                     else:
                         self.apply_weakness(5, 2)
             if current_arrow_type == "Bola Tip":
                 if 1 in target_list:
-                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1))
+                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(1))
                     if ai1_hp < 0:
                         ai1_hp = 0
                     else:
                         self.apply_stun(1, 1)
                 if 2 in target_list:
-                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2))
+                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(2))
                     if ai2_hp < 0:
                         ai2_hp = 0
                     else:
                         self.apply_stun(2, 1)
                 if 3 in target_list:
-                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3))
+                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(3))
                     if ai3_hp < 0:
                         ai3_hp = 0
                     else:
                         self.apply_stun(3, 1)
                 if 4 in target_list:
-                    ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4))
+                    ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(4))
                     if ai4_hp < 0:
                         ai4_hp = 0
                     else:
                         self.apply_stun(4, 1)
                 if 5 in target_list:
-                    ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5))
+                    ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(5))
                     if ai5_hp < 0:
                         ai5_hp = 0
                     else:
                         self.apply_stun(5, 1)
             if current_arrow_type == "Vein Sensitizer Tip":
                 if 1 in target_list:
-                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1))
+                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(1))
                     if ai1_hp < 0:
                         ai1_hp = 0
                     else:
                         self.apply_brittle(1, 2)
                 if 2 in target_list:
-                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2))
+                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(2))
                     if ai2_hp < 0:
                         ai2_hp = 0
                     else:
                         self.apply_brittle(2, 2)
                 if 3 in target_list:
-                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3))
+                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(3))
                     if ai3_hp < 0:
                         ai3_hp = 0
                     else:
                         self.apply_brittle(3, 2)
                 if 4 in target_list:
-                    ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4))
+                    ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(4))
                     if ai4_hp < 0:
                         ai4_hp = 0
                     else:
                         self.apply_brittle(4, 2)
                 if 5 in target_list:
-                    ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5))
+                    ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(5))
                     if ai5_hp < 0:
                         ai5_hp = 0
                     else:
@@ -25475,35 +25908,35 @@ class GameFrame(tk.Frame):
         elif ability_data[0] == "Ricochet Shot":
             if current_arrow_type == "Heavy Iron Tip":
                 if AI_SPAWNED == 1:
-                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1) * 1.5)
+                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(1) * 1.5)
                 if AI_SPAWNED == 2:
-                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1) * 1.5)
-                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2) * 1.5)
+                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(1) * 1.5)
+                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(2) * 1.5)
                 if AI_SPAWNED == 3:
-                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1) * 1.5)
-                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2) * 1.5)
-                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3) * 1.5)
+                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(1) * 1.5)
+                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(2) * 1.5)
+                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(3) * 1.5)
                 if AI_SPAWNED == 4:
-                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1) * 1.5)
-                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2) * 1.5)
-                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3) * 1.5)
-                    ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4) * 1.5)
+                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(1) * 1.5)
+                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(2) * 1.5)
+                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(3) * 1.5)
+                    ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(4) * 1.5)
                 if AI_SPAWNED == 5:
-                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1) * 1.5)
-                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2) * 1.5)
-                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3) * 1.5)
-                    ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4) * 1.5)
-                    ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5) * 1.5)
+                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(1) * 1.5)
+                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(2) * 1.5)
+                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(3) * 1.5)
+                    ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(4) * 1.5)
+                    ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(5) * 1.5)
             if current_arrow_type == "Barbed Tip":
                 if AI_SPAWNED == 1:
-                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1) * 0.75)
+                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(1) * 0.75)
                     if ai1_hp < 0:
                         ai1_hp = 0
                     else:
                         self.apply_barbedArrowDot(1, 3)
                 if AI_SPAWNED == 2:
-                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1) * 0.75)
-                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2) * 0.75)
+                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(1) * 0.75)
+                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(2) * 0.75)
                     if ai1_hp < 0:
                         ai1_hp = 0
                     else:
@@ -25513,9 +25946,9 @@ class GameFrame(tk.Frame):
                     else:
                         self.apply_barbedArrowDot(2, 3)
                 if AI_SPAWNED == 3:
-                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1) * 0.75)
-                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2) * 0.75)
-                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3) * 0.75)
+                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(1) * 0.75)
+                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(2) * 0.75)
+                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(3) * 0.75)
                     if ai1_hp < 0:
                         ai1_hp = 0
                     else:
@@ -25529,10 +25962,10 @@ class GameFrame(tk.Frame):
                     else:
                         self.apply_barbedArrowDot(3, 3)
                 if AI_SPAWNED == 4:
-                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1) * 0.75)
-                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2) * 0.75)
-                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3) * 0.75)
-                    ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4) * 0.75)
+                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(1) * 0.75)
+                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(2) * 0.75)
+                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(3) * 0.75)
+                    ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(4) * 0.75)
                     if ai1_hp < 0:
                         ai1_hp = 0
                     else:
@@ -25550,11 +25983,11 @@ class GameFrame(tk.Frame):
                     else:
                         self.apply_barbedArrowDot(4, 3)
                 if AI_SPAWNED == 5:
-                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1) * 0.75)
-                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2) * 0.75)
-                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3) * 0.75)
-                    ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4) * 0.75)
-                    ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5) * 0.75)
+                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(1) * 0.75)
+                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(2) * 0.75)
+                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(3) * 0.75)
+                    ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(4) * 0.75)
+                    ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(5) * 0.75)
                     if ai1_hp < 0:
                         ai1_hp = 0
                     else:
@@ -25577,33 +26010,33 @@ class GameFrame(tk.Frame):
                         self.apply_barbedArrowDot(5, 3)
             if current_arrow_type == "Shrapnel Tip":
                 if AI_SPAWNED == 1:
-                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1) * 0.75)
+                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(1) * 0.75)
                     if ai1_hp < 0:
                         ai1_hp = 0
                 if AI_SPAWNED == 2:
-                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1) * 0.75)
-                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2) * 0.75)
+                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(1) * 0.75)
+                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(2) * 0.75)
                     if ai1_hp != 0:
-                        ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2) * 0.15)
+                        ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(2) * 0.15)
                     if ai2_hp != 0:
-                        ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1) * 0.15)
+                        ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(1) * 0.15)
                     if ai1_hp < 0:
                         ai1_hp = 0
                     if ai2_hp < 0:
                         ai2_hp = 0
                 if AI_SPAWNED == 3:
-                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1) * 0.75)
-                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2) * 0.75)
-                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3) * 0.75)
+                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(1) * 0.75)
+                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(2) * 0.75)
+                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(3) * 0.75)
                     if ai1_hp != 0:
-                        ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2) * 0.15)
-                        ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3) * 0.15)
+                        ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(2) * 0.15)
+                        ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(3) * 0.15)
                     if ai2_hp != 0:
-                        ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1) * 0.15)
-                        ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3) * 0.15)
+                        ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(1) * 0.15)
+                        ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(3) * 0.15)
                     if ai3_hp != 0:
-                        ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1) * 0.15)
-                        ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2) * 0.15)
+                        ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(1) * 0.15)
+                        ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(2) * 0.15)
                     if ai1_hp < 0:
                         ai1_hp = 0
                     if ai2_hp < 0:
@@ -25611,26 +26044,26 @@ class GameFrame(tk.Frame):
                     if ai3_hp < 0:
                         ai3_hp = 0
                 if AI_SPAWNED == 4:
-                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1) * 0.75)
-                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2) * 0.75)
-                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3) * 0.75)
-                    ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4) * 0.75)
+                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(1) * 0.75)
+                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(2) * 0.75)
+                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(3) * 0.75)
+                    ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(4) * 0.75)
                     if ai1_hp != 0:
-                        ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2) * 0.15)
-                        ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3) * 0.15)
-                        ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4) * 0.15)
+                        ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(2) * 0.15)
+                        ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(3) * 0.15)
+                        ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(4) * 0.15)
                     if ai2_hp != 0:
-                        ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1) * 0.15)
-                        ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3) * 0.15)
-                        ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4) * 0.15)
+                        ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(1) * 0.15)
+                        ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(3) * 0.15)
+                        ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(4) * 0.15)
                     if ai3_hp != 0:
-                        ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1) * 0.15)
-                        ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2) * 0.15)
-                        ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4) * 0.15)
+                        ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(1) * 0.15)
+                        ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(2) * 0.15)
+                        ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(4) * 0.15)
                     if ai4_hp != 0:
-                        ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1) * 0.15)
-                        ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2) * 0.15)
-                        ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3) * 0.15)
+                        ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(1) * 0.15)
+                        ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(2) * 0.15)
+                        ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(3) * 0.15)
                     if ai1_hp < 0:
                         ai1_hp = 0
                     if ai2_hp < 0:
@@ -25640,36 +26073,36 @@ class GameFrame(tk.Frame):
                     if ai4_hp < 0:
                         ai4_hp = 0
                 if AI_SPAWNED == 5:
-                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1) * 0.75)
-                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2) * 0.75)
-                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3) * 0.75)
-                    ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4) * 0.75)
-                    ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5) * 0.75)
+                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(1) * 0.75)
+                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(2) * 0.75)
+                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(3) * 0.75)
+                    ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(4) * 0.75)
+                    ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(5) * 0.75)
                     if ai1_hp != 0:
-                        ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2) * 0.15)
-                        ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3) * 0.15)
-                        ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4) * 0.15)
-                        ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5) * 0.15)
+                        ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(2) * 0.15)
+                        ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(3) * 0.15)
+                        ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(4) * 0.15)
+                        ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(5) * 0.15)
                     if ai2_hp != 0:
-                        ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1) * 0.15)
-                        ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3) * 0.15)
-                        ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4) * 0.15)
-                        ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5) * 0.15)
+                        ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(1) * 0.15)
+                        ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(3) * 0.15)
+                        ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(4) * 0.15)
+                        ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(5) * 0.15)
                     if ai3_hp != 0:
-                        ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1) * 0.15)
-                        ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2) * 0.15)
-                        ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4) * 0.15)
-                        ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5) * 0.15)
+                        ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(1) * 0.15)
+                        ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(2) * 0.15)
+                        ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(4) * 0.15)
+                        ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(5) * 0.15)
                     if ai4_hp != 0:
-                        ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1) * 0.15)
-                        ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2) * 0.15)
-                        ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3) * 0.15)
-                        ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5) * 0.15)
+                        ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(1) * 0.15)
+                        ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(2) * 0.15)
+                        ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(3) * 0.15)
+                        ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(5) * 0.15)
                     if ai5_hp != 0:
-                        ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1) * 0.15)
-                        ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2) * 0.15)
-                        ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3) * 0.15)
-                        ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4) * 0.15)
+                        ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(1) * 0.15)
+                        ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(2) * 0.15)
+                        ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(3) * 0.15)
+                        ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(4) * 0.15)
                     if ai1_hp < 0:
                         ai1_hp = 0
                     if ai2_hp < 0:
@@ -25682,14 +26115,14 @@ class GameFrame(tk.Frame):
                         ai5_hp = 0
             if current_arrow_type == "Venom Tip":
                 if AI_SPAWNED == 1:
-                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1) * 0.75)
+                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(1) * 0.75)
                     if ai1_hp < 0:
                         ai1_hp = 0
                     else:
                         self.apply_weakness(1, 2)
                 if AI_SPAWNED == 2:
-                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1) * 0.75)
-                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2) * 0.75)
+                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(1) * 0.75)
+                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(2) * 0.75)
                     if ai1_hp < 0:
                         ai1_hp = 0
                     else:
@@ -25699,9 +26132,9 @@ class GameFrame(tk.Frame):
                     else:
                         self.apply_weakness(2, 2)
                 if AI_SPAWNED == 3:
-                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1) * 0.75)
-                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2) * 0.75)
-                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3) * 0.75)
+                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(1) * 0.75)
+                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(2) * 0.75)
+                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(3) * 0.75)
                     if ai1_hp < 0:
                         ai1_hp = 0
                     else:
@@ -25715,10 +26148,10 @@ class GameFrame(tk.Frame):
                     else:
                         self.apply_weakness(3, 2)
                 if AI_SPAWNED == 4:
-                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1) * 0.75)
-                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2) * 0.75)
-                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3) * 0.75)
-                    ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4) * 0.75)
+                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(1) * 0.75)
+                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(2) * 0.75)
+                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(3) * 0.75)
+                    ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(4) * 0.75)
                     if ai1_hp < 0:
                         ai1_hp = 0
                     else:
@@ -25736,11 +26169,11 @@ class GameFrame(tk.Frame):
                     else:
                         self.apply_weakness(4, 2)
                 if AI_SPAWNED == 5:
-                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1) * 0.75)
-                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2) * 0.75)
-                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3) * 0.75)
-                    ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4) * 0.75)
-                    ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5) * 0.75)
+                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(1) * 0.75)
+                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(2) * 0.75)
+                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(3) * 0.75)
+                    ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(4) * 0.75)
+                    ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(5) * 0.75)
                     if ai1_hp < 0:
                         ai1_hp = 0
                     else:
@@ -25763,14 +26196,14 @@ class GameFrame(tk.Frame):
                         self.apply_weakness(5, 2)
             if current_arrow_type == "Bola Tip":
                 if AI_SPAWNED == 1:
-                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1) * 0.75)
+                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(1) * 0.75)
                     if ai1_hp < 0:
                         ai1_hp = 0
                     else:
                         self.apply_stun(1, 1)
                 if AI_SPAWNED == 2:
-                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1) * 0.75)
-                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2) * 0.75)
+                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(1) * 0.75)
+                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(2) * 0.75)
                     if ai1_hp < 0:
                         ai1_hp = 0
                     else:
@@ -25780,9 +26213,9 @@ class GameFrame(tk.Frame):
                     else:
                         self.apply_stun(2, 1)
                 if AI_SPAWNED == 3:
-                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1) * 0.75)
-                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2) * 0.75)
-                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3) * 0.75)
+                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(1) * 0.75)
+                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(2) * 0.75)
+                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(3) * 0.75)
                     if ai1_hp < 0:
                         ai1_hp = 0
                     else:
@@ -25796,10 +26229,10 @@ class GameFrame(tk.Frame):
                     else:
                         self.apply_stun(3, 1)
                 if AI_SPAWNED == 4:
-                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1) * 0.75)
-                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2) * 0.75)
-                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3) * 0.75)
-                    ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4) * 0.75)
+                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(1) * 0.75)
+                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(2) * 0.75)
+                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(3) * 0.75)
+                    ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(4) * 0.75)
                     if ai1_hp < 0:
                         ai1_hp = 0
                     else:
@@ -25817,11 +26250,11 @@ class GameFrame(tk.Frame):
                     else:
                         self.apply_stun(4, 1)
                 if AI_SPAWNED == 5:
-                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1) * 0.75)
-                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2) * 0.75)
-                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3) * 0.75)
-                    ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4) * 0.75)
-                    ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5) * 0.75)
+                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(1) * 0.75)
+                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(2) * 0.75)
+                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(3) * 0.75)
+                    ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(4) * 0.75)
+                    ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(5) * 0.75)
                     if ai1_hp < 0:
                         ai1_hp = 0
                     else:
@@ -25844,14 +26277,14 @@ class GameFrame(tk.Frame):
                         self.apply_stun(5, 1)
             if current_arrow_type == "Vein Sensitizer Tip":
                 if AI_SPAWNED == 1:
-                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1) * 0.75)
+                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(1) * 0.75)
                     if ai1_hp < 0:
                         ai1_hp = 0
                     else:
                         self.apply_brittle(1, 2)
                 if AI_SPAWNED == 2:
-                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1) * 0.75)
-                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2) * 0.75)
+                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(1) * 0.75)
+                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(2) * 0.75)
                     if ai1_hp < 0:
                         ai1_hp = 0
                     else:
@@ -25861,9 +26294,9 @@ class GameFrame(tk.Frame):
                     else:
                         self.apply_brittle(2, 2)
                 if AI_SPAWNED == 3:
-                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1) * 0.75)
-                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2) * 0.75)
-                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3) * 0.75)
+                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(1) * 0.75)
+                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(2) * 0.75)
+                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(3) * 0.75)
                     if ai1_hp < 0:
                         ai1_hp = 0
                     else:
@@ -25877,10 +26310,10 @@ class GameFrame(tk.Frame):
                     else:
                         self.apply_brittle(3, 2)
                 if AI_SPAWNED == 4:
-                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1) * 0.75)
-                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2) * 0.75)
-                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3) * 0.75)
-                    ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4) * 0.75)
+                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(1) * 0.75)
+                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(2) * 0.75)
+                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(3) * 0.75)
+                    ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(4) * 0.75)
                     if ai1_hp < 0:
                         ai1_hp = 0
                     else:
@@ -25898,11 +26331,11 @@ class GameFrame(tk.Frame):
                     else:
                         self.apply_brittle(4, 2)
                 if AI_SPAWNED == 5:
-                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1) * 0.75)
-                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2) * 0.75)
-                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3) * 0.75)
-                    ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4) * 0.75)
-                    ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5) * 0.75)
+                    ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(1) * 0.75)
+                    ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(2) * 0.75)
+                    ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(3) * 0.75)
+                    ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(4) * 0.75)
+                    ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(5) * 0.75)
                     if ai1_hp < 0:
                         ai1_hp = 0
                     else:
@@ -25925,45 +26358,45 @@ class GameFrame(tk.Frame):
                         self.apply_brittle(5, 2)
         elif ability_data[0] == "Chain Bolts":
             if 1 in target_list:
-                ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1)) * 1.2
+                ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(1)) * 1.2
                 self.apply_charges(1)
             if 2 in target_list:
-                ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2)) * 1.2
+                ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(2)) * 1.2
                 self.apply_charges(2)
             if 3 in target_list:
-                ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3)) * 1.2
+                ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(3)) * 1.2
                 self.apply_charges(3)
             if 4 in target_list:
-                ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4)) * 1.2
+                ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(4)) * 1.2
                 self.apply_charges(4)
             if 5 in target_list:
-                ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5)) * 1.2
+                ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(5)) * 1.2
                 self.apply_charges(5)
         elif ability_data[0] == "Electrical Expulsion":
             if AI_SPAWNED == 1:
-                ai1_hp = ai1_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(1)) * 0.5)
+                ai1_hp = ai1_hp - math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(1)) * 0.5)
                 self.apply_charges(0)
             if AI_SPAWNED == 3:
-                ai1_hp = ai1_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(1)) * 0.5)
-                ai2_hp = ai2_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(2)) * 0.5)
+                ai1_hp = ai1_hp - math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(1)) * 0.5)
+                ai2_hp = ai2_hp - math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(2)) * 0.5)
                 self.apply_charges(0)
             if AI_SPAWNED == 3:
-                ai1_hp = ai1_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(1)) * 0.5)
-                ai2_hp = ai2_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(2)) * 0.5)
-                ai3_hp = ai3_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(3)) * 0.5)
+                ai1_hp = ai1_hp - math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(1)) * 0.5)
+                ai2_hp = ai2_hp - math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(2)) * 0.5)
+                ai3_hp = ai3_hp - math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(3)) * 0.5)
                 self.apply_charges(0)
             if AI_SPAWNED == 4:
-                ai1_hp = ai1_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(1)) * 0.5)
-                ai2_hp = ai2_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(2)) * 0.5)
-                ai3_hp = ai3_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(3)) * 0.5)
-                ai4_hp = ai4_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(4)) * 0.5)
+                ai1_hp = ai1_hp - math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(1)) * 0.5)
+                ai2_hp = ai2_hp - math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(2)) * 0.5)
+                ai3_hp = ai3_hp - math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(3)) * 0.5)
+                ai4_hp = ai4_hp - math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(4)) * 0.5)
                 self.apply_charges(0)
             if AI_SPAWNED == 5:
-                ai1_hp = ai1_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(1)) * 0.5)
-                ai2_hp = ai2_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(2)) * 0.5)
-                ai3_hp = ai3_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(3)) * 0.5)
-                ai4_hp = ai4_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(4)) * 0.5)
-                ai5_hp = ai5_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(5)) * 0.5)
+                ai1_hp = ai1_hp - math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(1)) * 0.5)
+                ai2_hp = ai2_hp - math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(2)) * 0.5)
+                ai3_hp = ai3_hp - math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(3)) * 0.5)
+                ai4_hp = ai4_hp - math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(4)) * 0.5)
+                ai5_hp = ai5_hp - math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(5)) * 0.5)
                 self.apply_charges(0)
         elif ability_data[0] == "Superconductor":
             global ai1_superconducted, ai2_superconducted, ai3_superconducted, ai4_superconducted, ai5_superconducted
@@ -25979,35 +26412,35 @@ class GameFrame(tk.Frame):
                 ai5_superconducted = 2
         elif ability_data[0] == "Power Surge":
             if AI_SPAWNED == 1:
-                ai1_hp = ai1_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(1))) * 1.4
+                ai1_hp = ai1_hp - math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(1))) * 1.4
                 self.apply_weakness(1, 2)
             if AI_SPAWNED == 3:
-                ai1_hp = ai1_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(1))) * 1.4
-                ai2_hp = ai2_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(2))) * 1.4
+                ai1_hp = ai1_hp - math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(1))) * 1.4
+                ai2_hp = ai2_hp - math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(2))) * 1.4
                 self.apply_weakness(1, 2)
                 self.apply_weakness(2, 2)
             if AI_SPAWNED == 3:
-                ai1_hp = ai1_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(1))) * 1.4
-                ai2_hp = ai2_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(2))) * 1.4
-                ai3_hp = ai3_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(3))) * 1.4
+                ai1_hp = ai1_hp - math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(1))) * 1.4
+                ai2_hp = ai2_hp - math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(2))) * 1.4
+                ai3_hp = ai3_hp - math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(3))) * 1.4
                 self.apply_weakness(1, 2)
                 self.apply_weakness(2, 2)
                 self.apply_weakness(3, 2)
             if AI_SPAWNED == 4:
-                ai1_hp = ai1_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(1))) * 1.4
-                ai2_hp = ai2_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(2))) * 1.4
-                ai3_hp = ai3_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(3))) * 1.4
-                ai4_hp = ai4_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(4))) * 1.4
+                ai1_hp = ai1_hp - math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(1))) * 1.4
+                ai2_hp = ai2_hp - math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(2))) * 1.4
+                ai3_hp = ai3_hp - math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(3))) * 1.4
+                ai4_hp = ai4_hp - math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(4))) * 1.4
                 self.apply_weakness(1, 2)
                 self.apply_weakness(2, 2)
                 self.apply_weakness(3, 2)
                 self.apply_weakness(4, 2)
             if AI_SPAWNED == 5:
-                ai1_hp = ai1_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(1))) * 1.4
-                ai2_hp = ai2_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(2))) * 1.4
-                ai3_hp = ai3_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(3))) * 1.4
-                ai4_hp = ai4_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(4))) * 1.4
-                ai5_hp = ai5_hp - math.ceil(math.ceil(ability_data[3] * self.check_brittle(5))) * 1.4
+                ai1_hp = ai1_hp - math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(1))) * 1.4
+                ai2_hp = ai2_hp - math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(2))) * 1.4
+                ai3_hp = ai3_hp - math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(3))) * 1.4
+                ai4_hp = ai4_hp - math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(4))) * 1.4
+                ai5_hp = ai5_hp - math.ceil(math.ceil(ability_data[3] * self.check_enemy_vunerability(5))) * 1.4
                 self.apply_weakness(1, 2)
                 self.apply_weakness(2, 2)
                 self.apply_weakness(3, 2)
@@ -26015,21 +26448,21 @@ class GameFrame(tk.Frame):
                 self.apply_weakness(5, 2)
         elif ability_data[0] == "Rock Barrage":
             if 1 in target_list:
-                ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1)) * 1.6
+                ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(1)) * 1.6
             if 2 in target_list:
-                ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2)) * 1.6
+                ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(2)) * 1.6
             if 3 in target_list:
-                ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3)) * 1.6
+                ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(3)) * 1.6
             if 4 in target_list:
-                ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4)) * 1.6
+                ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(4)) * 1.6
             if 5 in target_list:
-                ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5)) * 1.6
+                ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(5)) * 1.6
         elif ability_data[0] == "Shimmering Bolt":
-            shimmer_damage1 = math.ceil(ability_data[3] * self.check_brittle(1)) * 1.8
-            shimmer_damage2 = math.ceil(ability_data[3] * self.check_brittle(2)) * 1.8
-            shimmer_damage3 = math.ceil(ability_data[3] * self.check_brittle(3)) * 1.8
-            shimmer_damage4 = math.ceil(ability_data[3] * self.check_brittle(4)) * 1.8
-            shimmer_damage5 = math.ceil(ability_data[3] * self.check_brittle(5)) * 1.8
+            shimmer_damage1 = math.ceil(ability_data[3] * self.check_enemy_vunerability(1)) * 1.8
+            shimmer_damage2 = math.ceil(ability_data[3] * self.check_enemy_vunerability(2)) * 1.8
+            shimmer_damage3 = math.ceil(ability_data[3] * self.check_enemy_vunerability(3)) * 1.8
+            shimmer_damage4 = math.ceil(ability_data[3] * self.check_enemy_vunerability(4)) * 1.8
+            shimmer_damage5 = math.ceil(ability_data[3] * self.check_enemy_vunerability(5)) * 1.8
             if 1 in target_list:
                 ai1_hp = ai1_hp - shimmer_damage1
                 self.apply_shimmerDot(1,2)
@@ -26096,11 +26529,11 @@ class GameFrame(tk.Frame):
                 if champion5_hp != 0:
                     self.check_champion_blessing(5, shimmer_damage5)
         elif ability_data[0] == "Divine Smite":
-            divine_damage1 = math.ceil(ability_data[3] * self.check_brittle(1)) * 2.8
-            divine_damage2 = math.ceil(ability_data[3] * self.check_brittle(2)) * 2.8
-            divine_damage3 = math.ceil(ability_data[3] * self.check_brittle(3)) * 2.8
-            divine_damage4 = math.ceil(ability_data[3] * self.check_brittle(4)) * 2.8
-            divine_damage5 = math.ceil(ability_data[3] * self.check_brittle(5)) * 2.8
+            divine_damage1 = math.ceil(ability_data[3] * self.check_enemy_vunerability(1)) * 2.8
+            divine_damage2 = math.ceil(ability_data[3] * self.check_enemy_vunerability(2)) * 2.8
+            divine_damage3 = math.ceil(ability_data[3] * self.check_enemy_vunerability(3)) * 2.8
+            divine_damage4 = math.ceil(ability_data[3] * self.check_enemy_vunerability(4)) * 2.8
+            divine_damage5 = math.ceil(ability_data[3] * self.check_enemy_vunerability(5)) * 2.8
             if 1 in target_list:
                 ai1_hp = ai1_hp - divine_damage1
                 self.apply_divineDot(1,2)
@@ -26167,11 +26600,11 @@ class GameFrame(tk.Frame):
                 if champion5_hp != 0:
                     self.check_champion_blessing(5, divine_damage5)
         elif ability_data[0] == "Diffracting Nova":
-            nova_damage1 = math.ceil(ability_data[3] * self.check_brittle(1)) * 0.5
-            nova_damage2 = math.ceil(ability_data[3] * self.check_brittle(2)) * 0.5
-            nova_damage3 = math.ceil(ability_data[3] * self.check_brittle(3)) * 0.5
-            nova_damage4 = math.ceil(ability_data[3] * self.check_brittle(4)) * 0.5
-            nova_damage5 = math.ceil(ability_data[3] * self.check_brittle(5)) * 0.5
+            nova_damage1 = math.ceil(ability_data[3] * self.check_enemy_vunerability(1)) * 0.5
+            nova_damage2 = math.ceil(ability_data[3] * self.check_enemy_vunerability(2)) * 0.5
+            nova_damage3 = math.ceil(ability_data[3] * self.check_enemy_vunerability(3)) * 0.5
+            nova_damage4 = math.ceil(ability_data[3] * self.check_enemy_vunerability(4)) * 0.5
+            nova_damage5 = math.ceil(ability_data[3] * self.check_enemy_vunerability(5)) * 0.5
             if AI_SPAWNED == 1:
                 ai1_hp = ai1_hp - nova_damage1
                 if champion1_hp != 0:
@@ -26300,26 +26733,26 @@ class GameFrame(tk.Frame):
                 self.grant_champion_blessing(5)
         elif ability_data[0] == "Cybernetic Blast":
             if 1 in target_list:
-                ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1)) * 1.4
+                ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(1)) * 1.4
             if 2 in target_list:
-                ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2)) * 1.4
+                ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(2)) * 1.4
             if 3 in target_list:
-                ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3)) * 1.4
+                ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(3)) * 1.4
             if 4 in target_list:
-                ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4)) * 1.4
+                ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(4)) * 1.4
             if 5 in target_list:
-                ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5)) * 1.4
+                ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(5)) * 1.4
         elif ability_data[0] == "Snip Snip":
             if 1 in target_list:
-                ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_brittle(1)) * 2.2
+                ai1_hp = ai1_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(1)) * 2.2
             if 2 in target_list:
-                ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_brittle(2)) * 2.2
+                ai2_hp = ai2_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(2)) * 2.2
             if 3 in target_list:
-                ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_brittle(3)) * 2.2
+                ai3_hp = ai3_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(3)) * 2.2
             if 4 in target_list:
-                ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_brittle(4)) * 2.2
+                ai4_hp = ai4_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(4)) * 2.2
             if 5 in target_list:
-                ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_brittle(5)) * 2.2
+                ai5_hp = ai5_hp - math.ceil(ability_data[3] * self.check_enemy_vunerability(5)) * 2.2
         ai1_hp = math.ceil(ai1_hp)
         ai2_hp = math.ceil(ai2_hp)
         ai3_hp = math.ceil(ai3_hp)
@@ -26989,23 +27422,23 @@ class GameFrame(tk.Frame):
         global champion1_blessing, champion2_blessing, champion3_blessing, champion4_blessing, champion5_blessing, \
             champion1_statuses, champion2_statuses, champion3_statuses, champion4_statuses, champion5_statuses
         if target == 1:
-            champion1_blessing = 2
+            champion1_blessing = 3
             if "Blessed" not in champion1_statuses:
                 champion1_statuses.append("Blessed")
         if target == 2:
-            champion2_blessing = 2
+            champion2_blessing = 3
             if "Blessed" not in champion2_statuses:
                 champion2_statuses.append("Blessed")
         if target == 3:
-            champion3_blessing = 2
+            champion3_blessing = 3
             if "Blessed" not in champion3_statuses:
                 champion3_statuses.append("Blessed")
         if target == 4:
-            champion4_blessing = 2
+            champion4_blessing = 3
             if "Blessed" not in champion4_statuses:
                 champion4_statuses.append("Blessed")
         if target == 5:
-            champion5_blessing = 2
+            champion5_blessing = 3
             if "Blessed" not in champion5_statuses:
                 champion5_statuses.append("Blessed")
 
@@ -27824,34 +28257,34 @@ class GameFrame(tk.Frame):
                     ai5_statuses.append("Brittle")
             else:
                 return
-    def check_brittle(self, target):
-        damage_modifier = 1
+    def check_enemy_vunerability(self, target):
+        vunerability_modifier = 1
         if target == 1:
             if ai1_brittle != 0:
-                damage_modifier = damage_modifier + 0.3
+                vunerability_modifier = vunerability_modifier + 0.3
             if ai1_thornsDot[1] != 0:
-                damage_modifier = damage_modifier + (0.01 * ai1_thornsDot[1])
+                vunerability_modifier = vunerability_modifier + (0.02 * ai1_thornsDot[1])
         if target == 2:
             if ai2_brittle != 0:
-                damage_modifier = damage_modifier + 0.3
+                vunerability_modifier = vunerability_modifier + 0.3
             if ai2_thornsDot[1] != 0:
-                damage_modifier = damage_modifier + (0.01 * ai2_thornsDot[1])
+                vunerability_modifier = vunerability_modifier + (0.02 * ai2_thornsDot[1])
         if target == 3:
             if ai3_brittle != 0:
-                damage_modifier = damage_modifier + 0.3
+                vunerability_modifier = vunerability_modifier + 0.3
             if ai3_thornsDot[1] != 0:
-                damage_modifier = damage_modifier + (0.01 * ai3_thornsDot[1])
+                vunerability_modifier = vunerability_modifier + (0.02 * ai3_thornsDot[1])
         if target == 4:
             if ai4_brittle != 0:
-                damage_modifier = damage_modifier + 0.3
+                vunerability_modifier = vunerability_modifier + 0.3
             if ai4_thornsDot[1] != 0:
-                damage_modifier = damage_modifier + (0.01 * ai4_thornsDot[1])
+                vunerability_modifier = vunerability_modifier + (0.02 * ai4_thornsDot[1])
         if target == 5:
             if ai5_brittle != 0:
-                damage_modifier = damage_modifier + 0.3
+                vunerability_modifier = vunerability_modifier + 0.3
             if ai5_thornsDot[1] != 0:
-                damage_modifier = damage_modifier + (0.01 * ai5_thornsDot[1])
-        return damage_modifier
+                vunerability_modifier = vunerability_modifier + (0.02 * ai5_thornsDot[1])
+        return vunerability_modifier
     def apply_shimmerDot(self, target, length):
         global ai1_shimmerDot, ai2_shimmerDot, ai3_shimmerDot, ai4_shimmerDot, ai5_shimmerDot, \
             ai1_statuses, ai2_statuses, ai3_statuses, ai4_statuses, ai5_statuses
@@ -29602,468 +30035,185 @@ class GameFrame(tk.Frame):
     def EndGameSaving(self):
         global endgame_window
         endgame_window = tk.Tk()
+        total_rooms = (floor_level * 3) + room_level
+        whole_collected_emblems = floor_level
+        fraction_collected_emblems = 0
+        if room_level == 2:
+            fraction_collected_emblems = 0.33
+        elif room_level == 3:
+            fraction_collected_emblems = 0.67
+        total_collected_emblems = whole_collected_emblems + fraction_collected_emblems
+        old_total_emblems = ParentClass.get_account_data(self, "emblems")
+        new_total_emblems = old_total_emblems
+        if ".33" in str(old_total_emblems):
+            if fraction_collected_emblems == 0.33:
+                new_total_emblems = new_total_emblems - 0.33
+                new_total_emblems = new_total_emblems + 0.67
+            elif fraction_collected_emblems == 0.67:
+                new_total_emblems = new_total_emblems - 0.67
+                new_total_emblems = new_total_emblems + 1
+        elif ".67" in str(old_total_emblems):
+            if fraction_collected_emblems == 0.33:
+                new_total_emblems = new_total_emblems - 0.67
+                new_total_emblems = new_total_emblems + 1
+            elif fraction_collected_emblems == 0.67:
+                new_total_emblems = new_total_emblems - 0.67
+                new_total_emblems = new_total_emblems + 1.33
         invis_label1 = tk.Label(endgame_window)
-        title_label = tk.Label(endgame_window, text="You've Lost!", font=self.small_title_font)
-        progress_label = tk.Label(endgame_window, text="But you've made it to Floor {} Room {}!".format(floorLevel, roomLevel))
-        save_game_stats_confirmation_label = tk.Label(endgame_window,
-                                                      text="Do you want to apply your game to the Leaderboard?\nIf you've done well enough, your game will appear in the top ten for the difficulty category!")
-        yes_button = tk.Button(endgame_window, text="Yes", font=self.medium_text_font_bold, command=self.add_score_to_leaderboard)
-        no_button = tk.Button(endgame_window, text="No", command=self.confirm_decline_add_score, font=self.medium_text_font_bold)
+        invis_label2 = tk.Label(endgame_window)
+        title_label = tk.Label(endgame_window, text="You're exploration ends here", font=self.small_title_font)
+        final_progress_label = tk.Label(endgame_window, text="But you've made it past {} Floors and {} Rooms, thats {} Rooms total!".format(floor_level, room_level, total_rooms))
+        player_rank = ParentClass.get_account_data(self, "rank")
+        if player_rank != dungeon_settings:
+            emblems_update_label = tk.Label(endgame_window,
+                                            text="Because you explored a lower level dungeon, you don't receive rewards towards your next Guild rank\nYou only received dungeoneer emblems from your current guilds expedition dungeon")
+        else:
+            emblems_update_label = tk.Label(endgame_window,
+                                                text="You've received {} dungeoneer emblems\nYou now have a total of {} emblems".format(total_collected_emblems, new_total_emblems))
+            rank_change_check = 0
+            if old_total_emblems < 20:
+                if new_total_emblems >= 20:
+                    rank_change_check = 1
+                    rank_change_label = tk.Label(endgame_window, text="Congratulations! You've collected enough emblems to rank you up into the Silver Guild!\nYou've now got access to Silver Guild expeditions")
+                else:
+                    rank_change_label = tk.Label(endgame_window, text="")
+            elif old_total_emblems < 40:
+                if new_total_emblems >= 40:
+                    rank_change_check = 1
+                    rank_change_label = tk.Label(endgame_window, text="Congratulations! You've collected enough emblems to rank you up into the Gold Guild!\nYou've now got access to Gold Guild expeditions")
+                else:
+                    rank_change_label = tk.Label(endgame_window, text="")
+            elif old_total_emblems < 60:
+                if new_total_emblems >= 60:
+                    rank_change_check = 1
+                    rank_change_label = tk.Label(endgame_window, text="Congratulations! You've collected enough emblems to rank you up into the Steel Guild!\nYou've now got access to Steel Guild expeditions")
+                else:
+                    rank_change_label = tk.Label(endgame_window, text="")
+            elif old_total_emblems < 80:
+                if new_total_emblems >= 80:
+                    rank_change_check = 1
+                    rank_change_label = tk.Label(endgame_window, text="Congratulations! You've collected enough emblems to rank you up into the Diamond Guild!\nYou've now got access to Diamond Guild expeditions")
+                else:
+                    rank_change_label = tk.Label(endgame_window, text="")
+            elif old_total_emblems < 100:
+                if new_total_emblems >= 100:
+                    rank_change_check = 1
+                    rank_change_label = tk.Label(endgame_window, text="Congratulations! You've collected enough emblems to rank you up into the Ruby Guild!\nYou've now got access to Ruby Guild expeditions")
+                else:
+                    rank_change_label = tk.Label(endgame_window, text="")
+            elif old_total_emblems < 120:
+                if new_total_emblems >= 120:
+                    rank_change_check = 1
+                    rank_change_label = tk.Label(endgame_window, text="Congratulations! You've collected enough emblems to rank you up into the Obsidian Guild!\nYou've now got access to Obsidian Guild expeditions")
+                else:
+                    rank_change_label = tk.Label(endgame_window, text="")
+            ParentClass.update_account_emblems(self, new_total_emblems, rank_change_check)
+            rank_change_label.grid(row=5, column=3)
+        endGame_to_mainMenu_button = tk.Button(endgame_window, text="Back to the Dungeon Entrance", command=self.begin_dungeon_run)
         title_label.grid(row=1, column=3)
-        progress_label.grid(row=2, column=3)
+        final_progress_label.grid(row=2, column=3)
         invis_label1.grid(row=3, column=2, pady=10)
-        save_game_stats_confirmation_label.grid(row=4, column=3)
-        yes_button.grid(row=5, column=3, sticky="w", padx=25)
-        no_button.grid(row=5, column=3, sticky="e", padx=25)
-    def add_score_to_leaderboard(self):
-        global roomLevel, floorLevel
-        user = ParentClass.get_user_encoded(self)
-        read_difficulty_file = open(
-            "C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Data (DO NOT EDIT)/game_data_dungeon_difficulty.txt".format(computer_username),
-            "r")
-        dungeon_settings = read_difficulty_file.readline()
-        if dungeon_settings == "easy":
-            leaderboard_easy_file = open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Data (DO NOT EDIT)/game_data_easy_leaderboard.txt".format(computer_username), "a")
-            leaderboard_easy_file.write("\n")
-            leaderboard_easy_file.write("{} {} {} {}".format(user, floorLevel, roomLevel, CHAMPION_LIST))
-            leaderboard_easy_file.close()
-        if dungeon_settings == "normal":
-            leaderboard_normal_file = open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Data (DO NOT EDIT)/game_data_normal_leaderboard.txt".format(computer_username), "a")
-            leaderboard_normal_file.write("\n")
-            leaderboard_normal_file.write("{} {} {} {}".format(user, floorLevel, roomLevel, CHAMPION_LIST))
-            leaderboard_normal_file.close()
-        if dungeon_settings == "hard":
-            leaderboard_hard_file = open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Data (DO NOT EDIT)/game_data_hard_leaderboard.txt".format(computer_username), "a")
-            leaderboard_hard_file.write("\n")
-            leaderboard_hard_file.write("{} {} {} {}".format(user, floorLevel, roomLevel, CHAMPION_LIST))
-            leaderboard_hard_file.close()
-        read_difficulty_file.close()
-        endgame_window.destroy()
-        for widget in dungeon_game_frame.winfo_children():
-            widget.destroy()
-        floorLevel = 1
-        roomLevel = 1
-        self.set_dungeon_properties()
-    def confirm_decline_add_score(self):
-        global confirmation_window
-        confirmation_window = tk.Tk()
-        warning_label = tk.Label(confirmation_window, text="Are you sure you don't want to add your score to the leaderboard?")
-        yes_button = tk.Button(confirmation_window, text="Yes", command=self.endgame_to_startgame)
-        no_button = tk.Button(confirmation_window, text="No", command=confirmation_window.destroy)
-        warning_label.grid(row=1, column=1)
-        yes_button.grid(row=2, column=1)
-        no_button.grid(row=3, column=1)
-    def endgame_to_startgame(self):
-        global floorLevel, roomLevel
-        confirmation_window.destroy()
-        endgame_window.destroy()
-        for widget in dungeon_game_frame.winfo_children():
-            widget.destroy()
-        floorLevel = 1
-        roomLevel = 1
-        self.set_dungeon_properties()
+        emblems_update_label.grid(row=4, column=3)
+        invis_label2.grid(row=6, column=3, pady=10)
+        endGame_to_mainMenu_button.grid(row=7, column=3)
 
 class CreateTeamPage(tk.Frame):
     def __init__(self, parent, controller):
         global update_page_button
         tk.Frame.__init__(self, parent)
         self.controller = controller
+        self.title_font = tkfont.Font(family='Times New Roman Baltic', size=120, weight="bold")
+        for widget in self.winfo_children():
+            widget.destroy()
         self.update_variables()
-        label = tk.Label(self, text="Champion Camp", font=controller.title_font)
-        team_1_button = tk.Button(self, text=team_1_button_text,
-                                  command=lambda: controller.show_frame("TeamSelectionPage"))
-        team_2_button = tk.Button(self, text="Team 2: NYI")
-        team_3_button = tk.Button(self, text="Team 3: NYI")
-        update_page_button_2 = tk.Button(self, text="Refresh Team Page", command=self.update_variables)
-        update_page_button_2.grid(row=8, column=2)
-        buttonReturn = tk.Button(self, text="Return to Menu",
-                                 command=lambda: controller.show_frame("MainMenu"))
-        label.grid(row=1, column=2, sticky="nsew", pady=10)
-        buttonReturn.grid(row=9, column=2)
-        team_1_button.grid(row=3, column=2)
-        team_2_button.grid(row=5, column=2)
-        team_3_button.grid(row=7, column=2)
 
     def update_variables(self):
-        global decoded_dungeoneer_team1, decoded_dungeoneer_team2, decoded_dungeoneer_team3, team_1_button_text, team_2_button_text, team_3_button_text
-        user = self.get_user()
-        team_1_list_data = []
-        team_2_list_data = []
-        team_3_list_data = []
-        team_line_1 = ParentClass.return_users_champion_team1(self, user)
-        team_line_1 = team_line_1.replace(",", "")
-        team_1_list_data = team_line_1.split()
-        team_line_2 = ParentClass.return_users_champion_team2(self, user)
-        team_line_2 = team_line_2.replace(",", "")
-        team_2_list_data = team_line_2.split()
-        team_line_3 = ParentClass.return_users_champion_team3(self, user)
-        team_line_3 = team_line_3.replace(",", "")
-        team_3_list_data = team_line_3.split()
-        decoded_dungeoneer_team1 = self.team_1_decode(team_1_list_data)
-        decoded_dungeoneer_team2 = self.team_2_decode(team_2_list_data)
-        decoded_dungeoneer_team3 = self.team_3_decode(team_3_list_data)
-        team_1_text = self.display_team(decoded_dungeoneer_team1)
-        team_2_text = self.display_team2(decoded_dungeoneer_team2)
-        team_3_text = self.display_team3(decoded_dungeoneer_team3)
-        team_1_button_text = self.team_1_button_message(decoded_dungeoneer_team1)
-        team_2_button_text = self.team_2_button_message(decoded_dungeoneer_team2)
-        team_3_button_text = self.team_3_button_message(decoded_dungeoneer_team3)
-        team_1_label = tk.Label(self, text=team_1_text)
-        team_2_label = tk.Label(self, text=team_2_text)
-        team_3_label = tk.Label(self, text=team_3_text)
-        team_1_label.grid(row=2, column=2)
-        team_2_label.grid(row=4, column=2)
-        team_3_label.grid(row=6, column=2)
+        global decoded_dungeoneer_team, team_button_text
+        for widget in self.winfo_children():
+            widget.destroy()
+        team_list_data = []
+        team_line = ParentClass.get_account_data(self, "champion_list")
+        team_list_data = team_line.split(":")
+        decoded_dungeoneer_team = self.team_decode(team_list_data)
+        team_text = self.display_team(decoded_dungeoneer_team)
+        team_button_text = self.team_button_message(decoded_dungeoneer_team)
+        title_label = tk.Label(self, text="Champion Camp", font=self.title_font)
+        team_label = tk.Label(self, text=team_text)
+        team_button = tk.Button(self, text=team_button_text,
+                                  command=lambda: ParentClass.show_frame(app, "TeamSelectionPage"))
+        update_page_button = tk.Button(self, text="Refresh Team Page", command=self.update_variables)
+        return_button = tk.Button(self, text="Return to Menu",
+                                 command=lambda: ParentClass.show_frame(app, "MainMenu"))
+        title_label.grid(row=1, column=2, sticky="nsew", pady=10)
+        team_label.grid(row=2, column=2)
+        team_button.grid(row=3, column=2)
+        update_page_button.grid(row=4, column=2)
+        return_button.grid(row=5, column=2)
 
-    def display_team(self, decoded_dungeoneer_team1):
-        team_1_text = ""
-        for character in decoded_dungeoneer_team1:
-            team_1_text += "\n"
-            team_1_text += character
-        return team_1_text
+    def display_team(self, decoded_dungeoneer_team):
+        team_text = ""
+        for character in decoded_dungeoneer_team:
+            team_text += "\n"
+            team_text += character
+        return team_text
 
-    def get_user(self):
-        user = ParentClass.get_user_encoded(self)
-        return user
-
-    def display_team2(self, decoded_dungeoneer_team2):
-        team_2_text = ""
-        for character in decoded_dungeoneer_team2:
-            team_2_text += "\n"
-            team_2_text += character
-        return team_2_text
-
-    def display_team3(self, decoded_dungeoneer_team3):
-        team_3_text = ""
-        for character in decoded_dungeoneer_team3:
-            team_3_text += "\n"
-            team_3_text += character
-        return team_3_text
-
-    def team_1_button_message(self, decoded_dungeoneer_team1):
+    def team_button_message(self, decoded_dungeoneer_team):
         text = ""
-        for character in decoded_dungeoneer_team1:
-            if character == "Empty":
-                text = "Team 1: Create"
-                return text
-            else:
-                text = "Team 1: Edit"
-        return text
-
-    def team_2_button_message(self, decoded_dungeoneer_team2):
-        text = ""
-        for character in decoded_dungeoneer_team2:
-            if character == "Empty":
-                text = "Team 2: Create"
-                return text
-            else:
-                text = "Team 2: Edit"
-        return text
-
-    def team_3_button_message(self, decoded_dungeoneer_team3):
-        text = ""
-        for character in decoded_dungeoneer_team3:
-            if character == "Empty":
-                text = "Team 3: Create"
-                return text
-            else:
-                text = "Team 3: Edit"
-        return text
-
-    def team_1_decode(self, team_1_list_data):
-        decoded_dungeoneer_team1 = []
-        if len(team_1_list_data) == 0:
-            decoded_dungeoneer_team1.append("Empty")
-            return decoded_dungeoneer_team1
+        if "Empty" in decoded_dungeoneer_team[0]:
+            text = "Team 1: Create"
         else:
-            if len(team_1_list_data) < 5:
-                for character in team_1_list_data:
-                    if character == MONK.code:
-                        decoded_dungeoneer_team1.append(MONK.title)
-                    if character == BARBARIAN.code:
-                        decoded_dungeoneer_team1.append(BARBARIAN.title)
-                    if character == KINGS_GUARD.code:
-                        decoded_dungeoneer_team1.append(KINGS_GUARD.title)
-                    if character == MASTER_FENCER.code:
-                        decoded_dungeoneer_team1.append(MASTER_FENCER.title)
-                    if character == BERSERKER.code:
-                        decoded_dungeoneer_team1.append(BERSERKER.title)
-                    if character == ROGUE.code:
-                        decoded_dungeoneer_team1.append(ROGUE.title)
-                    if character == SURVIVALIST.code:
-                        decoded_dungeoneer_team1.append(SURVIVALIST.title)
-                    if character == BRAWLIST.code:
-                        decoded_dungeoneer_team1.append(BRAWLIST.title)
-                    if character == ACADEMIC_MAGE.code:
-                        decoded_dungeoneer_team1.append(ACADEMIC_MAGE.title)
-                    if character == DRUID.code:
-                        decoded_dungeoneer_team1.append(DRUID.title)
-                    if character == WARLOCK.code:
-                        decoded_dungeoneer_team1.append(WARLOCK.title)
-                    if character == BLOODMANCER.code:
-                        decoded_dungeoneer_team1.append(BLOODMANCER.title)
-                    if character == PALADIN.code:
-                        decoded_dungeoneer_team1.append(PALADIN.title)
-                    if character == LEGION_RANGER.code:
-                        decoded_dungeoneer_team1.append(LEGION_RANGER.title)
-                    if character == MAGNETIMANCER.code:
-                        decoded_dungeoneer_team1.append(MAGNETIMANCER.title)
-                    if character == POWER_CONDUIT.code:
-                        decoded_dungeoneer_team1.append(POWER_CONDUIT.title)
-                    if character == EARTH_SPEAKER.code:
-                        decoded_dungeoneer_team1.append(EARTH_SPEAKER.title)
-                    if character == PRIEST.code:
-                        decoded_dungeoneer_team1.append(PRIEST.title)
-                    if character == TIME_WALKER.code:
-                        decoded_dungeoneer_team1.append(TIME_WALKER.title)
-                    if character == FIELD_MEDIC.code:
-                        decoded_dungeoneer_team1.append(FIELD_MEDIC.title)
-                    if not character:
-                        break
-            else:
-                for character in team_1_list_data:
-                    if character == MONK.code:
-                        decoded_dungeoneer_team1.append(MONK.title)
-                    if character == BARBARIAN.code:
-                        decoded_dungeoneer_team1.append(BARBARIAN.title)
-                    if character == KINGS_GUARD.code:
-                        decoded_dungeoneer_team1.append(KINGS_GUARD.title)
-                    if character == MASTER_FENCER.code:
-                        decoded_dungeoneer_team1.append(MASTER_FENCER.title)
-                    if character == BERSERKER.code:
-                        decoded_dungeoneer_team1.append(BERSERKER.title)
-                    if character == ROGUE.code:
-                        decoded_dungeoneer_team1.append(ROGUE.title)
-                    if character == SURVIVALIST.code:
-                        decoded_dungeoneer_team1.append(SURVIVALIST.title)
-                    if character == BRAWLIST.code:
-                        decoded_dungeoneer_team1.append(BRAWLIST.title)
-                    if character == ACADEMIC_MAGE.code:
-                        decoded_dungeoneer_team1.append(ACADEMIC_MAGE.title)
-                    if character == DRUID.code:
-                        decoded_dungeoneer_team1.append(DRUID.title)
-                    if character == WARLOCK.code:
-                        decoded_dungeoneer_team1.append(WARLOCK.title)
-                    if character == BLOODMANCER.code:
-                        decoded_dungeoneer_team1.append(BLOODMANCER.title)
-                    if character == PALADIN.code:
-                        decoded_dungeoneer_team1.append(PALADIN.title)
-                    if character == LEGION_RANGER.code:
-                        decoded_dungeoneer_team1.append(LEGION_RANGER.title)
-                    if character == MAGNETIMANCER.code:
-                        decoded_dungeoneer_team1.append(MAGNETIMANCER.title)
-                    if character == POWER_CONDUIT.code:
-                        decoded_dungeoneer_team1.append(POWER_CONDUIT.title)
-                    if character == EARTH_SPEAKER.code:
-                        decoded_dungeoneer_team1.append(EARTH_SPEAKER.title)
-                    if character == PRIEST.code:
-                        decoded_dungeoneer_team1.append(PRIEST.title)
-                    if character == TIME_WALKER.code:
-                        decoded_dungeoneer_team1.append(TIME_WALKER.title)
-                    if character == FIELD_MEDIC.code:
-                        decoded_dungeoneer_team1.append(FIELD_MEDIC.title)
-                return decoded_dungeoneer_team1
-        if len(decoded_dungeoneer_team1) < 5:
-            while len(decoded_dungeoneer_team1) < 5:
-                decoded_dungeoneer_team1.append("Empty")
-            return decoded_dungeoneer_team1
-
-    def team_2_decode(self, team_2_list_data):
-        decoded_dungeoneer_team2 = []
-        if len(team_2_list_data) == 0:
-            decoded_dungeoneer_team2.append("Empty")
-            return decoded_dungeoneer_team2
+            text = "Team 1: Edit"
+        return text
+    def team_decode(self, team_list_data):
+        decoded_dungeoneer_team = []
+        if "Empty" in team_list_data[0]:
+            decoded_dungeoneer_team.append("Empty")
+            return decoded_dungeoneer_team
         else:
-            if len(team_2_list_data) < 5:
-                for character in team_2_list_data:
-                    if character == MONK.code:
-                        decoded_dungeoneer_team2.append(MONK.title)
-                    if character == BARBARIAN.code:
-                        decoded_dungeoneer_team2.append(BARBARIAN.title)
-                    if character == KINGS_GUARD.code:
-                        decoded_dungeoneer_team2.append(KINGS_GUARD.title)
-                    if character == MASTER_FENCER.code:
-                        decoded_dungeoneer_team2.append(MASTER_FENCER.title)
-                    if character == BERSERKER.code:
-                        decoded_dungeoneer_team2.append(BERSERKER.title)
-                    if character == ROGUE.code:
-                        decoded_dungeoneer_team2.append(ROGUE.title)
-                    if character == SURVIVALIST.code:
-                        decoded_dungeoneer_team2.append(SURVIVALIST.title)
-                    if character == BRAWLIST.code:
-                        decoded_dungeoneer_team2.append(BRAWLIST.title)
-                    if character == ACADEMIC_MAGE.code:
-                        decoded_dungeoneer_team2.append(ACADEMIC_MAGE.title)
-                    if character == DRUID.code:
-                        decoded_dungeoneer_team2.append(DRUID.title)
-                    if character == WARLOCK.code:
-                        decoded_dungeoneer_team2.append(WARLOCK.title)
-                    if character == BLOODMANCER.code:
-                        decoded_dungeoneer_team2.append(BLOODMANCER.title)
-                    if character == PALADIN.code:
-                        decoded_dungeoneer_team2.append(PALADIN.title)
-                    if character == LEGION_RANGER.code:
-                        decoded_dungeoneer_team2.append(LEGION_RANGER.title)
-                    if character == MAGNETIMANCER.code:
-                        decoded_dungeoneer_team2.append(MAGNETIMANCER.title)
-                    if character == POWER_CONDUIT.code:
-                        decoded_dungeoneer_team2.append(POWER_CONDUIT.title)
-                    if character == EARTH_SPEAKER.code:
-                        decoded_dungeoneer_team2.append(EARTH_SPEAKER.title)
-                    if character == PRIEST.code:
-                        decoded_dungeoneer_team2.append(PRIEST.title)
-                    if character == TIME_WALKER.code:
-                        decoded_dungeoneer_team2.append(TIME_WALKER.title)
-                    if character == FIELD_MEDIC.code:
-                        decoded_dungeoneer_team2.append(FIELD_MEDIC.title)
-                    if not character:
-                        break
-            else:
-                for character in team_2_list_data:
-                    if character == MONK.code:
-                        decoded_dungeoneer_team2.append(MONK.title)
-                    if character == BARBARIAN.code:
-                        decoded_dungeoneer_team2.append(BARBARIAN.title)
-                    if character == KINGS_GUARD.code:
-                        decoded_dungeoneer_team2.append(KINGS_GUARD.title)
-                    if character == MASTER_FENCER.code:
-                        decoded_dungeoneer_team2.append(MASTER_FENCER.title)
-                    if character == BERSERKER.code:
-                        decoded_dungeoneer_team2.append(BERSERKER.title)
-                    if character == ROGUE.code:
-                        decoded_dungeoneer_team2.append(ROGUE.title)
-                    if character == SURVIVALIST.code:
-                        decoded_dungeoneer_team2.append(SURVIVALIST.title)
-                    if character == BRAWLIST.code:
-                        decoded_dungeoneer_team2.append(BRAWLIST.title)
-                    if character == ACADEMIC_MAGE.code:
-                        decoded_dungeoneer_team2.append(ACADEMIC_MAGE.title)
-                    if character == DRUID.code:
-                        decoded_dungeoneer_team2.append(DRUID.title)
-                    if character == WARLOCK.code:
-                        decoded_dungeoneer_team2.append(WARLOCK.title)
-                    if character == BLOODMANCER.code:
-                        decoded_dungeoneer_team2.append(BLOODMANCER.title)
-                    if character == PALADIN.code:
-                        decoded_dungeoneer_team2.append(PALADIN.title)
-                    if character == LEGION_RANGER.code:
-                        decoded_dungeoneer_team2.append(LEGION_RANGER.title)
-                    if character == MAGNETIMANCER.code:
-                        decoded_dungeoneer_team2.append(MAGNETIMANCER.title)
-                    if character == POWER_CONDUIT.code:
-                        decoded_dungeoneer_team2.append(POWER_CONDUIT.title)
-                    if character == EARTH_SPEAKER.code:
-                        decoded_dungeoneer_team2.append(EARTH_SPEAKER.title)
-                    if character == PRIEST.code:
-                        decoded_dungeoneer_team2.append(PRIEST.title)
-                    if character == TIME_WALKER.code:
-                        decoded_dungeoneer_team2.append(TIME_WALKER.title)
-                    if character == FIELD_MEDIC.code:
-                        decoded_dungeoneer_team2.append(FIELD_MEDIC.title)
-                return decoded_dungeoneer_team2
-        if len(decoded_dungeoneer_team2) < 5:
-            while len(decoded_dungeoneer_team2) < 5:
-                decoded_dungeoneer_team2.append("Empty")
-            return decoded_dungeoneer_team2
-
-    def team_3_decode(self, team_3_list_data):
-        decoded_dungeoneer_team3 = []
-        if len(team_3_list_data) == 0:
-            decoded_dungeoneer_team3.append("Empty")
-            return decoded_dungeoneer_team3
-        else:
-            if len(team_3_list_data) < 5:
-                for character in team_3_list_data:
-                    if character == MONK.code:
-                        decoded_dungeoneer_team3.append(MONK.title)
-                    if character == BARBARIAN.code:
-                        decoded_dungeoneer_team3.append(BARBARIAN.title)
-                    if character == KINGS_GUARD.code:
-                        decoded_dungeoneer_team3.append(KINGS_GUARD.title)
-                    if character == MASTER_FENCER.code:
-                        decoded_dungeoneer_team3.append(MASTER_FENCER.title)
-                    if character == BERSERKER.code:
-                        decoded_dungeoneer_team3.append(BERSERKER.title)
-                    if character == ROGUE.code:
-                        decoded_dungeoneer_team3.append(ROGUE.title)
-                    if character == SURVIVALIST.code:
-                        decoded_dungeoneer_team3.append(SURVIVALIST.title)
-                    if character == BRAWLIST.code:
-                        decoded_dungeoneer_team3.append(BRAWLIST.title)
-                    if character == ACADEMIC_MAGE.code:
-                        decoded_dungeoneer_team3.append(ACADEMIC_MAGE.title)
-                    if character == DRUID.code:
-                        decoded_dungeoneer_team3.append(DRUID.title)
-                    if character == WARLOCK.code:
-                        decoded_dungeoneer_team3.append(WARLOCK.title)
-                    if character == BLOODMANCER.code:
-                        decoded_dungeoneer_team3.append(BLOODMANCER.title)
-                    if character == PALADIN.code:
-                        decoded_dungeoneer_team3.append(PALADIN.title)
-                    if character == LEGION_RANGER.code:
-                        decoded_dungeoneer_team3.append(LEGION_RANGER.title)
-                    if character == MAGNETIMANCER.code:
-                        decoded_dungeoneer_team3.append(MAGNETIMANCER.title)
-                    if character == POWER_CONDUIT.code:
-                        decoded_dungeoneer_team3.append(POWER_CONDUIT.title)
-                    if character == EARTH_SPEAKER.code:
-                        decoded_dungeoneer_team3.append(EARTH_SPEAKER.title)
-                    if character == PRIEST.code:
-                        decoded_dungeoneer_team3.append(PRIEST.title)
-                    if character == TIME_WALKER.code:
-                        decoded_dungeoneer_team3.append(TIME_WALKER.title)
-                    if character == FIELD_MEDIC.code:
-                        decoded_dungeoneer_team3.append(FIELD_MEDIC.title)
-                    if not character:
-                        break
-            else:
-                for character in team_3_list_data:
-                    if character == MONK.code:
-                        decoded_dungeoneer_team3.append(MONK.title)
-                    if character == BARBARIAN.code:
-                        decoded_dungeoneer_team3.append(BARBARIAN.title)
-                    if character == KINGS_GUARD.code:
-                        decoded_dungeoneer_team3.append(KINGS_GUARD.title)
-                    if character == MASTER_FENCER.code:
-                        decoded_dungeoneer_team3.append(MASTER_FENCER.title)
-                    if character == BERSERKER.code:
-                        decoded_dungeoneer_team3.append(BERSERKER.title)
-                    if character == ROGUE.code:
-                        decoded_dungeoneer_team3.append(ROGUE.title)
-                    if character == SURVIVALIST.code:
-                        decoded_dungeoneer_team3.append(SURVIVALIST.title)
-                    if character == BRAWLIST.code:
-                        decoded_dungeoneer_team3.append(BRAWLIST.title)
-                    if character == ACADEMIC_MAGE.code:
-                        decoded_dungeoneer_team3.append(ACADEMIC_MAGE.title)
-                    if character == DRUID.code:
-                        decoded_dungeoneer_team3.append(DRUID.title)
-                    if character == WARLOCK.code:
-                        decoded_dungeoneer_team3.append(WARLOCK.title)
-                    if character == BLOODMANCER.code:
-                        decoded_dungeoneer_team3.append(BLOODMANCER.title)
-                    if character == PALADIN.code:
-                        decoded_dungeoneer_team3.append(PALADIN.title)
-                    if character == LEGION_RANGER.code:
-                        decoded_dungeoneer_team3.append(LEGION_RANGER.title)
-                    if character == MAGNETIMANCER.code:
-                        decoded_dungeoneer_team3.append(MAGNETIMANCER.title)
-                    if character == POWER_CONDUIT.code:
-                        decoded_dungeoneer_team3.append(POWER_CONDUIT.title)
-                    if character == EARTH_SPEAKER.code:
-                        decoded_dungeoneer_team3.append(EARTH_SPEAKER.title)
-                    if character == PRIEST.code:
-                        decoded_dungeoneer_team3.append(PRIEST.title)
-                    if character == TIME_WALKER.code:
-                        decoded_dungeoneer_team3.append(TIME_WALKER.title)
-                    if character == FIELD_MEDIC.code:
-                        decoded_dungeoneer_team3.append(FIELD_MEDIC.title)
-                return decoded_dungeoneer_team3
-        if len(decoded_dungeoneer_team3) < 5:
-            while len(decoded_dungeoneer_team3) < 5:
-                decoded_dungeoneer_team3.append("Empty")
-            return decoded_dungeoneer_team3
-
+            for character in team_list_data:
+                if character == MONK.code:
+                    decoded_dungeoneer_team.append(MONK.title)
+                if character == BARBARIAN.code:
+                    decoded_dungeoneer_team.append(BARBARIAN.title)
+                if character == KINGS_GUARD.code:
+                    decoded_dungeoneer_team.append(KINGS_GUARD.title)
+                if character == MASTER_FENCER.code:
+                    decoded_dungeoneer_team.append(MASTER_FENCER.title)
+                if character == BERSERKER.code:
+                    decoded_dungeoneer_team.append(BERSERKER.title)
+                if character == ROGUE.code:
+                    decoded_dungeoneer_team.append(ROGUE.title)
+                if character == SURVIVALIST.code:
+                    decoded_dungeoneer_team.append(SURVIVALIST.title)
+                if character == BRAWLIST.code:
+                    decoded_dungeoneer_team.append(BRAWLIST.title)
+                if character == ACADEMIC_MAGE.code:
+                    decoded_dungeoneer_team.append(ACADEMIC_MAGE.title)
+                if character == DRUID.code:
+                    decoded_dungeoneer_team.append(DRUID.title)
+                if character == WARLOCK.code:
+                    decoded_dungeoneer_team.append(WARLOCK.title)
+                if character == BLOODMANCER.code:
+                    decoded_dungeoneer_team.append(BLOODMANCER.title)
+                if character == PALADIN.code:
+                    decoded_dungeoneer_team.append(PALADIN.title)
+                if character == LEGION_RANGER.code:
+                    decoded_dungeoneer_team.append(LEGION_RANGER.title)
+                if character == MAGNETIMANCER.code:
+                    decoded_dungeoneer_team.append(MAGNETIMANCER.title)
+                if character == POWER_CONDUIT.code:
+                    decoded_dungeoneer_team.append(POWER_CONDUIT.title)
+                if character == EARTH_SPEAKER.code:
+                    decoded_dungeoneer_team.append(EARTH_SPEAKER.title)
+                if character == PRIEST.code:
+                    decoded_dungeoneer_team.append(PRIEST.title)
+                if character == TIME_WALKER.code:
+                    decoded_dungeoneer_team.append(TIME_WALKER.title)
+                if character == FIELD_MEDIC.code:
+                    decoded_dungeoneer_team.append(FIELD_MEDIC.title)
+                if character == "Empty":
+                    decoded_dungeoneer_team.append("Empty")
+            return decoded_dungeoneer_team
 
 class TeamSelectionPage(tk.Frame):
     def __init__(self, parent, controller):
@@ -30075,9 +30225,9 @@ class TeamSelectionPage(tk.Frame):
         self.title_label_font = tkfont.Font(family='Helvetica', size=30, weight="bold")
         self.small_label_font = tkfont.Font(family='Helvetica', size=12, weight="bold")
         title = tk.Label(self, text="Champion Camp", font=self.title_label_font)
-        update_pageTSP = tk.Button(self, text="Begin Recruiting for Team 1", command=lambda: self.pitstop(),
+        update_pageTSP = tk.Button(self, text="Begin Recruiting", command=lambda: self.pitstop(),
                                    font=controller.menu_button_font)
-        returnButtonTSP = tk.Button(self, text="Cancel", command=lambda: controller.cancel_new_team1())
+        returnButtonTSP = tk.Button(self, text="Cancel", command=lambda: controller.cancel_new_team())
         invis_label1 = tk.Label(self)
         invis_label2 = tk.Label(self)
         update_pageTSP.grid(row=2, column=2, pady=50)
@@ -30088,20 +30238,17 @@ class TeamSelectionPage(tk.Frame):
 
     def pitstop(self):
         global visual_team_label, temp_party
-        user = ParentClass.get_user_encoded(self)
-        team_line_1 = []
-        team_line_1 = ParentClass.return_users_champion_team1(self, user)
-        team_line_1 = team_line_1.replace(",", "")
-        team_1_list_data = team_line_1.split()
-        CTP = CreateTeamPage
-        decoded_dungeoneer_team1CTP = CTP.team_1_decode(self, team_1_list_data)
-        temp_party = decoded_dungeoneer_team1CTP
+        team_line = []
+        team_line = ParentClass.get_account_data(self, "champion_list")
+        team_list_data = team_line.split(":")
+        decoded_dungeoneer_teamCTP = CreateTeamPage.team_decode(self, team_list_data)
+        temp_party = decoded_dungeoneer_teamCTP
         visual_team_label = tk.Label(self, text=self.display_team(temp_party))
         visual_team_label.grid(row=11, column=2)
         self.team_creation()
 
     def team_creation(self):
-        global tank, dps, healer, tank_section_button, dps_section_button, healer_section_button, decoded_dungeoneer_team1CTP
+        global tank, dps, healer, tank_section_button, dps_section_button, healer_section_button
         tank = False
         dps = False
         healer = False
@@ -30114,7 +30261,7 @@ class TeamSelectionPage(tk.Frame):
         healer_section_button = tk.Button(self, text="Healers", font=self.menu_button_font, width=26,
                                           command=self.view_healer)
         your_team_label = tk.Label(self, text=":Your Team:", font=self.small_label_font)
-        confirm_changes_button = tk.Button(self, text="Confirm Changes", command=self.confirm_new_team1)
+        confirm_changes_button = tk.Button(self, text="Confirm Changes", command=self.confirm_new_team)
         tank_section_button.grid(row=2, column=1)
         dps_section_button.grid(row=2, column=2, padx=25)
         healer_section_button.grid(row=2, column=3)
@@ -30127,22 +30274,22 @@ class TeamSelectionPage(tk.Frame):
         update_pageTSP.grid_forget()
 
     def display_team(self, temp_party):
-        team_1_text = ""
+        team_text = ""
         i = 0
         for character in temp_party:
             if i == 3:
-                team_1_text += "\n"
-            team_1_text += "["
-            team_1_text += character
-            team_1_text += "]"
+                team_text += "\n"
+            team_text += "["
+            team_text += character
+            team_text += "]"
             i += 1
         if i != 5:
             while i < 5:
-                team_1_text += "["
-                team_1_text += "Empty"
-                team_1_text += "]"
+                team_text += "["
+                team_text += "Empty"
+                team_text += "]"
                 i += 1
-        return team_1_text
+        return team_text
 
     def view_tanks(self):
         global MONK_label, MONK_button_add, MONK_button_details, BARBARIAN_label, BARBARIAN_button_add, \
@@ -30218,19 +30365,19 @@ class TeamSelectionPage(tk.Frame):
             MONK_label = tk.Label(self, text=MONK.name, font=self.menu_button_font)
             MONK_button_add = tk.Button(self, text="Add to Team",
                                         command=lambda: self.check_temp_party(MONK.title, "tank"))
-            MONK_button_details = tk.Button(self, text="View Details (NYI)")
+            MONK_button_details = tk.Button(self, text="View Details", command=lambda: self.champion_view_details(MONK.title))
             BARBARIAN_label = tk.Label(self, text=BARBARIAN.name, font=self.menu_button_font)
             BARBARIAN_button_add = tk.Button(self, text="Add to Team",
                                              command=lambda: self.check_temp_party(BARBARIAN.title, "tank"))
-            BARBARIAN_button_details = tk.Button(self, text="View Details (NYI)")
+            BARBARIAN_button_details = tk.Button(self, text="View Details", command=lambda: self.champion_view_details(BARBARIAN.title))
             bodyguard_label = tk.Label(self, text=KINGS_GUARD.name, font=self.menu_button_font)
             bodyguard_button_add = tk.Button(self, text="Add to Team",
                                              command=lambda: self.check_temp_party(KINGS_GUARD.title, "tank"))
-            bodyguard_button_details = tk.Button(self, text="View Details (NYI)")
+            bodyguard_button_details = tk.Button(self, text="View Details", command=lambda: self.champion_view_details(KINGS_GUARD.title))
             fencer_label = tk.Label(self, text=MASTER_FENCER.name, font=self.menu_button_font)
             fencer_button_add = tk.Button(self, text="Add to Team",
                                           command=lambda: self.check_temp_party(MASTER_FENCER.title, "tank"))
-            fencer_button_details = tk.Button(self, text="View Details (NYI)")
+            fencer_button_details = tk.Button(self, text="View Details", command=lambda: self.champion_view_details(MASTER_FENCER.title))
             MONK_label.grid(row=4, column=1, sticky="e")
             MONK_button_add.grid(row=5, column=1, sticky="e", padx=105)
             MONK_button_details.grid(row=5, column=1, sticky="e")
@@ -30300,52 +30447,52 @@ class TeamSelectionPage(tk.Frame):
             BERSERKER_label = tk.Label(self, text=BERSERKER.name)
             BERSERKER_button_add = tk.Button(self, text="Add to Team",
                                              command=lambda: self.check_temp_party(BERSERKER.title, "melee"))
-            BERSERKER_button_details = tk.Button(self, text="View Details (NYI)")
+            BERSERKER_button_details = tk.Button(self, text="View Details", command=lambda: self.champion_view_details(BERSERKER.title))
             ROGUE_label = tk.Label(self, text=ROGUE.name)
             ROGUE_button_add = tk.Button(self, text="Add to Team",
                                          command=lambda: self.check_temp_party(ROGUE.title, "melee"))
-            ROGUE_button_details = tk.Button(self, text="View Details (NYI)")
+            ROGUE_button_details = tk.Button(self, text="View Details", command=lambda: self.champion_view_details(ROGUE.title))
             SURVIVALIST_label = tk.Label(self, text=SURVIVALIST.name)
             SURVIVALIST_button_add = tk.Button(self, text="Add to Team",
                                                command=lambda: self.check_temp_party(SURVIVALIST.title, "melee"))
-            SURVIVALIST_button_details = tk.Button(self, text="View Details (NYI)")
+            SURVIVALIST_button_details = tk.Button(self, text="View Details", command=lambda: self.champion_view_details(SURVIVALIST.title))
             BRAWLIST_label = tk.Label(self, text=BRAWLIST.name)
             BRAWLIST_button_add = tk.Button(self, text="Add to Team",
                                             command=lambda: self.check_temp_party(BRAWLIST.title, "melee"))
-            BRAWLIST_button_details = tk.Button(self, text="View Details (NYI)")
+            BRAWLIST_button_details = tk.Button(self, text="View Details", command=lambda: self.champion_view_details(BRAWLIST.title))
             ACADEMIC_MAGE_label = tk.Label(self, text=ACADEMIC_MAGE.name)
             ACADEMIC_MAGE_button_add = tk.Button(self, text="Add to Team",
                                                  command=lambda: self.check_temp_party(ACADEMIC_MAGE.title, "magic"))
-            ACADEMIC_MAGE_button_details = tk.Button(self, text="View Details (NYI)")
+            ACADEMIC_MAGE_button_details = tk.Button(self, text="View Details", command=lambda: self.champion_view_details(ACADEMIC_MAGE.title))
             jungle_DRUID_label = tk.Label(self, text=DRUID.name)
             jungle_DRUID_button_add = tk.Button(self, text="Add to Team",
                                                 command=lambda: self.check_temp_party(DRUID.title, "magic"))
-            jungle_DRUID_button_details = tk.Button(self, text="View Details (NYI)")
+            jungle_DRUID_button_details = tk.Button(self, text="View Details", command=lambda: self.champion_view_details(DRUID.title))
             WARLOCK_label = tk.Label(self, text=WARLOCK.name)
             WARLOCK_button_add = tk.Button(self, text="Add to Team",
                                            command=lambda: self.check_temp_party(WARLOCK.title, "magic"))
-            WARLOCK_button_details = tk.Button(self, text="View Details (NYI)")
+            WARLOCK_button_details = tk.Button(self, text="View Details", command=lambda: self.champion_view_details(WARLOCK.title))
             BLOODMANCER_label = tk.Label(self, text=BLOODMANCER.name)
             BLOODMANCER_button_add = tk.Button(self, text="Add to Team",
                                                command=lambda: self.check_temp_party(BLOODMANCER.title, "magic"))
-            BLOODMANCER_button_details = tk.Button(self, text="View Details (NYI)")
+            BLOODMANCER_button_details = tk.Button(self, text="View Details", command=lambda: self.champion_view_details(BLOODMANCER.title))
             PALADIN_label = tk.Label(self, text=PALADIN.name)
             PALADIN_button_add = tk.Button(self, text="Add to Team",
                                            command=lambda: self.check_temp_party(PALADIN.title, "mixed"))
-            PALADIN_button_details = tk.Button(self, text="View Details (NYI)")
+            PALADIN_button_details = tk.Button(self, text="View Details", command=lambda: self.champion_view_details(PALADIN.title))
             LEGION_RANGER_label = tk.Label(self, text=LEGION_RANGER.name)
             LEGION_RANGER_button_add = tk.Button(self, text="Add to Team",
                                                  command=lambda: self.check_temp_party(LEGION_RANGER.title, "mixed"))
-            LEGION_RANGER_button_details = tk.Button(self, text="View Details (NYI)")
+            LEGION_RANGER_button_details = tk.Button(self, text="View Details", command=lambda: self.champion_view_details(LEGION_RANGER.title))
             MAGNETIMANCER_label = tk.Label(self, text=MAGNETIMANCER.name)
             MAGNETIMANCER_button_add = tk.Button(self, text="Add to Team",
                                                       command=lambda: self.check_temp_party(MAGNETIMANCER.title,
                                                                                              "mixed"))
-            MAGNETIMANCER_button_details = tk.Button(self, text="View Details (NYI)")
+            MAGNETIMANCER_button_details = tk.Button(self, text="View Details", command=lambda: self.champion_view_details(MAGNETIMANCER.title))
             POWER_CONDUIT_label = tk.Label(self, text=POWER_CONDUIT.name)
             POWER_CONDUIT_button_add = tk.Button(self, text="Add to Team",
                                                  command=lambda: self.check_temp_party(POWER_CONDUIT.title, "mixed"))
-            POWER_CONDUIT_button_details = tk.Button(self, text="View Details (NYI)")
+            POWER_CONDUIT_button_details = tk.Button(self, text="View Details", command=lambda: self.champion_view_details(POWER_CONDUIT.title))
             melee_label.grid(row=3, column=1)
             magic_label.grid(row=3, column=2)
             mix_label.grid(row=3, column=3)
@@ -30460,21 +30607,21 @@ class TeamSelectionPage(tk.Frame):
             EARTH_SPEAKER_label = tk.Label(self, text=EARTH_SPEAKER.name, font=self.menu_button_font)
             EARTH_SPEAKER_button_add = tk.Button(self, text="Add to Team",
                                                  command=lambda: self.check_temp_party(EARTH_SPEAKER.title, "healer"))
-            EARTH_SPEAKER_button_details = tk.Button(self, text="View Details (NYI)")
+            EARTH_SPEAKER_button_details = tk.Button(self, text="View Details", command=lambda: self.champion_view_details(EARTH_SPEAKER.title))
             PRIEST_label = tk.Label(self, text=PRIEST.name, font=self.menu_button_font)
             PRIEST_button_add = tk.Button(self, text="Add to Team",
                                                          command=lambda: self.check_temp_party(
                                                              PRIEST.title, "healer"))
-            PRIEST_button_details = tk.Button(self, text="View Details (NYI)")
+            PRIEST_button_details = tk.Button(self, text="View Details", command=lambda: self.champion_view_details(PRIEST.title))
             TIME_WALKER_label = tk.Label(self, text=TIME_WALKER.name, font=self.menu_button_font)
             TIME_WALKER_button_add = tk.Button(self, text="Add to Team",
                                                command=lambda: self.check_temp_party(TIME_WALKER.title, "healer"))
-            TIME_WALKER_button_details = tk.Button(self, text="View Details (NYI)")
+            TIME_WALKER_button_details = tk.Button(self, text="View Details", command=lambda: self.champion_view_details(TIME_WALKER.title))
             FIELD_MEDIC_label = tk.Label(self, text=FIELD_MEDIC.name, font=self.menu_button_font)
             FIELD_MEDIC_button_add = tk.Button(self, text="Add to Team",
                                                      command=lambda: self.check_temp_party(FIELD_MEDIC.title,
                                                                                             "healer"))
-            FIELD_MEDIC_button_details = tk.Button(self, text="View Details (NYI)")
+            FIELD_MEDIC_button_details = tk.Button(self, text="View Details", command=lambda: self.champion_view_details(FIELD_MEDIC.title))
             EARTH_SPEAKER_label.grid(row=4, column=1, sticky="e")
             EARTH_SPEAKER_button_add.grid(row=5, column=1, sticky="e", padx=105)
             EARTH_SPEAKER_button_details.grid(row=5, column=1, sticky="e")
@@ -30491,136 +30638,135 @@ class TeamSelectionPage(tk.Frame):
             invis_label4.grid(row=6, column=1, columnspan=3, pady=50)
 
     def champion_view_details(self, champion_name):
-        #here
         root = tk.Tk()
         champion_resource = ''
         if champion_name == "Monk": 
-            champion_details = ""
+            champion_details = "Feramon the Monk is a master of the battlefield, using his well placed attacks to control his enemies\nwhile utilising his magical baubles to prevent imminent danger towards himself"
             attacks_list = MONK.attack_list
             specials_list = MONK.specials_list
             passive_ability = MONK.passive
             champion_code = MONK.code
             champion_resource = 'Focus'
         if champion_name == "Barbarian": 
-            champion_details = ""
+            champion_details = "Baralor the Barbarian is in all words, an egomaniac\nHe wants all the attention for himself and can keep himself alive while he has it\nHe taunting enemies into attacking him with his words alone and gets stronger while everyones watching"
             attacks_list = BARBARIAN.attack_list
             specials_list = BARBARIAN.specials_list
             passive_ability = BARBARIAN.passive
             champion_code = BARBARIAN.code
             champion_resource = 'Rage'
         if champion_name == "Kings-Guard": 
-            champion_details = ""
+            champion_details = "Hecutis the Kings-Guard is like a building for his allies to rally behind\nStanding inbetween his friends and the enemy is what he does best\nHis fearless attitude towards his enemies is well put as he is almost as impenetrable as his Kings fortress"
             attacks_list = KINGS_GUARD.attack_list
             specials_list = KINGS_GUARD.specials_list
             passive_ability = KINGS_GUARD.passive
             champion_code = KINGS_GUARD.code
         if champion_name == "Fencer": 
-            champion_details = ""
+            champion_details = "Lorelai the Master Fencer is likely the fastest person alive being able to dodge and weave her away out of harms way\nwhile protecting her allies by redirect the enemies own hits right back at them"
             attacks_list = MASTER_FENCER.attack_list
             specials_list = MASTER_FENCER.specials_list
             passive_ability = MASTER_FENCER.passive
             champion_code = MASTER_FENCER.code
         if champion_name == "Berserker": 
-            champion_details = ""
+            champion_details = "Kelzarg the Berserker only gets angrier with each attack\nBeing able to enrage himself to dish out high amounts of damage at the cost of taking more himself"
             attacks_list = BERSERKER.attack_list
             specials_list = BERSERKER.specials_list
             passive_ability = BERSERKER.passive
             champion_code = BERSERKER.code
             champion_resource = 'Rage'
         if champion_name == "Rogue": 
-            champion_details = ""
+            champion_details = "Ryker the Rogue knows exactly where to strike to get the most of his cuts\nWhat makes him especially scary on the battlefield, is that the damage is usually done after the strikes been made"
             attacks_list = ROGUE.attack_list
             specials_list = ROGUE.specials_list
             passive_ability = ROGUE.passive
             champion_code = ROGUE.code
         if champion_name == "Survivalist": 
-            champion_details = ""
+            champion_details = "Mally the Survivalist's time in the wild has taught her all the tricks to keep herself alive\nWhile she strikes strong, her true power comes from standing longer than any of her counterparts"
             attacks_list = SURVIVALIST.attack_list
             specials_list = SURVIVALIST.specials_list
             passive_ability = SURVIVALIST.passive
             champion_code = SURVIVALIST.code
         if champion_name == "Brawlist": 
-            champion_details = ""
+            champion_details = "George the Brawlist knows the human body almost as well as a surgeon\nKnowing where to strike and in what order helps him keep miles ahead of his competitors"
             attacks_list = BRAWLIST.attack_list
             specials_list = BRAWLIST.specials_list
             passive_ability = BRAWLIST.passive
             champion_code = BRAWLIST.code
         if champion_name == "Academics Mage": 
-            champion_details = ""
+            champion_details = "Tulip the Academics Mage puts her knowledge to use\nBeing able to cast a variety of high power and high utility spells to overwhelm her enemies"
             attacks_list = ACADEMIC_MAGE.attack_list
             specials_list = ACADEMIC_MAGE.specials_list
             passive_ability = ACADEMIC_MAGE.passive
             champion_code = ACADEMIC_MAGE.code
             champion_resource = 'Mana'
         if champion_name == "Druid": 
-            champion_details = ""
+            champion_details = "Fuds the Druid loves roses, especially the thorny kinds\nShe's extremely adapt at manipulating her surrounding to support the deadly uses of her thorns"
             attacks_list = DRUID.attack_list
             specials_list = DRUID.specials_list
             passive_ability = DRUID.passive
             champion_code = DRUID.code
             champion_resource = 'Mana'
         if champion_name == "Warlock": 
-            champion_details = ""
+            champion_details = "Sol'ghar the Warlock has fallen deep into corruption\nBy giving in to voids power, he can cast devastating spells that obliterate his enemies if given only a little time"
             attacks_list = WARLOCK.attack_list
             specials_list = WARLOCK.specials_list
             passive_ability = WARLOCK.passive
             champion_code = WARLOCK.code
             champion_resource = 'Mana'
         if champion_name == "Bloodmancer": 
-            champion_details = ""
+            champion_details = "Flynn the Bloodmancer doesn't need the typical magic other spellcasters utilise\nUsing the power of whats on the inside, he can deliver huge blows while empowering his spells for extra effects"
             attacks_list = BLOODMANCER.attack_list
             specials_list = BLOODMANCER.specials_list
             passive_ability = BLOODMANCER.passive
             champion_code = BLOODMANCER.code
             champion_resource = 'Health'
         if champion_name == "Paladin": 
-            champion_details = ""
+            champion_details = "Olig the Paladin is a paragon of his gods wrath\nHe promises that heavy retribution will be carried out no matter how long it takes"
             attacks_list = PALADIN.attack_list
             specials_list = PALADIN.specials_list
             passive_ability = PALADIN.passive
             champion_code = PALADIN.code
         if champion_name == "Ranger": 
-            champion_details = ""
+            champion_details = "Brad the Legion Ranger is a standout archer that always has something for the right occasion\nHe has a myriad of techniques and skills to fit whatevers thrown his way"
             attacks_list = LEGION_RANGER.attack_list
             specials_list = LEGION_RANGER.specials_list
             passive_ability = LEGION_RANGER.passive
             champion_code = LEGION_RANGER.code
         if champion_name == "Magnetimancer": 
-            champion_details = ""
+            champion_details = "Kel'ther the Magnetimancer loves watching things zap\nUsing his electrical prowess he polarises his enemies and watches them fry when unbalanced charges violent stabilise"
             attacks_list = MAGNETIMANCER.attack_list
             specials_list = MAGNETIMANCER.specials_list
             passive_ability = MAGNETIMANCER.passive
             champion_code = MAGNETIMANCER.code
         if champion_name == "Power Conduit": 
-            champion_details = ""
+            champion_details = "Power Conduit is a large seemingly sentient floating pillar\nNo one knows why but it loves to support its companions with wildly powerful unknown support magic"
             attacks_list = POWER_CONDUIT.attack_list
             specials_list = POWER_CONDUIT.specials_list
             passive_ability = POWER_CONDUIT.passive
             champion_code = POWER_CONDUIT.code
             champion_resource = 'Charges'
         if champion_name == "Earth Speaker": 
-            champion_details = ""
+            champion_details = "Delamanar the Earth Speaker takes pride in drenching allies with healing waters\nManipulating the earth for protection and waters for healing is what he does best"
             attacks_list = EARTH_SPEAKER.attack_list
             specials_list = EARTH_SPEAKER.specials_list
             passive_ability = EARTH_SPEAKER.passive
             champion_code = EARTH_SPEAKER.code
             champion_resource = 'Mana'
         if champion_name == "Priest": 
-            champion_details = ""
+            champion_details = "Sethuk the High Priest takes from the healthly and gives to the sick\nHe granting his allies blessings that allows the damage he does to transfer into healing for them"
             attacks_list = PRIEST.attack_list
             specials_list = PRIEST.specials_list
             passive_ability = PRIEST.passive
             champion_code = PRIEST.code
             champion_resource = 'Mana'
         if champion_name == "Time Walker": 
-            champion_details = ""
+            champion_details = "Zaqner the Time Walker takes the technology from the future to warp reality in his favour\nReversing wounds entirely using technology that also keeps his allies in the fight without him needing to lift a finger"
             attacks_list = TIME_WALKER.attack_list
             specials_list = TIME_WALKER.specials_list
             passive_ability = TIME_WALKER.passive
             champion_code = TIME_WALKER.code
             champion_resource = 'Mana'
         if champion_name == "Field Medic": 
-            champion_details = ""
+            champion_details = "Curie the Field Medic has more than enough expierience on the field to warrent her resourcefulness\nGranting her allies fight winning buffs that linger, she can be happy to have her friends win her fights for her"
             attacks_list = FIELD_MEDIC.attack_list
             specials_list = FIELD_MEDIC.specials_list
             passive_ability = FIELD_MEDIC.passive
@@ -30629,50 +30775,136 @@ class TeamSelectionPage(tk.Frame):
         champion_title_label.grid(row=0, column=1)
         champion_details_label = tk.Label(root, text=champion_details)
         champion_details_label.grid(row=1, column=1)
-        champion_passive_details_button = tk.Button(root, text=passive_ability, command=lambda: self)
+        champion_passive_details_button = tk.Button(root, text=passive_ability, command=lambda: GameFrame.passive_details_window(self, champion_name))
         champion_passive_details_button.grid(row=2, column=1)
         if champion_resource != '':
-            if attacks_list != []:
-                if len.attacks_list == 1:
-                    
-                if len.attacks_list == 2:
-                    
-                if len.attacks_list == 3:
-
-                if len.attacks_list == 4:
+            champion_resource_label = tk.Label(root, text="This champion uses {} as a resource".format(champion_resource))
+            champion_resource_label.grid(row=3, column=1)
+            champion_attacks_label = tk.Label(root, text=":Attacks:")
+            champion_attacks_label.grid(row=4, column=1)
+            if len(attacks_list) != 0:
+                if len(attacks_list) == 1:
+                    champion_attack1_button = tk.Button(root, text="{}".format(attacks_list[0]), command=lambda: GameFrame.attack_details_window(self, attacks_list[0]))
+                    champion_attack1_button.grid(row=5, column=1)
+                elif len(attacks_list) == 2:
+                    champion_attack1_button = tk.Button(root, text="{}".format(attacks_list[0]), command=lambda: GameFrame.attack_details_window(self, attacks_list[0]))
+                    champion_attack2_button = tk.Button(root, text="{}".format(attacks_list[1]), command=lambda: GameFrame.attack_details_window(self, attacks_list[1]))
+                    champion_attack1_button.grid(row=5, column=1, sticky="w")
+                    champion_attack2_button.grid(row=5, column=1, sticky="e")
+                elif len(attacks_list) == 3:
+                    champion_attack1_button = tk.Button(root, text="{}".format(attacks_list[0]), command=lambda: GameFrame.attack_details_window(self, attacks_list[0]))
+                    champion_attack2_button = tk.Button(root, text="{}".format(attacks_list[1]), command=lambda: GameFrame.attack_details_window(self, attacks_list[1]))
+                    champion_attack3_button = tk.Button(root, text="{}".format(attacks_list[2]), command=lambda: GameFrame.attack_details_window(self, attacks_list[2]))
+                    champion_attack1_button.grid(row=5, column=1, sticky="w")
+                    champion_attack2_button.grid(row=5, column=1, sticky="e")
+                    champion_attack3_button.grid(row=6, column=1)
+                elif len(attacks_list) == 4:
+                    champion_attack1_button = tk.Button(root, text="{}".format(attacks_list[0]), command=lambda: GameFrame.attack_details_window(self, attacks_list[0]))
+                    champion_attack2_button = tk.Button(root, text="{}".format(attacks_list[1]), command=lambda: GameFrame.attack_details_window(self, attacks_list[1]))
+                    champion_attack3_button = tk.Button(root, text="{}".format(attacks_list[3]), command=lambda: GameFrame.attack_details_window(self, attacks_list[2]))
+                    champion_attack4_button = tk.Button(root, text="{}".format(attacks_list[3]), command=lambda: GameFrame.attack_details_window(self, attacks_list[3]))
+                    champion_attack1_button.grid(row=5, column=1, sticky="w")
+                    champion_attack2_button.grid(row=5, column=1, sticky="e")
+                    champion_attack3_button.grid(row=6, column=1, sticky="w")
+                    champion_attack4_button.grid(row=6, column=1, sticky="e")
             else:
-                
-            if specials_list != []:
-                if len.specials_list == 1:
-
-                if len.specials_list == 2:
-                    
-                if len.specials_list == 3:
-                    
-                if len.specials_list == 4:
+                champion_attackless_label = tk.Label(root, text="This champion has no attacks")
+                champion_attackless_label.grid(row=5, column=1)
+            champion_specials_label = tk.Label(root, text=":Specials:")
+            champion_specials_label.grid(row=7, column=1)
+            if len(specials_list) != 0:
+                if len(specials_list) == 1:
+                    champion_special1_button = tk.Button(root, text="{}".format(specials_list[0]), command=lambda: GameFrame.special_details_window(self, specials_list[0]))
+                    champion_special1_button.grid(row=8, column=1)
+                elif len(specials_list) == 2:
+                    champion_special1_button = tk.Button(root, text="{}".format(specials_list[0]), command=lambda: GameFrame.special_details_window(self, specials_list[0]))
+                    champion_special2_button = tk.Button(root, text="{}".format(specials_list[1]), command=lambda: GameFrame.special_details_window(self, specials_list[1]))
+                    champion_special1_button.grid(row=8, column=1, sticky="w")
+                    champion_special2_button.grid(row=8, column=1, sticky="e")
+                elif len(specials_list) == 3:
+                    champion_special1_button = tk.Button(root, text="{}".format(specials_list[0]), command=lambda: GameFrame.special_details_window(self, specials_list[0]))
+                    champion_special2_button = tk.Button(root, text="{}".format(specials_list[1]), command=lambda: GameFrame.special_details_window(self, specials_list[1]))
+                    champion_special3_button = tk.Button(root, text="{}".format(specials_list[2]), command=lambda: GameFrame.special_details_window(self, specials_list[2]))
+                    champion_special1_button.grid(row=8, column=1, sticky="w")
+                    champion_special2_button.grid(row=8, column=1, sticky="e")
+                    champion_special3_button.grid(row=9, column=1)
+                elif len(specials_list) == 4:
+                    champion_special1_button = tk.Button(root, text="{}".format(specials_list[0]), command=lambda: GameFrame.special_details_window(self, specials_list[0]))
+                    champion_special2_button = tk.Button(root, text="{}".format(specials_list[1]), command=lambda: GameFrame.special_details_window(self, specials_list[1]))
+                    champion_special3_button = tk.Button(root, text="{}".format(specials_list[2]), command=lambda: GameFrame.special_details_window(self, specials_list[2]))
+                    champion_special4_button = tk.Button(root, text="{}".format(specials_list[3]), command=lambda: GameFrame.special_details_window(self, specials_list[3]))
+                    champion_special1_button.grid(row=8, column=1, sticky="w")
+                    champion_special2_button.grid(row=8, column=1, sticky="e")
+                    champion_special3_button.grid(row=9, column=1, sticky="w")
+                    champion_special4_button.grid(row=9, column=1, sticky="e")
             else:
-
+                champion_specialless_label = tk.Label(root, text="This champion has no specials")
+                champion_specialless_label.grid(row=8, column=1)
+            close_button = tk.Button(root, text="Close Window", command=root.destroy)
+            close_button.grid(row=10, column=1)
         else:
-            if attacks_list != []:
-                if len.attacks_list == 1:
-
-                if len.attacks_list == 2:
-                    
-                if len.attacks_list == 3:
-
-                if len.attacks_list == 4:
+            champion_attacks_label = tk.Label(root, text=":Attacks:")
+            champion_attacks_label.grid(row=3, column=1)
+            if len(attacks_list) != 0:
+                if len(attacks_list) == 1:
+                    champion_attack1_button = tk.Button(root, text="{}".format(attacks_list[0]), command=lambda: GameFrame.attack_details_window(self, attacks_list[0]))
+                    champion_attack1_button.grid(row=4, column=1)
+                elif len(attacks_list) == 2:
+                    champion_attack1_button = tk.Button(root, text="{}".format(attacks_list[0]), command=lambda: GameFrame.attack_details_window(self, attacks_list[0]))
+                    champion_attack2_button = tk.Button(root, text="{}".format(attacks_list[1]), command=lambda: GameFrame.attack_details_window(self, attacks_list[1]))
+                    champion_attack1_button.grid(row=4, column=1, sticky="w")
+                    champion_attack2_button.grid(row=4, column=1, sticky="e")
+                elif len(attacks_list) == 3:
+                    champion_attack1_button = tk.Button(root, text="{}".format(attacks_list[0]), command=lambda: GameFrame.attack_details_window(self, attacks_list[0]))
+                    champion_attack2_button = tk.Button(root, text="{}".format(attacks_list[1]), command=lambda: GameFrame.attack_details_window(self, attacks_list[1]))
+                    champion_attack3_button = tk.Button(root, text="{}".format(attacks_list[2]), command=lambda: GameFrame.attack_details_window(self, attacks_list[2]))
+                    champion_attack1_button.grid(row=4, column=1, sticky="w")
+                    champion_attack2_button.grid(row=4, column=1, sticky="e")
+                    champion_attack3_button.grid(row=5, column=1)
+                elif len(attacks_list) == 4:
+                    champion_attack1_button = tk.Button(root, text="{}".format(attacks_list[0]), command=lambda: GameFrame.attack_details_window(self, attacks_list[0]))
+                    champion_attack2_button = tk.Button(root, text="{}".format(attacks_list[1]), command=lambda: GameFrame.attack_details_window(self, attacks_list[1]))
+                    champion_attack3_button = tk.Button(root, text="{}".format(attacks_list[3]), command=lambda: GameFrame.attack_details_window(self, attacks_list[2]))
+                    champion_attack4_button = tk.Button(root, text="{}".format(attacks_list[3]), command=lambda: GameFrame.attack_details_window(self, attacks_list[3]))
+                    champion_attack1_button.grid(row=4, column=1, sticky="w")
+                    champion_attack2_button.grid(row=4, column=1, sticky="e")
+                    champion_attack3_button.grid(row=5, column=1, sticky="w")
+                    champion_attack4_button.grid(row=5, column=1, sticky="e")
             else:
-
-            if specials_list != []:
-                if len.specials_list == 1:
-
-                if len.specials_list == 2:
-                    
-                if len.specials_list == 3:
-
-                if len.specials_list == 4:
+                champion_attackless_label = tk.Label(root, text="This champion has no attacks")
+                champion_attackless_label.grid(row=4, column=1)
+            champion_specials_label = tk.Label(root, text=":Specials:")
+            champion_specials_label.grid(row=6, column=1)
+            if len(specials_list) != 0:
+                if len(specials_list) == 1:
+                    champion_special1_button = tk.Button(root, text="{}".format(specials_list[0]), command=lambda: GameFrame.special_details_window(self, specials_list[0]))
+                    champion_special1_button.grid(row=7, column=1)
+                elif len(specials_list) == 2:
+                    champion_special1_button = tk.Button(root, text="{}".format(specials_list[0]), command=lambda: GameFrame.special_details_window(self, specials_list[0]))
+                    champion_special2_button = tk.Button(root, text="{}".format(specials_list[1]), command=lambda: GameFrame.special_details_window(self, specials_list[1]))
+                    champion_special1_button.grid(row=7, column=1, sticky="w")
+                    champion_special2_button.grid(row=7, column=1, sticky="e")
+                elif len(specials_list) == 3:
+                    champion_special1_button = tk.Button(root, text="{}".format(specials_list[0]), command=lambda: GameFrame.special_details_window(self, specials_list[0]))
+                    champion_special2_button = tk.Button(root, text="{}".format(specials_list[1]), command=lambda: GameFrame.special_details_window(self, specials_list[1]))
+                    champion_special3_button = tk.Button(root, text="{}".format(specials_list[2]), command=lambda: GameFrame.special_details_window(self, specials_list[2]))
+                    champion_special1_button.grid(row=7, column=1, sticky="w")
+                    champion_special2_button.grid(row=7, column=1, sticky="e")
+                    champion_special3_button.grid(row=8, column=1)
+                elif len(specials_list) == 4:
+                    champion_special1_button = tk.Button(root, text="{}".format(specials_list[0]), command=lambda: GameFrame.special_details_window(self, specials_list[0]))
+                    champion_special2_button = tk.Button(root, text="{}".format(specials_list[1]), command=lambda: GameFrame.special_details_window(self, specials_list[1]))
+                    champion_special3_button = tk.Button(root, text="{}".format(specials_list[2]), command=lambda: GameFrame.special_details_window(self, specials_list[2]))
+                    champion_special4_button = tk.Button(root, text="{}".format(specials_list[3]), command=lambda: GameFrame.special_details_window(self, specials_list[3]))
+                    champion_special1_button.grid(row=7, column=1, sticky="w")
+                    champion_special2_button.grid(row=7, column=1, sticky="e")
+                    champion_special3_button.grid(row=8, column=1, sticky="w")
+                    champion_special4_button.grid(row=8, column=1, sticky="e")
             else:
-                
+                champion_specialless_label = tk.Label(root, text="This champion has no specials")
+                champion_specialless_label.grid(row=7, column=1)
+            close_button = tk.Button(root, text="Close Window", command=root.destroy)
+            close_button.grid(row=9, column=1)
 
     def check_temp_party(self, champion, type):
         global temp_party, yes_buttonCTP, no_buttonCTP, warning_label1CTP, warning_label2CTP, tank, dps, healer, visual_team_label
@@ -30916,30 +31148,32 @@ class TeamSelectionPage(tk.Frame):
         visual_team_label = tk.Label(self, text=self.display_team(temp_party))
         visual_team_label.grid(row=11, column=2)
 
-    def confirm_new_team1(self):
+    def confirm_new_team(self):
         root = tk.Tk()
         confirmation_label = tk.Label(root, text="Are you sure you want save this group?")
-        yes_buttonCNT = tk.Button(root, text="Yes", command=lambda: ParentClass.finalise_new_team1(self, root))
+        yes_buttonCNT = tk.Button(root, text="Yes", command=lambda: ParentClass.finalise_new_team(self, root))
         no_buttonCNT = tk.Button(root, text="No", command=lambda: root.destroy())
         confirmation_label.grid(row=2, column=1)
         yes_buttonCNT.grid(row=3, column=1, sticky="w", padx=70)
         no_buttonCNT.grid(row=3, column=1, sticky="e", padx=70)
 
-    def save_new_team1(self, root):
+    def save_new_team(self, root):
+        user = ParentClass.get_account_data(self, "encoded_username")
+        user = str(user)
+        emblems = ParentClass.get_account_data(self, "emblems")
+        rank = ParentClass.get_account_data(self, "rank")
         i = -1
-        file = open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Data (DO NOT EDIT)/account_data_championTeam_1.txt".format(computer_username),
+        file = open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Data (DO NOT EDIT)/account_data_users.txt".format(computer_username),
                     "r")
         file_allLines = file.readlines()
-        user = ParentClass.get_user_encoded(self)
-        user = str(user)
         for line in file_allLines:
             i += 1
             if user in line:
-                coded_temp_party = self.code_party()
-                new_line = "{}, {}\n".format(user, coded_temp_party)
+                new_champion_list = self.code_party()
+                new_line = "{}, {}, {}, {}".format(user, new_champion_list, emblems, rank)
                 file_allLines[i] = new_line
                 file_write = open(
-                    "C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Data (DO NOT EDIT)/account_data_championTeam_1.txt".format(computer_username),
+                    "C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Data (DO NOT EDIT)/account_data_users.txt".format(computer_username),
                     "w")
                 file_write.writelines(file_allLines)
                 file.close()
@@ -30991,17 +31225,20 @@ class TeamSelectionPage(tk.Frame):
                 coded_temp_party += TIME_WALKER.code
             if character == FIELD_MEDIC.title:
                 coded_temp_party += FIELD_MEDIC.code
-            if character == "Empty":
-                break
             i += 1
             if i <= 4:
-                coded_temp_party += ", "
+                coded_temp_party += ":"
+        if len(temp_party) < 5:
+            while i < 5:
+                coded_temp_party += "Empty"
+                i += 1
+                if i <= 4:
+                    coded_temp_party += ":"
         return coded_temp_party
 
-    def clear_temp_party1(self):
+    def clear_temp_party(self):
         global temp_party
         temp_party = []
-
 
 class CreditPage(tk.Frame):
     def __init__(self, parent, controller):
@@ -31012,7 +31249,6 @@ class CreditPage(tk.Frame):
         button = tk.Button(self, text="Return to Menu",
                            command=lambda: controller.show_frame("MainMenu"))
         button.grid()
-
 
 class How2PlayPage(tk.Frame):
     def __init__(self, parent, controller):
