@@ -146,7 +146,7 @@ class ParentClass(tk.Tk):
         #Loads all frames on top of each other. The frame that is visible is the one called to go on top.
         for F in (
                 OpeningPage, MainMenu, DungeonDelve, CreateTeamPage, CreditPage, How2PlayPage, LeaderboardPage,
-                LoginMenu, RegisterMenu, DungeonManagement, Team1SelectionPage, GameFrame):
+                LoginMenu, RegisterMenu, DungeonManagement, TeamSelectionPage, GameFrame):
             page_name = F.__name__
             frame = F(parent=container, controller=self)
             self.frames[page_name] = frame
@@ -419,11 +419,11 @@ class ParentClass(tk.Tk):
         self.show_frame("CreateTeamPage")
 
     def cancel_new_team1(self):
-        Team1SelectionPage.clear_temp_party1(self)
+        TeamSelectionPage.clear_temp_party1(self)
         self.show_frame("CreateTeamPage")
 
     def finalise_new_team1(self, root):
-        Team1SelectionPage.save_new_team1(self, root)
+        TeamSelectionPage.save_new_team1(self, root)
         ParentClass.show_frame(app, "CreateTeamPage")
 
     #writes the users chosen team into a file for later use
@@ -629,7 +629,7 @@ class DungeonDelve(tk.Frame):
         SA = ParentClass
         decoded_dungeoneer_team1 = CTP.team_1_decode(self, team_1_list_data)
         message_label = tk.Label(root, text=":Are you sure you want to delve into the dungeon with:")
-        visual_team_label = tk.Label(root, text=self.display_team1(decoded_dungeoneer_team1))
+        visual_team_label = tk.Label(root, text=self.display_team(decoded_dungeoneer_team1))
         yesButton = tk.Button(root, text="Yes",
                               command=lambda: ParentClass.set_dungeon_team(self, decoded_dungeoneer_team1, root))
         noButton = tk.Button(root, text="No", command=root.destroy)
@@ -638,7 +638,7 @@ class DungeonDelve(tk.Frame):
         yesButton.grid(row=3, column=1, sticky="w", padx=100)
         noButton.grid(row=3, column=1, sticky="e", padx=100)
 
-    def display_team1(self, decoded_dungeoneer_team1):
+    def display_team(self, decoded_dungeoneer_team1):
         team_1_text = ""
         i = 0
         for character in decoded_dungeoneer_team1:
@@ -5105,9 +5105,9 @@ class GameFrame(tk.Frame):
         elif name == "Vein Sensitizer Tip":
             text = "Applies the Brittle debuff to hit enemies"
         elif name == "Power Aura":
-            text = "All Champions gain 20 perect extra damage"
+            text = "All Champions deal 20% extra damage"
         elif name == "Protection Aura":
-            text = "All Champions take 10 percent less damage"
+            text = "All Champions take 10% less damage"
         return text
     def apply_before_round_choices(self, champion_identifier, choice):
         global current_arrow_type, paladin_aura, ranger_aura_completed, paladin_aura_completed
@@ -15037,7 +15037,6 @@ class GameFrame(tk.Frame):
             champion1_bush_armour, champion2_bush_armour, champion3_bush_armour, champion4_bush_armour, champion5_bush_armour, \
             champion1_enhardened_nerves, champion2_enhardened_nerves, champion3_enhardened_nerves, champion4_enhardened_nerves, champion5_enhardened_nerves
         if champion_position == 1:
-            #HERE_1
             if CHAMPION_LIST[0] == "Monk":
                 if leg_sweep_requirements[3] > 0:
                     leg_sweep_requirements[3] = leg_sweep_requirements[3] - 1
@@ -15163,7 +15162,6 @@ class GameFrame(tk.Frame):
                 if champion1_bush_armour == 0:
                     champion1_statuses.remove("Bush Armour")
         if champion_position == 2:
-            #HERE_2
             if "Immunity: Block" in champion2_statuses:
                 champion2_statuses.remove("Immunity: Block")
             if "Immunity: Cocoon" in champion2_statuses:
@@ -15286,7 +15284,6 @@ class GameFrame(tk.Frame):
                 if secret_remedy_requirements[3] > 0:
                     secret_remedy_requirements[3] = secret_remedy_requirements[3] - 1
         if champion_position == 3:
-            #HERE_3
             if "Immunity: Block" in champion3_statuses:
                 champion3_statuses.remove("Immunity: Block")
             if "Immunity: Cocoon" in champion3_statuses:
@@ -15409,7 +15406,6 @@ class GameFrame(tk.Frame):
                 if secret_remedy_requirements[3] > 0:
                     secret_remedy_requirements[3] = secret_remedy_requirements[3] - 1
         if champion_position == 4:
-            #HERE_4
             if "Immunity: Block" in champion4_statuses:
                 champion4_statuses.remove("Immunity: Block")
             if "Immunity: Cocoon" in champion4_statuses:
@@ -15532,7 +15528,6 @@ class GameFrame(tk.Frame):
                 if secret_remedy_requirements[3] > 0:
                     secret_remedy_requirements[3] = secret_remedy_requirements[3] - 1
         if champion_position == 5:
-            #HERE_5
             if "Immunity: Block" in champion5_statuses:
                 champion5_statuses.remove("Immunity: Block")
             if "Immunity: Cocoon" in champion5_statuses:
@@ -21074,14 +21069,14 @@ class GameFrame(tk.Frame):
             ability_remaining_cooldown = boulder_cocoon_requirements[3]
             ability_resource = 'Mana'
         elif ability_name == "Healing Light":
-            special_ability_details = "Heal two allies and giving them 'Blessed' for 5 turns."
+            special_ability_details = "Heal two allies and give them 'Blessed' for 5 turns."
             ability_cost = healing_light_requirements[0]
             ability_gain = healing_light_requirements[1]
             ability_cooldown = healing_light_requirements[2]
             ability_remaining_cooldown = healing_light_requirements[3]
             ability_resource = 'Mana'
         elif ability_name == "Diffracting Nova":
-            special_ability_details = "Deal damage to all enemies and apply one turn of 'Blessed' to all allies"
+            special_ability_details = "Deal damage to all enemies and apply two turns of 'Blessed' to all allies"
             ability_cost = diffracting_nova_requirements[0]
             ability_gain = diffracting_nova_requirements[1]
             ability_cooldown = diffracting_nova_requirements[2]
@@ -21157,6 +21152,74 @@ class GameFrame(tk.Frame):
             ability_description_label.grid(row=2, column=1)
             close_button = tk.Button(root, text="Close", command=root.destroy)
             close_button.grid(row=3, column=1)
+    def passive_details_window(self, champion_name):
+        root = tk.Tk()
+        if champion_name == "Monk": 
+            passive_name = MONK.passive
+            passive_details = "The Monk wields three damage baubles that slows down the rate of damage taken\nWhenver he takes damage, if there is an available bauble, the damage is absorbed by the bauble and is split into three charges\nEach charge contains one third of the damage absorbed, meaning that all three charges contain in total the full hit\nAt the beginning of each turn, each bauble releases one charge dealing one charges worth of damage to the monk\nBaubles that still have charges cannot absorb more attacks, if all baubles have charges, the monk takes full damage"
+        elif champion_name == "Barbarian": 
+            passive_name = BARBARIAN.passive
+            passive_details = "The Barbarian deals an additionl 20% damage for each enemy attacking him"
+        elif champion_name == "Kings-Guard": 
+            passive_name = KINGS_GUARD.passive
+            passive_details = "15% of all damage taken by other allies is instead taken by the Kings-Guard"
+        elif champion_name == "Fencer": 
+            passive_name = MASTER_FENCER.passive
+            passive_details = "You have a 30% chance to reduce the damage of attacks dependng on the enemies size class\nIf the damage is successfully reduced, the enemy is taunted for one turn\nAmount of damage reduced (Tiny > 50%, Small > 40%, Medium > 30%, Large > 20%, Huge > 15%)"
+        elif champion_name == "Berserker": 
+            passive_name = BERSERKER.passive
+            passive_details = "The Berserker deals more damage depending on the amount of enemies in combat, dealing more the less there are\n(5 Enemies > 100% : 4 Enemies > 110% : 3 Enemies > 120 : 2 Enemies > 135% : 1 Enemy > 150%)"
+        elif champion_name == "Rogue": 
+            passive_name = ROGUE.passive
+            passive_details = "The Rogues bleed damage is increased by 10% with each unquie bleed applied to the target\nBleeds that are applied by other champions also count towards this passive"
+        elif champion_name == "Survivalist": 
+            passive_name = SURVIVALIST.passive
+            passive_details = "After using a special, the Survivalist will gain 'Prepared'\nPrepared: Your next attack deals 50% extra damage"
+        elif champion_name == "Brawlist": 
+            passive_name = BRAWLIST.passive
+            passive_details = "When the Brawlist attacks an enemy, the enemy takes extra damage from his next attack other than the one that left the debuff"
+        elif champion_name == "Academics Mage": 
+            passive_name = ACADEMIC_MAGE.passive
+            passive_details = "When the Mage casts a spell, every ally that uses Mana as a resource gains 20"
+        elif champion_name == "Druid": 
+            passive_name = DRUID.passive
+            passive_details = "Enemies take 2% extra damage from all sources for each thorn embedded into them"
+        elif champion_name == "Warlock": 
+            passive_name = WARLOCK.passive
+            passive_details = "Whenever an enemy takes damage from the Warlock, they receive one stack of 'Touch of Corruption', up to 10 maximum\nTouch of Corruption: All damage dealt is reduced by 1% per stack"
+        elif champion_name == "Bloodmancer": 
+            passive_name = BLOODMANCER.passive
+            passive_details = "Whenever the Bloodmancer casts an empowered ability, the next ability an ally uses that heals or deals damage is amplified by 50%"
+        elif champion_name == "Paladin": 
+            passive_name = PALADIN.passive
+            passive_details = "Every two turns, the Paladin can choose to give all their allies either Power Aura or Protection Aura\n(Power Aura: Damage dealt is increased by 20%) (Protection Aura: Damage taken is reduced by 10%)"
+        elif champion_name == "Ranger": 
+            passive_name = LEGION_RANGER.passive
+            passive_details = "Every three turns, the Ranger is given a choice of three random arrow tips that enhances their attacks\n"
+        elif champion_name == "Magnetimancer": 
+            passive_name = MAGNETIMANCER.passive
+            passive_details = "All attacks apply charges to enemies hit that have a polarity of either Positive or Negative\nWhen an enemy is charged with both polarities, the charges explode dealing damage to the them and lower damage to all other enemies\nAn enemy can only have two of the same charge"
+        elif champion_name == "Power Conduit": 
+            passive_name = POWER_CONDUIT.passive
+            passive_details = "Whenever the Power Conduit is damaged by an enemy it's core reacts violently, releasing volitile energy dealing damage back to their attacker."
+        elif champion_name == "Earth Speaker": 
+            passive_name = EARTH_SPEAKER.passive
+            passive_details = "Whenever an ally has a healing overtime effect on them, they are also encased with Toughened Mud\nReducing damage they take by 15%, the mud is removed when the healing effect disappears"
+        elif champion_name == "Priest": 
+            passive_name = PRIEST.passive
+            passive_details = "Special abilities the Priest casts give 'Blessed' to allies, making all damage the Priest deals also heal allies with this buff"
+        elif champion_name == "Time Walker": 
+            passive_name = TIME_WALKER.passive
+            passive_details = "The Time Walker has implanted Nano Repair Bots inside all his allies\nHealing them by 5% of their max health points at the start of each turn"
+        elif champion_name == "Field Medic": 
+            passive_name = FIELD_MEDIC.passive
+            passive_details = "The Field Medic's special abilties are extremely resourceful\nWhen the original effect of a special is over, a weaker version will linger for double the duration"
+        passive_title_label = tk.Label(root, text=passive_name)
+        passive_title_label.grid(row=0, column=1)
+        passive_details_label = tk.Label(root, text=passive_details)
+        passive_details_label.grid(row=1, column=1)
+        close_button = tk.Button(root, text="Close", command=root.destroy)
+        close_button.grid(row=2, column=1)
     def champion_turn_switch(self, champion_position):
         global from_end_of_turn
         if from_end_of_turn == 1:
@@ -23359,7 +23422,6 @@ class GameFrame(tk.Frame):
                 ai1_shimmerDot, ai2_shimmerDot, ai3_shimmerDot, ai4_shimmerDot, ai5_shimmerDot,\
                 ai1_divineDot, ai2_divineDot, ai3_divineDot, ai4_divineDot, ai5_divineDot
             counter = 0
-            #HEREHERE
             if 1 in target_list:
                 if ai1_burnDot[1] > 0:
                     while ai1_burnDot[1] > 0:
@@ -29609,7 +29671,7 @@ class CreateTeamPage(tk.Frame):
         self.update_variables()
         label = tk.Label(self, text="Champion Camp", font=controller.title_font)
         team_1_button = tk.Button(self, text=team_1_button_text,
-                                  command=lambda: controller.show_frame("Team1SelectionPage"))
+                                  command=lambda: controller.show_frame("TeamSelectionPage"))
         team_2_button = tk.Button(self, text="Team 2: NYI")
         team_3_button = tk.Button(self, text="Team 3: NYI")
         update_page_button_2 = tk.Button(self, text="Refresh Team Page", command=self.update_variables)
@@ -29640,7 +29702,7 @@ class CreateTeamPage(tk.Frame):
         decoded_dungeoneer_team1 = self.team_1_decode(team_1_list_data)
         decoded_dungeoneer_team2 = self.team_2_decode(team_2_list_data)
         decoded_dungeoneer_team3 = self.team_3_decode(team_3_list_data)
-        team_1_text = self.display_team1(decoded_dungeoneer_team1)
+        team_1_text = self.display_team(decoded_dungeoneer_team1)
         team_2_text = self.display_team2(decoded_dungeoneer_team2)
         team_3_text = self.display_team3(decoded_dungeoneer_team3)
         team_1_button_text = self.team_1_button_message(decoded_dungeoneer_team1)
@@ -29653,7 +29715,7 @@ class CreateTeamPage(tk.Frame):
         team_2_label.grid(row=4, column=2)
         team_3_label.grid(row=6, column=2)
 
-    def display_team1(self, decoded_dungeoneer_team1):
+    def display_team(self, decoded_dungeoneer_team1):
         team_1_text = ""
         for character in decoded_dungeoneer_team1:
             team_1_text += "\n"
@@ -30003,7 +30065,7 @@ class CreateTeamPage(tk.Frame):
             return decoded_dungeoneer_team3
 
 
-class Team1SelectionPage(tk.Frame):
+class TeamSelectionPage(tk.Frame):
     def __init__(self, parent, controller):
         global update_pageTSP
         global returnButtonTSP, invis_label1, invis_label2
@@ -30013,7 +30075,7 @@ class Team1SelectionPage(tk.Frame):
         self.title_label_font = tkfont.Font(family='Helvetica', size=30, weight="bold")
         self.small_label_font = tkfont.Font(family='Helvetica', size=12, weight="bold")
         title = tk.Label(self, text="Champion Camp", font=self.title_label_font)
-        update_pageTSP = tk.Button(self, text="Begin Recruiting for Team 1", command=lambda: self.pitstop1(),
+        update_pageTSP = tk.Button(self, text="Begin Recruiting for Team 1", command=lambda: self.pitstop(),
                                    font=controller.menu_button_font)
         returnButtonTSP = tk.Button(self, text="Cancel", command=lambda: controller.cancel_new_team1())
         invis_label1 = tk.Label(self)
@@ -30024,7 +30086,7 @@ class Team1SelectionPage(tk.Frame):
         invis_label1.grid(row=1, column=1, rowspan=4, pady=50, ipadx=240, ipady=100)
         invis_label2.grid(row=1, column=2, pady=100)
 
-    def pitstop1(self):
+    def pitstop(self):
         global visual_team_label, temp_party
         user = ParentClass.get_user_encoded(self)
         team_line_1 = []
@@ -30034,11 +30096,11 @@ class Team1SelectionPage(tk.Frame):
         CTP = CreateTeamPage
         decoded_dungeoneer_team1CTP = CTP.team_1_decode(self, team_1_list_data)
         temp_party = decoded_dungeoneer_team1CTP
-        visual_team_label = tk.Label(self, text=self.display_team1(temp_party))
+        visual_team_label = tk.Label(self, text=self.display_team(temp_party))
         visual_team_label.grid(row=11, column=2)
-        self.team_creation1()
+        self.team_creation()
 
-    def team_creation1(self):
+    def team_creation(self):
         global tank, dps, healer, tank_section_button, dps_section_button, healer_section_button, decoded_dungeoneer_team1CTP
         tank = False
         dps = False
@@ -30046,11 +30108,11 @@ class Team1SelectionPage(tk.Frame):
         invis_label3 = tk.Label(self)
         invis_label4 = tk.Label(self)
         tank_section_button = tk.Button(self, text="Tanks", font=self.menu_button_font, width=26,
-                                        command=self.view_tanks1)
+                                        command=self.view_tanks)
         dps_section_button = tk.Button(self, text="Damage Dealers", font=self.menu_button_font, width=26,
-                                       command=self.view_dps1)
+                                       command=self.view_dps)
         healer_section_button = tk.Button(self, text="Healers", font=self.menu_button_font, width=26,
-                                          command=self.view_healer1)
+                                          command=self.view_healer)
         your_team_label = tk.Label(self, text=":Your Team:", font=self.small_label_font)
         confirm_changes_button = tk.Button(self, text="Confirm Changes", command=self.confirm_new_team1)
         tank_section_button.grid(row=2, column=1)
@@ -30064,7 +30126,7 @@ class Team1SelectionPage(tk.Frame):
         invis_label2.grid_forget()
         update_pageTSP.grid_forget()
 
-    def display_team1(self, temp_party):
+    def display_team(self, temp_party):
         team_1_text = ""
         i = 0
         for character in temp_party:
@@ -30082,7 +30144,7 @@ class Team1SelectionPage(tk.Frame):
                 i += 1
         return team_1_text
 
-    def view_tanks1(self):
+    def view_tanks(self):
         global MONK_label, MONK_button_add, MONK_button_details, BARBARIAN_label, BARBARIAN_button_add, \
             BARBARIAN_button_details, bodyguard_label, bodyguard_button_add, bodyguard_button_details, \
             fencer_label, fencer_button_add, fencer_button_details, invis_label3, invis_label4, tank, dps, healer
@@ -30155,19 +30217,19 @@ class Team1SelectionPage(tk.Frame):
             invis_label4 = tk.Label(self)
             MONK_label = tk.Label(self, text=MONK.name, font=self.menu_button_font)
             MONK_button_add = tk.Button(self, text="Add to Team",
-                                        command=lambda: self.check_temp_party1(MONK.title, "tank"))
+                                        command=lambda: self.check_temp_party(MONK.title, "tank"))
             MONK_button_details = tk.Button(self, text="View Details (NYI)")
             BARBARIAN_label = tk.Label(self, text=BARBARIAN.name, font=self.menu_button_font)
             BARBARIAN_button_add = tk.Button(self, text="Add to Team",
-                                             command=lambda: self.check_temp_party1(BARBARIAN.title, "tank"))
+                                             command=lambda: self.check_temp_party(BARBARIAN.title, "tank"))
             BARBARIAN_button_details = tk.Button(self, text="View Details (NYI)")
             bodyguard_label = tk.Label(self, text=KINGS_GUARD.name, font=self.menu_button_font)
             bodyguard_button_add = tk.Button(self, text="Add to Team",
-                                             command=lambda: self.check_temp_party1(KINGS_GUARD.title, "tank"))
+                                             command=lambda: self.check_temp_party(KINGS_GUARD.title, "tank"))
             bodyguard_button_details = tk.Button(self, text="View Details (NYI)")
             fencer_label = tk.Label(self, text=MASTER_FENCER.name, font=self.menu_button_font)
             fencer_button_add = tk.Button(self, text="Add to Team",
-                                          command=lambda: self.check_temp_party1(MASTER_FENCER.title, "tank"))
+                                          command=lambda: self.check_temp_party(MASTER_FENCER.title, "tank"))
             fencer_button_details = tk.Button(self, text="View Details (NYI)")
             MONK_label.grid(row=4, column=1, sticky="e")
             MONK_button_add.grid(row=5, column=1, sticky="e", padx=105)
@@ -30184,7 +30246,7 @@ class Team1SelectionPage(tk.Frame):
             invis_label3.grid(row=3, column=1, columnspan=3, pady=50)
             invis_label4.grid(row=6, column=1, columnspan=3, pady=50)
 
-    def view_dps1(self):
+    def view_dps(self):
         global melee_label, magic_label, mix_label, BERSERKER_label, BERSERKER_button_add, BERSERKER_button_details, \
             ROGUE_label, ROGUE_button_add, ROGUE_button_details, SURVIVALIST_label, SURVIVALIST_button_add, SURVIVALIST_button_details, \
             BRAWLIST_label, BRAWLIST_button_add, BRAWLIST_button_details, ACADEMIC_MAGE_label, ACADEMIC_MAGE_button_add, ACADEMIC_MAGE_button_details, \
@@ -30237,52 +30299,52 @@ class Team1SelectionPage(tk.Frame):
             mix_label = tk.Label(self, text=":Other:", font=self.menu_button_font)
             BERSERKER_label = tk.Label(self, text=BERSERKER.name)
             BERSERKER_button_add = tk.Button(self, text="Add to Team",
-                                             command=lambda: self.check_temp_party1(BERSERKER.title, "melee"))
+                                             command=lambda: self.check_temp_party(BERSERKER.title, "melee"))
             BERSERKER_button_details = tk.Button(self, text="View Details (NYI)")
             ROGUE_label = tk.Label(self, text=ROGUE.name)
             ROGUE_button_add = tk.Button(self, text="Add to Team",
-                                         command=lambda: self.check_temp_party1(ROGUE.title, "melee"))
+                                         command=lambda: self.check_temp_party(ROGUE.title, "melee"))
             ROGUE_button_details = tk.Button(self, text="View Details (NYI)")
             SURVIVALIST_label = tk.Label(self, text=SURVIVALIST.name)
             SURVIVALIST_button_add = tk.Button(self, text="Add to Team",
-                                               command=lambda: self.check_temp_party1(SURVIVALIST.title, "melee"))
+                                               command=lambda: self.check_temp_party(SURVIVALIST.title, "melee"))
             SURVIVALIST_button_details = tk.Button(self, text="View Details (NYI)")
             BRAWLIST_label = tk.Label(self, text=BRAWLIST.name)
             BRAWLIST_button_add = tk.Button(self, text="Add to Team",
-                                            command=lambda: self.check_temp_party1(BRAWLIST.title, "melee"))
+                                            command=lambda: self.check_temp_party(BRAWLIST.title, "melee"))
             BRAWLIST_button_details = tk.Button(self, text="View Details (NYI)")
             ACADEMIC_MAGE_label = tk.Label(self, text=ACADEMIC_MAGE.name)
             ACADEMIC_MAGE_button_add = tk.Button(self, text="Add to Team",
-                                                 command=lambda: self.check_temp_party1(ACADEMIC_MAGE.title, "magic"))
+                                                 command=lambda: self.check_temp_party(ACADEMIC_MAGE.title, "magic"))
             ACADEMIC_MAGE_button_details = tk.Button(self, text="View Details (NYI)")
             jungle_DRUID_label = tk.Label(self, text=DRUID.name)
             jungle_DRUID_button_add = tk.Button(self, text="Add to Team",
-                                                command=lambda: self.check_temp_party1(DRUID.title, "magic"))
+                                                command=lambda: self.check_temp_party(DRUID.title, "magic"))
             jungle_DRUID_button_details = tk.Button(self, text="View Details (NYI)")
             WARLOCK_label = tk.Label(self, text=WARLOCK.name)
             WARLOCK_button_add = tk.Button(self, text="Add to Team",
-                                           command=lambda: self.check_temp_party1(WARLOCK.title, "magic"))
+                                           command=lambda: self.check_temp_party(WARLOCK.title, "magic"))
             WARLOCK_button_details = tk.Button(self, text="View Details (NYI)")
             BLOODMANCER_label = tk.Label(self, text=BLOODMANCER.name)
             BLOODMANCER_button_add = tk.Button(self, text="Add to Team",
-                                               command=lambda: self.check_temp_party1(BLOODMANCER.title, "magic"))
+                                               command=lambda: self.check_temp_party(BLOODMANCER.title, "magic"))
             BLOODMANCER_button_details = tk.Button(self, text="View Details (NYI)")
             PALADIN_label = tk.Label(self, text=PALADIN.name)
             PALADIN_button_add = tk.Button(self, text="Add to Team",
-                                           command=lambda: self.check_temp_party1(PALADIN.title, "mixed"))
+                                           command=lambda: self.check_temp_party(PALADIN.title, "mixed"))
             PALADIN_button_details = tk.Button(self, text="View Details (NYI)")
             LEGION_RANGER_label = tk.Label(self, text=LEGION_RANGER.name)
             LEGION_RANGER_button_add = tk.Button(self, text="Add to Team",
-                                                 command=lambda: self.check_temp_party1(LEGION_RANGER.title, "mixed"))
+                                                 command=lambda: self.check_temp_party(LEGION_RANGER.title, "mixed"))
             LEGION_RANGER_button_details = tk.Button(self, text="View Details (NYI)")
             MAGNETIMANCER_label = tk.Label(self, text=MAGNETIMANCER.name)
             MAGNETIMANCER_button_add = tk.Button(self, text="Add to Team",
-                                                      command=lambda: self.check_temp_party1(MAGNETIMANCER.title,
+                                                      command=lambda: self.check_temp_party(MAGNETIMANCER.title,
                                                                                              "mixed"))
             MAGNETIMANCER_button_details = tk.Button(self, text="View Details (NYI)")
             POWER_CONDUIT_label = tk.Label(self, text=POWER_CONDUIT.name)
             POWER_CONDUIT_button_add = tk.Button(self, text="Add to Team",
-                                                 command=lambda: self.check_temp_party1(POWER_CONDUIT.title, "mixed"))
+                                                 command=lambda: self.check_temp_party(POWER_CONDUIT.title, "mixed"))
             POWER_CONDUIT_button_details = tk.Button(self, text="View Details (NYI)")
             melee_label.grid(row=3, column=1)
             magic_label.grid(row=3, column=2)
@@ -30324,7 +30386,7 @@ class Team1SelectionPage(tk.Frame):
             POWER_CONDUIT_button_add.grid(row=9, column=3, sticky="e", padx=105)
             POWER_CONDUIT_button_details.grid(row=9, column=3, sticky="e")
 
-    def view_healer1(self):
+    def view_healer(self):
         global EARTH_SPEAKER_label, EARTH_SPEAKER_button_add, EARTH_SPEAKER_button_details, PRIEST_label, PRIEST_button_add, \
             PRIEST_button_details, TIME_WALKER_label, TIME_WALKER_button_add, TIME_WALKER_button_details, \
             FIELD_MEDIC_label, FIELD_MEDIC_button_add, FIELD_MEDIC_button_details, invis_label3, invis_label4, tank, dps, healer
@@ -30397,20 +30459,20 @@ class Team1SelectionPage(tk.Frame):
             healer = True
             EARTH_SPEAKER_label = tk.Label(self, text=EARTH_SPEAKER.name, font=self.menu_button_font)
             EARTH_SPEAKER_button_add = tk.Button(self, text="Add to Team",
-                                                 command=lambda: self.check_temp_party1(EARTH_SPEAKER.title, "healer"))
+                                                 command=lambda: self.check_temp_party(EARTH_SPEAKER.title, "healer"))
             EARTH_SPEAKER_button_details = tk.Button(self, text="View Details (NYI)")
             PRIEST_label = tk.Label(self, text=PRIEST.name, font=self.menu_button_font)
             PRIEST_button_add = tk.Button(self, text="Add to Team",
-                                                         command=lambda: self.check_temp_party1(
+                                                         command=lambda: self.check_temp_party(
                                                              PRIEST.title, "healer"))
             PRIEST_button_details = tk.Button(self, text="View Details (NYI)")
             TIME_WALKER_label = tk.Label(self, text=TIME_WALKER.name, font=self.menu_button_font)
             TIME_WALKER_button_add = tk.Button(self, text="Add to Team",
-                                               command=lambda: self.check_temp_party1(TIME_WALKER.title, "healer"))
+                                               command=lambda: self.check_temp_party(TIME_WALKER.title, "healer"))
             TIME_WALKER_button_details = tk.Button(self, text="View Details (NYI)")
             FIELD_MEDIC_label = tk.Label(self, text=FIELD_MEDIC.name, font=self.menu_button_font)
             FIELD_MEDIC_button_add = tk.Button(self, text="Add to Team",
-                                                     command=lambda: self.check_temp_party1(FIELD_MEDIC.title,
+                                                     command=lambda: self.check_temp_party(FIELD_MEDIC.title,
                                                                                             "healer"))
             FIELD_MEDIC_button_details = tk.Button(self, text="View Details (NYI)")
             EARTH_SPEAKER_label.grid(row=4, column=1, sticky="e")
@@ -30428,7 +30490,191 @@ class Team1SelectionPage(tk.Frame):
             invis_label3.grid(row=3, column=1, columnspan=3, pady=50)
             invis_label4.grid(row=6, column=1, columnspan=3, pady=50)
 
-    def check_temp_party1(self, champion, type):
+    def champion_view_details(self, champion_name):
+        #here
+        root = tk.Tk()
+        champion_resource = ''
+        if champion_name == "Monk": 
+            champion_details = ""
+            attacks_list = MONK.attack_list
+            specials_list = MONK.specials_list
+            passive_ability = MONK.passive
+            champion_code = MONK.code
+            champion_resource = 'Focus'
+        if champion_name == "Barbarian": 
+            champion_details = ""
+            attacks_list = BARBARIAN.attack_list
+            specials_list = BARBARIAN.specials_list
+            passive_ability = BARBARIAN.passive
+            champion_code = BARBARIAN.code
+            champion_resource = 'Rage'
+        if champion_name == "Kings-Guard": 
+            champion_details = ""
+            attacks_list = KINGS_GUARD.attack_list
+            specials_list = KINGS_GUARD.specials_list
+            passive_ability = KINGS_GUARD.passive
+            champion_code = KINGS_GUARD.code
+        if champion_name == "Fencer": 
+            champion_details = ""
+            attacks_list = MASTER_FENCER.attack_list
+            specials_list = MASTER_FENCER.specials_list
+            passive_ability = MASTER_FENCER.passive
+            champion_code = MASTER_FENCER.code
+        if champion_name == "Berserker": 
+            champion_details = ""
+            attacks_list = BERSERKER.attack_list
+            specials_list = BERSERKER.specials_list
+            passive_ability = BERSERKER.passive
+            champion_code = BERSERKER.code
+            champion_resource = 'Rage'
+        if champion_name == "Rogue": 
+            champion_details = ""
+            attacks_list = ROGUE.attack_list
+            specials_list = ROGUE.specials_list
+            passive_ability = ROGUE.passive
+            champion_code = ROGUE.code
+        if champion_name == "Survivalist": 
+            champion_details = ""
+            attacks_list = SURVIVALIST.attack_list
+            specials_list = SURVIVALIST.specials_list
+            passive_ability = SURVIVALIST.passive
+            champion_code = SURVIVALIST.code
+        if champion_name == "Brawlist": 
+            champion_details = ""
+            attacks_list = BRAWLIST.attack_list
+            specials_list = BRAWLIST.specials_list
+            passive_ability = BRAWLIST.passive
+            champion_code = BRAWLIST.code
+        if champion_name == "Academics Mage": 
+            champion_details = ""
+            attacks_list = ACADEMIC_MAGE.attack_list
+            specials_list = ACADEMIC_MAGE.specials_list
+            passive_ability = ACADEMIC_MAGE.passive
+            champion_code = ACADEMIC_MAGE.code
+            champion_resource = 'Mana'
+        if champion_name == "Druid": 
+            champion_details = ""
+            attacks_list = DRUID.attack_list
+            specials_list = DRUID.specials_list
+            passive_ability = DRUID.passive
+            champion_code = DRUID.code
+            champion_resource = 'Mana'
+        if champion_name == "Warlock": 
+            champion_details = ""
+            attacks_list = WARLOCK.attack_list
+            specials_list = WARLOCK.specials_list
+            passive_ability = WARLOCK.passive
+            champion_code = WARLOCK.code
+            champion_resource = 'Mana'
+        if champion_name == "Bloodmancer": 
+            champion_details = ""
+            attacks_list = BLOODMANCER.attack_list
+            specials_list = BLOODMANCER.specials_list
+            passive_ability = BLOODMANCER.passive
+            champion_code = BLOODMANCER.code
+            champion_resource = 'Health'
+        if champion_name == "Paladin": 
+            champion_details = ""
+            attacks_list = PALADIN.attack_list
+            specials_list = PALADIN.specials_list
+            passive_ability = PALADIN.passive
+            champion_code = PALADIN.code
+        if champion_name == "Ranger": 
+            champion_details = ""
+            attacks_list = LEGION_RANGER.attack_list
+            specials_list = LEGION_RANGER.specials_list
+            passive_ability = LEGION_RANGER.passive
+            champion_code = LEGION_RANGER.code
+        if champion_name == "Magnetimancer": 
+            champion_details = ""
+            attacks_list = MAGNETIMANCER.attack_list
+            specials_list = MAGNETIMANCER.specials_list
+            passive_ability = MAGNETIMANCER.passive
+            champion_code = MAGNETIMANCER.code
+        if champion_name == "Power Conduit": 
+            champion_details = ""
+            attacks_list = POWER_CONDUIT.attack_list
+            specials_list = POWER_CONDUIT.specials_list
+            passive_ability = POWER_CONDUIT.passive
+            champion_code = POWER_CONDUIT.code
+            champion_resource = 'Charges'
+        if champion_name == "Earth Speaker": 
+            champion_details = ""
+            attacks_list = EARTH_SPEAKER.attack_list
+            specials_list = EARTH_SPEAKER.specials_list
+            passive_ability = EARTH_SPEAKER.passive
+            champion_code = EARTH_SPEAKER.code
+            champion_resource = 'Mana'
+        if champion_name == "Priest": 
+            champion_details = ""
+            attacks_list = PRIEST.attack_list
+            specials_list = PRIEST.specials_list
+            passive_ability = PRIEST.passive
+            champion_code = PRIEST.code
+            champion_resource = 'Mana'
+        if champion_name == "Time Walker": 
+            champion_details = ""
+            attacks_list = TIME_WALKER.attack_list
+            specials_list = TIME_WALKER.specials_list
+            passive_ability = TIME_WALKER.passive
+            champion_code = TIME_WALKER.code
+            champion_resource = 'Mana'
+        if champion_name == "Field Medic": 
+            champion_details = ""
+            attacks_list = FIELD_MEDIC.attack_list
+            specials_list = FIELD_MEDIC.specials_list
+            passive_ability = FIELD_MEDIC.passive
+            champion_code = FIELD_MEDIC.code
+        champion_title_label = tk.Label(root, text="{} ({})".format(champion_name, champion_code))
+        champion_title_label.grid(row=0, column=1)
+        champion_details_label = tk.Label(root, text=champion_details)
+        champion_details_label.grid(row=1, column=1)
+        champion_passive_details_button = tk.Button(root, text=passive_ability, command=lambda: self)
+        champion_passive_details_button.grid(row=2, column=1)
+        if champion_resource != '':
+            if attacks_list != []:
+                if len.attacks_list == 1:
+                    
+                if len.attacks_list == 2:
+                    
+                if len.attacks_list == 3:
+
+                if len.attacks_list == 4:
+            else:
+                
+            if specials_list != []:
+                if len.specials_list == 1:
+
+                if len.specials_list == 2:
+                    
+                if len.specials_list == 3:
+                    
+                if len.specials_list == 4:
+            else:
+
+        else:
+            if attacks_list != []:
+                if len.attacks_list == 1:
+
+                if len.attacks_list == 2:
+                    
+                if len.attacks_list == 3:
+
+                if len.attacks_list == 4:
+            else:
+
+            if specials_list != []:
+                if len.specials_list == 1:
+
+                if len.specials_list == 2:
+                    
+                if len.specials_list == 3:
+
+                if len.specials_list == 4:
+            else:
+                
+
+    def check_temp_party(self, champion, type):
         global temp_party, yes_buttonCTP, no_buttonCTP, warning_label1CTP, warning_label2CTP, tank, dps, healer, visual_team_label
         tank_temp_party = []
         melee_temp_party = []
@@ -30444,7 +30690,7 @@ class Team1SelectionPage(tk.Frame):
             ok_button.grid(row=2, column=1)
             warning_label.grid(row=1, column=1)
             visual_team_label.destroy()
-            visual_team_label = tk.Label(self, text=self.display_team1(temp_party))
+            visual_team_label = tk.Label(self, text=self.display_team(temp_party))
             visual_team_label.grid(row=11, column=2)
         else:
             if len(temp_party) < 5:
@@ -30533,7 +30779,7 @@ class Team1SelectionPage(tk.Frame):
                     for character in healer_temp_party:
                         temp_party.append(character)
                 visual_team_label.destroy()
-                visual_team_label = tk.Label(self, text=self.display_team1(temp_party))
+                visual_team_label = tk.Label(self, text=self.display_team(temp_party))
                 visual_team_label.grid(row=11, column=2)
             elif len(temp_party) == 5:
                 root = tk.Tk()
@@ -30667,7 +30913,7 @@ class Team1SelectionPage(tk.Frame):
             for character in healer_temp_party:
                 temp_party.append(character)
         visual_team_label.destroy()
-        visual_team_label = tk.Label(self, text=self.display_team1(temp_party))
+        visual_team_label = tk.Label(self, text=self.display_team(temp_party))
         visual_team_label.grid(row=11, column=2)
 
     def confirm_new_team1(self):
