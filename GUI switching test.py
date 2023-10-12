@@ -1438,7 +1438,8 @@ class LeaderboardPage(tk.Frame):
                            command=lambda: controller.show_frame("MainMenu"))
         button.grid()
 
-# 
+#Frame that is the last screen before the player begins the game.
+#It's purpose is to let the player pick the difficulty they wish to play with the 'Select Dungeon Exedition' option and to confirm whether or not they're ready to start playing
 class DungeonDelve(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
@@ -1504,7 +1505,8 @@ class DungeonDelve(tk.Frame):
         root.destroy()
         ParentClass.show_frame(app, "GameFrame")
 
-# 
+#Frame where the player picks the difficulty of the dungeon they want to play
+#Higher difficulties are locked behind the rank system so if they want to play the harder dungeons then they'll need to rise the ranks and gain emblems
 class DungeonExpeditions(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
@@ -1516,7 +1518,7 @@ class DungeonExpeditions(tk.Frame):
         self.medium_text_font_bold = tkfont.Font(family='Times New Roman Baltic', size=50, weight="bold")
         self.lesser_text_font = tkfont.Font(family='Times New Roman Baltic', size=35)
         self.entering_expedition_board()
-# 
+#Buffer screen so that when the player visits later on, information is updated correctly
     def entering_expedition_board(self):
         for widget in self.winfo_children():
             widget.destroy()
@@ -1535,7 +1537,10 @@ class DungeonExpeditions(tk.Frame):
         enter_expedition_board_button.grid(row=4, column=1)
         invis_label3.grid(row=5, column=1, pady=60)
         back_button.grid(row=6, column=1)
-# 
+#There are 7 difficulties are linked with the 7 ranks. If the player has the required emblems to access the difficulty, the button will enabled and say 'Available' next to the name
+#If the player does not meet the required emblems, the button to enable the difficulty will be disabled and 
+#instead of saying 'Available' it will tell the player how many more emblems they'll need to collect. Each difficulty has the base hp and attack that enemies will start off with when first entering
+#the dungeon. Below the base stats, each difficulty also has the number that is connected with how the game gets harder.
     def expedition_board(self):
         for widget in self.winfo_children():
             widget.destroy()
@@ -1637,7 +1642,9 @@ class DungeonExpeditions(tk.Frame):
             gold_dungeon_button["state"] = "disabled"
         if player_emblems < float(20):
             silver_dungeon_button["state"] = "disabled"
-# 
+#When the player pushes a difficulty button to enable it, a textfile is updated with the current difficulty.
+#This is so that all the text and data that requires to know what difficulty it is, can easily look into this file.
+#This method reduces the amount of parameters needed or the use of global statements to run the program
     def set_new_dungeon_difficulty(self, difficulty):
         if difficulty == "Bronze":
             dungeon_difficulty_file = open(
@@ -1681,7 +1688,8 @@ class DungeonExpeditions(tk.Frame):
                 "w")
             dungeon_difficulty_file.write("Obsidian")
             dungeon_difficulty_file.close()
-# 
+#Each difficulties modifiers and numbers tied to it is stored in their respective function. 
+#When the game finds what difficulty it is, it can easily call the function that returns all of that difficulties respective values.
     def get_bronze_dungeon_modifiers(self):
         HEALTH_BASE = 1500
         ATTACKPOWER_BASE = 250
