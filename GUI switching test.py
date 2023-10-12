@@ -148,7 +148,6 @@ class ParentClass(tk.Tk):
             frame = F(parent=container, controller=self)
             self.frames[page_name] = frame
             frame.grid(row=0, column=0)
-
         self.show_frame("OpeningPage")
 #Function called upon to change frames
 #the frame used in the parameter is the frame changed to
@@ -1432,12 +1431,18 @@ class LeaderboardPage(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
         self.controller = controller
-        label = tk.Label(self, text="Leaderboards", font=controller.title_font)
-        label.grid(row=0, sticky="nsew", pady=10)
-        button = tk.Button(self, text="Return to Menu",
-                           command=lambda: controller.show_frame("MainMenu"))
-        button.grid()
-
+        invis_label1 = tk.Label(self)
+        invis_label2 = tk.Label(self)
+        opener_label = tk.Label(self, text="Guildhall Leaderboards", font=controller.small_title_font)
+        opener_button = tk.Button(self, text="Enter the Guildhall",
+                           command=self.leaderboard_frame, font=controller.menu_button_font)
+        invis_label1.grid(row=0, column=1, pady=25)
+        opener_label.grid(row=1, column=1, sticky="nsew", pady=10)
+        invis_label2.grid(row=2, column=1, pady=75)
+        opener_button.grid(row=3 ,column=1)
+    def leaderboard_frame():
+        for widget in self.winfo_children():
+            widget.destroy()
 #Frame that is the last screen before the player begins the game.
 #It's purpose is to let the player pick the difficulty they wish to play with the 'Select Dungeon Exedition' option and to confirm whether or not they're ready to start playing
 class DungeonDelve(tk.Frame):
