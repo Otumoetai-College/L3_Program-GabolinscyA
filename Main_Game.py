@@ -499,7 +499,6 @@ class MainMenu(tk.Frame):
 #In future will be where you can edit mutliple savable teams compositions (futureproofed)
 class CreateTeamPage(tk.Frame):
     def __init__(self, parent, controller):
-        global update_page_button
         tk.Frame.__init__(self, parent)
         self.controller = controller
         self.title_font = tkfont.Font(family='Times New Roman Baltic', size=120, weight="bold")
@@ -509,7 +508,6 @@ class CreateTeamPage(tk.Frame):
 #Function that layouts out the menu, has a button (update_page_button) that refreshes the entire UI so that
 #the display label (team_label) is refreshed to display the users newly created team
     def update_variables(self):
-        global decoded_dungeoneer_team, team_button_text
         for widget in self.winfo_children():
             widget.destroy()
         team_str = ParentClass.get_account_data(self, "champion_list")
@@ -1426,23 +1424,25 @@ class TeamSelectionPage(tk.Frame):
                     coded_temp_party += ":"
         return coded_temp_party
 
-# 
+# Not currently implemented
 class LeaderboardPage(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
         self.controller = controller
         invis_label1 = tk.Label(self)
         invis_label2 = tk.Label(self)
+        invis_label3 = tk.Label(self)
         opener_label = tk.Label(self, text="Guildhall Leaderboards", font=controller.small_title_font)
-        opener_button = tk.Button(self, text="Enter the Guildhall",
-                           command=self.leaderboard_frame, font=controller.menu_button_font)
-        invis_label1.grid(row=0, column=1, pady=25)
+        opener_button = tk.Button(self, text="Enter the Guildhall", font=controller.menu_button_font)
+        buttonReturn = tk.Button(self, text="Return to Menu", font=controller.menu_button_font,
+                                 command=lambda: controller.show_frame("MainMenu"))
+        invis_label1.grid(row=0, column=1, pady=15)
+        invis_label2.grid(row=1, column=0 ,padx=15)
         opener_label.grid(row=1, column=1, sticky="nsew", pady=10)
-        invis_label2.grid(row=2, column=1, pady=75)
+        invis_label3.grid(row=2, column=1, pady=75)
         opener_button.grid(row=3 ,column=1)
-    def leaderboard_frame():
-        for widget in self.winfo_children():
-            widget.destroy()
+        buttonReturn.grid(row=4, column=1)
+        
 #Frame that is the last screen before the player begins the game.
 #It's purpose is to let the player pick the difficulty they wish to play with the 'Select Dungeon Exedition' option and to confirm whether or not they're ready to start playing
 class DungeonDelve(tk.Frame):
@@ -1583,7 +1583,7 @@ class DungeonExpeditions(tk.Frame):
                                              "Base HP (1500) : Base ATK (250)\nHP Increase (50 per Room)\n"
                                              "ATK Increase (50 per Room)", font=self.smallish_text_font_bold,
                                     command=lambda: self.set_new_dungeon_difficulty("Bronze"))
-        silver_dungeon_label = tk.Label(self, text="Silver Guild ({})".format(silver_dungeon_text), font=self.smallish_text_font_bold)
+        silver_leaderboard_label = tk.Label(self, text="Silver Guild ({})".format(silver_dungeon_text), font=self.smallish_text_font_bold)
         silver_dungeon_button = tk.Button(self, text=":The Royal Catacombs:\n"
                                              "Base HP (1750) : Base ATK (275)\nHP Increase (75 per Room)\n"
                                              "ATK Increase (55 per Room)", font=self.smallish_text_font_bold,
@@ -1621,7 +1621,7 @@ class DungeonExpeditions(tk.Frame):
         invis_label2.grid(row=2, column=1, pady=20)
         bronze_dungeon_label.grid(row=3, column=1, sticky="w", padx=33)
         bronze_dungeon_button.grid(row=4, column=1, sticky="w")
-        silver_dungeon_label.grid(row=3, column=1)
+        silver_leaderboard_label.grid(row=3, column=1)
         silver_dungeon_button.grid(row=4, column=1)
         gold_dungeon_label.grid(row=3, column=1, sticky="e", padx=33)
         gold_dungeon_button.grid(row=4, column=1, sticky="e")
@@ -2119,10 +2119,7 @@ class GameFrame(tk.Frame):
     def set_adjustable_champion_stats(self):
         global champion1_hp, champion1_ap, champion1_rp, champion1_rpName, champion2_hp, champion2_ap, champion2_rp, champion2_rpName, \
             champion3_hp, champion3_ap, champion3_rp, champion3_rpName, champion4_hp, champion4_ap, champion4_rp, champion4_rpName, \
-            champion5_hp, champion5_ap, champion5_rp, champion5_rpName, \
-            champion2_small_external_buffs, champion2_big_external_buffs, champion3_small_external_buffs, champion3_big_external_buffs, \
-            champion4_small_external_buffs, champion4_big_external_buffs, champion5_small_external_buffs, champion5_big_external_buffs, \
-            legion_ranger_roundtracker, paladin_roundtracker
+            champion5_hp, champion5_ap, champion5_rp, champion5_rpName, legion_ranger_roundtracker, paladin_roundtracker
         champion1_hp = CHAMPION1_HP
         champion1_ap = CHAMPION1_AP
         legion_ranger_roundtracker = 0
@@ -2139,8 +2136,6 @@ class GameFrame(tk.Frame):
         else:
             champion2_rp = 0
         champion2_rpName = CHAMPION2_RPNAME
-        champion2_small_external_buffs = [0]
-        champion2_big_external_buffs = [0]
         champion3_hp = CHAMPION3_HP
         champion3_ap = CHAMPION3_AP
         if CHAMPION3_RPNAME == "Mana":
@@ -2148,8 +2143,6 @@ class GameFrame(tk.Frame):
         else:
             champion3_rp = 0
         champion3_rpName = CHAMPION3_RPNAME
-        champion3_small_external_buffs = [0]
-        champion3_big_external_buffs = [0]
         champion4_hp = CHAMPION4_HP
         champion4_ap = CHAMPION4_AP
         if CHAMPION4_RPNAME == "Mana":
@@ -2157,8 +2150,6 @@ class GameFrame(tk.Frame):
         else:
             champion4_rp = 0
         champion4_rpName = CHAMPION4_RPNAME
-        champion4_small_external_buffs = [0]
-        champion4_big_external_buffs = [0]
         champion5_hp = CHAMPION5_HP
         champion5_ap = CHAMPION5_AP
         if CHAMPION5_RPNAME == "Mana":
@@ -2166,8 +2157,6 @@ class GameFrame(tk.Frame):
         else:
             champion5_rp = 0
         champion5_rpName = CHAMPION5_RPNAME
-        champion5_small_external_buffs = [0]
-        champion5_big_external_buffs = [0]
         global champion1_immunity, champion2_immunity, champion3_immunity, champion4_immunity, champion5_immunity, \
             champion1_statuses, champion2_statuses, champion3_statuses, champion4_statuses, champion5_statuses
         champion1_immunity = []
@@ -31301,7 +31290,6 @@ class GameFrame(tk.Frame):
 #Calculates how many emblems the user has received and adds it to their total if they're eligible (playing on the same difficulty as their rank)
 #Also tells them whether or not they have ranked up due to the new emblems added to their total
     def EndGameSaving(self):
-        global endgame_window
         endgame_window = tk.Tk()
         total_rooms = (floor_level * 3) + room_level
         whole_collected_emblems = floor_level
