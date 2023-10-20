@@ -58,7 +58,7 @@ MASTER_FENCER = Champions(2000, 0, 150, 'Lorelai, the Master Fencer', "Fencer", 
 
 #Melee
 #BKR
-BERSERKER = Champions(1000, 100, 400, 'Kelzarg, the Berserker', "Berserker", "BKR", "Rage", ["Angering Strike", "Unbridled Rampage"], ["Pure Rage", "Reckless Flurry"], "Ever-Burning Rage")
+BERSERKER = Champions(1000, 100, 400, 'Kelzarg, the Berserker', "Berserker", "BKR", "Rage", ["Angering Strike", "Unbridled Rampage"], ["Pure Rage", "Reckless Flurry"], "One on One")
 #RGE
 ROGUE = Champions(1000, 0, 400, 'Ryker, the Rogue', "Rogue", "RGE", "null", ["Serrated Slash", "Eviscerate"], ["Garrote", "Exploit Weakness"], "Incisions within Incisions")
 #SRV
@@ -6007,15 +6007,18 @@ class GameFrame(tk.Frame):
             champion5_hp = math.ceil(champion5_hp)
             for widget in dungeon_game_frame.winfo_children():
                 widget.destroy()
-            self.monster_attack_intentions()
-            self.ai_choose_attack_targets()
-            self.combat_setup()
             if new_game == 1:
+                self.monster_attack_intentions()
+                self.ai_choose_attack_targets()
+                self.combat_setup()
                 ranger_aura_completed = 0
                 paladin_aura_completed = 1
                 new_round = 0
                 self.before_round_choices()
             elif current_turn == "MN":
+                self.monster_attack_intentions()
+                self.ai_choose_attack_targets()
+                self.combat_setup()
                 champion1_turnover = 0
                 champion2_turnover = 0
                 champion3_turnover = 0
@@ -6032,6 +6035,8 @@ class GameFrame(tk.Frame):
                 self.before_round_choices()
             else:
                 new_round = 0
+                self.ai_choose_attack_targets()
+                self.combat_setup()
                 if champion1_turnover == 1:
                     if champion2_turnover == 1:
                         if champion3_turnover == 1:
@@ -7282,18 +7287,17 @@ class GameFrame(tk.Frame):
                 if blood_spike_requirements[0] > 0:
                     if blood_spike_requirements[3] > 0:
                         attack_text = "Blood Spike ({})\n{} {}".format(blood_spike_requirements[3], "Health",
-                                                                       blood_spike_requirements[
-                                                                           0])
+                                                                       200)
                         attack_button_text_list.append(attack_text)
                     else:
-                        attack_text = "Blood Spike\n{} {}".format("Health", blood_spike_requirements[0])
+                        attack_text = "Blood Spike\n{} {}".format("Health", 200)
                         attack_button_text_list.append(attack_text)
                 elif blood_spike_requirements[3] > 0:
 
                     attack_text = "Blood Spike ({})".format(blood_spike_requirements[3])
                     attack_button_text_list.append(attack_text)
                 else:
-                    attack_text = "Blood Spike\n{} {}".format("Health", BLOODMANCER.ap)
+                    attack_text = "Blood Spike\n{} {}".format("Health", 200)
                     attack_button_text_list.append(attack_text)
             elif attack_name == "Righteous Blow":
                 if righteous_blow_requirements[0] > 0:
@@ -13648,6 +13652,8 @@ class GameFrame(tk.Frame):
                         disabled_frame_counter = disabled_frame_counter + 1
                     if disabled_frame_counter == AI_SPAWNED:
                         self.complete_turn(target_list)
+            else:
+                self.complete_turn(target_list)
 #Function that occurs after chosen targets have been confirmed
 #Depending on ability_data[1] (type of target) the respective function is run which makes the effect of the ability happen
 #finalise_damage_dealt > make ability deal damage and do special effects
@@ -20105,7 +20111,7 @@ class GameFrame(tk.Frame):
     def apply_thornsDot(self, target, stack_count):
         global ai1_thornsDot, ai2_thornsDot, ai3_thornsDot, ai4_thornsDot, ai5_thornsDot, \
             ai1_statuses, ai2_statuses, ai3_statuses, ai4_statuses, ai5_statuses
-        ThornDotTick = math.ceil(ability_data[3] * 0.25)
+        ThornDotTick = 200
         if target == 1:
             if ai1_thornsDot[1] != 0:
                 ai1_thornsDot[1] = ai1_thornsDot[1] + stack_count
@@ -29784,7 +29790,7 @@ class GameFrame(tk.Frame):
                         guardpassive_check = 1
                 if champion2_fortification != 0:
                     ai1_damage_done = ai1_damage_done * 0.7
-                if paladin_aura != 0:
+                if paladin_aura == 2:
                     ai1_damage_done = ai1_damage_done * 0.9
                 if champion2_pure_rage != 0:
                     ai1_damage_done = ai1_damage_done * 1.3
@@ -29802,7 +29808,7 @@ class GameFrame(tk.Frame):
                         guardpassive_check = 1
                 if champion3_fortification != 0:
                     ai1_damage_done = ai1_damage_done * 0.7
-                if paladin_aura != 0:
+                if paladin_aura == 2:
                     ai1_damage_done = ai1_damage_done * 0.9
                 if champion3_pure_rage != 0:
                     ai1_damage_done = ai1_damage_done * 1.3
@@ -29820,7 +29826,7 @@ class GameFrame(tk.Frame):
                         guardpassive_check = 1
                 if champion4_fortification != 0:
                     ai1_damage_done = ai1_damage_done * 0.7
-                if paladin_aura != 0:
+                if paladin_aura == 2:
                     ai1_damage_done = ai1_damage_done * 0.9
                 if champion4_pure_rage != 0:
                     ai1_damage_done = ai1_damage_done * 1.3
@@ -29838,7 +29844,7 @@ class GameFrame(tk.Frame):
                         guardpassive_check = 1
                 if champion5_fortification != 0:
                     ai1_damage_done = ai1_damage_done * 0.7
-                if paladin_aura != 0:
+                if paladin_aura == 2:
                     ai1_damage_done = ai1_damage_done * 0.9
                 if champion5_pure_rage != 0:
                     ai1_damage_done = ai1_damage_done * 1.3
@@ -29900,7 +29906,7 @@ class GameFrame(tk.Frame):
                         guardpassive_check = 1
                 if champion2_fortification != 0:
                     ai2_damage_done = ai2_damage_done * 0.7
-                if paladin_aura != 0:
+                if paladin_aura == 2:
                     ai2_damage_done = ai2_damage_done * 0.9
                 if champion2_pure_rage != 0:
                     ai2_damage_done = ai2_damage_done * 1.3
@@ -29918,7 +29924,7 @@ class GameFrame(tk.Frame):
                         guardpassive_check = 1
                 if champion3_fortification != 0:
                     ai2_damage_done = ai2_damage_done * 0.7
-                if paladin_aura != 0:
+                if paladin_aura == 2:
                     ai2_damage_done = ai2_damage_done * 0.9
                 if champion3_pure_rage != 0:
                     ai2_damage_done = ai2_damage_done * 1.3
@@ -29936,7 +29942,7 @@ class GameFrame(tk.Frame):
                         guardpassive_check = 1
                 if champion4_fortification != 0:
                     ai2_damage_done = ai2_damage_done * 0.7
-                if paladin_aura != 0:
+                if paladin_aura == 2:
                     ai2_damage_done = ai2_damage_done * 0.9
                 if champion4_pure_rage != 0:
                     ai2_damage_done = ai2_damage_done * 1.3
@@ -29954,7 +29960,7 @@ class GameFrame(tk.Frame):
                         guardpassive_check = 1
                 if champion5_fortification != 0:
                     ai2_damage_done = ai2_damage_done * 0.7
-                if paladin_aura != 0:
+                if paladin_aura == 2:
                     ai2_damage_done = ai2_damage_done * 0.9
                 if champion5_pure_rage != 0:
                     ai2_damage_done = ai2_damage_done * 1.3
@@ -30016,7 +30022,7 @@ class GameFrame(tk.Frame):
                         guardpassive_check = 1
                 if champion2_fortification != 0:
                     ai3_damage_done = ai3_damage_done * 0.7
-                if paladin_aura != 0:
+                if paladin_aura == 2:
                     ai3_damage_done = ai3_damage_done * 0.9
                 if champion2_pure_rage != 0:
                     ai3_damage_done = ai3_damage_done * 1.3
@@ -30034,7 +30040,7 @@ class GameFrame(tk.Frame):
                         guardpassive_check = 1
                 if champion3_fortification != 0:
                     ai3_damage_done = ai3_damage_done * 0.7
-                if paladin_aura != 0:
+                if paladin_aura == 2:
                     ai3_damage_done = ai3_damage_done * 0.9
                 if champion3_pure_rage != 0:
                     ai3_damage_done = ai3_damage_done * 1.3
@@ -30052,7 +30058,7 @@ class GameFrame(tk.Frame):
                         guardpassive_check = 1
                 if champion4_fortification != 0:
                     ai3_damage_done = ai3_damage_done * 0.7
-                if paladin_aura != 0:
+                if paladin_aura == 2:
                     ai3_damage_done = ai3_damage_done * 0.9
                 if champion4_pure_rage != 0:
                     ai3_damage_done = ai3_damage_done * 1.3
@@ -30070,7 +30076,7 @@ class GameFrame(tk.Frame):
                         guardpassive_check = 1
                 if champion5_fortification != 0:
                     ai3_damage_done = ai3_damage_done * 0.7
-                if paladin_aura != 0:
+                if paladin_aura == 2:
                     ai3_damage_done = ai3_damage_done * 0.9
                 if champion5_pure_rage != 0:
                     ai3_damage_done = ai3_damage_done * 1.3
@@ -30132,7 +30138,7 @@ class GameFrame(tk.Frame):
                         guardpassive_check = 1
                 if champion2_fortification != 0:
                     ai4_damage_done = ai4_damage_done * 0.7
-                if paladin_aura != 0:
+                if paladin_aura == 2:
                     ai4_damage_done = ai4_damage_done * 0.9
                 if champion2_pure_rage != 0:
                     ai4_damage_done = ai4_damage_done * 1.3
@@ -30150,7 +30156,7 @@ class GameFrame(tk.Frame):
                         guardpassive_check = 1
                 if champion3_fortification != 0:
                     ai4_damage_done = ai4_damage_done * 0.7
-                if paladin_aura != 0:
+                if paladin_aura == 2:
                     ai4_damage_done = ai4_damage_done * 0.9
                 if champion3_pure_rage != 0:
                     ai4_damage_done = ai4_damage_done * 1.3
@@ -30168,7 +30174,7 @@ class GameFrame(tk.Frame):
                         guardpassive_check = 1
                 if champion4_fortification != 0:
                     ai4_damage_done = ai4_damage_done * 0.7
-                if paladin_aura != 0:
+                if paladin_aura == 2:
                     ai4_damage_done = ai4_damage_done * 0.9
                 if champion4_pure_rage != 0:
                     ai4_damage_done = ai4_damage_done * 1.3
@@ -30186,7 +30192,7 @@ class GameFrame(tk.Frame):
                         guardpassive_check = 1
                 if champion5_fortification != 0:
                     ai4_damage_done = ai4_damage_done * 0.7
-                if paladin_aura != 0:
+                if paladin_aura == 2:
                     ai4_damage_done = ai4_damage_done * 0.9
                 if champion5_pure_rage != 0:
                     ai4_damage_done = ai4_damage_done * 1.3
@@ -30248,7 +30254,7 @@ class GameFrame(tk.Frame):
                         guardpassive_check = 1
                 if champion2_fortification != 0:
                     ai5_damage_done = ai5_damage_done * 0.7
-                if paladin_aura != 0:
+                if paladin_aura == 2:
                     ai5_damage_done = ai5_damage_done * 0.9
                 if champion2_pure_rage != 0:
                     ai5_damage_done = ai5_damage_done * 1.3
@@ -30266,7 +30272,7 @@ class GameFrame(tk.Frame):
                         guardpassive_check = 1
                 if champion3_fortification != 0:
                     ai5_damage_done = ai5_damage_done * 0.7
-                if paladin_aura != 0:
+                if paladin_aura == 2:
                     ai5_damage_done = ai5_damage_done * 0.9
                 if champion3_pure_rage != 0:
                     ai5_damage_done = ai5_damage_done * 1.3
@@ -30284,7 +30290,7 @@ class GameFrame(tk.Frame):
                         guardpassive_check = 1
                 if champion4_fortification != 0:
                     ai5_damage_done = ai5_damage_done * 0.7
-                if paladin_aura != 0:
+                if paladin_aura == 2:
                     ai5_damage_done = ai5_damage_done * 0.9
                 if champion4_pure_rage != 0:
                     ai5_damage_done = ai5_damage_done * 1.3
@@ -30302,7 +30308,7 @@ class GameFrame(tk.Frame):
                         guardpassive_check = 1
                 if champion5_fortification != 0:
                     ai5_damage_done = ai5_damage_done * 0.7
-                if paladin_aura != 0:
+                if paladin_aura == 2:
                     ai5_damage_done = ai5_damage_done * 0.9
                 if champion5_pure_rage != 0:
                     ai5_damage_done = ai5_damage_done * 1.3
