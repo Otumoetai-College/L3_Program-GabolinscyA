@@ -20,26 +20,27 @@ from flask import Flask
 from flask_bcrypt import Bcrypt
 app = Flask(__name__)
 bcrypt = Bcrypt(app)
-#
+#A class that lets me create all the information tied to each individual champion to be called for checking and variable setting later
+#Means I don't have to use globals for passing around these variables
 class Champions:
     def __init__(self, hp, rp, ap, name, title, code, rp_name, attack_list, specials_list, passive):
-        #Health Point
+        #Health Points
         self.hp = hp
-        #Resource Point
+        #Resource Points
         self.rp = rp
         #Attack Power
         self.ap = ap
-        #Set Name
+        #Set Full Name
         self.name = name
-        #Set Title
+        #Set Short Title
         self.title = title
-        #Set Code
+        #Set Champion Code
         self.code = code
         #Resource Power Name
         self.rp_name = rp_name
         #Attacks List
         self.attack_list = attack_list
-        #Special Abilities List
+        #Specials List
         self.specials_list = specials_list 
         #Passive Name
         self.passive = passive
@@ -94,7 +95,7 @@ PRIEST = Champions(1000, 200, 150, 'Sethuk, Priest of the Devoted', "Priest", "P
 TIME_WALKER = Champions(1000, 200, 150, 'Zaqner, the Time Walker', "Time Walker", "TWK", "Mana", ["Cybernetic Blast"], ["Overclock Nanobots", "Reverse Wounds", "Alter Time"], "Nanobots")
 #FDM
 FIELD_MEDIC = Champions(1000, 0, 150, 'Curie, Field Medic', "Field Medic", "FDM", "null", ["Snip Snip"], ["Bandages", "Tight Tourniquet", "Secret Remedy"], "Experienced Healing")
-
+#Same reason for the Champions class. Allows me to easily set and call back these variables later without needing globals
 class Monsters:
     def __init__(self, rp, rp_name, name, nickname, enter_word, attack_list, ai_spawned, size_class):
         #Resource Point
@@ -205,10 +206,12 @@ class ParentClass(tk.Tk):
             dungeon_name = "The Void Zone"
         elif dungeon_settings == "Obsidian":
             dungeon_name = "The Abyss"
+        elif dungeon_settings == "null":
+            dungeon_name = "None"
         difficulty_file_read.close()
         if requested_data == "difficulty":
             return dungeon_settings
-        if requested_data == "name":
+        elif requested_data == "name":
             return dungeon_name
 #Basic opening frame
 class OpeningPage(tk.Frame):
@@ -306,6 +309,7 @@ class LoginMenu(tk.Frame):
                         if bcrypt.check_password_hash(password_file_r, password_encoder):
                             problem_label.destroy()
                             self.set_current_user(inputted_username)
+                            DungeonExpeditions.set_new_dungeon_difficulty(self, "null")
                             ParentClass.show_frame(app, "MainMenu")
                     except:
                         problem_label.destroy()
@@ -475,12 +479,12 @@ class MainMenu(tk.Frame):
                                command=lambda: controller.show_frame("CreateTeamPage"))
         buttonCredit = tk.Button(self, text="Credits (NYI)", padx=10, pady=10, font=controller.menu_button_font,
                                  command=lambda: controller.show_frame("CreditPage"))
-        buttonH2P = tk.Button(self, text="How to Play (NYI)", padx=10, pady=10, font=controller.menu_button_font,
+        buttonH2P = tk.Button(self, text="How to Play", padx=10, pady=10, font=controller.menu_button_font,
                               command=lambda: controller.show_frame("How2PlayPage"))
         buttonLeaderboard = tk.Button(self, text="Leaderboard (NYI)", padx=10, pady=10, font=controller.menu_button_font,
                                       command=lambda: controller.show_frame("LeaderboardPage"))
         buttonQuit = tk.Button(self, text="Exit game", padx=10, pady=10, font=controller.menu_button_font,
-                               command=self.destroy)
+                               command=lambda: self.destroy())
         buttonDungeon.grid(row=1, column=2, pady=2, sticky="w")
         buttonTeam.grid(row=2, column=2, pady=2, sticky="w")
         buttonCredit.grid(row=5, column=2, pady=2, sticky="w")
@@ -516,6 +520,7 @@ class CreateTeamPage(tk.Frame):
         team_text = self.display_team_vertical(decoded_dungeoneer_team)
         team_button_text = self.team_button_message(decoded_dungeoneer_team)
         title_label = tk.Label(self, text="Champion Camp", font=self.title_font)
+        invis_label1 = tk.Label(self)
         team_label = tk.Label(self, text=team_text)
         team_button = tk.Button(self, text=team_button_text,
                                   command=lambda: ParentClass.show_frame(app, "TeamSelectionPage"))
@@ -523,10 +528,11 @@ class CreateTeamPage(tk.Frame):
         return_button = tk.Button(self, text="Return to Menu",
                                  command=lambda: ParentClass.show_frame(app, "MainMenu"))
         title_label.grid(row=1, column=2, sticky="nsew", pady=10)
-        team_label.grid(row=2, column=2)
-        team_button.grid(row=3, column=2)
-        update_page_button.grid(row=4, column=2)
-        return_button.grid(row=5, column=2)
+        invis_label1.grid(row=2, column=2, pady=40)
+        team_label.grid(row=3, column=2)
+        team_button.grid(row=4, column=2)
+        update_page_button.grid(row=5, column=2)
+        return_button.grid(row=6, column=2)
 #Makes a single str that has a champion on one new line, making a visual vertical string
     def display_team_vertical(self, decoded_dungeoneer_team):
         team_text = ""
@@ -606,11 +612,15 @@ class CreateTeamPage(tk.Frame):
 #A team can consist of any combonation of 5 unqiue champions. There is no limit to what team can have what, just that you can't have more than 1 of the same champion.
 class TeamSelectionPage(tk.Frame):
     def __init__(self, parent, controller):
+        global temp_party
         tk.Frame.__init__(self, parent)
         self.controller = controller
         self.menu_button_font = tkfont.Font(family='Helvetica', size=18, weight="bold")
         self.title_label_font = tkfont.Font(family='Helvetica', size=30, weight="bold")
         self.small_label_font = tkfont.Font(family='Helvetica', size=12, weight="bold")
+        team_str = ParentClass.get_account_data(self, "champion_list")
+        team_list_data = team_str.split(":")
+        temp_party = CreateTeamPage.team_decode(self, team_list_data)
         title = tk.Label(self, text="Champion Camp", font=self.title_label_font)
         begin_recruiting_button = tk.Button(self, text="Begin Recruiting", command=lambda: self.team_creation("None"),
                                    font=controller.menu_button_font)
@@ -629,14 +639,11 @@ class TeamSelectionPage(tk.Frame):
 #Clicking add to team will add them to one of the 5 slots that are shown at the bottom of the screen
 #if their team is currently full, they get a pop-up window that asks if they want to replace a current champion to add the new one, letting them pick which champion they want to replace
     def team_creation(self, section_selected):
-        global visual_team_label
+        global visual_team_label, temp_party
         for widget in self.winfo_children():
             widget.destroy()
         invis_label1 = tk.Label(self)
         invis_label2 = tk.Label(self)
-        team_str = ParentClass.get_account_data(self, "champion_list")
-        team_list_data = team_str.split(":")
-        temp_party = CreateTeamPage.team_decode(self, team_list_data)
         tank_section_button = tk.Button(self, text="Tanks", font=self.menu_button_font, width=26,
                                         command=lambda: self.team_creation("Tanks"))
         dps_section_button = tk.Button(self, text="Damage Dealers", font=self.menu_button_font, width=26,
@@ -644,8 +651,8 @@ class TeamSelectionPage(tk.Frame):
         healer_section_button = tk.Button(self, text="Healers", font=self.menu_button_font, width=26,
                                         command=lambda: self.team_creation("Healers"))
         your_team_label = tk.Label(self, text=":Your Team:", font=self.small_label_font)
-        visual_team_label = tk.Label(self, text=self.display_team(temp_party))
-        confirm_changes_button = tk.Button(self, text="Confirm Changes", command=lambda: self.confirm_new_team(temp_party))
+        visual_team_label = tk.Label(self, text=self.display_team())
+        confirm_changes_button = tk.Button(self, text="Confirm Changes", command=lambda: self.confirm_new_team())
         cancel_button = tk.Button(self, text="Cancel", command=lambda: ParentClass.show_frame(app, "CreateTeamPage"))
         tank_section_button.grid(row=2, column=1)
         dps_section_button.grid(row=2, column=2, padx=25)
@@ -664,28 +671,28 @@ class TeamSelectionPage(tk.Frame):
             invis_label4 = tk.Label(self)
             MONK_label = tk.Label(self, text=MONK.name, font=self.menu_button_font)
             MONK_button_add = tk.Button(self, text="Add to Team",
-                                        command=lambda: self.check_temp_party(MONK.title, "tank", temp_party))
+                                        command=lambda: self.check_temp_party(MONK.title, "tank"))
             MONK_button_details = tk.Button(self, text="View Details", command=lambda: self.champion_view_details(MONK.title))
             BARBARIAN_label = tk.Label(self, text=BARBARIAN.name, font=self.menu_button_font)
             BARBARIAN_button_add = tk.Button(self, text="Add to Team",
-                                                command=lambda: self.check_temp_party(BARBARIAN.title, "tank", temp_party))
+                                                command=lambda: self.check_temp_party(BARBARIAN.title, "tank"))
             BARBARIAN_button_details = tk.Button(self, text="View Details", command=lambda: self.champion_view_details(BARBARIAN.title))
             bodyguard_label = tk.Label(self, text=KINGS_GUARD.name, font=self.menu_button_font)
             bodyguard_button_add = tk.Button(self, text="Add to Team",
-                                                command=lambda: self.check_temp_party(KINGS_GUARD.title, "tank", temp_party))
+                                                command=lambda: self.check_temp_party(KINGS_GUARD.title, "tank"))
             bodyguard_button_details = tk.Button(self, text="View Details", command=lambda: self.champion_view_details(KINGS_GUARD.title))
             fencer_label = tk.Label(self, text=MASTER_FENCER.name, font=self.menu_button_font)
             fencer_button_add = tk.Button(self, text="Add to Team",
-                                            command=lambda: self.check_temp_party(MASTER_FENCER.title, "tank", temp_party))
+                                            command=lambda: self.check_temp_party(MASTER_FENCER.title, "tank"))
             fencer_button_details = tk.Button(self, text="View Details", command=lambda: self.champion_view_details(MASTER_FENCER.title))
             MONK_label.grid(row=4, column=1, sticky="e")
-            MONK_button_add.grid(row=5, column=1, sticky="e", padx=105)
+            MONK_button_add.grid(row=5, column=1, sticky="e", padx=75)
             MONK_button_details.grid(row=5, column=1, sticky="e")
             BARBARIAN_label.grid(row=4, column=3, sticky="w")
             BARBARIAN_button_add.grid(row=5, column=3, sticky="w")
             BARBARIAN_button_details.grid(row=5, column=3, sticky="w", padx=80)
             bodyguard_label.grid(row=7, column=1, sticky="e")
-            bodyguard_button_add.grid(row=8, column=1, sticky="e", padx=105)
+            bodyguard_button_add.grid(row=8, column=1, sticky="e", padx=75)
             bodyguard_button_details.grid(row=8, column=1, sticky="e")
             fencer_label.grid(row=7, column=3, sticky="w")
             fencer_button_add.grid(row=8, column=3, sticky="w")
@@ -701,51 +708,51 @@ class TeamSelectionPage(tk.Frame):
             dps_catagory3_label = tk.Label(self, text=":Other:", font=self.menu_button_font)
             BERSERKER_label = tk.Label(self, text=BERSERKER.name)
             BERSERKER_button_add = tk.Button(self, text="Add to Team",
-                                                command=lambda: self.check_temp_party(BERSERKER.title, "melee", temp_party))
+                                                command=lambda: self.check_temp_party(BERSERKER.title, "melee"))
             BERSERKER_button_details = tk.Button(self, text="View Details", command=lambda: self.champion_view_details(BERSERKER.title))
             ROGUE_label = tk.Label(self, text=ROGUE.name)
             ROGUE_button_add = tk.Button(self, text="Add to Team",
-                                            command=lambda: self.check_temp_party(ROGUE.title, "melee", temp_party))
+                                            command=lambda: self.check_temp_party(ROGUE.title, "melee"))
             ROGUE_button_details = tk.Button(self, text="View Details", command=lambda: self.champion_view_details(ROGUE.title))
             SURVIVALIST_label = tk.Label(self, text=SURVIVALIST.name)
             SURVIVALIST_button_add = tk.Button(self, text="Add to Team",
-                                                command=lambda: self.check_temp_party(SURVIVALIST.title, "melee", temp_party))
+                                                command=lambda: self.check_temp_party(SURVIVALIST.title, "melee"))
             SURVIVALIST_button_details = tk.Button(self, text="View Details", command=lambda: self.champion_view_details(SURVIVALIST.title))
             BRAWLIST_label = tk.Label(self, text=BRAWLIST.name)
             BRAWLIST_button_add = tk.Button(self, text="Add to Team",
-                                            command=lambda: self.check_temp_party(BRAWLIST.title, "melee", temp_party))
+                                            command=lambda: self.check_temp_party(BRAWLIST.title, "melee"))
             BRAWLIST_button_details = tk.Button(self, text="View Details", command=lambda: self.champion_view_details(BRAWLIST.title))
             ACADEMIC_MAGE_label = tk.Label(self, text=ACADEMIC_MAGE.name)
             ACADEMIC_MAGE_button_add = tk.Button(self, text="Add to Team",
-                                                    command=lambda: self.check_temp_party(ACADEMIC_MAGE.title, "magic", temp_party))
+                                                    command=lambda: self.check_temp_party(ACADEMIC_MAGE.title, "magic"))
             ACADEMIC_MAGE_button_details = tk.Button(self, text="View Details", command=lambda: self.champion_view_details(ACADEMIC_MAGE.title))
             jungle_DRUID_label = tk.Label(self, text=DRUID.name)
             jungle_DRUID_button_add = tk.Button(self, text="Add to Team",
-                                                command=lambda: self.check_temp_party(DRUID.title, "magic", temp_party))
+                                                command=lambda: self.check_temp_party(DRUID.title, "magic"))
             jungle_DRUID_button_details = tk.Button(self, text="View Details", command=lambda: self.champion_view_details(DRUID.title))
             WARLOCK_label = tk.Label(self, text=WARLOCK.name)
             WARLOCK_button_add = tk.Button(self, text="Add to Team",
-                                            command=lambda: self.check_temp_party(WARLOCK.title, "magic", temp_party))
+                                            command=lambda: self.check_temp_party(WARLOCK.title, "magic"))
             WARLOCK_button_details = tk.Button(self, text="View Details", command=lambda: self.champion_view_details(WARLOCK.title))
             BLOODMANCER_label = tk.Label(self, text=BLOODMANCER.name)
             BLOODMANCER_button_add = tk.Button(self, text="Add to Team",
-                                                command=lambda: self.check_temp_party(BLOODMANCER.title, "magic", temp_party))
+                                                command=lambda: self.check_temp_party(BLOODMANCER.title, "magic"))
             BLOODMANCER_button_details = tk.Button(self, text="View Details", command=lambda: self.champion_view_details(BLOODMANCER.title))
             PALADIN_label = tk.Label(self, text=PALADIN.name)
             PALADIN_button_add = tk.Button(self, text="Add to Team",
-                                            command=lambda: self.check_temp_party(PALADIN.title, "mixed", temp_party))
+                                            command=lambda: self.check_temp_party(PALADIN.title, "mixed"))
             PALADIN_button_details = tk.Button(self, text="View Details", command=lambda: self.champion_view_details(PALADIN.title))
             LEGION_RANGER_label = tk.Label(self, text=LEGION_RANGER.name)
             LEGION_RANGER_button_add = tk.Button(self, text="Add to Team",
-                                                    command=lambda: self.check_temp_party(LEGION_RANGER.title, "mixed", temp_party))
+                                                    command=lambda: self.check_temp_party(LEGION_RANGER.title, "mixed"))
             LEGION_RANGER_button_details = tk.Button(self, text="View Details", command=lambda: self.champion_view_details(LEGION_RANGER.title))
             MAGNETIMANCER_label = tk.Label(self, text=MAGNETIMANCER.name)
             MAGNETIMANCER_button_add = tk.Button(self, text="Add to Team",
-                                                        command=lambda: self.check_temp_party(MAGNETIMANCER.title, "mixed", temp_party))
+                                                        command=lambda: self.check_temp_party(MAGNETIMANCER.title, "mixed"))
             MAGNETIMANCER_button_details = tk.Button(self, text="View Details", command=lambda: self.champion_view_details(MAGNETIMANCER.title))
             POWER_CONDUIT_label = tk.Label(self, text=POWER_CONDUIT.name)
             POWER_CONDUIT_button_add = tk.Button(self, text="Add to Team",
-                                                    command=lambda: self.check_temp_party(POWER_CONDUIT.title, "mixed", temp_party))
+                                                    command=lambda: self.check_temp_party(POWER_CONDUIT.title, "mixed"))
             POWER_CONDUIT_button_details = tk.Button(self, text="View Details", command=lambda: self.champion_view_details(POWER_CONDUIT.title))
             dps_catagory1_label.grid(row=3, column=1)
             dps_catagory2_label.grid(row=3, column=2)
@@ -757,10 +764,10 @@ class TeamSelectionPage(tk.Frame):
             ROGUE_button_add.grid(row=9, column=1, sticky="w")
             ROGUE_button_details.grid(row=9, column=1, sticky="w", padx=80)
             SURVIVALIST_label.grid(row=5, column=1, sticky="e", padx=10)
-            SURVIVALIST_button_add.grid(row=6, column=1, sticky="e", padx=115)
+            SURVIVALIST_button_add.grid(row=6, column=1, sticky="e", padx=85)
             SURVIVALIST_button_details.grid(row=6, column=1, sticky="e", padx=10)
             BRAWLIST_label.grid(row=8, column=1, sticky="e", padx=10)
-            BRAWLIST_button_add.grid(row=9, column=1, sticky="e", padx=115)
+            BRAWLIST_button_add.grid(row=9, column=1, sticky="e", padx=85)
             BRAWLIST_button_details.grid(row=9, column=1, sticky="e", padx=10)
             ACADEMIC_MAGE_label.grid(row=5, column=2, sticky="w", padx=10)
             ACADEMIC_MAGE_button_add.grid(row=6, column=2, sticky="w", padx=10)
@@ -769,10 +776,10 @@ class TeamSelectionPage(tk.Frame):
             jungle_DRUID_button_add.grid(row=9, column=2, sticky="w", padx=10)
             jungle_DRUID_button_details.grid(row=9, column=2, sticky="w", padx=90)
             WARLOCK_label.grid(row=5, column=2, sticky="e", padx=10)
-            WARLOCK_button_add.grid(row=6, column=2, sticky="e", padx=115)
+            WARLOCK_button_add.grid(row=6, column=2, sticky="e", padx=85)
             WARLOCK_button_details.grid(row=6, column=2, sticky="e", padx=10)
             BLOODMANCER_label.grid(row=8, column=2, sticky="e", padx=10)
-            BLOODMANCER_button_add.grid(row=9, column=2, sticky="e", padx=115)
+            BLOODMANCER_button_add.grid(row=9, column=2, sticky="e", padx=85)
             BLOODMANCER_button_details.grid(row=9, column=2, sticky="e", padx=10)
             PALADIN_label.grid(row=5, column=3, sticky="w", padx=10)
             PALADIN_button_add.grid(row=6, column=3, sticky="w", padx=10)
@@ -781,10 +788,10 @@ class TeamSelectionPage(tk.Frame):
             LEGION_RANGER_button_add.grid(row=9, column=3, sticky="w", padx=10)
             LEGION_RANGER_button_details.grid(row=9, column=3, sticky="w", padx=90)
             MAGNETIMANCER_label.grid(row=5, column=3, sticky="e")
-            MAGNETIMANCER_button_add.grid(row=6, column=3, sticky="e", padx=105)
+            MAGNETIMANCER_button_add.grid(row=6, column=3, sticky="e", padx=75)
             MAGNETIMANCER_button_details.grid(row=6, column=3, sticky="e")
             POWER_CONDUIT_label.grid(row=8, column=3, sticky="e")
-            POWER_CONDUIT_button_add.grid(row=9, column=3, sticky="e", padx=105)
+            POWER_CONDUIT_button_add.grid(row=9, column=3, sticky="e", padx=75)
             POWER_CONDUIT_button_details.grid(row=9, column=3, sticky="e")
         elif section_selected == "Healers":
             tank_section_button["state"] = "normal"
@@ -794,29 +801,29 @@ class TeamSelectionPage(tk.Frame):
             invis_label4 = tk.Label(self)
             EARTH_SPEAKER_label = tk.Label(self, text=EARTH_SPEAKER.name, font=self.menu_button_font)
             EARTH_SPEAKER_button_add = tk.Button(self, text="Add to Team",
-                                                    command=lambda: self.check_temp_party(EARTH_SPEAKER.title, "healer", temp_party))
+                                                    command=lambda: self.check_temp_party(EARTH_SPEAKER.title, "healer"))
             EARTH_SPEAKER_button_details = tk.Button(self, text="View Details", command=lambda: self.champion_view_details(EARTH_SPEAKER.title))
             PRIEST_label = tk.Label(self, text=PRIEST.name, font=self.menu_button_font)
             PRIEST_button_add = tk.Button(self, text="Add to Team",
-                                                            command=lambda: self.check_temp_party(PRIEST.title, "healer", temp_party))
+                                                            command=lambda: self.check_temp_party(PRIEST.title, "healer"))
             PRIEST_button_details = tk.Button(self, text="View Details", command=lambda: self.champion_view_details(PRIEST.title))
             TIME_WALKER_label = tk.Label(self, text=TIME_WALKER.name, font=self.menu_button_font)
             TIME_WALKER_button_add = tk.Button(self, text="Add to Team",
-                                                command=lambda: self.check_temp_party(TIME_WALKER.title, "healer", temp_party))
+                                                command=lambda: self.check_temp_party(TIME_WALKER.title, "healer"))
             TIME_WALKER_button_details = tk.Button(self, text="View Details", command=lambda: self.champion_view_details(TIME_WALKER.title))
             FIELD_MEDIC_label = tk.Label(self, text=FIELD_MEDIC.name, font=self.menu_button_font)
             FIELD_MEDIC_button_add = tk.Button(self, text="Add to Team",
                                                         command=lambda: self.check_temp_party(FIELD_MEDIC.title,
-                                                                                            "healer", temp_party))
+                                                                                            "healer"))
             FIELD_MEDIC_button_details = tk.Button(self, text="View Details", command=lambda: self.champion_view_details(FIELD_MEDIC.title))
             EARTH_SPEAKER_label.grid(row=4, column=1, sticky="e")
-            EARTH_SPEAKER_button_add.grid(row=5, column=1, sticky="e", padx=105)
+            EARTH_SPEAKER_button_add.grid(row=5, column=1, sticky="e", padx=75)
             EARTH_SPEAKER_button_details.grid(row=5, column=1, sticky="e")
             PRIEST_label.grid(row=4, column=3, sticky="w")
             PRIEST_button_add.grid(row=5, column=3, sticky="w")
             PRIEST_button_details.grid(row=5, column=3, sticky="w", padx=80)
             TIME_WALKER_label.grid(row=7, column=1, sticky="e")
-            TIME_WALKER_button_add.grid(row=8, column=1, sticky="e", padx=105)
+            TIME_WALKER_button_add.grid(row=8, column=1, sticky="e", padx=75)
             TIME_WALKER_button_details.grid(row=8, column=1, sticky="e")
             FIELD_MEDIC_label.grid(row=7, column=3, sticky="w")
             FIELD_MEDIC_button_add.grid(row=8, column=3, sticky="w")
@@ -824,10 +831,10 @@ class TeamSelectionPage(tk.Frame):
             invis_label3.grid(row=3, column=1, columnspan=3, pady=50)
             invis_label4.grid(row=6, column=1, columnspan=3, pady=50)
 #Simply makes and returns a string that lists out each champion in the team, any missing spaces are taken up with 'Empty'
-    def display_team(self, team):
+    def display_team(self):
         team_text = ""
         i = 0
-        for character in team:
+        for character in temp_party:
             team_text += "["
             team_text += character
             team_text += "]"
@@ -1112,8 +1119,8 @@ class TeamSelectionPage(tk.Frame):
 #If the champion is already in the party, they'll be told this and nothing happens
 #If there is room in the party for the champion, they'll be added
 #If there isn't room available, the user will be asked if they want to replace one of the champions in the party with the new champion
-    def check_temp_party(self, champion, type, temp_party):
-        global yes_buttonCTP, no_buttonCTP, warning_label1CTP, warning_label2CTP, visual_team_label
+    def check_temp_party(self, champion, type):
+        global yes_buttonCTP, no_buttonCTP, warning_label1CTP, warning_label2CTP, visual_team_label, temp_party
         tank_temp_party = []
         melee_temp_party = []
         magic_temp_party = []
@@ -1128,7 +1135,7 @@ class TeamSelectionPage(tk.Frame):
             ok_button.grid(row=2, column=1)
             warning_label.grid(row=1, column=1)
             visual_team_label.destroy()
-            visual_team_label = tk.Label(self, text=self.display_team(temp_party))
+            visual_team_label = tk.Label(self, text=self.display_team())
             visual_team_label.grid(row=11, column=2)
         else:
             if len(temp_party) < 5:
@@ -1173,8 +1180,6 @@ class TeamSelectionPage(tk.Frame):
                         healer_temp_party.append(character)
                     if character == FIELD_MEDIC.title:
                         healer_temp_party.append(character)
-                    if character == "Empty":
-                        p = 0
                 if type == "tank":
                     tank_temp_party.append(champion)
                     tank_temp_party = sorted(tank_temp_party)
@@ -1207,21 +1212,21 @@ class TeamSelectionPage(tk.Frame):
                     for character in healer_temp_party:
                         temp_party.append(character)
                 visual_team_label.destroy()
-                visual_team_label = tk.Label(self, text=self.display_team(temp_party))
+                visual_team_label = tk.Label(self, text=self.display_team())
                 visual_team_label.grid(row=11, column=2)
             elif len(temp_party) == 5:
                 root = tk.Tk()
                 warning_label1CTP = tk.Label(root, text="The party is currently full!")
                 warning_label2CTP = tk.Label(root, text="Would you like to remove a current party member to make room?")
                 yes_buttonCTP = tk.Button(root, text="Yes",
-                                          command=lambda: self.adding_champions_tempParty(root, champion, temp_party))
+                                          command=lambda: self.adding_champions_tempParty(root, champion))
                 no_buttonCTP = tk.Button(root, text="No", command=lambda: root.destroy())
                 warning_label1CTP.grid(row=1, column=1)
                 warning_label2CTP.grid(row=2, column=1)
                 yes_buttonCTP.grid(row=3, column=1, sticky="w", padx=140)
                 no_buttonCTP.grid(row=3, column=1, sticky="e", padx=140)
 #Gives the user a list of each champion currently in the party and asks them to choose one to remove so the new champion can take their place
-    def adding_champions_tempParty(self, root, champion, temp_party):
+    def adding_champions_tempParty(self, root, champion):
         global champion1CTP, champion2CTP, champion3CTP, champion4CTP, champion5CTP, cancel_buttonCTP, window_labelCTP
         yes_buttonCTP.destroy()
         no_buttonCTP.destroy()
@@ -1229,15 +1234,15 @@ class TeamSelectionPage(tk.Frame):
         warning_label2CTP.destroy()
         window_labelCTP = tk.Label(root, text="Please choose which champion will be replaced for '{}'".format(champion))
         champion1CTP = tk.Button(root, text=temp_party[0],
-                                 command=lambda: self.replace_champion(root, champion, temp_party, temp_party[0]))
+                                 command=lambda: self.replace_champion(root, champion, temp_party[0]))
         champion2CTP = tk.Button(root, text=temp_party[1],
-                                 command=lambda: self.replace_champion(root, champion, temp_party, temp_party[1]))
+                                 command=lambda: self.replace_champion(root, champion, temp_party[1]))
         champion3CTP = tk.Button(root, text=temp_party[2],
-                                 command=lambda: self.replace_champion(root, champion, temp_party, temp_party[2]))
+                                 command=lambda: self.replace_champion(root, champion, temp_party[2]))
         champion4CTP = tk.Button(root, text=temp_party[3],
-                                 command=lambda: self.replace_champion(root, champion, temp_party, temp_party[3]))
+                                 command=lambda: self.replace_champion(root, champion, temp_party[3]))
         champion5CTP = tk.Button(root, text=temp_party[4],
-                                 command=lambda: self.replace_champion(root, champion, temp_party, temp_party[4]))
+                                 command=lambda: self.replace_champion(root, champion, temp_party[4]))
         cancel_buttonCTP = tk.Button(root, text="Cancel", command=root.destroy)
         window_labelCTP.grid(row=1, column=3)
         champion1CTP.grid(row=2, column=3)
@@ -1247,8 +1252,8 @@ class TeamSelectionPage(tk.Frame):
         champion5CTP.grid(row=6, column=3)
         cancel_buttonCTP.grid(row=7, column=3)
 #Removes the selected champion and adds the new one, then sorts the list to match the types (Tanks > MeleeDPS > MagicDPS > MixedDPS > Healers)
-    def replace_champion(self, root, champion, temp_party, selected):
-        global visual_team_label
+    def replace_champion(self, root, champion, selected):
+        global visual_team_label, temp_party
         pos = temp_party.index(selected)
         temp_pos = temp_party[pos]
         temp_party[pos] = champion
@@ -1331,19 +1336,19 @@ class TeamSelectionPage(tk.Frame):
             for character in healer_temp_party:
                 temp_party.append(character)
         visual_team_label.destroy()
-        visual_team_label = tk.Label(self, text=self.display_team(temp_party))
+        visual_team_label = tk.Label(self, text=self.display_team())
         visual_team_label.grid(row=11, column=2)
 #Asks the user if they want save the team they have made
-    def confirm_new_team(self, temp_party):
+    def confirm_new_team(self):
         root = tk.Tk()
         confirmation_label = tk.Label(root, text="Are you sure you want save this group?")
-        yes_buttonCNT = tk.Button(root, text="Yes", command=lambda: self.save_new_team(root, temp_party))
+        yes_buttonCNT = tk.Button(root, text="Yes", command=lambda: self.save_new_team(root))
         no_buttonCNT = tk.Button(root, text="No", command=lambda: root.destroy())
         confirmation_label.grid(row=2, column=1)
         yes_buttonCNT.grid(row=3, column=1, sticky="w", padx=70)
         no_buttonCNT.grid(row=3, column=1, sticky="e", padx=70)
 #Replaces the old team data tied with the users account inside the account_data_users with the new team data
-    def save_new_team(self, root, temp_party):
+    def save_new_team(self, root):
         user = ParentClass.get_account_data(self, "encoded_username")
         user = str(user)
         emblems = ParentClass.get_account_data(self, "emblems")
@@ -1356,7 +1361,7 @@ class TeamSelectionPage(tk.Frame):
             i += 1
             if user in line:
                 new_champion_list = self.code_party(temp_party)
-                new_line = "{}, {}, {}, {}".format(user, new_champion_list, emblems, rank)
+                new_line = "{}, {}, {}, {}\n".format(user, new_champion_list, emblems, rank)
                 file_allLines[i] = new_line
                 file_write = open(
                     "C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Data (DO NOT EDIT)/account_data_users.txt".format(COMPUTER_USERNAME),
@@ -1424,7 +1429,7 @@ class TeamSelectionPage(tk.Frame):
                     coded_temp_party += ":"
         return coded_temp_party
 
-# Not currently implemented
+#Not currently implemented
 class LeaderboardPage(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
@@ -1452,7 +1457,7 @@ class DungeonDelve(tk.Frame):
         label = tk.Label(self, text="Dungeon", font=controller.title_font)
         play_button = tk.Button(self, text="Enter the Dungeon", font=controller.menu_button_font,
                                 command=self.team_check)
-        dungeon_settings_button = tk.Button(self, text="Select Dungeon Exedition", font=controller.menu_button_font,
+        dungeon_settings_button = tk.Button(self, text="Select Dungeon Expedition", font=controller.menu_button_font,
                                             command=lambda: controller.show_frame("DungeonExpeditions"))
         buttonReturn = tk.Button(self, text="Return to Menu", font=controller.menu_button_font,
                                  command=lambda: controller.show_frame("MainMenu"))
@@ -1469,7 +1474,13 @@ class DungeonDelve(tk.Frame):
         team_str = ParentClass.get_account_data(self, "champion_list")
         team_list_data = team_str.split(":")
         decoded_dungeoneer_team = CreateTeamPage.team_decode(self, team_list_data)
-        if "Empty" in decoded_dungeoneer_team:
+        if ParentClass.get_dungeon_difficulty_data(self, "difficulty") == "null":
+            root = tk.Tk()
+            warning_label = tk.Label(root, text="You must select an Expedition before entering the dungeon")
+            okButton = tk.Button(root, text="Ok", command=root.destroy)
+            warning_label.grid(row=1, column=1)
+            okButton.grid(row=3, column=1)
+        elif "Empty" in decoded_dungeoneer_team:
             root = tk.Tk()
             warning_label = tk.Label(root, text="You must have a full team before \nentering the dungeon")
             okButton = tk.Button(root, text="Ok", command=root.destroy)
@@ -1692,6 +1703,12 @@ class DungeonExpeditions(tk.Frame):
                 "C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Data (DO NOT EDIT)/game_data_dungeon_difficulty.txt".format(COMPUTER_USERNAME),
                 "w")
             dungeon_difficulty_file.write("Obsidian")
+            dungeon_difficulty_file.close()
+        elif difficulty == "null":
+            dungeon_difficulty_file = open(
+                "C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Data (DO NOT EDIT)/game_data_dungeon_difficulty.txt".format(COMPUTER_USERNAME),
+                "w")
+            dungeon_difficulty_file.write("null")
             dungeon_difficulty_file.close()
 #Each difficulties modifiers and numbers tied to it is stored in their respective function. 
 #When the game finds what difficulty it is, it can easily call the function that returns all of that difficulties respective values.
@@ -2982,7 +2999,7 @@ class GameFrame(tk.Frame):
         attack = []
         if AI_NAME == "Grothak the Destroyer":
             #Club_Slam
-            club_slam_basenumber = [1, 1.3, 1.5]
+            club_slam_basenumber = [1, 1.2, 1.3]
             random.shuffle(club_slam_basenumber)
             club_slam_damage = (club_slam_basenumber[0] * (AI_ATTACKPOWER + ai_damage_modifier))
             if club_slam_requirements[1] == 0:
@@ -3004,7 +3021,7 @@ class GameFrame(tk.Frame):
                 attack = ["Violent Thrash", math.ceil(violent_thrash_damage), "2T", "Melee"]
         if AI_NAME == "Siren Triplets":
             #Twilight Beam
-            twilight_beam_basenumber = [1.2, 1.4, 1.6]
+            twilight_beam_basenumber = [1, 1.2, 1.4]
             random.shuffle(twilight_beam_basenumber)
             twilight_beam_damage = (twilight_beam_basenumber[0] * (AI_ATTACKPOWER + ai_damage_modifier))
             if twilight_beam_requirements[1] == 0:
@@ -3015,7 +3032,7 @@ class GameFrame(tk.Frame):
                 attack = ["Twilight Beam", math.ceil(twilight_beam_damage), "1T", "Magic"]
         if AI_NAME == "Venomskin Amphiboids":
             #Spear Thrust
-            spear_thrust_basenumber = [1.2, 1.4, 1.6]
+            spear_thrust_basenumber = [1, 1.3]
             random.shuffle(spear_thrust_basenumber)
             spear_thrust_damage = (spear_thrust_basenumber[0] * (AI_ATTACKPOWER + ai_damage_modifier))
             if spear_stab_requirements[1] == 0:
@@ -3026,7 +3043,7 @@ class GameFrame(tk.Frame):
                 attack = ["Spear Thrust", math.ceil(spear_thrust_damage), "1T", "Melee"]
         if AI_NAME == "Giant Locust Swarm":
             #Bite
-            bite_basenumber = [1.2, 1.4, 1.6]
+            bite_basenumber = [1, 1.1, 1.3]
             random.shuffle(bite_basenumber)
             bite_damage = (bite_basenumber[0] * (AI_ATTACKPOWER + ai_damage_modifier))
             if bite_requirements[1] == 0:
@@ -3063,7 +3080,7 @@ class GameFrame(tk.Frame):
                                             if champion5_play_dead == 0:
                                                 playdead_check = 0
                                             else:
-                                                played_check = 1
+                                                playdead_check = 1
                                         else:
                                             playdead_check = 1
                                     else:
@@ -3258,7 +3275,7 @@ class GameFrame(tk.Frame):
                                             if champion5_play_dead == 0:
                                                 playdead_check = 0
                                             else:
-                                                played_check = 1
+                                                playdead_check = 1
                                         else:
                                             playdead_check = 1
                                     else:
@@ -3420,13 +3437,13 @@ class GameFrame(tk.Frame):
                                     random.shuffle(ai_attack_options)
                                     if ai_attack_options[0] == "C1":
                                         ai_attack2_target = CHAMPION_LIST[0]
-                                    if ai_attack_options[0] == "C2":
+                                    elif ai_attack_options[0] == "C2":
                                         ai_attack2_target = CHAMPION_LIST[1]
-                                    if ai_attack_options[0] == "C3":
+                                    elif ai_attack_options[0] == "C3":
                                         ai_attack2_target = CHAMPION_LIST[2]
-                                    if ai_attack_options[0] == "C4":
+                                    elif ai_attack_options[0] == "C4":
                                         ai_attack2_target = CHAMPION_LIST[3]
-                                    if ai_attack_options[0] == "C5":
+                                    elif ai_attack_options[0] == "C5":
                                         ai_attack2_target = CHAMPION_LIST[4]
                                     ai2_attack_intention = "{} and {} <<< {} ({} Damage)".format(ai_attack1_target, ai_attack2_target,
                                                                                                 ai2_attack[0],
@@ -3454,7 +3471,7 @@ class GameFrame(tk.Frame):
                                                 if champion5_play_dead == 0:
                                                     playdead_check = 0
                                                 else:
-                                                    played_check = 1
+                                                    playdead_check = 1
                                             else:
                                                 playdead_check = 1
                                         else:
@@ -3650,7 +3667,7 @@ class GameFrame(tk.Frame):
                                             if champion5_play_dead == 0:
                                                 playdead_check = 0
                                             else:
-                                                played_check = 1
+                                                playdead_check = 1
                                         else:
                                             playdead_check = 1
                                     else:
@@ -3846,7 +3863,7 @@ class GameFrame(tk.Frame):
                                             if champion5_play_dead == 0:
                                                 playdead_check = 0
                                             else:
-                                                played_check = 1
+                                                playdead_check = 1
                                         else:
                                             playdead_check = 1
                                     else:
@@ -5497,7 +5514,7 @@ class GameFrame(tk.Frame):
                     effects_list.append(":Damage Taken Debuffs:")
                     for status_effect in ai1_statuses:
                         if status_effect == "Thorns":
-                            effects_list.append("Naturaly Vunerable [+{}%]".format(ai1_thornsDot[1]))
+                            effects_list.append("Naturally Vunerable [+{}%]".format(ai1_thornsDot[1]*2))
                         if status_effect == "Brittle":
                             effects_list.append("Brittle ({})".format(ai1_brittle))
                         if status_effect == "HardHitterDB":
@@ -5601,7 +5618,7 @@ class GameFrame(tk.Frame):
                     effects_list.append(":Damage Taken Debuffs:")
                     for status_effect in ai2_statuses:
                         if status_effect == "Thorns":
-                            effects_list.append("Naturaly Vunerable [+{}%]".format(ai2_thornsDot[1]))
+                            effects_list.append("Naturally Vunerable [+{}%]".format(ai2_thornsDot[1]*2))
                         if status_effect == "Brittle":
                             effects_list.append("Brittle ({})".format(ai2_brittle))
                         if status_effect == "HardHitterDB":
@@ -5705,7 +5722,7 @@ class GameFrame(tk.Frame):
                     effects_list.append(":Damage Taken Debuffs:")
                     for status_effect in ai3_statuses:
                         if status_effect == "Thorns":
-                            effects_list.append("Naturaly Vunerable [+{}%]".format(ai3_thornsDot[1]))
+                            effects_list.append("Naturally Vunerable [+{}%]".format(ai3_thornsDot[1]*2))
                         if status_effect == "Brittle":
                             effects_list.append("Brittle ({})".format(ai3_brittle))
                         if status_effect == "HardHitterDB":
@@ -5809,7 +5826,7 @@ class GameFrame(tk.Frame):
                     effects_list.append(":Damage Taken Debuffs:")
                     for status_effect in ai4_statuses:
                         if status_effect == "Thorns":
-                            effects_list.append("Naturaly Vunerable [+{}%]".format(ai4_thornsDot[1]))
+                            effects_list.append("Naturally Vunerable [+{}%]".format(ai4_thornsDot[1]*2))
                         if status_effect == "Brittle":
                             effects_list.append("Brittle ({})".format(ai4_brittle))
                         if status_effect == "HardHitterDB":
@@ -5913,7 +5930,7 @@ class GameFrame(tk.Frame):
                     effects_list.append(":Damage Taken Debuffs:")
                     for status_effect in ai5_statuses:
                         if status_effect == "Thorns":
-                            effects_list.append("Naturaly Vunerable [+{}%]".format(ai5_thornsDot[1]))
+                            effects_list.append("Naturally Vunerable [+{}%]".format(ai5_thornsDot[1]*2))
                         if status_effect == "Brittle":
                             effects_list.append("Brittle ({})".format(ai5_brittle))
                         if status_effect == "HardHitterDB":
@@ -5946,7 +5963,7 @@ class GameFrame(tk.Frame):
     def next_turn(self):
         global combat_results, current_turn, new_round, from_end_of_turn, new_game,\
             champion1_turnover, champion2_turnover, champion3_turnover, champion4_turnover,champion5_turnover, \
-            ranger_aura_completed, paladin_aura_completed
+            ranger_aura_completed, paladin_aura_completed, champion1_hp, champion2_hp, champion3_hp, champion4_hp, champion5_hp
         if AI_SPAWNED == 1:
             if ai1_hp <= 0:
                 combat_results = "win"
@@ -5983,11 +6000,16 @@ class GameFrame(tk.Frame):
         elif combat_results == "lost":
             self.begin_endgame()
         else:
+            champion1_hp = math.ceil(champion1_hp)
+            champion2_hp = math.ceil(champion2_hp)
+            champion3_hp = math.ceil(champion3_hp)
+            champion4_hp = math.ceil(champion4_hp)
+            champion5_hp = math.ceil(champion5_hp)
             for widget in dungeon_game_frame.winfo_children():
                 widget.destroy()
             self.monster_attack_intentions()
             self.ai_choose_attack_targets()
-            self.combat_set()
+            self.combat_setup()
             if new_game == 1:
                 ranger_aura_completed = 0
                 paladin_aura_completed = 1
@@ -6455,16 +6477,18 @@ class GameFrame(tk.Frame):
             champion5_turn_button.destroy()
             back_button.destroy()
             from_turn_choice = 0
-        self.combat_set()
+        self.combat_setup()
         if champion1_hp == 0:
             self.next_turn()
         else:
             button_text_list1 = self.get_champions_ability_button_data(1, "Attack")
             button_text_list2 = self.get_champions_ability_button_data(1, "Special")
+            button_text_list3 = self.get_champions_ability_button_data(1, "Attack View Details")
+            button_text_list4 = self.get_champions_ability_button_data(1, "Special View Details")
             attack_button_champion1 = tk.Button(dungeon_game_frame, text=self.check_if_attack_user_text(), width=59,
-                                                height=10, command=lambda: self.check_if_attack_user_command(button_text_list1))
+                                                height=10, command=lambda: self.check_if_attack_user_command(button_text_list1, button_text_list3))
             special_button_champion1 = tk.Button(dungeon_game_frame, text=self.check_if_special_user_text(), width=59, height=10,
-                                                command=lambda: self.check_if_special_user_command(button_text_list2))
+                                                command=lambda: self.check_if_special_user_command(button_text_list2, button_text_list4))
             turn_choice_champion1 = tk.Button(dungeon_game_frame, text="Change Champions", width=59, height=10,
                                                 command=self.turn_choice)
             attack_button_champion1.grid(row=18, column=1)
@@ -6508,16 +6532,18 @@ class GameFrame(tk.Frame):
             champion5_turn_button.destroy()
             back_button.destroy()
             from_turn_choice = 0
-        self.combat_set()
+        self.combat_setup()
         if champion2_hp == 0:
             self.next_turn()
         else:
             button_text_list1 = self.get_champions_ability_button_data(2, "Attack")
             button_text_list2 = self.get_champions_ability_button_data(2, "Special")
+            button_text_list3 = self.get_champions_ability_button_data(2, "Attack View Details")
+            button_text_list4 = self.get_champions_ability_button_data(2, "Special View Details")
             attack_button_champion2 = tk.Button(dungeon_game_frame, text=self.check_if_attack_user_text(), width=59,
-                                                height=10, command=lambda: self.check_if_attack_user_command(button_text_list1))
+                                                height=10, command=lambda: self.check_if_attack_user_command(button_text_list1, button_text_list3))
             special_button_champion2 = tk.Button(dungeon_game_frame, text=self.check_if_special_user_text(), width=59, height=10,
-                                                command=lambda: self.check_if_special_user_command(button_text_list2))
+                                                command=lambda: self.check_if_special_user_command(button_text_list2, button_text_list4))
             turn_choice_champion2 = tk.Button(dungeon_game_frame, text="Change Champions", width=59, height=10,
                                                 command=self.turn_choice)
             attack_button_champion2.grid(row=18, column=1)
@@ -6561,16 +6587,18 @@ class GameFrame(tk.Frame):
             champion5_turn_button.destroy()
             back_button.destroy()
             from_turn_choice = 0
-        self.combat_set()
+        self.combat_setup()
         if champion3_hp == 0:
             self.next_turn()
         else:
             button_text_list1 = self.get_champions_ability_button_data(3, "Attack")
             button_text_list2 = self.get_champions_ability_button_data(3, "Special")
+            button_text_list3 = self.get_champions_ability_button_data(3, "Attack View Details")
+            button_text_list4 = self.get_champions_ability_button_data(3, "Special View Details")
             attack_button_champion3 = tk.Button(dungeon_game_frame, text=self.check_if_attack_user_text(), width=59,
-                                                height=10, command=lambda: self.check_if_attack_user_command(button_text_list1))
+                                                height=10, command=lambda: self.check_if_attack_user_command(button_text_list1, button_text_list3))
             special_button_champion3 = tk.Button(dungeon_game_frame, text=self.check_if_special_user_text(), width=59, height=10,
-                                                command=lambda: self.check_if_special_user_command(button_text_list2))
+                                                command=lambda: self.check_if_special_user_command(button_text_list2, button_text_list4))
             turn_choice_champion3 = tk.Button(dungeon_game_frame, text="Change Champions", width=59, height=10,
                                                 command=self.turn_choice)
             attack_button_champion3.grid(row=18, column=1)
@@ -6614,16 +6642,18 @@ class GameFrame(tk.Frame):
             champion5_turn_button.destroy()
             back_button.destroy()
             from_turn_choice = 0
-        self.combat_set()
+        self.combat_setup()
         if champion4_hp == 0:
             self.next_turn()
         else:
             button_text_list1 = self.get_champions_ability_button_data(4, "Attack")
             button_text_list2 = self.get_champions_ability_button_data(4, "Special")
+            button_text_list3 = self.get_champions_ability_button_data(4, "Attack View Details")
+            button_text_list4 = self.get_champions_ability_button_data(4, "Special View Details")
             attack_button_champion4 = tk.Button(dungeon_game_frame, text=self.check_if_attack_user_text(), width=59,
-                                                height=10, command=lambda: self.check_if_attack_user_command(button_text_list1))
+                                                height=10, command=lambda: self.check_if_attack_user_command(button_text_list1, button_text_list3))
             special_button_champion4 = tk.Button(dungeon_game_frame, text=self.check_if_special_user_text(), width=59, height=10,
-                                                command=lambda: self.check_if_special_user_command(button_text_list2))
+                                                command=lambda: self.check_if_special_user_command(button_text_list2, button_text_list4))
             turn_choice_champion4 = tk.Button(dungeon_game_frame, text="Change Champions", width=59, height=10,
                                                 command=self.turn_choice)
             attack_button_champion4.grid(row=18, column=1)
@@ -6667,16 +6697,18 @@ class GameFrame(tk.Frame):
             champion5_turn_button.destroy()
             back_button.destroy()
             from_turn_choice = 0
-        self.combat_set()
+        self.combat_setup()
         if champion5_hp == 0:
             self.next_turn()
         else:
             button_text_list1 = self.get_champions_ability_button_data(5, "Attack")
             button_text_list2 = self.get_champions_ability_button_data(5, "Special")
+            button_text_list3 = self.get_champions_ability_button_data(5, "Attack View Details")
+            button_text_list4 = self.get_champions_ability_button_data(5, "Special View Details")
             attack_button_champion5 = tk.Button(dungeon_game_frame, text=self.check_if_attack_user_text(), width=59,
-                                                height=10, command=lambda: self.check_if_attack_user_command(button_text_list1))
+                                                height=10, command=lambda: self.check_if_attack_user_command(button_text_list1, button_text_list3))
             special_button_champion5 = tk.Button(dungeon_game_frame, text=self.check_if_special_user_text(), width=59, height=10,
-                                                command=lambda: self.check_if_special_user_command(button_text_list2))
+                                                command=lambda: self.check_if_special_user_command(button_text_list2, button_text_list4))
             turn_choice_champion5 = tk.Button(dungeon_game_frame, text="Change Champions", width=59, height=10,
                                                 command=self.turn_choice)
             attack_button_champion5.grid(row=18, column=1)
@@ -6687,6 +6719,7 @@ class GameFrame(tk.Frame):
     def check_if_attack_user_text(self):
         counter = 1
         attack_text = ""
+        unattack_detected = 0
         for character in CHAMPION_LIST:
             turn_check = "C{}".format(counter)
             if current_turn == turn_check:
@@ -6701,7 +6734,7 @@ class GameFrame(tk.Frame):
         return attack_text
 #Checks over if the champion whose turn it is isn't someone who can't use attacks
 #If they are someone who can use attacks, they're allowed through, otherwise nothing happens and they can't access the attacks tab
-    def check_if_attack_user_command(self, button_text_list1):
+    def check_if_attack_user_command(self, button_text_list1, button_text_list3):
         counter = 1
         unattack_detected = 0
         for character in CHAMPION_LIST:
@@ -6711,12 +6744,13 @@ class GameFrame(tk.Frame):
                     unattack_detected = 1
             counter += 1
         if unattack_detected != 1:
-            self.special_button(button_text_list1)
+            self.attack_button(button_text_list1, button_text_list3)
 #Checks over if the champion whose turn it is isn't someone who can't use specials
 #If they are someone who can use specials, the text is the normal 'Special Moves', otherwise button the text will be 'Cannot Use Specials'
     def check_if_special_user_text(self):
         counter = 1
         special_text = ""
+        unspecial_detected = 0
         for character in CHAMPION_LIST:
             turn_check = "C{}".format(counter)
             if current_turn == turn_check:
@@ -6734,7 +6768,7 @@ class GameFrame(tk.Frame):
         return special_text
 #Checks over if the champion whose turn it is isn't someone who can't use specials
 #If they are someone who can use specials, they're allowed through, otherwise nothing happens and they can't access the specials tab
-    def check_if_special_user_command(self, button_text_list2):
+    def check_if_special_user_command(self, button_text_list2, button_text_list4):
         counter = 1
         unspecial_detected = 0
         for character in CHAMPION_LIST:
@@ -6748,64 +6782,59 @@ class GameFrame(tk.Frame):
                     unspecial_detected = 1
             counter += 1
         if unspecial_detected != 1:
-            self.special_button(button_text_list2)
+            self.special_button(button_text_list2, button_text_list4)
 #Displays all attacks available to the user to choose from with their name, cost, and remaining cooldown.
 #Any button that doesn't have an ability tied to it is shown as Empty
 #There is a 'View Details' button below each ability that brings up a window that tells the user everything they need to know about that ability
-    def attack_button(self, button_text_list1):
+    def attack_button(self, button_text_list1, button_text_list3):
         global attack1_button, attack1_button_details, attack2_button, attack2_button_details, attack3_button, attack3_button_details, attack4_button, attack4_button_details, back_button, \
             from_attack_button, target_to_attack
         if target_to_attack == 1:
             target_to_attack = 0
             if AI_SPAWNED == 1:
                 ai1_attacktarget_frame.destroy()
-                target_back_button.destroy()
             if AI_SPAWNED == 2:
                 ai1_attacktarget_frame.destroy()
                 ai2_attacktarget_frame.destroy()
-                target_back_button.destroy()
             if AI_SPAWNED == 3:
                 ai1_attacktarget_frame.destroy()
                 ai2_attacktarget_frame.destroy()
                 ai3_attacktarget_frame.destroy()
-                target_back_button.destroy()
             if AI_SPAWNED == 4:
                 ai1_attacktarget_frame.destroy()
                 ai2_attacktarget_frame.destroy()
                 ai3_attacktarget_frame.destroy()
                 ai4_attacktarget_frame.destroy()
-                target_back_button.destroy()
             if AI_SPAWNED == 5:
                 ai1_attacktarget_frame.destroy()
                 ai2_attacktarget_frame.destroy()
                 ai3_attacktarget_frame.destroy()
                 ai4_attacktarget_frame.destroy()
                 ai5_attacktarget_frame.destroy()
-                target_back_button.destroy()
         if current_turn == "C1":
             attack_button_champion1.destroy()
             special_button_champion1.destroy()
             turn_choice_champion1.destroy()
             attack1_button = tk.Button(dungeon_game_frame, text=button_text_list1[0], width=50, height=4,
-                                       command=lambda: self.champion_attacks(button_text_list1[0]))
+                                       command=lambda: self.champion_attacks(button_text_list3[0]))
             attack1_button_details = tk.Button(dungeon_game_frame,
-                                               text="{} Details".format(button_text_list1[0]), width=38,
-                                               height=1, command=lambda: self.attack_details_window(button_text_list1[0]))
+                                               text="{} Details".format(button_text_list3[0]), width=38,
+                                               height=1, command=lambda: self.attack_details_window(button_text_list3[0]))
             attack2_button = tk.Button(dungeon_game_frame, text=button_text_list1[1], width=50, height=4,
-                                       command=lambda: self.champion_attacks(button_text_list1[1]))
+                                       command=lambda: self.champion_attacks(button_text_list3[1]))
             attack2_button_details = tk.Button(dungeon_game_frame,
-                                               text="{} Details".format(button_text_list1[1]), width=38,
-                                               height=1, command=lambda: self.attack_details_window(button_text_list1[1]))
+                                               text="{} Details".format(button_text_list3[1]), width=38,
+                                               height=1, command=lambda: self.attack_details_window(button_text_list3[1]))
             attack3_button = tk.Button(dungeon_game_frame, text=button_text_list1[2], width=50, height=4,
-                                       command=lambda: self.champion_attacks(button_text_list1[2]))
+                                       command=lambda: self.champion_attacks(button_text_list3[2]))
             attack3_button_details = tk.Button(dungeon_game_frame,
-                                               text="{} Details".format(button_text_list1[2]), width=38,
-                                               height=1, command=lambda: self.attack_details_window(button_text_list1[2]))
+                                               text="{} Details".format(button_text_list3[2]), width=38,
+                                               height=1, command=lambda: self.attack_details_window(button_text_list3[2]))
             attack4_button = tk.Button(dungeon_game_frame, text=button_text_list1[3], width=50, height=4,
-                                       command=lambda: self.champion_attacks(button_text_list1[3]))
+                                       command=lambda: self.champion_attacks(button_text_list3[3]))
             attack4_button_details = tk.Button(dungeon_game_frame,
-                                               text="{} Details".format(button_text_list1[3]), width=38,
-                                               height=1, command=lambda: self.attack_details_window(button_text_list1[3]))
+                                               text="{} Details".format(button_text_list3[3]), width=38,
+                                               height=1, command=lambda: self.attack_details_window(button_text_list3[3]))
             back_button = tk.Button(dungeon_game_frame, text="Back", command=self.player_combat_champion1)
             back_button.grid(row=20, column=2, pady=20)
             attack1_button.grid(row=18, column=1)
@@ -6822,25 +6851,25 @@ class GameFrame(tk.Frame):
             special_button_champion2.destroy()
             turn_choice_champion2.destroy()
             attack1_button = tk.Button(dungeon_game_frame, text=button_text_list1[0], width=50, height=4,
-                                       command=lambda: self.champion_attacks(button_text_list1[0]))
+                                       command=lambda: self.champion_attacks(button_text_list3[0]))
             attack1_button_details = tk.Button(dungeon_game_frame,
-                                               text="{} Details".format(button_text_list1[0]), width=38,
-                                               height=1, command=lambda: self.attack_details_window(button_text_list1[0]))
+                                               text="{} Details".format(button_text_list3[0]), width=38,
+                                               height=1, command=lambda: self.attack_details_window(button_text_list3[0]))
             attack2_button = tk.Button(dungeon_game_frame, text=button_text_list1[1], width=50, height=4,
-                                       command=lambda: self.champion_attacks(button_text_list1[1]))
+                                       command=lambda: self.champion_attacks(button_text_list3[1]))
             attack2_button_details = tk.Button(dungeon_game_frame,
-                                               text="{} Details".format(button_text_list1[1]), width=38,
-                                               height=1, command=lambda: self.attack_details_window(button_text_list1[1]))
+                                               text="{} Details".format(button_text_list3[1]), width=38,
+                                               height=1, command=lambda: self.attack_details_window(button_text_list3[1]))
             attack3_button = tk.Button(dungeon_game_frame, text=button_text_list1[2], width=50, height=4,
-                                       command=lambda: self.champion_attacks(button_text_list1[2]))
+                                       command=lambda: self.champion_attacks(button_text_list3[2]))
             attack3_button_details = tk.Button(dungeon_game_frame,
-                                               text="{} Details".format(button_text_list1[2]), width=38,
-                                               height=1, command=lambda: self.attack_details_window(button_text_list1[2]))
+                                               text="{} Details".format(button_text_list3[2]), width=38,
+                                               height=1, command=lambda: self.attack_details_window(button_text_list3[2]))
             attack4_button = tk.Button(dungeon_game_frame, text=button_text_list1[3], width=50, height=4,
-                                       command=lambda: self.champion_attacks(button_text_list1[3]))
+                                       command=lambda: self.champion_attacks(button_text_list3[3]))
             attack4_button_details = tk.Button(dungeon_game_frame,
-                                               text="{} Details".format(button_text_list1[3]), width=38,
-                                               height=1, command=lambda: self.attack_details_window(button_text_list1[3]))
+                                               text="{} Details".format(button_text_list3[3]), width=38,
+                                               height=1, command=lambda: self.attack_details_window(button_text_list3[3]))
             back_button = tk.Button(dungeon_game_frame, text="Back", command=self.player_combat_champion2)
             back_button.grid(row=20, column=2, pady=20)
             attack1_button.grid(row=18, column=1)
@@ -6857,25 +6886,25 @@ class GameFrame(tk.Frame):
             special_button_champion3.destroy()
             turn_choice_champion3.destroy()
             attack1_button = tk.Button(dungeon_game_frame, text=button_text_list1[0], width=50, height=4,
-                                       command=lambda: self.champion_attacks(button_text_list1[0]))
+                                       command=lambda: self.champion_attacks(button_text_list3[0]))
             attack1_button_details = tk.Button(dungeon_game_frame,
-                                               text="{} Details".format(button_text_list1[0]), width=38,
-                                               height=1, command=lambda: self.attack_details_window(button_text_list1[0]))
+                                               text="{} Details".format(button_text_list3[0]), width=38,
+                                               height=1, command=lambda: self.attack_details_window(button_text_list3[0]))
             attack2_button = tk.Button(dungeon_game_frame, text=button_text_list1[1], width=50, height=4,
-                                       command=lambda: self.champion_attacks(button_text_list1[1]))
+                                       command=lambda: self.champion_attacks(button_text_list3[1]))
             attack2_button_details = tk.Button(dungeon_game_frame,
-                                               text="{} Details".format(button_text_list1[1]), width=38,
-                                               height=1, command=lambda: self.attack_details_window(button_text_list1[1]))
+                                               text="{} Details".format(button_text_list3[1]), width=38,
+                                               height=1, command=lambda: self.attack_details_window(button_text_list3[1]))
             attack3_button = tk.Button(dungeon_game_frame, text=button_text_list1[2], width=50, height=4,
-                                       command=lambda: self.champion_attacks(button_text_list1[2]))
+                                       command=lambda: self.champion_attacks(button_text_list3[2]))
             attack3_button_details = tk.Button(dungeon_game_frame,
-                                               text="{} Details".format(button_text_list1[2]), width=38,
-                                               height=1, command=lambda: self.attack_details_window(button_text_list1[2]))
+                                               text="{} Details".format(button_text_list3[2]), width=38,
+                                               height=1, command=lambda: self.attack_details_window(button_text_list3[2]))
             attack4_button = tk.Button(dungeon_game_frame, text=button_text_list1[3], width=50, height=4,
-                                       command=lambda: self.champion_attacks(button_text_list1[3]))
+                                       command=lambda: self.champion_attacks(button_text_list3[3]))
             attack4_button_details = tk.Button(dungeon_game_frame,
-                                               text="{} Details".format(button_text_list1[3]), width=38,
-                                               height=1, command=lambda: self.attack_details_window(button_text_list1[3]))
+                                               text="{} Details".format(button_text_list3[3]), width=38,
+                                               height=1, command=lambda: self.attack_details_window(button_text_list3[3]))
             back_button = tk.Button(dungeon_game_frame, text="Back", command=self.player_combat_champion3)
             back_button.grid(row=20, column=2, pady=20)
             attack1_button.grid(row=18, column=1)
@@ -6892,25 +6921,25 @@ class GameFrame(tk.Frame):
             special_button_champion4.destroy()
             turn_choice_champion4.destroy()
             attack1_button = tk.Button(dungeon_game_frame, text=button_text_list1[0], width=50, height=4,
-                                       command=lambda: self.champion_attacks(button_text_list1[0]))
+                                       command=lambda: self.champion_attacks(button_text_list3[0]))
             attack1_button_details = tk.Button(dungeon_game_frame,
-                                               text="{} Details".format(button_text_list1[0]), width=38,
-                                               height=1, command=lambda: self.attack_details_window(button_text_list1[0]))
+                                               text="{} Details".format(button_text_list3[0]), width=38,
+                                               height=1, command=lambda: self.attack_details_window(button_text_list3[0]))
             attack2_button = tk.Button(dungeon_game_frame, text=button_text_list1[1], width=50, height=4,
-                                       command=lambda: self.champion_attacks(button_text_list1[1]))
+                                       command=lambda: self.champion_attacks(button_text_list3[1]))
             attack2_button_details = tk.Button(dungeon_game_frame,
-                                               text="{} Details".format(button_text_list1[1]), width=38,
-                                               height=1, command=lambda: self.attack_details_window(button_text_list1[1]))
+                                               text="{} Details".format(button_text_list3[1]), width=38,
+                                               height=1, command=lambda: self.attack_details_window(button_text_list3[1]))
             attack3_button = tk.Button(dungeon_game_frame, text=button_text_list1[2], width=50, height=4,
-                                       command=lambda: self.champion_attacks(button_text_list1[2]))
+                                       command=lambda: self.champion_attacks(button_text_list3[2]))
             attack3_button_details = tk.Button(dungeon_game_frame,
-                                               text="{} Details".format(button_text_list1[2]), width=38,
-                                               height=1, command=lambda: self.attack_details_window(button_text_list1[2]))
+                                               text="{} Details".format(button_text_list3[2]), width=38,
+                                               height=1, command=lambda: self.attack_details_window(button_text_list3[2]))
             attack4_button = tk.Button(dungeon_game_frame, text=button_text_list1[3], width=50, height=4,
-                                       command=lambda: self.champion_attacks(button_text_list1[3]))
+                                       command=lambda: self.champion_attacks(button_text_list3[3]))
             attack4_button_details = tk.Button(dungeon_game_frame,
-                                               text="{} Details".format(button_text_list1[3]), width=38,
-                                               height=1, command=lambda: self.attack_details_window(button_text_list1[3]))
+                                               text="{} Details".format(button_text_list3[3]), width=38,
+                                               height=1, command=lambda: self.attack_details_window(button_text_list3[3]))
             back_button = tk.Button(dungeon_game_frame, text="Back", command=self.player_combat_champion4)
             back_button.grid(row=20, column=2, pady=20)
             attack1_button.grid(row=18, column=1)
@@ -6927,25 +6956,25 @@ class GameFrame(tk.Frame):
             special_button_champion5.destroy()
             turn_choice_champion5.destroy()
             attack1_button = tk.Button(dungeon_game_frame, text=button_text_list1[0], width=50, height=4,
-                                       command=lambda: self.champion_attacks(button_text_list1[0]))
+                                       command=lambda: self.champion_attacks(button_text_list3[0]))
             attack1_button_details = tk.Button(dungeon_game_frame,
-                                               text="{} Details".format(button_text_list1[0]), width=38,
-                                               height=1, command=lambda: self.attack_details_window(button_text_list1[0]))
+                                               text="{} Details".format(button_text_list3[0]), width=38,
+                                               height=1, command=lambda: self.attack_details_window(button_text_list3[0]))
             attack2_button = tk.Button(dungeon_game_frame, text=button_text_list1[1], width=50, height=4,
-                                       command=lambda: self.champion_attacks(button_text_list1[1]))
+                                       command=lambda: self.champion_attacks(button_text_list3[1]))
             attack2_button_details = tk.Button(dungeon_game_frame,
-                                               text="{} Details".format(button_text_list1[1]), width=38,
-                                               height=1, command=lambda: self.attack_details_window(button_text_list1[1]))
+                                               text="{} Details".format(button_text_list3[1]), width=38,
+                                               height=1, command=lambda: self.attack_details_window(button_text_list3[1]))
             attack3_button = tk.Button(dungeon_game_frame, text=button_text_list1[2], width=50, height=4,
-                                       command=lambda: self.champion_attacks(button_text_list1[2]))
+                                       command=lambda: self.champion_attacks(button_text_list3[2]))
             attack3_button_details = tk.Button(dungeon_game_frame,
-                                               text="{} Details".format(button_text_list1[2]), width=38,
-                                               height=1, command=lambda: self.attack_details_window(button_text_list1[2]))
+                                               text="{} Details".format(button_text_list3[2]), width=38,
+                                               height=1, command=lambda: self.attack_details_window(button_text_list3[2]))
             attack4_button = tk.Button(dungeon_game_frame, text=button_text_list1[3], width=50, height=4,
-                                       command=lambda: self.champion_attacks(button_text_list1[3]))
+                                       command=lambda: self.champion_attacks(button_text_list3[3]))
             attack4_button_details = tk.Button(dungeon_game_frame,
-                                               text="{} Details".format(button_text_list1[3]), width=38,
-                                               height=1, command=lambda: self.attack_details_window(button_text_list1[3]))
+                                               text="{} Details".format(button_text_list3[3]), width=38,
+                                               height=1, command=lambda: self.attack_details_window(button_text_list3[3]))
             back_button = tk.Button(dungeon_game_frame, text="Back", command=self.player_combat_champion5)
             back_button.grid(row=20, column=2, pady=20)
             attack1_button.grid(row=18, column=1)
@@ -7011,6 +7040,10 @@ class GameFrame(tk.Frame):
             button_list = self.champions_attack_button_text(attack_button_text_list_temp)
         elif ability_set == "Special":
             button_list = self.champions_special_button_text(special_button_text_list_temp)
+        elif ability_set == "Attack View Details":
+            button_list = attack_button_text_list_temp
+        elif ability_set == "Special View Details":
+            button_list = special_button_text_list_temp
         return button_list
 #Checks which attacks are in the list and adds their costs and cooldowns remaining to a string thats added to a list thats returned
     def champions_attack_button_text(self, attack_button_text_list_temp):
@@ -7384,7 +7417,7 @@ class GameFrame(tk.Frame):
                 attack_button_text_list.append(attack_name)
         return attack_button_text_list
 #Checks which special are in the list and adds their costs and cooldowns remaining to a string thats added to a list thats returned    
-    def champions_special_button_text(special_button_text_list_temp):
+    def champions_special_button_text(self, special_button_text_list_temp):
         for special_name in special_button_text_list_temp:
             if special_name == "Harmonize":
                 if harmonize_requirements[0] > 0:
@@ -8129,7 +8162,7 @@ class GameFrame(tk.Frame):
             ability_cooldown = crusade_requirements[2]
             ability_remaining_cooldown = crusade_requirements[3]
         if ability_name == "Steady Aim":
-            attack_ability_details = "Fire a precise arrow at an enemy, dealing damage and reducing the cooldowns of Power Shot and Ricochet Shot by one\Enemies hit are affected by the currently equipped tip"
+            attack_ability_details = "Fire a precise arrow at an enemy, dealing damage and reducing the cooldowns of Power Shot and Ricochet Shot by one\nEnemies hit are affected by the currently equipped tip"
             ability_cost = steady_aim_requirements[0]
             ability_gain = steady_aim_requirements[1]
             ability_cooldown = steady_aim_requirements[2]
@@ -8230,11 +8263,11 @@ class GameFrame(tk.Frame):
             close_button = tk.Button(root, text="Close Window", command=root.destroy)
             close_button.grid(row=3, column=1)
 #Finds the ability name and sets the abilities data into a universal list that can be called upon easily
-#This list 'ability_data' has four variables
+#This list 'ability_data' can have four variables
 #1: Ability name (string)
 #2: Ability target (string) which can be 'self' (just happens, mostly self-buffs), 'enemy' (targets or hits enemies), or 'ally' (targets or effect happens to allies)
 #3: Ability targeting amount (string) which can be '1T' (hits only one target), '2T' (hits two targets), '3T' (hits three targets), or 'AOE' (hits everyone alive from the target stated AKA enemies or allies)
-#4: Ability power (interger), named either damage_done or healing_done based on the ability effect
+#4: Ability power (interger), named either damage_done or healing_done based on the ability effect (if the ability doesn't have a damage or healing attribute then it is not given)
 #Function also finds which champion the ability belongs to and which position they're in order to add or subtract resource
     def champion_attacks(self, ability_name):
         global attack_to_target, special_to_target, ability_data, champion1_rp, champion2_rp, champion3_rp, champion4_rp, champion5_rp
@@ -10364,7 +10397,7 @@ class GameFrame(tk.Frame):
 #Displays all specials available to the user to choose from with their name, cost, and remaining cooldown.
 #Any button that doesn't have an ability tied to it is shown as Empty
 #There is a 'View Details' button below each ability that brings up a window that tells the user everything they need to know about that ability
-    def special_button(self, button_text_list2):
+    def special_button(self, button_text_list2, button_text_list4):
         global special1_button, special1_button_details, special2_button, special2_button_details, special3_button, special3_button_details, special4_button, special4_button_details, back_button, \
             from_special_button
         if current_turn == "C1":
@@ -10372,25 +10405,25 @@ class GameFrame(tk.Frame):
             special_button_champion1.destroy()
             turn_choice_champion1.destroy()
             special1_button = tk.Button(dungeon_game_frame, text=button_text_list2[0], width=50, height=4,
-                                       command=lambda: self.champion_specials(button_text_list2[0]))
+                                       command=lambda: self.champion_specials(button_text_list4[0]))
             special1_button_details = tk.Button(dungeon_game_frame,
-                                                text="{} Details".format(button_text_list2[0]), width=38,
-                                                height=1, command=lambda: self.special_details_window(button_text_list2[0]))
+                                                text="{} Details".format(button_text_list4[0]), width=38,
+                                                height=1, command=lambda: self.special_details_window(button_text_list4[0]))
             special2_button = tk.Button(dungeon_game_frame, text=button_text_list2[1], width=50, height=4,
-                                       command=lambda: self.champion_specials(button_text_list2[1]))
+                                       command=lambda: self.champion_specials(button_text_list4[1]))
             special2_button_details = tk.Button(dungeon_game_frame,
-                                                text="{} Details".format(button_text_list2[1]), width=38,
-                                                height=1, command=lambda: self.special_details_window(button_text_list2[1]))
+                                                text="{} Details".format(button_text_list4[1]), width=38,
+                                                height=1, command=lambda: self.special_details_window(button_text_list4[1]))
             special3_button = tk.Button(dungeon_game_frame, text=button_text_list2[2], width=50, height=4,
-                                       command=lambda: self.champion_specials(button_text_list2[2]))
+                                       command=lambda: self.champion_specials(button_text_list4[2]))
             special3_button_details = tk.Button(dungeon_game_frame,
-                                                text="{} Details".format(button_text_list2[2]), width=38,
-                                                height=1, command=lambda: self.special_details_window(button_text_list2[2]))
+                                                text="{} Details".format(button_text_list4[2]), width=38,
+                                                height=1, command=lambda: self.special_details_window(button_text_list4[2]))
             special4_button = tk.Button(dungeon_game_frame, text=button_text_list2[3], width=50, height=4,
-                                       command=lambda: self.champion_specials(button_text_list2[3]))
+                                       command=lambda: self.champion_specials(button_text_list4[3]))
             special4_button_details = tk.Button(dungeon_game_frame,
-                                                text="{} Details".format(button_text_list2[3]), width=38,
-                                                height=1, command=lambda: self.special_details_window(button_text_list2[3]))
+                                                text="{} Details".format(button_text_list4[3]), width=38,
+                                                height=1, command=lambda: self.special_details_window(button_text_list4[3]))
             back_button = tk.Button(dungeon_game_frame, text="Back", command=self.player_combat_champion1)
             back_button.grid(row=20, column=2, pady=20)
             special1_button.grid(row=18, column=1)
@@ -10407,25 +10440,25 @@ class GameFrame(tk.Frame):
             special_button_champion2.destroy()
             turn_choice_champion2.destroy()
             special1_button = tk.Button(dungeon_game_frame, text=button_text_list2[0], width=50, height=4,
-                                       command=lambda: self.champion_specials(button_text_list2[0]))
+                                       command=lambda: self.champion_specials(button_text_list4[0]))
             special1_button_details = tk.Button(dungeon_game_frame,
-                                                text="{} Details".format(button_text_list2[0]), width=38,
-                                                height=1, command=lambda: self.special_details_window(button_text_list2[0]))
+                                                text="{} Details".format(button_text_list4[0]), width=38,
+                                                height=1, command=lambda: self.special_details_window(button_text_list4[0]))
             special2_button = tk.Button(dungeon_game_frame, text=button_text_list2[1], width=50, height=4,
-                                       command=lambda: self.champion_specials(button_text_list2[1]))
+                                       command=lambda: self.champion_specials(button_text_list4[1]))
             special2_button_details = tk.Button(dungeon_game_frame,
-                                                text="{} Details".format(button_text_list2[1]), width=38,
-                                                height=1, command=lambda: self.special_details_window(button_text_list2[1]))
+                                                text="{} Details".format(button_text_list4[1]), width=38,
+                                                height=1, command=lambda: self.special_details_window(button_text_list4[1]))
             special3_button = tk.Button(dungeon_game_frame, text=button_text_list2[2], width=50, height=4,
-                                       command=lambda: self.champion_specials(button_text_list2[2]))
+                                       command=lambda: self.champion_specials(button_text_list4[2]))
             special3_button_details = tk.Button(dungeon_game_frame,
-                                                text="{} Details".format(button_text_list2[2]), width=38,
-                                                height=1, command=lambda: self.special_details_window(button_text_list2[2]))
+                                                text="{} Details".format(button_text_list4[2]), width=38,
+                                                height=1, command=lambda: self.special_details_window(button_text_list4[2]))
             special4_button = tk.Button(dungeon_game_frame, text=button_text_list2[3], width=50, height=4,
-                                       command=lambda: self.champion_specials(button_text_list2[3]))
+                                       command=lambda: self.champion_specials(button_text_list4[3]))
             special4_button_details = tk.Button(dungeon_game_frame,
-                                                text="{} Details".format(button_text_list2[3]), width=38,
-                                                height=1, command=lambda: self.special_details_window(button_text_list2[3]))
+                                                text="{} Details".format(button_text_list4[3]), width=38,
+                                                height=1, command=lambda: self.special_details_window(button_text_list4[3]))
             back_button = tk.Button(dungeon_game_frame, text="Back", command=self.player_combat_champion2)
             back_button.grid(row=20, column=2, pady=20)
             special1_button.grid(row=18, column=1)
@@ -10442,25 +10475,25 @@ class GameFrame(tk.Frame):
             special_button_champion3.destroy()
             turn_choice_champion3.destroy()
             special1_button = tk.Button(dungeon_game_frame, text=button_text_list2[0], width=50, height=4,
-                                       command=lambda: self.champion_specials(button_text_list2[0]))
+                                       command=lambda: self.champion_specials(button_text_list4[0]))
             special1_button_details = tk.Button(dungeon_game_frame,
-                                                text="{} Details".format(button_text_list2[0]), width=38,
-                                                height=1, command=lambda: self.special_details_window(button_text_list2[0]))
+                                                text="{} Details".format(button_text_list4[0]), width=38,
+                                                height=1, command=lambda: self.special_details_window(button_text_list4[0]))
             special2_button = tk.Button(dungeon_game_frame, text=button_text_list2[1], width=50, height=4,
-                                       command=lambda: self.champion_specials(button_text_list2[1]))
+                                       command=lambda: self.champion_specials(button_text_list4[1]))
             special2_button_details = tk.Button(dungeon_game_frame,
-                                                text="{} Details".format(button_text_list2[1]), width=38,
-                                                height=1, command=lambda: self.special_details_window(button_text_list2[1]))
+                                                text="{} Details".format(button_text_list4[1]), width=38,
+                                                height=1, command=lambda: self.special_details_window(button_text_list4[1]))
             special3_button = tk.Button(dungeon_game_frame, text=button_text_list2[2], width=50, height=4,
-                                       command=lambda: self.champion_specials(button_text_list2[2]))
+                                       command=lambda: self.champion_specials(button_text_list4[2]))
             special3_button_details = tk.Button(dungeon_game_frame,
-                                                text="{} Details".format(button_text_list2[2]), width=38,
-                                                height=1, command=lambda: self.special_details_window(button_text_list2[2]))
+                                                text="{} Details".format(button_text_list4[2]), width=38,
+                                                height=1, command=lambda: self.special_details_window(button_text_list4[2]))
             special4_button = tk.Button(dungeon_game_frame, text=button_text_list2[3], width=50, height=4,
-                                       command=lambda: self.champion_specials(button_text_list2[3]))
+                                       command=lambda: self.champion_specials(button_text_list4[3]))
             special4_button_details = tk.Button(dungeon_game_frame,
-                                                text="{} Details".format(button_text_list2[3]), width=38,
-                                                height=1, command=lambda: self.special_details_window(button_text_list2[3]))
+                                                text="{} Details".format(button_text_list4[3]), width=38,
+                                                height=1, command=lambda: self.special_details_window(button_text_list4[3]))
             back_button = tk.Button(dungeon_game_frame, text="Back", command=self.player_combat_champion3)
             back_button.grid(row=20, column=2, pady=20)
             special1_button.grid(row=18, column=1)
@@ -10477,25 +10510,25 @@ class GameFrame(tk.Frame):
             special_button_champion4.destroy()
             turn_choice_champion4.destroy()
             special1_button = tk.Button(dungeon_game_frame, text=button_text_list2[0], width=50, height=4,
-                                       command=lambda: self.champion_specials(button_text_list2[0]))
+                                       command=lambda: self.champion_specials(button_text_list4[0]))
             special1_button_details = tk.Button(dungeon_game_frame,
-                                                text="{} Details".format(button_text_list2[0]), width=38,
-                                                height=1, command=lambda: self.special_details_window(button_text_list2[0]))
+                                                text="{} Details".format(button_text_list4[0]), width=38,
+                                                height=1, command=lambda: self.special_details_window(button_text_list4[0]))
             special2_button = tk.Button(dungeon_game_frame, text=button_text_list2[1], width=50, height=4,
-                                       command=lambda: self.champion_specials(button_text_list2[1]))
+                                       command=lambda: self.champion_specials(button_text_list4[1]))
             special2_button_details = tk.Button(dungeon_game_frame,
-                                                text="{} Details".format(button_text_list2[1]), width=38,
-                                                height=1, command=lambda: self.special_details_window(button_text_list2[1]))
+                                                text="{} Details".format(button_text_list4[1]), width=38,
+                                                height=1, command=lambda: self.special_details_window(button_text_list4[1]))
             special3_button = tk.Button(dungeon_game_frame, text=button_text_list2[2], width=50, height=4,
-                                       command=lambda: self.champion_specials(button_text_list2[2]))
+                                       command=lambda: self.champion_specials(button_text_list4[2]))
             special3_button_details = tk.Button(dungeon_game_frame,
-                                                text="{} Details".format(button_text_list2[2]), width=38,
-                                                height=1, command=lambda: self.special_details_window(button_text_list2[2]))
+                                                text="{} Details".format(button_text_list4[2]), width=38,
+                                                height=1, command=lambda: self.special_details_window(button_text_list4[2]))
             special4_button = tk.Button(dungeon_game_frame, text=button_text_list2[3], width=50, height=4,
-                                       command=lambda: self.champion_specials(button_text_list2[3]))
+                                       command=lambda: self.champion_specials(button_text_list4[3]))
             special4_button_details = tk.Button(dungeon_game_frame,
-                                                text="{} Details".format(button_text_list2[3]), width=38,
-                                                height=1, command=lambda: self.special_details_window(button_text_list2[3]))
+                                                text="{} Details".format(button_text_list4[3]), width=38,
+                                                height=1, command=lambda: self.special_details_window(button_text_list4[3]))
             back_button = tk.Button(dungeon_game_frame, text="Back", command=self.player_combat_champion4)
             back_button.grid(row=20, column=2, pady=20)
             special1_button.grid(row=18, column=1)
@@ -10512,25 +10545,25 @@ class GameFrame(tk.Frame):
             special_button_champion5.destroy()
             turn_choice_champion5.destroy()
             special1_button = tk.Button(dungeon_game_frame, text=button_text_list2[0], width=50, height=4,
-                                       command=lambda: self.champion_specials(button_text_list2[0]))
+                                       command=lambda: self.champion_specials(button_text_list4[0]))
             special1_button_details = tk.Button(dungeon_game_frame,
-                                                text="{} Details".format(button_text_list2[0]), width=38,
-                                                height=1, command=lambda: self.special_details_window(button_text_list2[0]))
+                                                text="{} Details".format(button_text_list4[0]), width=38,
+                                                height=1, command=lambda: self.special_details_window(button_text_list4[0]))
             special2_button = tk.Button(dungeon_game_frame, text=button_text_list2[1], width=50, height=4,
-                                       command=lambda: self.champion_specials(button_text_list2[1]))
+                                       command=lambda: self.champion_specials(button_text_list4[1]))
             special2_button_details = tk.Button(dungeon_game_frame,
-                                                text="{} Details".format(button_text_list2[1]), width=38,
-                                                height=1, command=lambda: self.special_details_window(button_text_list2[1]))
+                                                text="{} Details".format(button_text_list4[1]), width=38,
+                                                height=1, command=lambda: self.special_details_window(button_text_list4[1]))
             special3_button = tk.Button(dungeon_game_frame, text=button_text_list2[2], width=50, height=4,
-                                       command=lambda: self.champion_specials(button_text_list2[2]))
+                                       command=lambda: self.champion_specials(button_text_list4[2]))
             special3_button_details = tk.Button(dungeon_game_frame,
-                                                text="{} Details".format(button_text_list2[2]), width=38,
-                                                height=1, command=lambda: self.special_details_window(button_text_list2[2]))
+                                                text="{} Details".format(button_text_list4[2]), width=38,
+                                                height=1, command=lambda: self.special_details_window(button_text_list4[2]))
             special4_button = tk.Button(dungeon_game_frame, text=button_text_list2[3], width=50, height=4,
-                                       command=lambda: self.champion_specials(button_text_list2[3]))
+                                       command=lambda: self.champion_specials(button_text_list4[3]))
             special4_button_details = tk.Button(dungeon_game_frame,
-                                                text="{} Details".format(button_text_list2[3]), width=38,
-                                                height=1, command=lambda: self.special_details_window(button_text_list2[3]))
+                                                text="{} Details".format(button_text_list4[3]), width=38,
+                                                height=1, command=lambda: self.special_details_window(button_text_list4[3]))
             back_button = tk.Button(dungeon_game_frame, text="Back", command=self.player_combat_champion5)
             back_button.grid(row=20, column=2, pady=20)
             special1_button.grid(row=18, column=1)
@@ -12988,7 +13021,7 @@ class GameFrame(tk.Frame):
     def player_targeting_AI(self):
         global attack_to_target, special_to_target, ai1_attacktarget_frame, ai2_attacktarget_frame, ai3_attacktarget_frame, \
             ai4_attacktarget_frame, ai5_attacktarget_frame, champion1_supporttarget_frame, champion2_supporttarget_frame, \
-            champion3_supporttarget_frame, champion4_supporttarget_frame, champion5_supporttarget_frame, target_to_attack, target_to_special, target_back_button
+            champion3_supporttarget_frame, champion4_supporttarget_frame, champion5_supporttarget_frame, target_to_attack, target_to_special
         if attack_to_target == 1:
             attack1_button.destroy()
             attack1_button_details.destroy()
@@ -13022,8 +13055,6 @@ class GameFrame(tk.Frame):
                     ai1_attacktarget_frame = tk.Button(dungeon_game_frame, text=self.target_frame_ai_champion_text("ai", 1),
                                                        command=lambda: self.multi_target_check(1))
                     ai1_attacktarget_frame.grid(row=19, column=2)
-                    target_back_button = tk.Button(dungeon_game_frame, text="Back", command= self.attack_button)
-                    target_back_button.grid(row=20, column=2)
                 elif AI_SPAWNED == 2:
                     ai1_attacktarget_frame = tk.Button(dungeon_game_frame, text=self.target_frame_ai_champion_text("ai", 1),
                                                        command=lambda: self.multi_target_check(1))
@@ -13035,8 +13066,6 @@ class GameFrame(tk.Frame):
                         ai1_attacktarget_frame["state"] = 'disable'
                     if ai2_hp == 0:
                         ai2_attacktarget_frame["state"] = 'disable'
-                    target_back_button = tk.Button(dungeon_game_frame, text="Back", command= self.attack_button)
-                    target_back_button.grid(row=20, column=2)
                 elif AI_SPAWNED == 3:
                     ai1_attacktarget_frame = tk.Button(dungeon_game_frame, text=self.target_frame_ai_champion_text("ai", 1),
                                                        command=lambda: self.multi_target_check(1))
@@ -13053,8 +13082,6 @@ class GameFrame(tk.Frame):
                         ai2_attacktarget_frame["state"] = 'disable'
                     if ai3_hp == 0:
                         ai3_attacktarget_frame["state"] = 'disable'
-                    target_back_button = tk.Button(dungeon_game_frame, text="Back", command= self.attack_button)
-                    target_back_button.grid(row=20, column=2)
                 elif AI_SPAWNED == 4:
                     ai1_attacktarget_frame = tk.Button(dungeon_game_frame, text=self.target_frame_ai_champion_text("ai", 1),
                                                        command=lambda: self.multi_target_check(1))
@@ -13076,8 +13103,6 @@ class GameFrame(tk.Frame):
                         ai3_attacktarget_frame["state"] = 'disable'
                     if ai4_hp == 0:
                         ai4_attacktarget_frame["state"] = 'disable'
-                    target_back_button = tk.Button(dungeon_game_frame, text="Back", command= self.attack_button)
-                    target_back_button.grid(row=20, column=2)
                 elif AI_SPAWNED == 5:
                     ai1_attacktarget_frame = tk.Button(dungeon_game_frame, text=self.target_frame_ai_champion_text("ai", 1),
                                                        command=lambda: self.multi_target_check(1))
@@ -13104,8 +13129,6 @@ class GameFrame(tk.Frame):
                         ai4_attacktarget_frame["state"] = 'disable'
                     if ai5_hp == 0:
                         ai5_attacktarget_frame["state"] = 'disable'
-                    target_back_button = tk.Button(dungeon_game_frame, text="Back", command= self.attack_button)
-                    target_back_button.grid(row=20, column=2)
         if ability_data[1] == "ally":
             if ability_data[2] == "AOE":
                 target_list = []
@@ -13136,8 +13159,6 @@ class GameFrame(tk.Frame):
                     champion4_supporttarget_frame["state"] = 'disable'
                 if champion5_hp == 0:
                     champion5_supporttarget_frame["state"] = 'disable'
-                target_back_button = tk.Button(dungeon_game_frame, text="Back", command= self.attack_button)
-                target_back_button.grid(row=20, column=2)
         if ability_data[1] == "self":
             target_list = []
             self.complete_turn(target_list)
@@ -30319,10 +30340,10 @@ class GameFrame(tk.Frame):
             fortification_requirements, riposte_requirements, magic_reflection_requirements, evasive_manoeuvres_requirements, \
             reckless_flurry_requirements, eviscerate_requirements, exploit_weakness_requirements, scrap_bomb_requirements, \
             play_dead_requirements, survival_kit_requirements, uppercut_requirements, knock_out_requirements, \
-            wide_swing_requirements, arcane_brilliance_requirements, vine_swipe_requirements, burst_n_bloom_requirements, \
+            wide_swing_requirements, arcane_brilliance_requirements, invigorate_thorns_requirements, \
             wound_fissure_requirements, blood_boil_requirements, enharden_nerves_requirements, righteous_blow_requirements, \
             crusade_requirements, damnation_requirements, power_shot_requirements, multi_shot_requirements, \
-            ricochet_shot_requirements, energise_requirements, superconductor_requirements, ocean_tides_requirements, \
+            ricochet_shot_requirements, energise_requirements, superconductor_requirements, ocean_tides_requirements, boulder_cocoon_requirements, \
             alter_time_requirements, tight_tourniquet_requirements, secret_remedy_requirements, \
             champion1_immunity, champion2_immunity, champion3_immunity, champion4_immunity, champion5_immunity, \
             champion1_fullPotential, champion2_fullPotential, champion3_fullPotential, champion4_fullPotential, champion5_fullPotential, \
@@ -30382,10 +30403,8 @@ class GameFrame(tk.Frame):
                 if arcane_brilliance_requirements[3] > 0:
                     arcane_brilliance_requirements[3] = arcane_brilliance_requirements[3] - 1
             if CHAMPION_LIST[0] == "Druid":
-                if vine_swipe_requirements[3] > 0:
-                    vine_swipe_requirements[3] = vine_swipe_requirements[3] - 1
-                if burst_n_bloom_requirements[3] > 0:
-                    burst_n_bloom_requirements[3] = burst_n_bloom_requirements[3] - 1
+                if invigorate_thorns_requirements[3] > 0:
+                    invigorate_thorns_requirements[3] = invigorate_thorns_requirements[3] - 1
             if CHAMPION_LIST[0] == "Warlock":
                 if wound_fissure_requirements[3] > 0:
                     wound_fissure_requirements[3] = wound_fissure_requirements[3] - 1
@@ -30416,6 +30435,8 @@ class GameFrame(tk.Frame):
             if CHAMPION_LIST[0] == "Earth Speaker":
                 if ocean_tides_requirements[3] > 0:
                     ocean_tides_requirements[3] = ocean_tides_requirements[3] - 1
+                if boulder_cocoon_requirements[3] > 0:
+                    boulder_cocoon_requirements[3] = boulder_cocoon_requirements[3] - 1
             if CHAMPION_LIST[0] == "Time Walker":
                 if alter_time_requirements[3] > 0:
                     alter_time_requirements[3] = alter_time_requirements[3] - 1
@@ -30540,10 +30561,8 @@ class GameFrame(tk.Frame):
                 if arcane_brilliance_requirements[3] > 0:
                     arcane_brilliance_requirements[3] = arcane_brilliance_requirements[3] - 1
             if CHAMPION_LIST[1] == "Druid":
-                if vine_swipe_requirements[3] > 0:
-                    vine_swipe_requirements[3] = vine_swipe_requirements[3] - 1
-                if burst_n_bloom_requirements[3] > 0:
-                    burst_n_bloom_requirements[3] = burst_n_bloom_requirements[3] - 1
+                if invigorate_thorns_requirements[3] > 0:
+                    invigorate_thorns_requirements[3] = invigorate_thorns_requirements[3] - 1
             if CHAMPION_LIST[1] == "Warlock":
                 if wound_fissure_requirements[3] > 0:
                     wound_fissure_requirements[3] = wound_fissure_requirements[3] - 1
@@ -30574,6 +30593,8 @@ class GameFrame(tk.Frame):
             if CHAMPION_LIST[1] == "Earth Speaker":
                 if ocean_tides_requirements[3] > 0:
                     ocean_tides_requirements[3] = ocean_tides_requirements[3] - 1
+                if boulder_cocoon_requirements[3] > 0:
+                    boulder_cocoon_requirements[3] = boulder_cocoon_requirements[3] - 1
             if CHAMPION_LIST[1] == "Time Walker":
                 if alter_time_requirements[3] > 0:
                     alter_time_requirements[3] = alter_time_requirements[3] - 1
@@ -30662,10 +30683,8 @@ class GameFrame(tk.Frame):
                 if arcane_brilliance_requirements[3] > 0:
                     arcane_brilliance_requirements[3] = arcane_brilliance_requirements[3] - 1
             if CHAMPION_LIST[2] == "Druid":
-                if vine_swipe_requirements[3] > 0:
-                    vine_swipe_requirements[3] = vine_swipe_requirements[3] - 1
-                if burst_n_bloom_requirements[3] > 0:
-                    burst_n_bloom_requirements[3] = burst_n_bloom_requirements[3] - 1
+                if invigorate_thorns_requirements[3] > 0:
+                    invigorate_thorns_requirements[3] = invigorate_thorns_requirements[3] - 1
             if CHAMPION_LIST[2] == "Warlock":
                 if wound_fissure_requirements[3] > 0:
                     wound_fissure_requirements[3] = wound_fissure_requirements[3] - 1
@@ -30696,6 +30715,8 @@ class GameFrame(tk.Frame):
             if CHAMPION_LIST[2] == "Earth Speaker":
                 if ocean_tides_requirements[3] > 0:
                     ocean_tides_requirements[3] = ocean_tides_requirements[3] - 1
+                if boulder_cocoon_requirements[3] > 0:
+                    boulder_cocoon_requirements[3] = boulder_cocoon_requirements[3] - 1
             if CHAMPION_LIST[2] == "Time Walker":
                 if alter_time_requirements[3] > 0:
                     alter_time_requirements[3] = alter_time_requirements[3] - 1
@@ -30784,10 +30805,8 @@ class GameFrame(tk.Frame):
                 if arcane_brilliance_requirements[3] > 0:
                     arcane_brilliance_requirements[3] = arcane_brilliance_requirements[3] - 1
             if CHAMPION_LIST[3] == "Druid":
-                if vine_swipe_requirements[3] > 0:
-                    vine_swipe_requirements[3] = vine_swipe_requirements[3] - 1
-                if burst_n_bloom_requirements[3] > 0:
-                    burst_n_bloom_requirements[3] = burst_n_bloom_requirements[3] - 1
+                if invigorate_thorns_requirements[3] > 0:
+                    invigorate_thorns_requirements[3] = invigorate_thorns_requirements[3] - 1
             if CHAMPION_LIST[3] == "Warlock":
                 if wound_fissure_requirements[3] > 0:
                     wound_fissure_requirements[3] = wound_fissure_requirements[3] - 1
@@ -30818,6 +30837,8 @@ class GameFrame(tk.Frame):
             if CHAMPION_LIST[3] == "Earth Speaker":
                 if ocean_tides_requirements[3] > 0:
                     ocean_tides_requirements[3] = ocean_tides_requirements[3] - 1
+                if boulder_cocoon_requirements[3] > 0:
+                    boulder_cocoon_requirements[3] = boulder_cocoon_requirements[3] - 1
             if CHAMPION_LIST[3] == "Time Walker":
                 if alter_time_requirements[3] > 0:
                     alter_time_requirements[3] = alter_time_requirements[3] - 1
@@ -30906,10 +30927,8 @@ class GameFrame(tk.Frame):
                 if arcane_brilliance_requirements[3] > 0:
                     arcane_brilliance_requirements[3] = arcane_brilliance_requirements[3] - 1
             if CHAMPION_LIST[4] == "Druid":
-                if vine_swipe_requirements[3] > 0:
-                    vine_swipe_requirements[3] = vine_swipe_requirements[3] - 1
-                if burst_n_bloom_requirements[3] > 0:
-                    burst_n_bloom_requirements[3] = burst_n_bloom_requirements[3] - 1
+                if invigorate_thorns_requirements[3] > 0:
+                    invigorate_thorns_requirements[3] = invigorate_thorns_requirements[3] - 1
             if CHAMPION_LIST[4] == "Warlock":
                 if wound_fissure_requirements[3] > 0:
                     wound_fissure_requirements[3] = wound_fissure_requirements[3] - 1
@@ -30940,6 +30959,8 @@ class GameFrame(tk.Frame):
             if CHAMPION_LIST[4] == "Earth Speaker":
                 if ocean_tides_requirements[3] > 0:
                     ocean_tides_requirements[3] = ocean_tides_requirements[3] - 1
+                if boulder_cocoon_requirements[3] > 0:
+                    boulder_cocoon_requirements[3] = boulder_cocoon_requirements[3] - 1
             if CHAMPION_LIST[4] == "Time Walker":
                 if alter_time_requirements[3] > 0:
                     alter_time_requirements[3] = alter_time_requirements[3] - 1
@@ -31309,6 +31330,7 @@ class GameFrame(tk.Frame):
             elif fraction_collected_emblems == 0.67:
                 new_total_emblems = new_total_emblems - 0.67
                 new_total_emblems = new_total_emblems + 1
+            new_total_emblems = new_total_emblems + whole_collected_emblems
         elif ".67" in str(old_total_emblems):
             if fraction_collected_emblems == 0.33:
                 new_total_emblems = new_total_emblems - 0.67
@@ -31316,10 +31338,13 @@ class GameFrame(tk.Frame):
             elif fraction_collected_emblems == 0.67:
                 new_total_emblems = new_total_emblems - 0.67
                 new_total_emblems = new_total_emblems + 1.33
+            new_total_emblems = new_total_emblems + whole_collected_emblems
+        else:
+            new_total_emblems = new_total_emblems + total_collected_emblems
         invis_label1 = tk.Label(endgame_window)
         invis_label2 = tk.Label(endgame_window)
         title_label = tk.Label(endgame_window, text="You're exploration ends here", font=self.small_title_font)
-        final_progress_label = tk.Label(endgame_window, text="But you've made it past {} Floors and {} Rooms, thats {} Rooms total!".format(floor_level, room_level, total_rooms))
+        final_progress_label = tk.Label(endgame_window, text="But you've made it past {} Floors and {} Rooms, thats {} Rooms total!".format(floor_level, room_level-1, total_rooms))
         player_rank = ParentClass.get_account_data(self, "rank")
         if player_rank != dungeon_settings:
             emblems_update_label = tk.Label(endgame_window,
@@ -31416,7 +31441,7 @@ class GameFrame(tk.Frame):
                 file_write.writelines(file_allLines)
                 file.close()
                 file_write.close()
-# 
+#NotYetImplimented supposed to show all the credits of who worked on this game
 class CreditPage(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
@@ -31426,7 +31451,8 @@ class CreditPage(tk.Frame):
         button = tk.Button(self, text="Return to Menu",
                            command=lambda: controller.show_frame("MainMenu"))
         button.grid()
-# 
+#Frame that gives the user a whole catalogue of tutorials that they can look through to learn more about the game
+#Has tutorials on Navigating the Menus, Champions Basics, Choosing your Team, Dungeon Difficulties, The Combat Cycle, and the Ranking System
 class How2PlayPage(tk.Frame):
     def __init__(self, parent, controller):
         global tutorial_frame
@@ -31443,23 +31469,460 @@ class How2PlayPage(tk.Frame):
         for widget in tutorial_frame.winfo_children():
             widget.destroy()
         title_label = tk.Label(tutorial_frame, text="How To Play", font=self.small_title_font)
-        choosing_team_tutorial_button = tk.Button(tutorial_frame, text=":Choosing your team:", font=self.menu_button_font, width=20, command=self.choosing_team_tutorial_page1)
+        navigating_menus_tutorial_button = tk.Button(tutorial_frame, text=":Navigating the Menus:", font=self.menu_button_font, width=20, command=self.navigating_menu_tutorial_page1)
+        choosing_team_tutorial_button = tk.Button(tutorial_frame, text=":Champion Information:", font=self.menu_button_font, width=20, command=self.champion_information_tutorial_menu)
         entering_dungeon_tutorial_button = tk.Button(tutorial_frame, text=":Entering the Dungeon:", font=self.menu_button_font, width=20, command=self.entering_the_dungeon_tutorial_menu)
-        other_features_tutorial_button = tk.Button(tutorial_frame, text=":Leaderboard:", font=self.menu_button_font, width=16)
+        other_features_tutorial_button = tk.Button(tutorial_frame, text=":Ranking System:", font=self.menu_button_font, width=16, command=self.ranking_system_tutorial_page1)
         invis_label = tk.Label(tutorial_frame)
         invis_label.grid(row=1,column=0, padx=160)
-        title_label.grid(row=1, column=1, sticky="nsew", pady=10)
-        choosing_team_tutorial_button.grid(row=2, column=1, pady=10)
-        entering_dungeon_tutorial_button.grid(row=3, column=1, pady=10)
-        other_features_tutorial_button.grid(row=4, column=1, pady=10)
+        title_label.grid(row=1, column=1, sticky="nsew")
+        navigating_menus_tutorial_button.grid(row=2, column=1, pady=10)
+        choosing_team_tutorial_button.grid(row=3, column=1, pady=10)
+        entering_dungeon_tutorial_button.grid(row=4, column=1, pady=10)
+        other_features_tutorial_button.grid(row=5, column=1, pady=10)
         button = tk.Button(tutorial_frame, text="Return to Menu",
                            command=lambda: ParentClass.show_frame(app, "MainMenu"))
+        button.grid(row=6, column=1)
+    def navigating_menu_tutorial_page1(self):
+        for widget in tutorial_frame.winfo_children():
+            widget.destroy()
+        title_label = tk.Label(tutorial_frame, text="Navigating the Menus", font=self.small_title_font)
+        slide_progress = tk.Label(tutorial_frame, text="1/10", font=self.medium_text_font_bold)
+        navigating_menus_tutorial_text_label = tk.Label(tutorial_frame, text="Welcome to Dungeons of Strife!\n"
+                                                    "First thing to know before you play is knowing how to navigate all the different menus\n"
+                                                    "This tutorial will take you around the games menus and give a brief description so you understand a basic whats what\n"
+                                                    "The image below shows the 'Surface Menu'\n"
+                                                    "Think of this as the Main Menu, from here you'll be able to get everywhere")
+        img1 = Image.open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Images/NavigatingMenus/navigatingMenus_tutorial_picture1.png".format(COMPUTER_USERNAME))
+        img1.thumbnail((450, 450))
+        img1 = ImageTk.PhotoImage(img1)
+        image_label = tk.Label(tutorial_frame, image=img1)
+        image_label.image = img1
+        image_label.grid(row=4, column=1)
+        next_button = tk.Button(tutorial_frame, text="Next Slide", font=self.menu_button_font, command=self.navigating_menu_tutorial_page2)
+        exit_button = tk.Button(tutorial_frame, text="Exit", font=self.menu_button_font, command=self.opening_tutorial_menu)
+        invis_label = tk.Label(tutorial_frame)
+        invis_label.grid(row=1,column=0, padx=48)
+        title_label.grid(row=1, column=1, sticky="nsew")
+        slide_progress.grid(row=2, column=1, pady=10)
+        navigating_menus_tutorial_text_label.grid(row=3, column=1, pady=10)
+        next_button.grid(row=5, column=1)
+        exit_button.grid(row=6, column=1)
+    def navigating_menu_tutorial_page2(self):
+        for widget in tutorial_frame.winfo_children():
+            widget.destroy()
+        title_label = tk.Label(tutorial_frame, text="Navigating the Menus", font=self.small_title_font)
+        slide_progress = tk.Label(tutorial_frame, text="2/10", font=self.medium_text_font_bold)
+        navigating_menus_tutorial_text_label = tk.Label(tutorial_frame, text="Firstly, we'll look into the 'Delve into the Dungeon' button\n"
+                                                    "This button will send you to the dungeon's entrance, where you'll be able to choose your difficulty and begin playing")
+        img2 = Image.open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Images/NavigatingMenus/navigatingMenus_tutorial_picture2.png".format(COMPUTER_USERNAME))
+        img2.thumbnail((450, 450))
+        img2 = ImageTk.PhotoImage(img2)
+        image_label = tk.Label(tutorial_frame, image=img2)
+        image_label.image = img2
+        image_label.grid(row=4, column=1)
+        next_button = tk.Button(tutorial_frame, text="Next Slide", font=self.menu_button_font, command=self.navigating_menu_tutorial_page3)
+        previous_button = tk.Button(tutorial_frame, text="Previous Slide", font=self.menu_button_font, command=self.navigating_menu_tutorial_page1)
+        exit_button = tk.Button(tutorial_frame, text="Exit", font=self.menu_button_font, command=self.opening_tutorial_menu)
+        invis_label = tk.Label(tutorial_frame)
+        invis_label.grid(row=1,column=0, padx=48)
+        title_label.grid(row=1, column=1, sticky="nsew")
+        slide_progress.grid(row=2, column=1, pady=10)
+        navigating_menus_tutorial_text_label.grid(row=3, column=1, pady=10)
+        next_button.grid(row=5, column=1)
+        previous_button.grid(row=6, column=1)
+        exit_button.grid(row=7, column=1)
+    def navigating_menu_tutorial_page3(self):
+        for widget in tutorial_frame.winfo_children():
+            widget.destroy()
+        title_label = tk.Label(tutorial_frame, text="Navigating the Menus", font=self.small_title_font)
+        slide_progress = tk.Label(tutorial_frame, text="3/10", font=self.medium_text_font_bold)
+        navigating_menus_tutorial_text_label = tk.Label(tutorial_frame, text="This is the Dungeon entrance menu\n"
+                                                    "The highlighted button is how you begin playing\n"
+                                                    "When you've put together your champion team and picked your difficulty, you'll be able to explore the dungeon")
+        img3 = Image.open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Images/NavigatingMenus/navigatingMenus_tutorial_picture3.png".format(COMPUTER_USERNAME))
+        img3.thumbnail((450, 450))
+        img3 = ImageTk.PhotoImage(img3)
+        image_label = tk.Label(tutorial_frame, image=img3)
+        image_label.image = img3
+        image_label.grid(row=4, column=1)
+        next_button = tk.Button(tutorial_frame, text="Next Slide", font=self.menu_button_font, command=self.navigating_menu_tutorial_page4)
+        previous_button = tk.Button(tutorial_frame, text="Previous Slide", font=self.menu_button_font, command=self.navigating_menu_tutorial_page2)
+        exit_button = tk.Button(tutorial_frame, text="Exit", font=self.menu_button_font, command=self.opening_tutorial_menu)
+        invis_label = tk.Label(tutorial_frame)
+        invis_label.grid(row=1,column=0, padx=48)
+        title_label.grid(row=1, column=1, sticky="nsew")
+        slide_progress.grid(row=2, column=1, pady=10)
+        navigating_menus_tutorial_text_label.grid(row=3, column=1, pady=10)
+        next_button.grid(row=5, column=1)
+        previous_button.grid(row=6, column=1)
+        exit_button.grid(row=7, column=1)
+    def navigating_menu_tutorial_page4(self):
+        for widget in tutorial_frame.winfo_children():
+            widget.destroy()
+        title_label = tk.Label(tutorial_frame, text="Navigating the Menus", font=self.small_title_font)
+        slide_progress = tk.Label(tutorial_frame, text="4/10", font=self.medium_text_font_bold)
+        navigating_menus_tutorial_text_label = tk.Label(tutorial_frame, text="The highlighted button is how you'll pick the dungeon difficulty\n"
+                                                    "For an indepth tutorial on dungeon difficulty, look for the 'Dungeon Difficulties' tutorial section")
+        img4 = Image.open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Images/NavigatingMenus/navigatingMenus_tutorial_picture4.png".format(COMPUTER_USERNAME))
+        img4.thumbnail((450, 450))
+        img4 = ImageTk.PhotoImage(img4)
+        image_label = tk.Label(tutorial_frame, image=img4)
+        image_label.image = img4
+        image_label.grid(row=4, column=1)
+        next_button = tk.Button(tutorial_frame, text="Next Slide", font=self.menu_button_font, command=self.navigating_menu_tutorial_page5)
+        previous_button = tk.Button(tutorial_frame, text="Previous Slide", font=self.menu_button_font, command=self.navigating_menu_tutorial_page3)
+        exit_button = tk.Button(tutorial_frame, text="Exit", font=self.menu_button_font, command=self.opening_tutorial_menu)
+        invis_label = tk.Label(tutorial_frame)
+        invis_label.grid(row=1,column=0, padx=48)
+        title_label.grid(row=1, column=1, sticky="nsew")
+        slide_progress.grid(row=2, column=1, pady=10)
+        navigating_menus_tutorial_text_label.grid(row=3, column=1, pady=10)
+        next_button.grid(row=5, column=1)
+        previous_button.grid(row=6, column=1)
+        exit_button.grid(row=7, column=1)
+    def navigating_menu_tutorial_page5(self):
+        for widget in tutorial_frame.winfo_children():
+            widget.destroy()
+        title_label = tk.Label(tutorial_frame, text="Navigating the Menus", font=self.small_title_font)
+        slide_progress = tk.Label(tutorial_frame, text="5/10", font=self.medium_text_font_bold)
+        navigating_menus_tutorial_text_label = tk.Label(tutorial_frame, text="Now we're back to the surface menu, we'll go over all the other buttons\n"
+                                                    "The highlighed button is where you'll put together you're team of 5 unqiue champions that you'll take into the dungeon\n"
+                                                    "For an indepth tutorial on how to recruit champions to your team, look for the 'Choosing your Team' tutorial section")
+        img5 = Image.open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Images/NavigatingMenus/navigatingMenus_tutorial_picture5.png".format(COMPUTER_USERNAME))
+        img5.thumbnail((450, 450))
+        img5 = ImageTk.PhotoImage(img5)
+        image_label = tk.Label(tutorial_frame, image=img5)
+        image_label.image = img5
+        image_label.grid(row=4, column=1)
+        next_button = tk.Button(tutorial_frame, text="Next Slide", font=self.menu_button_font, command=self.navigating_menu_tutorial_page6)
+        previous_button = tk.Button(tutorial_frame, text="Previous Slide", font=self.menu_button_font, command=self.navigating_menu_tutorial_page4)
+        exit_button = tk.Button(tutorial_frame, text="Exit", font=self.menu_button_font, command=self.opening_tutorial_menu)
+        invis_label = tk.Label(tutorial_frame)
+        invis_label.grid(row=1,column=0, padx=48)
+        title_label.grid(row=1, column=1, sticky="nsew")
+        slide_progress.grid(row=2, column=1, pady=10)
+        navigating_menus_tutorial_text_label.grid(row=3, column=1, pady=10)
+        next_button.grid(row=5, column=1)
+        previous_button.grid(row=6, column=1)
+        exit_button.grid(row=7, column=1)
+    def navigating_menu_tutorial_page6(self):
+        for widget in tutorial_frame.winfo_children():
+            widget.destroy()
+        title_label = tk.Label(tutorial_frame, text="Navigating the Menus", font=self.small_title_font)
+        slide_progress = tk.Label(tutorial_frame, text="6/10", font=self.medium_text_font_bold)
+        navigating_menus_tutorial_text_label = tk.Label(tutorial_frame, text="The highlighted button is where you can look at your current rank (currently NYI)\n"
+                                                    "For an indepth tutorial on how the ranking system works, look for the 'Ranking System' tutorial section")
+        img6 = Image.open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Images/NavigatingMenus/navigatingMenus_tutorial_picture6.png".format(COMPUTER_USERNAME))
+        img6.thumbnail((450, 450))
+        img6 = ImageTk.PhotoImage(img6)
+        image_label = tk.Label(tutorial_frame, image=img6)
+        image_label.image = img6
+        image_label.grid(row=4, column=1)
+        next_button = tk.Button(tutorial_frame, text="Next Slide", font=self.menu_button_font, command=self.navigating_menu_tutorial_page7)
+        previous_button = tk.Button(tutorial_frame, text="Previous Slide", font=self.menu_button_font, command=self.navigating_menu_tutorial_page5)
+        exit_button = tk.Button(tutorial_frame, text="Exit", font=self.menu_button_font, command=self.opening_tutorial_menu)
+        invis_label = tk.Label(tutorial_frame)
+        invis_label.grid(row=1,column=0, padx=48)
+        title_label.grid(row=1, column=1, sticky="nsew")
+        slide_progress.grid(row=2, column=1, pady=10)
+        navigating_menus_tutorial_text_label.grid(row=3, column=1, pady=10)
+        next_button.grid(row=5, column=1)
+        previous_button.grid(row=6, column=1)
+        exit_button.grid(row=7, column=1)
+    def navigating_menu_tutorial_page7(self):
+        for widget in tutorial_frame.winfo_children():
+            widget.destroy()
+        title_label = tk.Label(tutorial_frame, text="Navigating the Menus", font=self.small_title_font)
+        slide_progress = tk.Label(tutorial_frame, text="7/10", font=self.medium_text_font_bold)
+        navigating_menus_tutorial_text_label = tk.Label(tutorial_frame, text="The highlighted button is where you can go to for tutorials and information on how the game works\n"
+                                                    "You are always welcome to visit this this page if you've forgotten how a certain mechanic or page works")
+        img7 = Image.open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Images/NavigatingMenus/navigatingMenus_tutorial_picture7.png".format(COMPUTER_USERNAME))
+        img7.thumbnail((450, 450))
+        img7 = ImageTk.PhotoImage(img7)
+        image_label = tk.Label(tutorial_frame, image=img7)
+        image_label.image = img7
+        image_label.grid(row=4, column=1)
+        next_button = tk.Button(tutorial_frame, text="Next Slide", font=self.menu_button_font, command=self.navigating_menu_tutorial_page8)
+        previous_button = tk.Button(tutorial_frame, text="Previous Slide", font=self.menu_button_font, command=self.navigating_menu_tutorial_page6)
+        exit_button = tk.Button(tutorial_frame, text="Exit", font=self.menu_button_font, command=self.opening_tutorial_menu)
+        invis_label = tk.Label(tutorial_frame)
+        invis_label.grid(row=1,column=0, padx=48)
+        title_label.grid(row=1, column=1, sticky="nsew")
+        slide_progress.grid(row=2, column=1, pady=10)
+        navigating_menus_tutorial_text_label.grid(row=3, column=1, pady=10)
+        next_button.grid(row=5, column=1)
+        previous_button.grid(row=6, column=1)
+        exit_button.grid(row=7, column=1)
+    def navigating_menu_tutorial_page8(self):
+        for widget in tutorial_frame.winfo_children():
+            widget.destroy()
+        title_label = tk.Label(tutorial_frame, text="Navigating the Menus", font=self.small_title_font)
+        slide_progress = tk.Label(tutorial_frame, text="8/10", font=self.medium_text_font_bold)
+        navigating_menus_tutorial_text_label = tk.Label(tutorial_frame, text="The highlighted button is where you can see the people who worked on this game! (currently NYI)")
+        img8 = Image.open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Images/NavigatingMenus/navigatingMenus_tutorial_picture8.png".format(COMPUTER_USERNAME))
+        img8.thumbnail((450, 450))
+        img8 = ImageTk.PhotoImage(img8)
+        image_label = tk.Label(tutorial_frame, image=img8)
+        image_label.image = img8
+        image_label.grid(row=4, column=1)
+        next_button = tk.Button(tutorial_frame, text="Next Slide", font=self.menu_button_font, command=self.navigating_menu_tutorial_page9)
+        previous_button = tk.Button(tutorial_frame, text="Previous Slide", font=self.menu_button_font, command=self.navigating_menu_tutorial_page7)
+        exit_button = tk.Button(tutorial_frame, text="Exit", font=self.menu_button_font, command=self.opening_tutorial_menu)
+        invis_label = tk.Label(tutorial_frame)
+        invis_label.grid(row=1,column=0, padx=48)
+        title_label.grid(row=1, column=1, sticky="nsew")
+        slide_progress.grid(row=2, column=1, pady=10)
+        navigating_menus_tutorial_text_label.grid(row=3, column=1, pady=10)
+        next_button.grid(row=5, column=1)
+        previous_button.grid(row=6, column=1)
+        exit_button.grid(row=7, column=1)
+    def navigating_menu_tutorial_page9(self):
+        for widget in tutorial_frame.winfo_children():
+            widget.destroy()
+        title_label = tk.Label(tutorial_frame, text="Navigating the Menus", font=self.small_title_font)
+        slide_progress = tk.Label(tutorial_frame, text="9/10", font=self.medium_text_font_bold)
+        navigating_menus_tutorial_text_label = tk.Label(tutorial_frame, text="The highlighted button is how you can exit the game once you're done playing")
+        img9 = Image.open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Images/NavigatingMenus/navigatingMenus_tutorial_picture9.png".format(COMPUTER_USERNAME))
+        img9.thumbnail((450, 450))
+        img9 = ImageTk.PhotoImage(img9)
+        image_label = tk.Label(tutorial_frame, image=img9)
+        image_label.image = img9
+        image_label.grid(row=4, column=1)
+        next_button = tk.Button(tutorial_frame, text="Next Slide", font=self.menu_button_font, command=self.navigating_menu_tutorial_page10)
+        previous_button = tk.Button(tutorial_frame, text="Previous Slide", font=self.menu_button_font, command=self.navigating_menu_tutorial_page8)
+        exit_button = tk.Button(tutorial_frame, text="Exit", font=self.menu_button_font, command=self.opening_tutorial_menu)
+        invis_label = tk.Label(tutorial_frame)
+        invis_label.grid(row=1,column=0, padx=48)
+        title_label.grid(row=1, column=1, sticky="nsew")
+        slide_progress.grid(row=2, column=1, pady=10)
+        navigating_menus_tutorial_text_label.grid(row=3, column=1, pady=10)
+        next_button.grid(row=5, column=1)
+        previous_button.grid(row=6, column=1)
+        exit_button.grid(row=7, column=1)
+    def navigating_menu_tutorial_page10(self):
+        for widget in tutorial_frame.winfo_children():
+            widget.destroy()
+        title_label = tk.Label(tutorial_frame, text="Navigating the Menus", font=self.small_title_font)
+        slide_progress = tk.Label(tutorial_frame, text="10/10", font=self.medium_text_font_bold)
+        navigating_menus_tutorial_text_label = tk.Label(tutorial_frame, text="That's it!\n"
+                                                    "You now know a basic understanding of how to navigate the menus of Dungeons of Strife\n"
+                                                    "If you ever forget where anything is, don't be shy to return and look it up!")
+        previous_button = tk.Button(tutorial_frame, text="Previous Slide", font=self.menu_button_font, command=self.navigating_menu_tutorial_page9)
+        exit_button = tk.Button(tutorial_frame, text="Exit", font=self.menu_button_font, command=self.opening_tutorial_menu)
+        invis_label = tk.Label(tutorial_frame)
+        invis_label.grid(row=1,column=0, padx=48)
+        title_label.grid(row=1, column=1, sticky="nsew")
+        slide_progress.grid(row=2, column=1, pady=10)
+        navigating_menus_tutorial_text_label.grid(row=3, column=1, pady=10)
+        previous_button.grid(row=6, column=1)
+        exit_button.grid(row=7, column=1)
+    def champion_information_tutorial_menu(self):
+        for widget in tutorial_frame.winfo_children():
+            widget.destroy()
+        title_label = tk.Label(tutorial_frame, text="Champion Information", font=self.small_title_font)
+        champion_basics_tutorial_button = tk.Button(tutorial_frame, text=":Champion Basics:", font=self.menu_button_font, width=20, command=self.champion_basics_tutorial_page1)
+        choosing_team_tutorial_button = tk.Button(tutorial_frame, text=":Choosing your Team:", font=self.menu_button_font, width=20, command=self.choosing_team_tutorial_page1)
+        invis_label = tk.Label(tutorial_frame)
+        invis_label.grid(row=1,column=0, padx=40)
+        title_label.grid(row=1, column=1, sticky="nsew")
+        champion_basics_tutorial_button.grid(row=2, column=1, pady=10)
+        choosing_team_tutorial_button.grid(row=3, column=1, pady=10)
+        button = tk.Button(tutorial_frame, text="Back", command=self.opening_tutorial_menu)
         button.grid(row=5, column=1)
+    def champion_basics_tutorial_page1(self):
+        for widget in tutorial_frame.winfo_children():
+            widget.destroy()
+        title_label = tk.Label(tutorial_frame, text="Champion Basics", font=self.small_title_font)
+        slide_progress = tk.Label(tutorial_frame, text="1/8", font=self.medium_text_font_bold)
+        champion_basics_tutorial_text_label = tk.Label(tutorial_frame, text="Understanding how champions work in Dungeons of Strife is extremely important as gameplay is based entirely around them\n"
+                                                        "This tutorial will dive into what makes a champion a champion. How they're built and what you need to understand to get a grip with their mechanics")
+        next_button = tk.Button(tutorial_frame, text="Next Slide", font=self.menu_button_font, command=self.champion_basics_tutorial_page2)
+        exit_button = tk.Button(tutorial_frame, text="Exit", font=self.menu_button_font, command=self.champion_information_tutorial_menu)
+        invis_label = tk.Label(tutorial_frame)
+        invis_label.grid(row=1,column=0, padx=90)
+        title_label.grid(row=1, column=1, sticky="nsew")
+        slide_progress.grid(row=2, column=1, pady=10)
+        champion_basics_tutorial_text_label.grid(row=3, column=1, pady=10)
+        next_button.grid(row=5, column=1)
+        exit_button.grid(row=6, column=1)
+    def champion_basics_tutorial_page2(self):
+        for widget in tutorial_frame.winfo_children():
+            widget.destroy()
+        title_label = tk.Label(tutorial_frame, text="Champion Basics", font=self.small_title_font)
+        slide_progress = tk.Label(tutorial_frame, text="2/8", font=self.medium_text_font_bold)
+        champion_basics_tutorial_text_label = tk.Label(tutorial_frame, text="First thing to know about champions is their specialisation\n"
+                                                        "Specialisations are catagories that champions fall into based on what they do with their kit\n"
+                                                        "There are three specialisations:\n"
+                                                        "Tanks, who try reducing the damage their team takes\n"
+                                                        "Damage Dealers, who deal as much damage as possible to the enemy monsters\n"
+                                                        "Healers, who heal back the damage their team takes\n"
+                                                        "Each specialisation plays a role in their teams survival in the dungeon\n"
+                                                        "Out of the total 20 champions, 4 are tanks, 12 are damage dealers, and the last 4 are healers")
+        img2 = Image.open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Images/ChampionBasics/championBasics_tutorial_picture1.png".format(COMPUTER_USERNAME))
+        img2.thumbnail((400, 400))
+        img2 = ImageTk.PhotoImage(img2)
+        image_label = tk.Label(tutorial_frame, image=img2)
+        image_label.image = img2
+        image_label.grid(row=4, column=1)
+        next_button = tk.Button(tutorial_frame, text="Next Slide", font=self.menu_button_font, command=self.champion_basics_tutorial_page3)
+        previous_button = tk.Button(tutorial_frame, text="Previous Slide", font=self.menu_button_font, command=self.champion_basics_tutorial_page1)
+        exit_button = tk.Button(tutorial_frame, text="Exit", font=self.menu_button_font, command=self.champion_information_tutorial_menu)
+        invis_label = tk.Label(tutorial_frame)
+        invis_label.grid(row=1, column=0, padx=90)
+        title_label.grid(row=1, column=1, sticky="nsew")
+        slide_progress.grid(row=2, column=1, pady=10)
+        champion_basics_tutorial_text_label.grid(row=3, column=1, pady=10)
+        next_button.grid(row=5, column=1)
+        previous_button.grid(row=6, column=1)
+        exit_button.grid(row=7, column=1)
+    def champion_basics_tutorial_page3(self):
+        for widget in tutorial_frame.winfo_children():
+            widget.destroy()
+        title_label = tk.Label(tutorial_frame, text="Champion Basics", font=self.small_title_font)
+        slide_progress = tk.Label(tutorial_frame, text="3/8", font=self.medium_text_font_bold)
+        attacks_tutorial_label = tk.Label(tutorial_frame, text="Attacks", font=self.medium_text_font_bold)
+        champion_basics_tutorial_text_label = tk.Label(tutorial_frame, text="Attacks are the most basic forms of damage that champions can utilise to destroy their enemies\n"
+                                                        "Not all attacks deal direct damage, though most do. but a lot of attacks have extra special effects\n"
+                                                        "Whether that be from debuffing the enemy, or buffing their next attack\n"
+                                                        "Attacks are extremely reliable forms of damage and value from an action")
+        next_button = tk.Button(tutorial_frame, text="Next Slide", font=self.menu_button_font, command=self.champion_basics_tutorial_page4)
+        previous_button = tk.Button(tutorial_frame, text="Previous Slide", font=self.menu_button_font, command=self.champion_basics_tutorial_page2)
+        exit_button = tk.Button(tutorial_frame, text="Exit", font=self.menu_button_font, command=self.champion_information_tutorial_menu)
+        invis_label = tk.Label(tutorial_frame)
+        invis_label.grid(row=1, column=0, padx=90)
+        title_label.grid(row=1, column=1, sticky="nsew")
+        slide_progress.grid(row=2, column=1, pady=10)
+        champion_basics_tutorial_text_label.grid(row=4, column=1, pady=10)
+        attacks_tutorial_label.grid(row=3, column=1)
+        next_button.grid(row=5, column=1)
+        previous_button.grid(row=6, column=1)
+        exit_button.grid(row=7, column=1)
+    def champion_basics_tutorial_page4(self):
+        for widget in tutorial_frame.winfo_children():
+            widget.destroy()
+        title_label = tk.Label(tutorial_frame, text="Champion Basics", font=self.small_title_font)
+        slide_progress = tk.Label(tutorial_frame, text="4/8", font=self.medium_text_font_bold)
+        specials_tutorial_label = tk.Label(tutorial_frame, text="Specials", font=self.medium_text_font_bold)
+        champion_basics_tutorial_text_label = tk.Label(tutorial_frame, text="Specials are what they're called 'Special'. They do unique and cool effects that further the kit of each champion\n"
+                                                        "Not all specials deal damage, some grant buffs, some grant protection, and some debuff enemies\n"
+                                                        "Specials can be very powerful when used in the right situations")
+        next_button = tk.Button(tutorial_frame, text="Next Slide", font=self.menu_button_font, command=self.champion_basics_tutorial_page5)
+        previous_button = tk.Button(tutorial_frame, text="Previous Slide", font=self.menu_button_font, command=self.champion_basics_tutorial_page3)
+        exit_button = tk.Button(tutorial_frame, text="Exit", font=self.menu_button_font, command=self.champion_information_tutorial_menu)
+        invis_label = tk.Label(tutorial_frame)
+        invis_label.grid(row=1, column=0, padx=90)
+        title_label.grid(row=1, column=1, sticky="nsew")
+        slide_progress.grid(row=2, column=1, pady=10)
+        specials_tutorial_label.grid(row=3, column=1)
+        champion_basics_tutorial_text_label.grid(row=4, column=1, pady=10)
+        next_button.grid(row=5, column=1)
+        previous_button.grid(row=6, column=1)
+        exit_button.grid(row=7, column=1)
+    def champion_basics_tutorial_page5(self):
+        for widget in tutorial_frame.winfo_children():
+            widget.destroy()
+        title_label = tk.Label(tutorial_frame, text="Champion Basics", font=self.small_title_font)
+        slide_progress = tk.Label(tutorial_frame, text="5/8", font=self.medium_text_font_bold)
+        champion_basics_tutorial_text_label = tk.Label(tutorial_frame, text="Some abilities champions use require resources to use, but some even grant resource to use on other abilities\n"
+                                                        "When viewing the details of an abilities whether it be in combat or in the champion camp, abilities will show if they cost a certain amount of resource, or gain some when used\n"
+                                                        "Make sure when playing to always have a healthy amount of resource available so that you can always use your powerful moves when needed the most otherwise you will be left without them\n"
+                                                        "Here is a few examples of resource cost from some of the the Earth Speakers abilities")
+        img2 = Image.open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Images/ChampionBasics/championBasics_tutorial_picture2.png".format(COMPUTER_USERNAME))
+        img2.thumbnail((400, 400))
+        img2 = ImageTk.PhotoImage(img2)
+        image_label = tk.Label(tutorial_frame, image=img2)
+        image_label.image = img2
+        image_label.grid(row=4, column=1, sticky="w")
+        img3 = Image.open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Images/ChampionBasics/championBasics_tutorial_picture3.png".format(COMPUTER_USERNAME))
+        img3.thumbnail((400, 400))
+        img3 = ImageTk.PhotoImage(img3)
+        image_label = tk.Label(tutorial_frame, image=img3)
+        image_label.image = img3
+        image_label.grid(row=4, column=1, sticky="e")
+        next_button = tk.Button(tutorial_frame, text="Next Slide", font=self.menu_button_font, command=self.champion_basics_tutorial_page6)
+        previous_button = tk.Button(tutorial_frame, text="Previous Slide", font=self.menu_button_font, command=self.champion_basics_tutorial_page4)
+        exit_button = tk.Button(tutorial_frame, text="Exit", font=self.menu_button_font, command=self.champion_information_tutorial_menu)
+        invis_label = tk.Label(tutorial_frame)
+        invis_label.grid(row=1, column=0, padx=50)
+        title_label.grid(row=1, column=1, sticky="nsew")
+        slide_progress.grid(row=2, column=1, pady=10)
+        champion_basics_tutorial_text_label.grid(row=3, column=1, pady=10)
+        next_button.grid(row=5, column=1)
+        previous_button.grid(row=6, column=1)
+        exit_button.grid(row=7, column=1)
+    def champion_basics_tutorial_page6(self):
+        for widget in tutorial_frame.winfo_children():
+            widget.destroy()
+        title_label = tk.Label(tutorial_frame, text="Champion Basics", font=self.small_title_font)
+        slide_progress = tk.Label(tutorial_frame, text="6/8", font=self.medium_text_font_bold)
+        champion_basics_tutorial_text_label = tk.Label(tutorial_frame, text="Some abilities even have cooldowns, meaning that once used, you'll have to wait a certain number of rounds before using them again\n"
+                                                        "Even powerful abilities that don't have a resource cost have cooldowns so that they aren't used over and over\n"
+                                                        "When viewing an ability you can see its inital cooldown and its remaining cooldown if used recently")
+        img4 = Image.open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Images/ChampionBasics/championBasics_tutorial_picture4.png".format(COMPUTER_USERNAME))
+        img4.thumbnail((550, 250))
+        img4 = ImageTk.PhotoImage(img4)
+        image_label = tk.Label(tutorial_frame, image=img4)
+        image_label.image = img4
+        image_label.grid(row=4, column=1)
+        next_button = tk.Button(tutorial_frame, text="Next Slide", font=self.menu_button_font, command=self.champion_basics_tutorial_page7)
+        previous_button = tk.Button(tutorial_frame, text="Previous Slide", font=self.menu_button_font, command=self.champion_basics_tutorial_page5)
+        exit_button = tk.Button(tutorial_frame, text="Exit", font=self.menu_button_font, command=self.champion_information_tutorial_menu)
+        invis_label = tk.Label(tutorial_frame)
+        invis_label.grid(row=1, column=0, padx=90)
+        title_label.grid(row=1, column=1, sticky="nsew")
+        slide_progress.grid(row=2, column=1, pady=10)
+        champion_basics_tutorial_text_label.grid(row=3, column=1, pady=10)
+        next_button.grid(row=5, column=1)
+        previous_button.grid(row=6, column=1)
+        exit_button.grid(row=7, column=1)
+    def champion_basics_tutorial_page7(self):
+        for widget in tutorial_frame.winfo_children():
+            widget.destroy()
+        title_label = tk.Label(tutorial_frame, text="Champion Basics", font=self.small_title_font)
+        slide_progress = tk.Label(tutorial_frame, text="7/8", font=self.medium_text_font_bold)
+        champion_basics_tutorial_text_label = tk.Label(tutorial_frame, text="Passives are what make each champion stand out from the rest\n"
+                                                        "Each champion has a passive, most champions passives synergize well with the abilities they have at their disposal but some champions passives actually support other champions instead\n"
+                                                        "Some passives are incredibly powerful, so make sure to check out every champions passive to find ones you like the look of!\n"
+                                                        "Heres the Earth Speakers passive, it gives the allies he heals a buff that protects them from damage while his heal over time is active on them")
+        img5 = Image.open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Images/ChampionBasics/championBasics_tutorial_picture5.png".format(COMPUTER_USERNAME))
+        img5.thumbnail((550, 250))
+        img5 = ImageTk.PhotoImage(img5)
+        image_label = tk.Label(tutorial_frame, image=img5)
+        image_label.image = img5
+        image_label.grid(row=4, column=1)
+        next_button = tk.Button(tutorial_frame, text="Next Slide", font=self.menu_button_font, command=self.champion_basics_tutorial_page8)
+        previous_button = tk.Button(tutorial_frame, text="Previous Slide", font=self.menu_button_font, command=self.champion_basics_tutorial_page6)
+        exit_button = tk.Button(tutorial_frame, text="Exit", font=self.menu_button_font, command=self.champion_information_tutorial_menu)
+        invis_label = tk.Label(tutorial_frame)
+        invis_label.grid(row=1, column=0, padx=70)
+        title_label.grid(row=1, column=1, sticky="nsew")
+        slide_progress.grid(row=2, column=1, pady=10)
+        champion_basics_tutorial_text_label.grid(row=3, column=1, pady=10)
+        next_button.grid(row=5, column=1)
+        previous_button.grid(row=6, column=1)
+        exit_button.grid(row=7, column=1)
+    def champion_basics_tutorial_page8(self):
+        for widget in tutorial_frame.winfo_children():
+            widget.destroy()
+        title_label = tk.Label(tutorial_frame, text="Champion Basics", font=self.small_title_font)
+        slide_progress = tk.Label(tutorial_frame, text="8/8", font=self.medium_text_font_bold)
+        champion_basics_tutorial_text_label = tk.Label(tutorial_frame, text="Thats it!\n"
+                                                        "You now know everything you need to know about the basic building blocks of what makes up champions")
+        previous_button = tk.Button(tutorial_frame, text="Previous Slide", font=self.menu_button_font, command=self.champion_basics_tutorial_page7)
+        exit_button = tk.Button(tutorial_frame, text="Exit", font=self.menu_button_font, command=self.champion_information_tutorial_menu)
+        invis_label = tk.Label(tutorial_frame)
+        invis_label.grid(row=1, column=0, padx=90)
+        title_label.grid(row=1, column=1, sticky="nsew")
+        slide_progress.grid(row=2, column=1, pady=10)
+        champion_basics_tutorial_text_label.grid(row=3, column=1, pady=10)
+        previous_button.grid(row=4, column=1)
+        exit_button.grid(row=5, column=1)
     def choosing_team_tutorial_page1(self):
         for widget in tutorial_frame.winfo_children():
             widget.destroy()
-        title_label = tk.Label(tutorial_frame, text="Choosing your team", font=self.small_title_font)
-        slide_progress = tk.Label(tutorial_frame, text="1/10", font=self.medium_text_font_bold)
+        title_label = tk.Label(tutorial_frame, text="Choosing your Team", font=self.small_title_font)
+        slide_progress = tk.Label(tutorial_frame, text="1/11", font=self.medium_text_font_bold)
         choosing_team_tutorial_text_label = tk.Label(tutorial_frame, text="Before you can enter the Dungeon, you must select five champions"
                                                                           " to accompany you into the depths\n"
                                                                           "To begin assembling your team, select 'Champion Camp' in the Main Menu")
@@ -31470,22 +31933,22 @@ class How2PlayPage(tk.Frame):
         image_label.image = img1
         image_label.grid(row=4, column=1)
         next_button = tk.Button(tutorial_frame, text="Next Slide", font=self.menu_button_font, command=self.choosing_team_tutorial_page2)
-        exit_button = tk.Button(tutorial_frame, text="Exit", font=self.menu_button_font, command=self.opening_tutorial_menu)
+        exit_button = tk.Button(tutorial_frame, text="Exit", font=self.menu_button_font, command=self.champion_information_tutorial_menu)
         invis_label = tk.Label(tutorial_frame)
         invis_label.grid(row=1,column=0, padx=48)
-        title_label.grid(row=1, column=1, sticky="nsew", pady=10)
+        title_label.grid(row=1, column=1, sticky="nsew")
         slide_progress.grid(row=2, column=1, pady=10)
         choosing_team_tutorial_text_label.grid(row=3, column=1, pady=10)
-        next_button.grid(row=5, column=1, pady=10)
+        next_button.grid(row=5, column=1)
         exit_button.grid(row=6, column=1)
     def choosing_team_tutorial_page2(self):
         for widget in tutorial_frame.winfo_children():
             widget.destroy()
-        title_label = tk.Label(tutorial_frame, text="Choosing your team", font=self.small_title_font)
-        slide_progress = tk.Label(tutorial_frame, text="2/10", font=self.medium_text_font_bold)
-        choosing_team_tutorial_text_label = tk.Label(tutorial_frame, text="You have a total of three team slots\n "
-                                                                          "This lets you keep your favourite combinations while being able to try something new!\n"
-                                                                          "Press any of the 'Create' buttons to begin team assembly")
+        title_label = tk.Label(tutorial_frame, text="Choosing your Team", font=self.small_title_font)
+        slide_progress = tk.Label(tutorial_frame, text="2/11", font=self.medium_text_font_bold)
+        choosing_team_tutorial_text_label = tk.Label(tutorial_frame, text="Here, you are presented with your team of champions\n "
+                                                                          "If this is your first time playing, you'll find that this section is empty\n"
+                                                                          "Press the 'Create' button to begin assembling your champions!")
         img2 = Image.open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Images/ChoosingTeam/choosingTeam_tutorial_picture2.png".format(COMPUTER_USERNAME))
         img2.thumbnail((550, 250))
         img2 = ImageTk.PhotoImage(img2)
@@ -31493,24 +31956,26 @@ class How2PlayPage(tk.Frame):
         image_label.image = img2
         image_label.grid(row=4, column=1)
         next_button = tk.Button(tutorial_frame, text="Next Slide", font=self.menu_button_font, command=self.choosing_team_tutorial_page3)
-        next_button.grid(row=5, column=1, pady=10)
-        exit_button = tk.Button(tutorial_frame, text="Exit", font=self.menu_button_font, command=self.opening_tutorial_menu)
+        previous_button = tk.Button(tutorial_frame, text="Previous Slide", font=self.menu_button_font, command=self.choosing_team_tutorial_page1)
+        exit_button = tk.Button(tutorial_frame, text="Exit", font=self.menu_button_font, command=self.champion_information_tutorial_menu)
         invis_label = tk.Label(tutorial_frame)
         invis_label.grid(row=1, column=0, padx=48)
-        title_label.grid(row=1, column=1, sticky="nsew", pady=10)
+        title_label.grid(row=1, column=1, sticky="nsew")
         slide_progress.grid(row=2, column=1, pady=10)
         choosing_team_tutorial_text_label.grid(row=3, column=1, pady=10)
+        next_button.grid(row=5, column=1)
+        previous_button.grid(row=6, column=1)
         exit_button.grid(row=7, column=1)
     def choosing_team_tutorial_page3(self):
         for widget in tutorial_frame.winfo_children():
             widget.destroy()
-        title_label = tk.Label(tutorial_frame, text="Choosing your team", font=self.small_title_font)
-        slide_progress = tk.Label(tutorial_frame, text="3/10", font=self.medium_text_font_bold)
-        choosing_team_tutorial_text_label = tk.Label(tutorial_frame, text="There are three specializations of champions\n"
-                                                                          "Though each champion is solely unique in its own way, they all fall into one of the three specializations or 'specs'\n"
-                                                                          "Each specialization plays an important role inside the dungeon, and utilizing each one will get you further in your run\n"
-                                                                          "To view each specializations champion selection range, click on the specialization name button up on the top of your page\n"
-                                                                          "View Page 4-5-6 of this tutorial to see what each specialization does")
+        title_label = tk.Label(tutorial_frame, text="Choosing your Team", font=self.small_title_font)
+        slide_progress = tk.Label(tutorial_frame, text="3/11", font=self.medium_text_font_bold)
+        choosing_team_tutorial_text_label = tk.Label(tutorial_frame, text="There are three specialisations of champions\n"
+                                                                          "Though each champion is solely unique in its own way, they all fall into one of the three specialisations'\n"
+                                                                          "Each specialisation plays an important role inside the dungeon, and utilizing each one will get you further in your expeditions\n"
+                                                                          "To view each specialisations champion selection range, click on the specialisation name button up on the top of your page\n"
+                                                                          "Pages 4-5-6 of this tutorial explain in details what each specialisation does")
         img3 = Image.open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Images/ChoosingTeam/choosingTeam_tutorial_picture3.png".format(COMPUTER_USERNAME))
         img3.thumbnail((800, 800))
         img3 = ImageTk.PhotoImage(img3)
@@ -31518,79 +31983,87 @@ class How2PlayPage(tk.Frame):
         image_label.image = img3
         image_label.grid(row=4, column=1)
         next_button = tk.Button(tutorial_frame, text="Next Slide", font=self.menu_button_font, command=self.choosing_team_tutorial_page4)
-        exit_button = tk.Button(tutorial_frame, text="Exit", font=self.menu_button_font, command=self.opening_tutorial_menu)
+        previous_button = tk.Button(tutorial_frame, text="Previous Slide", font=self.menu_button_font, command=self.choosing_team_tutorial_page2)
+        previous_button.grid(row=6, column=1)
+        exit_button = tk.Button(tutorial_frame, text="Exit", font=self.menu_button_font, command=self.champion_information_tutorial_menu)
         invis_label = tk.Label(tutorial_frame)
         invis_label.grid(row=1,column=0, padx=48)
-        title_label.grid(row=1, column=1, sticky="nsew", pady=10)
+        title_label.grid(row=1, column=1, sticky="nsew")
         slide_progress.grid(row=2, column=1, pady=10)
         choosing_team_tutorial_text_label.grid(row=3, column=1, pady=10)
-        next_button.grid(row=5, column=1, pady=10)
-        exit_button.grid(row=6, column=1)
+        next_button.grid(row=5, column=1)
+        exit_button.grid(row=7, column=1)
     def choosing_team_tutorial_page4(self):
         for widget in tutorial_frame.winfo_children():
             widget.destroy()
-        title_label = tk.Label(tutorial_frame, text="Choosing your team", font=self.small_title_font)
-        slide_progress = tk.Label(tutorial_frame, text="4/10", font=self.medium_text_font_bold)
+        title_label = tk.Label(tutorial_frame, text="Choosing your Team", font=self.small_title_font)
+        slide_progress = tk.Label(tutorial_frame, text="4/11", font=self.medium_text_font_bold)
         choosing_team_tutorial_tank_label = tk.Label(tutorial_frame, text="Tanks", font=self.medium_text_font_bold)
-        choosing_team_tutorial_text_label = tk.Label(tutorial_frame, text="The Tank specialization maximizes its teams survival by reducing the enemies damage done,\n"
-                                                                          "by taunting enemies to force them to attack the tank instead of their teammates,\n"
-                                                                          "and by blocking enemies attacks and protecting allies")
+        choosing_team_tutorial_text_label = tk.Label(tutorial_frame, text="The Tank specialisation maximizes its teams survival by reducing their allies damage taken\n"
+                                                                          "Tanks have many tools up their selves to keep their teammates alive, like redirect enemy attacks,\n"
+                                                                          "reducing enemies damage, and causing enemies to not be able to attack at all!")
         next_button = tk.Button(tutorial_frame, text="Next Slide", font=self.menu_button_font, command=self.choosing_team_tutorial_page5)
-        exit_button = tk.Button(tutorial_frame, text="Exit", font=self.menu_button_font, command=self.opening_tutorial_menu)
+        previous_button = tk.Button(tutorial_frame, text="Previous Slide", font=self.menu_button_font, command=self.choosing_team_tutorial_page3)
+        previous_button.grid(row=6, column=1)
+        exit_button = tk.Button(tutorial_frame, text="Exit", font=self.menu_button_font, command=self.champion_information_tutorial_menu)
         invis_label = tk.Label(tutorial_frame)
         invis_label.grid(row=1,column=0, padx=48)
-        title_label.grid(row=1, column=1, sticky="nsew", pady=10)
+        title_label.grid(row=1, column=1, sticky="nsew")
         slide_progress.grid(row=2, column=1, pady=10)
         choosing_team_tutorial_tank_label.grid(row=3, column=1, pady=10)
         choosing_team_tutorial_text_label.grid(row=4, column=1, pady=10)
-        next_button.grid(row=6, column=1, pady=10)
+        next_button.grid(row=5, column=1)
         exit_button.grid(row=7, column=1)
     def choosing_team_tutorial_page5(self):
         for widget in tutorial_frame.winfo_children():
             widget.destroy()
-        title_label = tk.Label(tutorial_frame, text="Choosing your team", font=self.small_title_font)
-        slide_progress = tk.Label(tutorial_frame, text="5/10", font=self.medium_text_font_bold)
+        title_label = tk.Label(tutorial_frame, text="Choosing your Team", font=self.small_title_font)
+        slide_progress = tk.Label(tutorial_frame, text="5/11", font=self.medium_text_font_bold)
         choosing_team_tutorial_dps_catagory1_label = tk.Label(tutorial_frame, text="Damage Dealers", font=self.medium_text_font_bold)
-        choosing_team_tutorial_text_label = tk.Label(tutorial_frame, text="The Damage Dealer specialization or 'DPS' maximizes its damage done to the monsters you'll encounter in the dungeon,\n"
+        choosing_team_tutorial_text_label = tk.Label(tutorial_frame, text="The Damage Dealer specialisation maximizes its damage done to the monsters you'll encounter in the dungeon,\n"
                                                                           "they can also cause nasty effects that hinder and damage enemies over multiple turns,\n"
-                                                                          "some DPS can also help other teammates by powering them to make them deal more damage")
+                                                                          "some DPS can also help other teammates by empowering them to make them deal more damage")
         next_button = tk.Button(tutorial_frame, text="Next Slide", font=self.menu_button_font, command=self.choosing_team_tutorial_page6)
-        exit_button = tk.Button(tutorial_frame, text="Exit", font=self.menu_button_font, command=self.opening_tutorial_menu)
+        previous_button = tk.Button(tutorial_frame, text="Previous Slide", font=self.menu_button_font, command=self.choosing_team_tutorial_page4)
+        previous_button.grid(row=6, column=1)
+        exit_button = tk.Button(tutorial_frame, text="Exit", font=self.menu_button_font, command=self.champion_information_tutorial_menu)
         invis_label = tk.Label(tutorial_frame)
         invis_label.grid(row=1,column=0, padx=48)
-        title_label.grid(row=1, column=1, sticky="nsew", pady=10)
+        title_label.grid(row=1, column=1, sticky="nsew")
         slide_progress.grid(row=2, column=1, pady=10)
         choosing_team_tutorial_dps_catagory1_label.grid(row=3, column=1, pady=10)
         choosing_team_tutorial_text_label.grid(row=4, column=1, pady=10)
-        next_button.grid(row=6, column=1, pady=10)
+        next_button.grid(row=5, column=1)
         exit_button.grid(row=7, column=1)
     def choosing_team_tutorial_page6(self):
         for widget in tutorial_frame.winfo_children():
             widget.destroy()
-        title_label = tk.Label(tutorial_frame, text="Choosing your team", font=self.small_title_font)
-        slide_progress = tk.Label(tutorial_frame, text="6/10", font=self.medium_text_font_bold)
+        title_label = tk.Label(tutorial_frame, text="Choosing your Team", font=self.small_title_font)
+        slide_progress = tk.Label(tutorial_frame, text="6/11", font=self.medium_text_font_bold)
         choosing_team_tutorial_healer_label = tk.Label(tutorial_frame, text="Healers", font=self.medium_text_font_bold)
-        choosing_team_tutorial_text_label = tk.Label(tutorial_frame, text="The Healer specialization maximizes its support capabilities to other teammates,\n"
+        choosing_team_tutorial_text_label = tk.Label(tutorial_frame, text="The Healer specialisation maximizes its support and healing capabilities to other teammates,\n"
                                                                           "Healers can heal back damage inflicted on teammates by monsters,\n"
-                                                                          "Healers can also support their team by providing power boosts or protection from attacks")
+                                                                          "and can also support their team by providing power boosts or protection from attacks")
         next_button = tk.Button(tutorial_frame, text="Next Slide", font=self.menu_button_font, command=self.choosing_team_tutorial_page7)
-        exit_button = tk.Button(tutorial_frame, text="Exit", font=self.menu_button_font, command=self.opening_tutorial_menu)
+        previous_button = tk.Button(tutorial_frame, text="Previous Slide", font=self.menu_button_font, command=self.choosing_team_tutorial_page5)
+        previous_button.grid(row=6, column=1)
+        exit_button = tk.Button(tutorial_frame, text="Exit", font=self.menu_button_font, command=self.champion_information_tutorial_menu)
         invis_label = tk.Label(tutorial_frame)
         invis_label.grid(row=1,column=0, padx=48)
-        title_label.grid(row=1, column=1, sticky="nsew", pady=10)
+        title_label.grid(row=1, column=1, sticky="nsew")
         slide_progress.grid(row=2, column=1, pady=10)
         choosing_team_tutorial_healer_label.grid(row=3, column=1, pady=10)
         choosing_team_tutorial_text_label.grid(row=4, column=1, pady=10)
-        next_button.grid(row=6, column=1, pady=10)
+        next_button.grid(row=5, column=1)
         exit_button.grid(row=7, column=1)
     def choosing_team_tutorial_page7(self):
         for widget in tutorial_frame.winfo_children():
             widget.destroy()
-        title_label = tk.Label(tutorial_frame, text="Choosing your team", font=self.small_title_font)
-        slide_progress = tk.Label(tutorial_frame, text="7/10", font=self.medium_text_font_bold)
-        choosing_team_tutorial_text_label = tk.Label(tutorial_frame, text="To add a champion to your team, press the 'Add to team' button and they'll be added to the team bar on the bottom of the screen\n"
-                                                                          "You may select any combination of champions by you many only have one of the same champion\n"                                                         
-                                                                          "Its important to put together a team that can cover a wide array of scenarios so you can handle each challenge without being at a disadvantage")
+        title_label = tk.Label(tutorial_frame, text="Choosing your Team", font=self.small_title_font)
+        slide_progress = tk.Label(tutorial_frame, text="7/11", font=self.medium_text_font_bold)
+        choosing_team_tutorial_text_label = tk.Label(tutorial_frame, text="If you're curious what a champion does, click on the 'View Details' button below the champion you're interested in\n"
+                                                     "A small window will pop up and will tell you everything you need to know about the champion. Including their attacks and special moves they can preform\n"
+                                                     "Don't worry if you don't understand what any of it means, check out the 'Champion Basics' tutorial to learn about how champions function to gain a better understanding")
         img4 = Image.open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Images/ChoosingTeam/choosingTeam_tutorial_picture4.png".format(COMPUTER_USERNAME))
         img4.thumbnail((450, 450))
         img4 = ImageTk.PhotoImage(img4)
@@ -31598,294 +32071,716 @@ class How2PlayPage(tk.Frame):
         image_label.image = img4
         image_label.grid(row=4, column=1)
         next_button = tk.Button(tutorial_frame, text="Next Slide", font=self.menu_button_font, command=self.choosing_team_tutorial_page8)
-        exit_button = tk.Button(tutorial_frame, text="Exit", font=self.menu_button_font, command=self.opening_tutorial_menu)
+        previous_button = tk.Button(tutorial_frame, text="Previous Slide", font=self.menu_button_font, command=self.choosing_team_tutorial_page6)
+        previous_button.grid(row=6, column=1)
+        exit_button = tk.Button(tutorial_frame, text="Exit", font=self.menu_button_font, command=self.champion_information_tutorial_menu)
         invis_label = tk.Label(tutorial_frame)
         invis_label.grid(row=1,column=0, padx=48)
-        title_label.grid(row=1, column=1, sticky="nsew", pady=10)
+        title_label.grid(row=1, column=1, sticky="nsew")
         slide_progress.grid(row=2, column=1, pady=10)
         choosing_team_tutorial_text_label.grid(row=3, column=1, pady=10)
-        next_button.grid(row=5, column=1, pady=10)
-        exit_button.grid(row=6, column=1)
+        next_button.grid(row=5, column=1)
+        exit_button.grid(row=7, column=1)
     def choosing_team_tutorial_page8(self):
         for widget in tutorial_frame.winfo_children():
             widget.destroy()
-        title_label = tk.Label(tutorial_frame, text="Choosing your team", font=self.small_title_font)
-        slide_progress = tk.Label(tutorial_frame, text="8/10", font=self.medium_text_font_bold)
+        title_label = tk.Label(tutorial_frame, text="Choosing your Team", font=self.small_title_font)
+        slide_progress = tk.Label(tutorial_frame, text="8/11", font=self.medium_text_font_bold)
+        choosing_team_tutorial_text_label = tk.Label(tutorial_frame, text="To add a champion to your team, press the 'Add to team' button and they'll be added to the team bar on the bottom of the screen\n"
+                                                                          "You may select any combination of champions, but you cannot have more than one of the same champion\n"                                                         
+                                                                          "Its smart to put together a team that can cover a wide array of scenarios so you can handle each challenge without being at a disadvantage\n"
+                                                                          "Also think about a team of champions that synergises well with one anothers abilities")
+        img4 = Image.open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Images/ChoosingTeam/choosingTeam_tutorial_picture5.png".format(COMPUTER_USERNAME))
+        img4.thumbnail((700, 7000))
+        img4 = ImageTk.PhotoImage(img4)
+        image_label = tk.Label(tutorial_frame, image=img4)
+        image_label.image = img4
+        image_label.grid(row=4, column=1)
+        next_button = tk.Button(tutorial_frame, text="Next Slide", font=self.menu_button_font, command=self.choosing_team_tutorial_page9)
+        previous_button = tk.Button(tutorial_frame, text="Previous Slide", font=self.menu_button_font, command=self.choosing_team_tutorial_page7)
+        previous_button.grid(row=6, column=1)
+        exit_button = tk.Button(tutorial_frame, text="Exit", font=self.menu_button_font, command=self.champion_information_tutorial_menu)
+        invis_label = tk.Label(tutorial_frame)
+        invis_label.grid(row=1,column=0, padx=48)
+        title_label.grid(row=1, column=1, sticky="nsew")
+        slide_progress.grid(row=2, column=1, pady=10)
+        choosing_team_tutorial_text_label.grid(row=3, column=1, pady=10)
+        next_button.grid(row=5, column=1)
+        exit_button.grid(row=7, column=1)
+    def choosing_team_tutorial_page9(self):
+        for widget in tutorial_frame.winfo_children():
+            widget.destroy()
+        title_label = tk.Label(tutorial_frame, text="Choosing your Team", font=self.small_title_font)
+        slide_progress = tk.Label(tutorial_frame, text="9/11", font=self.medium_text_font_bold)
         choosing_team_tutorial_text_label = tk.Label(tutorial_frame, text="If you have all five team slots full and want to change a champion, don't fret!\n"
                                                                           "Just add the champion you want like normal and you'll be able to swap around champions in your party")
-        img5 = Image.open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Images/ChoosingTeam/choosingTeam_tutorial_picture5.png".format(COMPUTER_USERNAME))
-        img5.thumbnail((400, 400))
+        img5 = Image.open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Images/ChoosingTeam/choosingTeam_tutorial_picture6.png".format(COMPUTER_USERNAME))
+        img5.thumbnail((500, 900))
         img5 = ImageTk.PhotoImage(img5)
         image_label1 = tk.Label(tutorial_frame, image=img5)
         image_label1.image = img5
         image_label1.grid(row=4, column=1, sticky="w")
-        img6 = Image.open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Images/ChoosingTeam/choosingTeam_tutorial_picture6.png".format(COMPUTER_USERNAME))
-        img6.thumbnail((400, 400))
+        img6 = Image.open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Images/ChoosingTeam/choosingTeam_tutorial_picture7.png".format(COMPUTER_USERNAME))
+        img6.thumbnail((500, 900))
         img6 = ImageTk.PhotoImage(img6)
         image_label2 = tk.Label(tutorial_frame, image=img6)
         image_label2.image = img6
         image_label2.grid(row=4, column=1, sticky="e")
-        next_button = tk.Button(tutorial_frame, text="Next Slide", font=self.menu_button_font, command=self.choosing_team_tutorial_page9)
-        exit_button = tk.Button(tutorial_frame, text="Exit", font=self.menu_button_font, command=self.opening_tutorial_menu)
+        next_button = tk.Button(tutorial_frame, text="Next Slide", font=self.menu_button_font, command=self.choosing_team_tutorial_page10)
+        previous_button = tk.Button(tutorial_frame, text="Previous Slide", font=self.menu_button_font, command=self.choosing_team_tutorial_page8)
+        previous_button.grid(row=6, column=1)
+        exit_button = tk.Button(tutorial_frame, text="Exit", font=self.menu_button_font, command=self.champion_information_tutorial_menu)
         invis_label = tk.Label(tutorial_frame)
         invis_label.grid(row=1,column=0, padx=48)
-        title_label.grid(row=1, column=1, sticky="nsew", pady=10)
+        title_label.grid(row=1, column=1, sticky="nsew")
         slide_progress.grid(row=2, column=1, pady=10)
         choosing_team_tutorial_text_label.grid(row=3, column=1, pady=10)
-        next_button.grid(row=5, column=1, pady=10)
-        exit_button.grid(row=6, column=1)
-    def choosing_team_tutorial_page9(self):
+        next_button.grid(row=5, column=1)
+        exit_button.grid(row=7, column=1)
+    def choosing_team_tutorial_page10(self):
         for widget in tutorial_frame.winfo_children():
             widget.destroy()
-        title_label = tk.Label(tutorial_frame, text="Choosing your team", font=self.small_title_font)
-        slide_progress = tk.Label(tutorial_frame, text="9/10", font=self.medium_text_font_bold)
+        title_label = tk.Label(tutorial_frame, text="Choosing your Team", font=self.small_title_font)
+        slide_progress = tk.Label(tutorial_frame, text="10/11", font=self.medium_text_font_bold)
         choosing_team_tutorial_text_label = tk.Label(tutorial_frame, text="Once you have chosen all five of your preferred champions, make sure to press the 'Confirm Changes' button to save that team to the slot")
-        img7 = Image.open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Images/ChoosingTeam/choosingTeam_tutorial_picture7.png".format(COMPUTER_USERNAME))
-        img7.thumbnail((450, 450))
+        img7 = Image.open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Images/ChoosingTeam/choosingTeam_tutorial_picture8.png".format(COMPUTER_USERNAME))
+        img7.thumbnail((800, 800))
         img7 = ImageTk.PhotoImage(img7)
         image_label = tk.Label(tutorial_frame, image=img7)
         image_label.image = img7
         image_label.grid(row=4, column=1)
-        next_button = tk.Button(tutorial_frame, text="Next Slide", font=self.menu_button_font, command=self.choosing_team_tutorial_page10)
-        exit_button = tk.Button(tutorial_frame, text="Exit", font=self.menu_button_font, command=self.opening_tutorial_menu)
+        next_button = tk.Button(tutorial_frame, text="Next Slide", font=self.menu_button_font, command=self.choosing_team_tutorial_page11)
+        previous_button = tk.Button(tutorial_frame, text="Previous Slide", font=self.menu_button_font, command=self.choosing_team_tutorial_page9)
+        previous_button.grid(row=6, column=1)
+        exit_button = tk.Button(tutorial_frame, text="Exit", font=self.menu_button_font, command=self.champion_information_tutorial_menu)
         invis_label = tk.Label(tutorial_frame)
         invis_label.grid(row=1,column=0, padx=48)
-        title_label.grid(row=1, column=1, sticky="nsew", pady=10)
+        title_label.grid(row=1, column=1, sticky="nsew")
         slide_progress.grid(row=2, column=1, pady=10)
         choosing_team_tutorial_text_label.grid(row=3, column=1, pady=10)
-        next_button.grid(row=5, column=1, pady=10)
-        exit_button.grid(row=6, column=1)
-    def choosing_team_tutorial_page10(self):
+        next_button.grid(row=5, column=1)
+        exit_button.grid(row=7, column=1)
+    def choosing_team_tutorial_page11(self):
         for widget in tutorial_frame.winfo_children():
             widget.destroy()
-        title_label = tk.Label(tutorial_frame, text="Choosing your team", font=self.small_title_font)
-        slide_progress = tk.Label(tutorial_frame, text="10/10", font=self.medium_text_font_bold)
+        title_label = tk.Label(tutorial_frame, text="Choosing your Team", font=self.small_title_font)
+        slide_progress = tk.Label(tutorial_frame, text="11/11", font=self.medium_text_font_bold)
         choosing_team_tutorial_text_label = tk.Label(tutorial_frame, text="That's it!\n"
-                                                                          "You now know how to create Champion Teams and what each specialization does\n"
+                                                                          "You now know how to create Champion Teams and what each specialisation does\n"
                                                                           "If you need to, read the other sections of the 'How to Play' page to learn more on how to play!")
-        exit_button = tk.Button(tutorial_frame, text="Exit", font=self.menu_button_font, command=self.opening_tutorial_menu)
+        previous_button = tk.Button(tutorial_frame, text="Previous Slide", font=self.menu_button_font, command=self.choosing_team_tutorial_page10)
+        previous_button.grid(row=5, column=1)
+        exit_button = tk.Button(tutorial_frame, text="Exit", font=self.menu_button_font, command=self.champion_information_tutorial_menu)
         invis_label = tk.Label(tutorial_frame)
         invis_label.grid(row=1,column=0, padx=48)
-        title_label.grid(row=1, column=1, sticky="nsew", pady=10)
+        title_label.grid(row=1, column=1, sticky="nsew")
         slide_progress.grid(row=2, column=1, pady=10)
         choosing_team_tutorial_text_label.grid(row=3, column=1, pady=10)
-        exit_button.grid(row=5, column=1)
+        exit_button.grid(row=6, column=1)
     def entering_the_dungeon_tutorial_menu(self):
         for widget in tutorial_frame.winfo_children():
             widget.destroy()
         title_label = tk.Label(tutorial_frame, text="Entering the Dungeon", font=self.small_title_font)
-        dungeon_settings_tutorial_button = tk.Button(tutorial_frame, text=":Dungeon Settings:", font=self.menu_button_font, width=20, command=self.dungeon_settings_tutorial_page1)
-        entering_combat_tutorial_button = tk.Button(tutorial_frame, text=":Entering Combat:", font=self.menu_button_font, width=20, command=self.entering_combat_tutorial_menu)
+        dungeon_difficulties_tutorial_button = tk.Button(tutorial_frame, text=":Dungeon Difficulties:", font=self.menu_button_font, width=20, command=self.dungeon_difficulties_tutorial_page1)
+        combat_ui_tutorial_button = tk.Button(tutorial_frame, text=":Combat Cycle:", font=self.menu_button_font, width=20, command=self.combat_cycle_tutorial_page1)
         invis_label = tk.Label(tutorial_frame)
         invis_label.grid(row=1,column=0, padx=40)
-        title_label.grid(row=1, column=1, sticky="nsew", pady=10)
-        dungeon_settings_tutorial_button.grid(row=2, column=1, pady=10)
-        entering_combat_tutorial_button.grid(row=3, column=1, pady=10)
-        button = tk.Button(tutorial_frame, text="Back",
-                           command=self.opening_tutorial_menu)
+        title_label.grid(row=1, column=1, sticky="nsew")
+        dungeon_difficulties_tutorial_button.grid(row=2, column=1, pady=10)
+        combat_ui_tutorial_button.grid(row=3, column=1, pady=10)
+        combat_cycle_tutorial_button.grid(row=4, column=1, pady=10)
+        button = tk.Button(tutorial_frame, text="Back", command=self.opening_tutorial_menu)
         button.grid(row=5, column=1)
-    def dungeon_settings_tutorial_page1(self):
+    def dungeon_difficulties_tutorial_page1(self):
         for widget in tutorial_frame.winfo_children():
             widget.destroy()
-        title_label = tk.Label(tutorial_frame, text="Dungeon Settings", font=self.small_title_font)
-        slide_progress = tk.Label(tutorial_frame, text="1/5", font=self.medium_text_font_bold)
-        choosing_team_tutorial_text_label = tk.Label(tutorial_frame, text="The Dungeon itself is perilous, but you can personally tune how you interact with the dungeon\n"
-                                                                          "Navigate to the 'Dungeon Management' options as shown in the pictures to begin going through the game setting")
-        img1 = Image.open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Images/DungeonSettings/dungeonSettings_tutorial_picture1.png".format(COMPUTER_USERNAME))
+        title_label = tk.Label(tutorial_frame, text="Dungeon Difficulties", font=self.small_title_font)
+        slide_progress = tk.Label(tutorial_frame, text="1/9", font=self.medium_text_font_bold)
+        dungeon_difficulties_tutorial_text_label = tk.Label(tutorial_frame, text="The Dungeon is perilous, but luckily, you can personally tune how you interact with the dungeon\n"
+                                                                          "Depending on your rank, you can choose from difficulties equal to or lower than what you're eligible for\n"
+                                                                          "Slides 2-3-4 will teach you how to get to the Dungeon Expeditions window to choose your difficulty")
+        next_button = tk.Button(tutorial_frame, text="Next Slide", font=self.menu_button_font, command=self.dungeon_difficulties_tutorial_page2)
+        exit_button = tk.Button(tutorial_frame, text="Exit", font=self.menu_button_font, command=self.entering_the_dungeon_tutorial_menu)
+        invis_label = tk.Label(tutorial_frame)
+        invis_label.grid(row=1,column=0, padx=60)
+        title_label.grid(row=1, column=1, sticky="nsew")
+        slide_progress.grid(row=2, column=1, pady=10)
+        dungeon_difficulties_tutorial_text_label.grid(row=3, column=1, pady=10)
+        next_button.grid(row=4, column=1)
+        exit_button.grid(row=5, column=1)
+    def dungeon_difficulties_tutorial_page2(self):
+        for widget in tutorial_frame.winfo_children():
+            widget.destroy()
+        title_label = tk.Label(tutorial_frame, text="Dungeon Difficulties", font=self.small_title_font)
+        slide_progress = tk.Label(tutorial_frame, text="2/9", font=self.medium_text_font_bold)
+        dungeon_difficulties_tutorial_text_label = tk.Label(tutorial_frame, text="Click the 'Delve into the Dungeon' option on the Surface Menu")
+        img1 = Image.open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Images/DungeonDifficulties/dungeonDifficulties_tutorial_picture1.png".format(COMPUTER_USERNAME))
         img1.thumbnail((400, 400))
-        img1 = ImageTk.PhotoImage(img1)
-        image_label1 = tk.Label(tutorial_frame, image=img1)
-        image_label1.image = img1
-        image_label1.grid(row=4, column=1, sticky="w")
-        img2 = Image.open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Images/DungeonSettings/dungeonSettings_tutorial_picture2.png".format(COMPUTER_USERNAME))
-        img2.thumbnail((400, 400))
-        img2 = ImageTk.PhotoImage(img2)
-        image_label2 = tk.Label(tutorial_frame, image=img2)
-        image_label2.image = img2
-        image_label2.grid(row=4, column=1, sticky="e")
-        next_button = tk.Button(tutorial_frame, text="Next Slide", font=self.menu_button_font, command=self.dungeon_settings_tutorial_page2)
-        exit_button = tk.Button(tutorial_frame, text="Exit", font=self.menu_button_font, command=self.entering_the_dungeon_tutorial_menu)
-        invis_label = tk.Label(tutorial_frame)
-        invis_label.grid(row=1,column=0, padx=80)
-        title_label.grid(row=1, column=1, sticky="nsew", pady=10)
-        slide_progress.grid(row=2, column=1, pady=10)
-        choosing_team_tutorial_text_label.grid(row=3, column=1, pady=10)
-        next_button.grid(row=5, column=1, pady=10)
-        exit_button.grid(row=6, column=1)
-    def dungeon_settings_tutorial_page2(self):
-        for widget in tutorial_frame.winfo_children():
-            widget.destroy()
-        title_label = tk.Label(tutorial_frame, text="Dungeon Settings", font=self.small_title_font)
-        slide_progress = tk.Label(tutorial_frame, text="2/5", font=self.medium_text_font_bold)
-        choosing_team_tutorial_text_label = tk.Label(tutorial_frame, text="The monsters inside the Dungeon become tougher the further you delve.\n"
-                                                                          "Each difficult allows you to change the rate at which the monsters DAMAGE/HEALTH scale at per FLOOR/ROOM respectively\n"
-                                                                          "Under each difficulty setting is the scaling modifier that takes affect")
-        img1 = Image.open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Images/DungeonSettings/dungeonSettings_tutorial_picture3.png".format(COMPUTER_USERNAME))
-        img1.thumbnail((400, 400))
-        img1 = ImageTk.PhotoImage(img1)
-        image_label1 = tk.Label(tutorial_frame, image=img1)
-        image_label1.image = img1
-        image_label1.grid(row=4, column=1)
-        next_button = tk.Button(tutorial_frame, text="Next Slide", font=self.menu_button_font, command=self.dungeon_settings_tutorial_page3)
-        exit_button = tk.Button(tutorial_frame, text="Exit", font=self.menu_button_font, command=self.entering_the_dungeon_tutorial_menu)
-        invis_label = tk.Label(tutorial_frame)
-        invis_label.grid(row=1,column=0, padx=80)
-        title_label.grid(row=1, column=1, sticky="nsew", pady=10)
-        slide_progress.grid(row=2, column=1, pady=10)
-        choosing_team_tutorial_text_label.grid(row=3, column=1, pady=10)
-        next_button.grid(row=5, column=1, pady=10)
-        exit_button.grid(row=6, column=1)
-    def dungeon_settings_tutorial_page3(self):
-        for widget in tutorial_frame.winfo_children():
-            widget.destroy()
-        title_label = tk.Label(tutorial_frame, text="Dungeon Settings", font=self.small_title_font)
-        slide_progress = tk.Label(tutorial_frame, text="3/5", font=self.medium_text_font_bold)
-        choosing_team_tutorial_text_label = tk.Label(tutorial_frame, text="To select a difficulty, just click on the button with the name of the difficulty you wish to play")
-        img1 = Image.open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Images/DungeonSettings/dungeonSettings_tutorial_picture4.png".format(COMPUTER_USERNAME))
-        img1.thumbnail((400, 400))
-        img1 = ImageTk.PhotoImage(img1)
-        image_label1 = tk.Label(tutorial_frame, image=img1)
-        image_label1.image = img1
-        image_label1.grid(row=4, column=1)
-        next_button = tk.Button(tutorial_frame, text="Next Slide", font=self.menu_button_font, command=self.dungeon_settings_tutorial_page4)
-        exit_button = tk.Button(tutorial_frame, text="Exit", font=self.menu_button_font, command=self.entering_the_dungeon_tutorial_menu)
-        invis_label = tk.Label(tutorial_frame)
-        invis_label.grid(row=1,column=0, padx=80)
-        title_label.grid(row=1, column=1, sticky="nsew", pady=10)
-        slide_progress.grid(row=2, column=1, pady=10)
-        choosing_team_tutorial_text_label.grid(row=3, column=1, pady=10)
-        next_button.grid(row=5, column=1, pady=10)
-        exit_button.grid(row=6, column=1)
-    def dungeon_settings_tutorial_page4(self):
-        for widget in tutorial_frame.winfo_children():
-            widget.destroy()
-        title_label = tk.Label(tutorial_frame, text="Dungeon Settings", font=self.small_title_font)
-        slide_progress = tk.Label(tutorial_frame, text="4/5", font=self.medium_text_font_bold)
-        choosing_team_tutorial_text_label = tk.Label(tutorial_frame, text="When in combat, lookout at the top of the screen to see what the current modifications the monsters have!\n"
-                                                                          "Remember, every floor the attack modifier will increase, and every room the health modifier will increase.\n"
-                                                                          "The in-game showcase also trackers the permanent health modifier, to understand the Permanent health modifier please view the Dungeon")
-        img1 = Image.open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Images/DungeonSettings/dungeonSettings_tutorial_picture5.png".format(COMPUTER_USERNAME))
-        img1.thumbnail((400, 400))
-        img1 = ImageTk.PhotoImage(img1)
-        image_label1 = tk.Label(tutorial_frame, image=img1)
-        image_label1.image = img1
-        image_label1.grid(row=4, column=1, sticky="w")
-        img2 = Image.open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Images/DungeonSettings/dungeonSettings_tutorial_picture6.png".format(COMPUTER_USERNAME))
-        img2.thumbnail((400, 400))
-        img2 = ImageTk.PhotoImage(img2)
-        image_label2 = tk.Label(tutorial_frame, image=img2)
-        image_label2.image = img2
-        image_label2.grid(row=4, column=1, sticky="e")
-        next_button = tk.Button(tutorial_frame, text="Next Slide", font=self.menu_button_font, command=self.dungeon_settings_tutorial_page2)
-        exit_button = tk.Button(tutorial_frame, text="Exit", font=self.menu_button_font, command=self.entering_the_dungeon_tutorial_menu)
-        invis_label = tk.Label(tutorial_frame)
-        invis_label.grid(row=1,column=0, padx=80)
-        title_label.grid(row=1, column=1, sticky="nsew", pady=10)
-        slide_progress.grid(row=2, column=1, pady=10)
-        choosing_team_tutorial_text_label.grid(row=3, column=1, pady=10)
-        next_button.grid(row=5, column=1, pady=10)
-        exit_button.grid(row=6, column=1)
-    def entering_combat_tutorial_menu(self):
-        for widget in tutorial_frame.winfo_children():
-            widget.destroy()
-        title_label = tk.Label(tutorial_frame, text="Entering Combat", font=self.small_title_font)
-        combat_user_interface_tutorial_button = tk.Button(tutorial_frame, text=":Combat User Interface:", font=self.menu_button_font, width=20, command=self.combat_user_interface_tutorial_page1)
-        champion_ability_tutorial_button = tk.Button(tutorial_frame, text=":Champion Ability Requirements:", font=self.menu_button_font, width=20, command=self.champion_ability_requirements_tutorial_page1)
-        special_effects_tutorial_button = tk.Button(tutorial_frame, text=":Special Combat Effects:", font=self.menu_button_font, width=16, command=self.special_effects_tutorial_page1)
-        invis_label = tk.Label(tutorial_frame)
-        invis_label.grid(row=1,column=0, padx=160)
-        title_label.grid(row=1, column=1, sticky="nsew", pady=10)
-        combat_user_interface_tutorial_button.grid(row=2, column=1, pady=10)
-        champion_ability_tutorial_button.grid(row=3, column=1, pady=10)
-        special_effects_tutorial_button.grid(row=4, column=1, pady=10)
-        button = tk.Button(tutorial_frame, text="Back",
-                           command= self.entering_the_dungeon_tutorial_menu)
-        button.grid(row=5, column=1)
-    def combat_user_interface_tutorial_page1(self):
-        for widget in tutorial_frame.winfo_children():
-            widget.destroy()
-        title_label = tk.Label(tutorial_frame, text="Dungeon Settings", font=self.small_title_font)
-        slide_progress = tk.Label(tutorial_frame, text="1/4", font=self.medium_text_font_bold)
-        choosing_team_tutorial_text_label = tk.Label(tutorial_frame, text="Once you have chosen all five of your preferred champions, make sure to press the 'Confirm Changes' button to save that team to the slot")
-        img7 = Image.open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Images/choosingTeam_tutorial_picture7.png".format(COMPUTER_USERNAME))
-        img7.thumbnail((450, 450))
-        img7 = ImageTk.PhotoImage(img7)
-        image_label = tk.Label(tutorial_frame, image=img7)
-        image_label.image = img7
-        image_label.grid(row=4, column=1)
-        next_button = tk.Button(tutorial_frame, text="Next Slide", font=self.menu_button_font, command=self.choosing_team_tutorial_page10)
-        exit_button = tk.Button(tutorial_frame, text="Exit", font=self.menu_button_font, command=self.entering_the_dungeon_tutorial_menu)
-        invis_label = tk.Label(tutorial_frame)
-        invis_label.grid(row=1,column=0, padx=48)
-        title_label.grid(row=1, column=1, sticky="nsew", pady=10)
-        slide_progress.grid(row=2, column=1, pady=10)
-        choosing_team_tutorial_text_label.grid(row=3, column=1, pady=10)
-        next_button.grid(row=5, column=1, pady=10)
-        exit_button.grid(row=6, column=1)
-    def champion_ability_requirements_tutorial_page1(self):
-        for widget in tutorial_frame.winfo_children():
-            widget.destroy()
-        title_label = tk.Label(tutorial_frame, text="Dungeon Settings", font=self.small_title_font)
-        slide_progress = tk.Label(tutorial_frame, text="1/4", font=self.medium_text_font_bold)
-        choosing_team_tutorial_text_label = tk.Label(tutorial_frame, text="Once you have chosen all five of your preferred champions, make sure to press the 'Confirm Changes' button to save that team to the slot")
-        img7 = Image.open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Images/choosingTeam_tutorial_picture7.png".format(COMPUTER_USERNAME))
-        img7.thumbnail((450, 450))
-        img7 = ImageTk.PhotoImage(img7)
-        image_label = tk.Label(tutorial_frame, image=img7)
-        image_label.image = img7
-        image_label.grid(row=4, column=1)
-        next_button = tk.Button(tutorial_frame, text="Next Slide", font=self.menu_button_font, command=self.choosing_team_tutorial_page10)
-        exit_button = tk.Button(tutorial_frame, text="Exit", font=self.menu_button_font, command=self.entering_the_dungeon_tutorial_menu)
-        invis_label = tk.Label(tutorial_frame)
-        invis_label.grid(row=1,column=0, padx=48)
-        title_label.grid(row=1, column=1, sticky="nsew", pady=10)
-        slide_progress.grid(row=2, column=1, pady=10)
-        choosing_team_tutorial_text_label.grid(row=3, column=1, pady=10)
-        next_button.grid(row=5, column=1, pady=10)
-        exit_button.grid(row=6, column=1)
-    def special_effects_tutorial_page1(self):
-        for widget in tutorial_frame.winfo_children():
-            widget.destroy()
-        title_label = tk.Label(tutorial_frame, text="Dungeon Settings", font=self.small_title_font)
-        slide_progress = tk.Label(tutorial_frame, text="1/4", font=self.medium_text_font_bold)
-        choosing_team_tutorial_text_label = tk.Label(tutorial_frame, text="Once you have chosen all five of your preferred champions, make sure to press the 'Confirm Changes' button to save that team to the slot")
-        img7 = Image.open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Images/choosingTeam_tutorial_picture7.png".format(COMPUTER_USERNAME))
-        img7.thumbnail((450, 450))
-        img7 = ImageTk.PhotoImage(img7)
-        image_label = tk.Label(tutorial_frame, image=img7)
-        image_label.image = img7
-        image_label.grid(row=4, column=1)
-        next_button = tk.Button(tutorial_frame, text="Next Slide", font=self.menu_button_font, command=self.choosing_team_tutorial_page10)
-        exit_button = tk.Button(tutorial_frame, text="Exit", font=self.menu_button_font, command=self.entering_the_dungeon_tutorial_menu)
-        invis_label = tk.Label(tutorial_frame)
-        invis_label.grid(row=1,column=0, padx=48)
-        title_label.grid(row=1, column=1, sticky="nsew", pady=10)
-        slide_progress.grid(row=2, column=1, pady=10)
-        choosing_team_tutorial_text_label.grid(row=3, column=1, pady=10)
-        next_button.grid(row=5, column=1, pady=10)
-        exit_button.grid(row=6, column=1)
-    def leaderboard_tutorial_page1(self):
-        for widget in tutorial_frame.winfo_children():
-            widget.destroy()
-        title_label = tk.Label(tutorial_frame, text="Leaderboard", font=self.small_title_font)
-        slide_progress = tk.Label(tutorial_frame, text="1/4", font=self.medium_text_font_bold)
-        choosing_team_tutorial_text_label = tk.Label(tutorial_frame, text="")
-        img1 = Image.open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Images/leaderboard_tutorial_picture1.png".format(COMPUTER_USERNAME))
-        img1.thumbnail((550, 250))
         img1 = ImageTk.PhotoImage(img1)
         image_label = tk.Label(tutorial_frame, image=img1)
         image_label.image = img1
         image_label.grid(row=4, column=1)
-        next_button = tk.Button(tutorial_frame, text="Next Slide", font=self.menu_button_font, command=self.choosing_team_tutorial_page3)
-        next_button.grid(row=5, column=1, pady=10)
+        next_button = tk.Button(tutorial_frame, text="Next Slide", font=self.menu_button_font, command=self.dungeon_difficulties_tutorial_page3)
+        previous_button = tk.Button(tutorial_frame, text="Previous Slide", font=self.menu_button_font, command=self.dungeon_difficulties_tutorial_page1)
+        previous_button.grid(row=6, column=1)
+        exit_button = tk.Button(tutorial_frame, text="Exit", font=self.menu_button_font, command=self.entering_the_dungeon_tutorial_menu)
+        invis_label = tk.Label(tutorial_frame)
+        invis_label.grid(row=1,column=0, padx=60)
+        title_label.grid(row=1, column=1, sticky="nsew")
+        slide_progress.grid(row=2, column=1, pady=10)
+        dungeon_difficulties_tutorial_text_label.grid(row=3, column=1, pady=10)
+        next_button.grid(row=5, column=1)
+        exit_button.grid(row=7, column=1)
+    def dungeon_difficulties_tutorial_page3(self):
+        for widget in tutorial_frame.winfo_children():
+            widget.destroy()
+        title_label = tk.Label(tutorial_frame, text="Dungeon Difficulties", font=self.small_title_font)
+        slide_progress = tk.Label(tutorial_frame, text="3/9", font=self.medium_text_font_bold)
+        dungeon_difficulties_tutorial_text_label = tk.Label(tutorial_frame, text="Then click 'Select Dungeon Expedition'")
+        img2 = Image.open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Images/DungeonDifficulties/dungeonDifficulties_tutorial_picture2.png".format(COMPUTER_USERNAME))
+        img2.thumbnail((400, 400))
+        img2 = ImageTk.PhotoImage(img2)
+        image_label = tk.Label(tutorial_frame, image=img2)
+        image_label.image = img2
+        image_label.grid(row=4, column=1)
+        next_button = tk.Button(tutorial_frame, text="Next Slide", font=self.menu_button_font, command=self.dungeon_difficulties_tutorial_page4)
+        previous_button = tk.Button(tutorial_frame, text="Previous Slide", font=self.menu_button_font, command=self.dungeon_difficulties_tutorial_page2)
+        previous_button.grid(row=6, column=1)
+        exit_button = tk.Button(tutorial_frame, text="Exit", font=self.menu_button_font, command=self.entering_the_dungeon_tutorial_menu)
+        invis_label = tk.Label(tutorial_frame)
+        invis_label.grid(row=1,column=0, padx=60)
+        title_label.grid(row=1, column=1, sticky="nsew")
+        slide_progress.grid(row=2, column=1, pady=10)
+        dungeon_difficulties_tutorial_text_label.grid(row=3, column=1, pady=10)
+        next_button.grid(row=5, column=1)
+        exit_button.grid(row=7, column=1)
+    def dungeon_difficulties_tutorial_page4(self):
+        for widget in tutorial_frame.winfo_children():
+            widget.destroy()
+        title_label = tk.Label(tutorial_frame, text="Dungeon Difficulties", font=self.small_title_font)
+        slide_progress = tk.Label(tutorial_frame, text="4/9", font=self.medium_text_font_bold)
+        dungeon_difficulties_tutorial_text_label = tk.Label(tutorial_frame, text="This menu shows you your currently selected expedition/difficulty\n"
+                                                            "To view the rest, finally click the 'View Expeditions' button")
+        img3 = Image.open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Images/DungeonDifficulties/dungeonDifficulties_tutorial_picture3.png".format(COMPUTER_USERNAME))
+        img3.thumbnail((400, 400))
+        img3 = ImageTk.PhotoImage(img3)
+        image_label = tk.Label(tutorial_frame, image=img3)
+        image_label.image = img3
+        image_label.grid(row=4, column=1)
+        next_button = tk.Button(tutorial_frame, text="Next Slide", font=self.menu_button_font, command=self.dungeon_difficulties_tutorial_page5)
+        previous_button = tk.Button(tutorial_frame, text="Previous Slide", font=self.menu_button_font, command=self.dungeon_difficulties_tutorial_page3)
+        previous_button.grid(row=6, column=1)
+        exit_button = tk.Button(tutorial_frame, text="Exit", font=self.menu_button_font, command=self.entering_the_dungeon_tutorial_menu)
+        invis_label = tk.Label(tutorial_frame)
+        invis_label.grid(row=1,column=0, padx=60)
+        title_label.grid(row=1, column=1, sticky="nsew")
+        slide_progress.grid(row=2, column=1, pady=10)
+        dungeon_difficulties_tutorial_text_label.grid(row=3, column=1, pady=10)
+        next_button.grid(row=5, column=1)
+        exit_button.grid(row=7, column=1)
+    def dungeon_difficulties_tutorial_page5(self):
+        for widget in tutorial_frame.winfo_children():
+            widget.destroy()
+        title_label = tk.Label(tutorial_frame, text="Dungeon Difficulties", font=self.small_title_font)
+        slide_progress = tk.Label(tutorial_frame, text="5/9", font=self.medium_text_font_bold)
+        dungeon_difficulties_tutorial_text_label = tk.Label(tutorial_frame, text="This is the Expeditions Board\n"
+                                                            "Here you can select different difficulty options you've unlocked through ranking up. New players will only have access to the first difficulty\n"
+                                                            "Over top of each difficulty it will tell you how many more dungeoneer emblems you'll need to unlock them\n"
+                                                            "To learn more about ranking up and obtaining emblems, visist the 'Ranking System' tutorial page")
+        img4 = Image.open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Images/DungeonDifficulties/dungeonDifficulties_tutorial_picture4.png".format(COMPUTER_USERNAME))
+        img4.thumbnail((500, 500))
+        img4 = ImageTk.PhotoImage(img4)
+        image_label = tk.Label(tutorial_frame, image=img4)
+        image_label.image = img4
+        image_label.grid(row=4, column=1)
+        next_button = tk.Button(tutorial_frame, text="Next Slide", font=self.menu_button_font, command=self.dungeon_difficulties_tutorial_page6)
+        previous_button = tk.Button(tutorial_frame, text="Previous Slide", font=self.menu_button_font, command=self.dungeon_difficulties_tutorial_page4)
+        previous_button.grid(row=6, column=1)
+        exit_button = tk.Button(tutorial_frame, text="Exit", font=self.menu_button_font, command=self.entering_the_dungeon_tutorial_menu)
+        invis_label = tk.Label(tutorial_frame)
+        invis_label.grid(row=1,column=0, padx=60)
+        title_label.grid(row=1, column=1, sticky="nsew")
+        slide_progress.grid(row=2, column=1, pady=10)
+        dungeon_difficulties_tutorial_text_label.grid(row=3, column=1)
+        next_button.grid(row=5, column=1)
+        exit_button.grid(row=7, column=1)
+    def dungeon_difficulties_tutorial_page6(self):
+        for widget in tutorial_frame.winfo_children():
+            widget.destroy()
+        title_label = tk.Label(tutorial_frame, text="Dungeon Difficulties", font=self.small_title_font)
+        slide_progress = tk.Label(tutorial_frame, text="6/9", font=self.medium_text_font_bold)
+        dungeon_difficulties_tutorial_text_label = tk.Label(tutorial_frame, text="Each difficulty has two number sets tied to them that affects how strong the monsters are inside the dungeon\n"
+                                                            "The first is the Base health and attack. This is the starting stats that the monsters have, when there are multiple monsters, the base number is split equally amongst them\n"
+                                                            "The second is the Increase per room. This is the modifier that is added onto the base number for every room that the player has cleared, this is the main way the dungeon gets harder over time\n"
+                                                            "You can tell that for each difficulty increase. the base and increase per room numbers all go up, this makes later difficulties much harder than the easier ones")
+        img5 = Image.open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Images/DungeonDifficulties/dungeonDifficulties_tutorial_picture5.png".format(COMPUTER_USERNAME))
+        img5.thumbnail((500, 500))
+        img5 = ImageTk.PhotoImage(img5)
+        image_label = tk.Label(tutorial_frame, image=img5)
+        image_label.image = img5
+        image_label.grid(row=4, column=1)
+        next_button = tk.Button(tutorial_frame, text="Next Slide", font=self.menu_button_font, command=self.dungeon_difficulties_tutorial_page7)
+        previous_button = tk.Button(tutorial_frame, text="Previous Slide", font=self.menu_button_font, command=self.dungeon_difficulties_tutorial_page5)
+        previous_button.grid(row=6, column=1)
+        exit_button = tk.Button(tutorial_frame, text="Exit", font=self.menu_button_font, command=self.entering_the_dungeon_tutorial_menu)
+        invis_label = tk.Label(tutorial_frame)
+        invis_label.grid(row=1,column=0, padx=60)
+        title_label.grid(row=1, column=1, sticky="nsew")
+        slide_progress.grid(row=2, column=1, pady=10)
+        dungeon_difficulties_tutorial_text_label.grid(row=3, column=1)
+        next_button.grid(row=5, column=1)
+        exit_button.grid(row=7, column=1)
+    def dungeon_difficulties_tutorial_page7(self):
+        for widget in tutorial_frame.winfo_children():
+            widget.destroy()
+        title_label = tk.Label(tutorial_frame, text="Dungeon Difficulties", font=self.small_title_font)
+        slide_progress = tk.Label(tutorial_frame, text="7/9", font=self.medium_text_font_bold)
+        dungeon_difficulties_tutorial_text_label = tk.Label(tutorial_frame, text="Here is the first example of the increasing power of monsters\n"
+                                                            "In this picture, the active expedition is the 'Wailing Caverns' the Steel guilds difficulty!\n"
+                                                            "This player is on the third room of the dungeon, meaning the extra damage and health is +195 (65x3) and +375 (125x3)")
+        img6 = Image.open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Images/DungeonDifficulties/dungeonDifficulties_tutorial_picture6.png".format(COMPUTER_USERNAME))
+        img6.thumbnail((800, 800))
+        img6 = ImageTk.PhotoImage(img6)
+        image_label = tk.Label(tutorial_frame, image=img6)
+        image_label.image = img6
+        image_label.grid(row=4, column=1)
+        next_button = tk.Button(tutorial_frame, text="Next Slide", font=self.menu_button_font, command=self.dungeon_difficulties_tutorial_page8)
+        previous_button = tk.Button(tutorial_frame, text="Previous Slide", font=self.menu_button_font, command=self.dungeon_difficulties_tutorial_page6)
+        previous_button.grid(row=6, column=1)
+        exit_button = tk.Button(tutorial_frame, text="Exit", font=self.menu_button_font, command=self.entering_the_dungeon_tutorial_menu)
+        invis_label = tk.Label(tutorial_frame)
+        invis_label.grid(row=1,column=0, padx=60)
+        title_label.grid(row=1, column=1, sticky="nsew")
+        slide_progress.grid(row=2, column=1, pady=10)
+        dungeon_difficulties_tutorial_text_label.grid(row=3, column=1, pady=10)
+        next_button.grid(row=5, column=1)
+        exit_button.grid(row=7, column=1)
+    def dungeon_difficulties_tutorial_page8(self):
+        for widget in tutorial_frame.winfo_children():
+            widget.destroy()
+        title_label = tk.Label(tutorial_frame, text="Dungeon Difficulties", font=self.small_title_font)
+        slide_progress = tk.Label(tutorial_frame, text="8/9", font=self.medium_text_font_bold)
+        dungeon_difficulties_tutorial_text_label = tk.Label(tutorial_frame, text="Here is the second example of the increasing power of monsters\n"
+                                                            "In this picture, the active expedition is the 'Void Zone' the Ruby guilds difficulty!\n"
+                                                            "This player is on the second floor and third room of the dungeon, meaning the extra damage and health is +675 (75x9) and +1575 (175x9)")
+        img7 = Image.open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Images/DungeonDifficulties/dungeonDifficulties_tutorial_picture7.png".format(COMPUTER_USERNAME))
+        img7.thumbnail((800, 800))
+        img7 = ImageTk.PhotoImage(img7)
+        image_label = tk.Label(tutorial_frame, image=img7)
+        image_label.image = img7
+        image_label.grid(row=4, column=1)
+        next_button = tk.Button(tutorial_frame, text="Next Slide", font=self.menu_button_font, command=self.dungeon_difficulties_tutorial_page9)
+        previous_button = tk.Button(tutorial_frame, text="Previous Slide", font=self.menu_button_font, command=self.dungeon_difficulties_tutorial_page7)
+        previous_button.grid(row=6, column=1)
+        exit_button = tk.Button(tutorial_frame, text="Exit", font=self.menu_button_font, command=self.entering_the_dungeon_tutorial_menu)
+        invis_label = tk.Label(tutorial_frame)
+        invis_label.grid(row=1,column=0, padx=60)
+        title_label.grid(row=1, column=1, sticky="nsew")
+        slide_progress.grid(row=2, column=1, pady=10)
+        dungeon_difficulties_tutorial_text_label.grid(row=3, column=1, pady=10)
+        next_button.grid(row=5, column=1)
+        exit_button.grid(row=7, column=1)
+    def dungeon_difficulties_tutorial_page9(self):
+        for widget in tutorial_frame.winfo_children():
+            widget.destroy()
+        title_label = tk.Label(tutorial_frame, text="Dungeon Difficulties", font=self.small_title_font)
+        slide_progress = tk.Label(tutorial_frame, text="9/9", font=self.medium_text_font_bold)
+        dungeon_difficulties_tutorial_text_label = tk.Label(tutorial_frame, text="Thats it!\n"
+                                                            "You now know all there is about selecting the dungeons difficulty/expedition and its effect on the game")
+        previous_button = tk.Button(tutorial_frame, text="Previous Slide", font=self.menu_button_font, command=self.dungeon_difficulties_tutorial_page8)
+        previous_button.grid(row=4, column=1)
+        exit_button = tk.Button(tutorial_frame, text="Exit", font=self.menu_button_font, command=self.entering_the_dungeon_tutorial_menu)
+        invis_label = tk.Label(tutorial_frame)
+        invis_label.grid(row=1,column=0, padx=60)
+        title_label.grid(row=1, column=1, sticky="nsew")
+        slide_progress.grid(row=2, column=1, pady=10)
+        dungeon_difficulties_tutorial_text_label.grid(row=3, column=1, pady=10)
+        exit_button.grid(row=5, column=1)
+    def combat_cycle_tutorial_page1(self):
+        for widget in tutorial_frame.winfo_children():
+            widget.destroy()
+        title_label = tk.Label(tutorial_frame, text="Combat Cycle", font=self.small_title_font)
+        slide_progress = tk.Label(tutorial_frame, text="1/10", font=self.medium_text_font_bold)
+        combat_cycle_tutorial_text_label = tk.Label(tutorial_frame, text="With all the special abilities and attacks in Dungeons of Strife, combat can seem very complicated on the surface\n"
+                                                    "In reality, combat is quite simple when it comes to understanding turn orders\n"
+                                                    "This tutorial will take you step by step into how combat is driven and what happens at each corner")
+        next_button = tk.Button(tutorial_frame, text="Next Slide", font=self.menu_button_font, command=self.combat_cycle_tutorial_page2)
+        exit_button = tk.Button(tutorial_frame, text="Exit", font=self.menu_button_font, command=self.entering_the_dungeon_tutorial_menu)
+        invis_label = tk.Label(tutorial_frame)
+        invis_label.grid(row=1,column=0, padx=110)
+        title_label.grid(row=1, column=1, sticky="nsew")
+        slide_progress.grid(row=2, column=1, pady=10)
+        combat_cycle_tutorial_text_label.grid(row=3, column=1, pady=10)
+        next_button.grid(row=4, column=1)
+        exit_button.grid(row=5, column=1)
+    def combat_cycle_tutorial_page2(self):
+        for widget in tutorial_frame.winfo_children():
+            widget.destroy()
+        title_label = tk.Label(tutorial_frame, text="Combat Cycle", font=self.small_title_font)
+        slide_progress = tk.Label(tutorial_frame, text="2/10", font=self.medium_text_font_bold)
+        combat_cycle_tutorial_text_label = tk.Label(tutorial_frame, text="The first stop is the Pre-Combat Phase\n"
+                                                    "This is the phase you enter after winning each fight and before starting the next\n"
+                                                    "Here you can see all five of your champions along with their current health points and resource points if they have any\n"
+                                                    "You're able to either start the next fight, quickly return to the main menu without ending the run, or forfeiting the run entirely\n"
+                                                    "Forfeiting simply causes the game to end as though your team has been defeated, allowing you to claim rewards early")
+        img1 = Image.open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Images/CombatCycle/combatCycle_tutorial_picture1.png".format(COMPUTER_USERNAME))
+        img1.thumbnail((400, 400))
+        img1 = ImageTk.PhotoImage(img1)
+        image_label = tk.Label(tutorial_frame, image=img1)
+        image_label.image = img1
+        image_label.grid(row=4, column=1)
+        next_button = tk.Button(tutorial_frame, text="Next Slide", font=self.menu_button_font, command=self.combat_cycle_tutorial_page3)
+        previous_button = tk.Button(tutorial_frame, text="Previous Slide", font=self.menu_button_font, command=self.combat_cycle_tutorial_page1)
+        previous_button.grid(row=6, column=1)
+        exit_button = tk.Button(tutorial_frame, text="Exit", font=self.menu_button_font, command=self.entering_the_dungeon_tutorial_menu)
+        invis_label = tk.Label(tutorial_frame)
+        invis_label.grid(row=1,column=0, padx=110)
+        title_label.grid(row=1, column=1, sticky="nsew")
+        slide_progress.grid(row=2, column=1, pady=10)
+        combat_cycle_tutorial_text_label.grid(row=3, column=1, pady=10)
+        next_button.grid(row=5, column=1)
+        exit_button.grid(row=7, column=1)
+    def combat_cycle_tutorial_page3(self):
+        for widget in tutorial_frame.winfo_children():
+            widget.destroy()
+        title_label = tk.Label(tutorial_frame, text="Combat Cycle", font=self.small_title_font)
+        slide_progress = tk.Label(tutorial_frame, text="3/10", font=self.medium_text_font_bold)
+        combat_cycle_tutorial_text_label = tk.Label(tutorial_frame, text="If you choose to begin the next fight, you're brought to this screen. At the bottom, you're given the ability to select one of three buttons\n"
+                                                    "The first lets you look through your current champions attacks, the second their specials, and the third which lets you control a different champion\n"
+                                                    "You have free choice to take whatever action you want")
+        img2 = Image.open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Images/CombatCycle/combatCycle_tutorial_picture2.png".format(COMPUTER_USERNAME))
+        img2.thumbnail((450, 450))
+        img2 = ImageTk.PhotoImage(img2)
+        image_label = tk.Label(tutorial_frame, image=img2)
+        image_label.image = img2
+        image_label.grid(row=4, column=1)
+        next_button = tk.Button(tutorial_frame, text="Next Slide", font=self.menu_button_font, command=self.combat_cycle_tutorial_page4)
+        previous_button = tk.Button(tutorial_frame, text="Previous Slide", font=self.menu_button_font, command=self.combat_cycle_tutorial_page2)
+        previous_button.grid(row=6, column=1)
+        exit_button = tk.Button(tutorial_frame, text="Exit", font=self.menu_button_font, command=self.entering_the_dungeon_tutorial_menu)
+        invis_label = tk.Label(tutorial_frame)
+        invis_label.grid(row=1,column=0, padx=110)
+        title_label.grid(row=1, column=1, sticky="nsew")
+        slide_progress.grid(row=2, column=1)
+        combat_cycle_tutorial_text_label.grid(row=3, column=1)
+        next_button.grid(row=5, column=1)
+        exit_button.grid(row=7, column=1)
+    def combat_cycle_tutorial_page4(self):
+        for widget in tutorial_frame.winfo_children():
+            widget.destroy()
+        title_label = tk.Label(tutorial_frame, text="Combat Cycle", font=self.small_title_font)
+        slide_progress = tk.Label(tutorial_frame, text="4/10", font=self.medium_text_font_bold)
+        combat_cycle_tutorial_text_label = tk.Label(tutorial_frame, text="Clicking on either the 'Attacks' or 'Specials' buttons will open up a menu of all of that champions corrasponding abilities\n"
+                                                    "You can select any of these abilities as long as it doesn't have a remaining cooldown and you have the resource for it\n"
+                                                    "To learn more about champions and their abilities, visit the 'Champion Basics' tutorial section")
+        img3 = Image.open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Images/CombatCycle/combatCycle_tutorial_picture3.png".format(COMPUTER_USERNAME))
+        img3.thumbnail((450, 450))
+        img3 = ImageTk.PhotoImage(img3)
+        image_label = tk.Label(tutorial_frame, image=img3)
+        image_label.image = img3
+        image_label.grid(row=4, column=1)
+        next_button = tk.Button(tutorial_frame, text="Next Slide", font=self.menu_button_font, command=self.combat_cycle_tutorial_page5)
+        previous_button = tk.Button(tutorial_frame, text="Previous Slide", font=self.menu_button_font, command=self.combat_cycle_tutorial_page3)
+        previous_button.grid(row=6, column=1)
+        exit_button = tk.Button(tutorial_frame, text="Exit", font=self.menu_button_font, command=self.entering_the_dungeon_tutorial_menu)
+        invis_label = tk.Label(tutorial_frame)
+        invis_label.grid(row=1,column=0, padx=110)
+        title_label.grid(row=1, column=1, sticky="nsew")
+        slide_progress.grid(row=2, column=1, pady=10)
+        combat_cycle_tutorial_text_label.grid(row=3, column=1, pady=10)
+        next_button.grid(row=5, column=1)
+        exit_button.grid(row=7, column=1)
+    def combat_cycle_tutorial_page5(self):
+        for widget in tutorial_frame.winfo_children():
+            widget.destroy()
+        title_label = tk.Label(tutorial_frame, text="Combat Cycle", font=self.small_title_font)
+        slide_progress = tk.Label(tutorial_frame, text="5/10", font=self.medium_text_font_bold)
+        combat_cycle_tutorial_text_label = tk.Label(tutorial_frame, text="After making your action, you'll asked who out of your champions should take their turn next\n"
+                                                    "Champions who've already had their turn won't be able to be selected, only those who haven't had a turn yet will be selectable")
+        img4 = Image.open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Images/CombatCycle/combatCycle_tutorial_picture4.png".format(COMPUTER_USERNAME))
+        img4.thumbnail((500, 500))
+        img4 = ImageTk.PhotoImage(img4)
+        image_label = tk.Label(tutorial_frame, image=img4)
+        image_label.image = img4
+        image_label.grid(row=4, column=1)
+        next_button = tk.Button(tutorial_frame, text="Next Slide", font=self.menu_button_font, command=self.combat_cycle_tutorial_page6)
+        previous_button = tk.Button(tutorial_frame, text="Previous Slide", font=self.menu_button_font, command=self.combat_cycle_tutorial_page4)
+        previous_button.grid(row=6, column=1)
+        exit_button = tk.Button(tutorial_frame, text="Exit", font=self.menu_button_font, command=self.entering_the_dungeon_tutorial_menu)
+        invis_label = tk.Label(tutorial_frame)
+        invis_label.grid(row=1,column=0, padx=110)
+        title_label.grid(row=1, column=1, sticky="nsew")
+        slide_progress.grid(row=2, column=1, pady=10)
+        combat_cycle_tutorial_text_label.grid(row=3, column=1, pady=10)
+        next_button.grid(row=5, column=1)
+        exit_button.grid(row=7, column=1)
+    def combat_cycle_tutorial_page6(self):
+        for widget in tutorial_frame.winfo_children():
+            widget.destroy()
+        title_label = tk.Label(tutorial_frame, text="Combat Cycle", font=self.small_title_font)
+        slide_progress = tk.Label(tutorial_frame, text="6/10", font=self.medium_text_font_bold)
+        combat_cycle_tutorial_text_label = tk.Label(tutorial_frame, text="When all your champions have had their turn, the monsters turn will begin\n"
+                                                    "Monsters, when starting their turn, will first take damage from any damage over time effects they're afflicted with\n"
+                                                    "If they're still alive afterwards they'll take their attacks damaging allies they were targetting\n"
+                                                    "After all monsters have attacked, heal over time abiltiies on allies will trigger and all buffs with timers will tick down by one\n"
+                                                    "All of the champions abilities that are on cooldown also tick down by one")
+        next_button = tk.Button(tutorial_frame, text="Next Slide", font=self.menu_button_font, command=self.combat_cycle_tutorial_page7)
+        previous_button = tk.Button(tutorial_frame, text="Previous Slide", font=self.menu_button_font, command=self.combat_cycle_tutorial_page5)
+        previous_button.grid(row=5, column=1)
+        exit_button = tk.Button(tutorial_frame, text="Exit", font=self.menu_button_font, command=self.entering_the_dungeon_tutorial_menu)
+        invis_label = tk.Label(tutorial_frame)
+        invis_label.grid(row=1,column=0, padx=110)
+        title_label.grid(row=1, column=1, sticky="nsew")
+        slide_progress.grid(row=2, column=1, pady=10)
+        combat_cycle_tutorial_text_label.grid(row=3, column=1, pady=10)
+        next_button.grid(row=4, column=1)
+        exit_button.grid(row=6, column=1)
+    def combat_cycle_tutorial_page7(self):
+        for widget in tutorial_frame.winfo_children():
+            widget.destroy()
+        title_label = tk.Label(tutorial_frame, text="Combat Cycle", font=self.small_title_font)
+        slide_progress = tk.Label(tutorial_frame, text="7/10", font=self.medium_text_font_bold)
+        combat_cycle_tutorial_text_label = tk.Label(tutorial_frame, text="The champions turn then begins once again, ready to repeat in the same fashion as before\n"
+                                                    "This continues until either all the champions or monsters have been defeated")
+        img5 = Image.open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Images/CombatCycle/combatCycle_tutorial_picture5.png".format(COMPUTER_USERNAME))
+        img5.thumbnail((500, 500))
+        img5 = ImageTk.PhotoImage(img5)
+        image_label = tk.Label(tutorial_frame, image=img5)
+        image_label.image = img5
+        image_label.grid(row=4, column=1)
+        next_button = tk.Button(tutorial_frame, text="Next Slide", font=self.menu_button_font, command=self.combat_cycle_tutorial_page8)
+        previous_button = tk.Button(tutorial_frame, text="Previous Slide", font=self.menu_button_font, command=self.combat_cycle_tutorial_page6)
+        previous_button.grid(row=6, column=1)
+        exit_button = tk.Button(tutorial_frame, text="Exit", font=self.menu_button_font, command=self.entering_the_dungeon_tutorial_menu)
+        invis_label = tk.Label(tutorial_frame)
+        invis_label.grid(row=1,column=0, padx=110)
+        title_label.grid(row=1, column=1, sticky="nsew")
+        slide_progress.grid(row=2, column=1, pady=10)
+        combat_cycle_tutorial_text_label.grid(row=3, column=1, pady=10)
+        next_button.grid(row=5, column=1)
+        exit_button.grid(row=7, column=1)
+    def combat_cycle_tutorial_page8(self):
+        for widget in tutorial_frame.winfo_children():
+            widget.destroy()
+        title_label = tk.Label(tutorial_frame, text="Combat Cycle", font=self.small_title_font)
+        slide_progress = tk.Label(tutorial_frame, text="8/10", font=self.medium_text_font_bold)
+        combat_cycle_tutorial_text_label = tk.Label(tutorial_frame, text="If the champions win by defeating the monsters, they're then returned to the Pre-Combat Phase\n"
+                                                    "Same as before, you can see the status of all your champions conditions. All health and resources lost in the previous battle will carry over. So be careful\n"
+                                                    "But there are some things that occur after each victory in combat, first all champions that use the 'Mana' resource will regain 75 instantly\n"
+                                                    "Secondly, all heal over time and buff effects will tick down once as well as remaining cooldowns")
+        img6 = Image.open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Images/CombatCycle/combatCycle_tutorial_picture6.png".format(COMPUTER_USERNAME))
+        img6.thumbnail((450, 450))
+        img6 = ImageTk.PhotoImage(img6)
+        image_label = tk.Label(tutorial_frame, image=img6)
+        image_label.image = img6
+        image_label.grid(row=4, column=1)
+        next_button = tk.Button(tutorial_frame, text="Next Slide", font=self.menu_button_font, command=self.combat_cycle_tutorial_page9)
+        previous_button = tk.Button(tutorial_frame, text="Previous Slide", font=self.menu_button_font, command=self.combat_cycle_tutorial_page7)
+        previous_button.grid(row=6, column=1)
+        exit_button = tk.Button(tutorial_frame, text="Exit", font=self.menu_button_font, command=self.entering_the_dungeon_tutorial_menu)
+        invis_label = tk.Label(tutorial_frame)
+        invis_label.grid(row=1,column=0, padx=110)
+        title_label.grid(row=1, column=1, sticky="nsew")
+        slide_progress.grid(row=2, column=1, pady=10)
+        combat_cycle_tutorial_text_label.grid(row=3, column=1, pady=10)
+        next_button.grid(row=5, column=1)
+        exit_button.grid(row=7, column=1)
+    def combat_cycle_tutorial_page9(self):
+        for widget in tutorial_frame.winfo_children():
+            widget.destroy()
+        title_label = tk.Label(tutorial_frame, text="Combat Cycle", font=self.small_title_font)
+        slide_progress = tk.Label(tutorial_frame, text="9/10", font=self.medium_text_font_bold)
+        combat_cycle_tutorial_text_label = tk.Label(tutorial_frame, text="If the monsters win by defeating all the champions, then the player will receive a game over screen\n"
+                                                    "Here, it will tell the player how many floors and rooms they've cleared as well as how many dungeoneer emblems they would've received\n"
+                                                    "If the player is playing on a difficulty lower than the highest they can play on, then they receive no emblems\n"
+                                                    "For more information on dungeoneer emblems and the ranking system, visit the 'Ranking System' tutorial section")
+        img7 = Image.open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Images/CombatCycle/combatCycle_tutorial_picture7.png".format(COMPUTER_USERNAME))
+        img7.thumbnail((500, 500))
+        img7 = ImageTk.PhotoImage(img7)
+        image_label = tk.Label(tutorial_frame, image=img7)
+        image_label.image = img7
+        image_label.grid(row=4, column=1)
+        next_button = tk.Button(tutorial_frame, text="Next Slide", font=self.menu_button_font, command=self.combat_cycle_tutorial_page10)
+        previous_button = tk.Button(tutorial_frame, text="Previous Slide", font=self.menu_button_font, command=self.combat_cycle_tutorial_page8)
+        previous_button.grid(row=6, column=1)
+        exit_button = tk.Button(tutorial_frame, text="Exit", font=self.menu_button_font, command=self.entering_the_dungeon_tutorial_menu)
+        invis_label = tk.Label(tutorial_frame)
+        invis_label.grid(row=1,column=0, padx=110)
+        title_label.grid(row=1, column=1, sticky="nsew")
+        slide_progress.grid(row=2, column=1, pady=10)
+        combat_cycle_tutorial_text_label.grid(row=3, column=1, pady=10)
+        next_button.grid(row=5, column=1)
+        exit_button.grid(row=7, column=1)
+    def combat_cycle_tutorial_page10(self):
+        for widget in tutorial_frame.winfo_children():
+            widget.destroy()
+        title_label = tk.Label(tutorial_frame, text="Combat Cycle", font=self.small_title_font)
+        slide_progress = tk.Label(tutorial_frame, text="10/10", font=self.medium_text_font_bold)
+        combat_cycle_tutorial_text_label = tk.Label(tutorial_frame, text="Thats it!\n"
+                                    "Now you know exactly how combat flows from turn to turn")
+        previous_button = tk.Button(tutorial_frame, text="Previous Slide", font=self.menu_button_font, command=self.combat_cycle_tutorial_page9)
+        previous_button.grid(row=4, column=1)
+        exit_button = tk.Button(tutorial_frame, text="Exit", font=self.menu_button_font, command=self.entering_the_dungeon_tutorial_menu)
+        invis_label = tk.Label(tutorial_frame)
+        invis_label.grid(row=1,column=0, padx=110)
+        title_label.grid(row=1, column=1, sticky="nsew")
+        slide_progress.grid(row=2, column=1, pady=10)
+        combat_cycle_tutorial_text_label.grid(row=3, column=1, pady=10)
+        exit_button.grid(row=5, column=1)
+    def ranking_system_tutorial_page1(self):
+        for widget in tutorial_frame.winfo_children():
+            widget.destroy()
+        title_label = tk.Label(tutorial_frame, text="Ranking System", font=self.small_title_font)
+        slide_progress = tk.Label(tutorial_frame, text="1/7", font=self.medium_text_font_bold)
+        ranking_system_tutorial_text_label = tk.Label(tutorial_frame, text="The Ranking System of Dungeons of Strife is how explorers can determine who has more experience down in the depths\n"
+                                                      "It's also how the different guilds determine whose allowed to join their dangerous expeditions into increasing challenging dungeons")
+        next_button = tk.Button(tutorial_frame, text="Next Slide", font=self.menu_button_font, command=self.ranking_system_tutorial_page2)
         exit_button = tk.Button(tutorial_frame, text="Exit", font=self.menu_button_font, command=self.opening_tutorial_menu)
         invis_label = tk.Label(tutorial_frame)
-        invis_label.grid(row=1, column=0, padx=48)
-        title_label.grid(row=1, column=1, sticky="nsew", pady=10)
+        invis_label.grid(row=1, column=0, padx=110)
+        title_label.grid(row=1, column=1, sticky="nsew")
         slide_progress.grid(row=2, column=1, pady=10)
-        choosing_team_tutorial_text_label.grid(row=3, column=1, pady=10)
+        ranking_system_tutorial_text_label.grid(row=3, column=1, pady=10)
+        next_button.grid(row=4, column=1)
+        exit_button.grid(row=5, column=1)
+    def ranking_system_tutorial_page2(self):
+        for widget in tutorial_frame.winfo_children():
+            widget.destroy()
+        title_label = tk.Label(tutorial_frame, text="Ranking System", font=self.small_title_font)
+        slide_progress = tk.Label(tutorial_frame, text="2/7", font=self.medium_text_font_bold)
+        ranking_system_tutorial_text_label = tk.Label(tutorial_frame, text="There are 7 ranks with each rank is represented by a Guild\n"
+                                                      "The higher your rank, the better your guild\n"
+                                                      "The names for each of the 7 guilds is shown below")
+        img1 = Image.open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Images/RankingSystem/rankingSystem_tutorial_picture1.png".format(COMPUTER_USERNAME))
+        img1.thumbnail((450, 450))
+        img1 = ImageTk.PhotoImage(img1)
+        image_label = tk.Label(tutorial_frame, image=img1)
+        image_label.image = img1
+        image_label.grid(row=4, column=1)
+        next_button = tk.Button(tutorial_frame, text="Next Slide", font=self.menu_button_font, command=self.ranking_system_tutorial_page3)
+        previous_button = tk.Button(tutorial_frame, text="Previous Slide", font=self.menu_button_font, command=self.ranking_system_tutorial_page1)
+        exit_button = tk.Button(tutorial_frame, text="Exit", font=self.menu_button_font, command=self.opening_tutorial_menu)
+        invis_label = tk.Label(tutorial_frame)
+        invis_label.grid(row=1, column=0, padx=110)
+        title_label.grid(row=1, column=1, sticky="nsew")
+        slide_progress.grid(row=2, column=1, pady=10)
+        ranking_system_tutorial_text_label.grid(row=3, column=1, pady=10)
+        next_button.grid(row=5, column=1)
+        previous_button.grid(row=6, column=1)
         exit_button.grid(row=7, column=1)
-
+    def ranking_system_tutorial_page3(self):
+        for widget in tutorial_frame.winfo_children():
+            widget.destroy()
+        title_label = tk.Label(tutorial_frame, text="Ranking System", font=self.small_title_font)
+        slide_progress = tk.Label(tutorial_frame, text="3/7", font=self.medium_text_font_bold)
+        ranking_system_tutorial_text_label = tk.Label(tutorial_frame, text="To reach the higher ranks, players must collect 'Dungeons of Strife's rank currency.\n"
+                                                      "Dungeoneer Emblems\n"
+                                                      "The amount of emblems a player has dictats the rank they are")
+        next_button = tk.Button(tutorial_frame, text="Next Slide", font=self.menu_button_font, command=self.ranking_system_tutorial_page4)
+        previous_button = tk.Button(tutorial_frame, text="Previous Slide", font=self.menu_button_font, command=self.ranking_system_tutorial_page2)
+        exit_button = tk.Button(tutorial_frame, text="Exit", font=self.menu_button_font, command=self.opening_tutorial_menu)
+        invis_label = tk.Label(tutorial_frame)
+        invis_label.grid(row=1, column=0, padx=110)
+        title_label.grid(row=1, column=1, sticky="nsew")
+        slide_progress.grid(row=2, column=1, pady=10)
+        ranking_system_tutorial_text_label.grid(row=3, column=1, pady=10)
+        next_button.grid(row=4, column=1)
+        previous_button.grid(row=5, column=1)
+        exit_button.grid(row=6, column=1)
+    def ranking_system_tutorial_page4(self):
+        for widget in tutorial_frame.winfo_children():
+            widget.destroy()
+        title_label = tk.Label(tutorial_frame, text="Ranking System", font=self.small_title_font)
+        slide_progress = tk.Label(tutorial_frame, text="4/7", font=self.medium_text_font_bold)
+        ranking_system_tutorial_text_label = tk.Label(tutorial_frame, text="The amount of emblems required for each rank is shown below\n"
+                                                      "The gap between each rank is equally 20 emblems apart\n"
+                                                      "The reward for achieving a new rank is access to that guild's dungeon difficulty known as an Expedition\n"
+                                                      "to learn more about the difficulties of each expedition, go to the 'Dungeon Difficulties' tutorial section")
+        img1 = Image.open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Images/RankingSystem/rankingSystem_tutorial_picture2.png".format(COMPUTER_USERNAME))
+        img1.thumbnail((450, 450))
+        img1 = ImageTk.PhotoImage(img1)
+        image_label = tk.Label(tutorial_frame, image=img1)
+        image_label.image = img1
+        image_label.grid(row=4, column=1)
+        next_button = tk.Button(tutorial_frame, text="Next Slide", font=self.menu_button_font, command=self.ranking_system_tutorial_page5)
+        previous_button = tk.Button(tutorial_frame, text="Previous Slide", font=self.menu_button_font, command=self.ranking_system_tutorial_page3)
+        exit_button = tk.Button(tutorial_frame, text="Exit", font=self.menu_button_font, command=self.opening_tutorial_menu)
+        invis_label = tk.Label(tutorial_frame)
+        invis_label.grid(row=1, column=0, padx=110)
+        title_label.grid(row=1, column=1, sticky="nsew")
+        slide_progress.grid(row=2, column=1, pady=10)
+        ranking_system_tutorial_text_label.grid(row=3, column=1, pady=10)
+        next_button.grid(row=5, column=1)
+        previous_button.grid(row=6, column=1)
+        exit_button.grid(row=7, column=1)
+    def ranking_system_tutorial_page5(self):
+        for widget in tutorial_frame.winfo_children():
+            widget.destroy()
+        title_label = tk.Label(tutorial_frame, text="Ranking System", font=self.small_title_font)
+        slide_progress = tk.Label(tutorial_frame, text="5/7", font=self.medium_text_font_bold)
+        ranking_system_tutorial_text_label = tk.Label(tutorial_frame, text="To earn these emblems in order to rank up, one must simply play the game on their highest available difficult\n"
+                                                      "Playing on difficulties that aren't the one tied to your current rank will not reward any emblems\n"
+                                                      "The amount of emblems rewarded is 0.33 per room cleared, meaning completing an entire floor will grant 1 full emblem!\n"
+                                                      "In essence, this means that to rank up, you must complete in total 20 floors worth of rooms in order to progress to the next rank")
+        img1 = Image.open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Images/RankingSystem/rankingSystem_tutorial_picture3.png".format(COMPUTER_USERNAME))
+        img1.thumbnail((450, 450))
+        img1 = ImageTk.PhotoImage(img1)
+        image_label = tk.Label(tutorial_frame, image=img1)
+        image_label.image = img1
+        image_label.grid(row=4, column=1)
+        next_button = tk.Button(tutorial_frame, text="Next Slide", font=self.menu_button_font, command=self.ranking_system_tutorial_page6)
+        previous_button = tk.Button(tutorial_frame, text="Previous Slide", font=self.menu_button_font, command=self.ranking_system_tutorial_page4)
+        exit_button = tk.Button(tutorial_frame, text="Exit", font=self.menu_button_font, command=self.opening_tutorial_menu)
+        invis_label = tk.Label(tutorial_frame)
+        invis_label.grid(row=1, column=0, padx=110)
+        title_label.grid(row=1, column=1, sticky="nsew")
+        slide_progress.grid(row=2, column=1, pady=10)
+        ranking_system_tutorial_text_label.grid(row=3, column=1, pady=10)
+        next_button.grid(row=5, column=1)
+        previous_button.grid(row=6, column=1)
+        exit_button.grid(row=7, column=1)
+    def ranking_system_tutorial_page6(self):
+        for widget in tutorial_frame.winfo_children():
+            widget.destroy()
+        title_label = tk.Label(tutorial_frame, text="Ranking System", font=self.small_title_font)
+        slide_progress = tk.Label(tutorial_frame, text="6/7", font=self.medium_text_font_bold)
+        ranking_system_tutorial_text_label = tk.Label(tutorial_frame, text="The Leaderboard was supposed to be where you could see the top 10 players that achieved the highest floors of each rank\n"
+                                                      "But as of right now it is currently unavailable")
+        img1 = Image.open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Images/RankingSystem/rankingSystem_tutorial_picture4.png".format(COMPUTER_USERNAME))
+        img1.thumbnail((450, 450))
+        img1 = ImageTk.PhotoImage(img1)
+        image_label = tk.Label(tutorial_frame, image=img1)
+        image_label.image = img1
+        image_label.grid(row=4, column=1)
+        next_button = tk.Button(tutorial_frame, text="Next Slide", font=self.menu_button_font, command=self.ranking_system_tutorial_page7)
+        previous_button = tk.Button(tutorial_frame, text="Previous Slide", font=self.menu_button_font, command=self.ranking_system_tutorial_page5)
+        exit_button = tk.Button(tutorial_frame, text="Exit", font=self.menu_button_font, command=self.opening_tutorial_menu)
+        invis_label = tk.Label(tutorial_frame)
+        invis_label.grid(row=1, column=0, padx=110)
+        title_label.grid(row=1, column=1, sticky="nsew")
+        slide_progress.grid(row=2, column=1, pady=10)
+        ranking_system_tutorial_text_label.grid(row=3, column=1, pady=10)
+        next_button.grid(row=5, column=1)
+        previous_button.grid(row=6, column=1)
+        exit_button.grid(row=7, column=1)
+    def ranking_system_tutorial_page7(self):
+        for widget in tutorial_frame.winfo_children():
+            widget.destroy()
+        title_label = tk.Label(tutorial_frame, text="Ranking System", font=self.small_title_font)
+        slide_progress = tk.Label(tutorial_frame, text="7/7", font=self.medium_text_font_bold)
+        ranking_system_tutorial_text_label = tk.Label(tutorial_frame, text="Thats it!\n"
+                                                      "You now know how the ranking system works in Dungeons of Strife\n"
+                                                      "If you ever need a refresher, don't be shy and revisit this tutorial page")
+        previous_button = tk.Button(tutorial_frame, text="Previous Slide", font=self.menu_button_font, command=self.ranking_system_tutorial_page6)
+        exit_button = tk.Button(tutorial_frame, text="Exit", font=self.menu_button_font, command=self.opening_tutorial_menu)
+        invis_label = tk.Label(tutorial_frame)
+        invis_label.grid(row=1, column=0, padx=110)
+        title_label.grid(row=1, column=1, sticky="nsew")
+        slide_progress.grid(row=2, column=1, pady=10)
+        ranking_system_tutorial_text_label.grid(row=3, column=1, pady=10)
+        previous_button.grid(row=4, column=1)
+        exit_button.grid(row=5, column=1)
+    
 if __name__ == "__main__":
     app = ParentClass()
     app.mainloop()
