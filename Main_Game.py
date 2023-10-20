@@ -163,14 +163,14 @@ class ParentClass(tk.Tk):
 #Data can be username (string), encoded user name (string), champion list in code form (string), number of emblems (float), or  rank (string)
     def get_account_data(self, requested_data):
         current_user = open(
-            "C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Data (DO NOT EDIT)/game_data_current_username.txt".format(COMPUTER_USERNAME), "r")
+            "C:/Users/{}/Documents/L3_ASSIGNMENT_RPG/Game_Data (DO NOT EDIT)/game_data_current_username.txt".format(COMPUTER_USERNAME), "r")
         current_user_read = current_user.readline()
         user = str(current_user_read)
         encoded_user = user.encode("utf-8")
         encoded_user = str(encoded_user)
         current_user.close()
         accounts_file = open(
-            "C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Data (DO NOT EDIT)/account_data_users.txt".format(COMPUTER_USERNAME), "r")
+            "C:/Users/{}/Documents/L3_ASSIGNMENT_RPG/Game_Data (DO NOT EDIT)/account_data_users.txt".format(COMPUTER_USERNAME), "r")
         for line in accounts_file:
             if encoded_user in line:
                 user_data_list = list(line.split(", "))
@@ -189,7 +189,7 @@ class ParentClass(tk.Tk):
 #Function that gets the games current dungeon name and returns it
     def get_dungeon_difficulty_data(self, requested_data):
         difficulty_file_read = open(
-            "C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Data (DO NOT EDIT)/game_data_dungeon_difficulty.txt".format(COMPUTER_USERNAME),
+            "C:/Users/{}/Documents/L3_ASSIGNMENT_RPG/Game_Data (DO NOT EDIT)/game_data_dungeon_difficulty.txt".format(COMPUTER_USERNAME),
             "r")
         dungeon_settings = difficulty_file_read.readline()
         if dungeon_settings == "Bronze":
@@ -272,9 +272,9 @@ class LoginMenu(tk.Frame):
         inputted_password = password_entry.get()
         inputted_password.strip()
         username_file = open(
-            "C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Data (DO NOT EDIT)/account_data_users.txt".format(COMPUTER_USERNAME), "r")
+            "C:/Users/{}/Documents/L3_ASSIGNMENT_RPG/Game_Data (DO NOT EDIT)/account_data_users.txt".format(COMPUTER_USERNAME), "r")
         password_file = open(
-            "C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Data (DO NOT EDIT)/account_data_password.txt".format(COMPUTER_USERNAME), "r")
+            "C:/Users/{}/Documents/L3_ASSIGNMENT_RPG/Game_Data (DO NOT EDIT)/account_data_password.txt".format(COMPUTER_USERNAME), "r")
         no_us_and_pw_warning =  ":---:Username and Password missing:---:"
         no_pw_warning =         ":----------:Password missing;---------:"
         no_us_warning =         ":----------:Username missing:---------:"
@@ -322,7 +322,7 @@ class LoginMenu(tk.Frame):
 #Writes the inputted_username into a text file for later use when finding what account is logged in
     def set_current_user(self, inputted_username):
         current_user = open(
-            "C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Data (DO NOT EDIT)/game_data_current_username.txt".format(COMPUTER_USERNAME), "w")
+            "C:/Users/{}/Documents/L3_ASSIGNMENT_RPG/Game_Data (DO NOT EDIT)/game_data_current_username.txt".format(COMPUTER_USERNAME), "w")
         current_user.write("{}".format(inputted_username))
         current_user.close()
 #Deletes the inputted data in the text boxes so they'll be empty next time the user enters the frame
@@ -384,9 +384,9 @@ class RegisterMenu(tk.Frame):
         inputted_confirm_password = confirm_password_entry.get()
         inputted_confirm_password.strip()
         username_file = open(
-            "C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Data (DO NOT EDIT)/account_data_users.txt".format(COMPUTER_USERNAME), "r")
+            "C:/Users/{}/Documents/L3_ASSIGNMENT_RPG/Game_Data (DO NOT EDIT)/account_data_users.txt".format(COMPUTER_USERNAME), "r")
         password_file = open(
-            "C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Data (DO NOT EDIT)/account_data_password.txt".format(COMPUTER_USERNAME), "r")
+            "C:/Users/{}/Documents/L3_ASSIGNMENT_RPG/Game_Data (DO NOT EDIT)/account_data_password.txt".format(COMPUTER_USERNAME), "r")
         no_us_and_pw_warning = "Username and Password cannot be empty"
         no_pw_warning =        ":--------:Password cannot be empty:--------:"
         no_us_warning =        ":--------:Username cannot be empty:--------:"
@@ -442,11 +442,11 @@ class RegisterMenu(tk.Frame):
         register_window_button_no.grid(column=1, row=3)
 #Writes the newly created account information into their respective text files
     def user_account_set(self, register_window,  encoded_username, encoded_password):
-        file = open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Data (DO NOT EDIT)/account_data_users.txt".format(COMPUTER_USERNAME), "a")
+        file = open("C:/Users/{}/Documents/L3_ASSIGNMENT_RPG/Game_Data (DO NOT EDIT)/account_data_users.txt".format(COMPUTER_USERNAME), "a")
         file.write("\n")
         file.write("{}, Empty:Empty:Empty:Empty:Empty, 0, Bronze".format(str(encoded_username)))
         file.close()
-        file = open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Data (DO NOT EDIT)/account_data_password.txt".format(COMPUTER_USERNAME), "a")
+        file = open("C:/Users/{}/Documents/L3_ASSIGNMENT_RPG/Game_Data (DO NOT EDIT)/account_data_password.txt".format(COMPUTER_USERNAME), "a")
         file.write("\n")
         file.write(str(encoded_password))
         file.close()
@@ -1354,7 +1354,7 @@ class TeamSelectionPage(tk.Frame):
         emblems = ParentClass.get_account_data(self, "emblems")
         rank = ParentClass.get_account_data(self, "rank")
         i = -1
-        file = open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Data (DO NOT EDIT)/account_data_users.txt".format(COMPUTER_USERNAME),
+        file = open("C:/Users/{}/Documents/L3_ASSIGNMENT_RPG/Game_Data (DO NOT EDIT)/account_data_users.txt".format(COMPUTER_USERNAME),
                     "r")
         file_allLines = file.readlines()
         for line in file_allLines:
@@ -1364,7 +1364,7 @@ class TeamSelectionPage(tk.Frame):
                 new_line = "{}, {}, {}, {}\n".format(user, new_champion_list, emblems, rank)
                 file_allLines[i] = new_line
                 file_write = open(
-                    "C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Data (DO NOT EDIT)/account_data_users.txt".format(COMPUTER_USERNAME),
+                    "C:/Users/{}/Documents/L3_ASSIGNMENT_RPG/Game_Data (DO NOT EDIT)/account_data_users.txt".format(COMPUTER_USERNAME),
                     "w")
                 file_write.writelines(file_allLines)
                 file.close()
@@ -1515,7 +1515,7 @@ class DungeonDelve(tk.Frame):
 #Writes the users current team into a file for later east use
     def set_dungeon_team(self, decoded_dungeoneer_team, root):
         current_team = open(
-            "C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Data (DO NOT EDIT)/game_data_dungeon_team.txt".format(COMPUTER_USERNAME), "w")
+            "C:/Users/{}/Documents/L3_ASSIGNMENT_RPG/Game_Data (DO NOT EDIT)/game_data_dungeon_team.txt".format(COMPUTER_USERNAME), "w")
         current_team.write(str(decoded_dungeoneer_team))
         current_team.close()
         root.destroy()
@@ -1664,49 +1664,49 @@ class DungeonExpeditions(tk.Frame):
     def set_new_dungeon_difficulty(self, difficulty):
         if difficulty == "Bronze":
             dungeon_difficulty_file = open(
-                "C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Data (DO NOT EDIT)/game_data_dungeon_difficulty.txt".format(COMPUTER_USERNAME),
+                "C:/Users/{}/Documents/L3_ASSIGNMENT_RPG/Game_Data (DO NOT EDIT)/game_data_dungeon_difficulty.txt".format(COMPUTER_USERNAME),
                 "w")
             dungeon_difficulty_file.write("Bronze")
             dungeon_difficulty_file.close()
         elif difficulty == "Silver":
             dungeon_difficulty_file = open(
-                "C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Data (DO NOT EDIT)/game_data_dungeon_difficulty.txt".format(COMPUTER_USERNAME),
+                "C:/Users/{}/Documents/L3_ASSIGNMENT_RPG/Game_Data (DO NOT EDIT)/game_data_dungeon_difficulty.txt".format(COMPUTER_USERNAME),
                 "w")
             dungeon_difficulty_file.write("Silver")
             dungeon_difficulty_file.close()
         elif difficulty == "Gold":
             dungeon_difficulty_file = open(
-                "C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Data (DO NOT EDIT)/game_data_dungeon_difficulty.txt".format(COMPUTER_USERNAME),
+                "C:/Users/{}/Documents/L3_ASSIGNMENT_RPG/Game_Data (DO NOT EDIT)/game_data_dungeon_difficulty.txt".format(COMPUTER_USERNAME),
                 "w")
             dungeon_difficulty_file.write("Gold")
             dungeon_difficulty_file.close()
         elif difficulty == "Steel":
             dungeon_difficulty_file = open(
-                "C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Data (DO NOT EDIT)/game_data_dungeon_difficulty.txt".format(COMPUTER_USERNAME),
+                "C:/Users/{}/Documents/L3_ASSIGNMENT_RPG/Game_Data (DO NOT EDIT)/game_data_dungeon_difficulty.txt".format(COMPUTER_USERNAME),
                 "w")
             dungeon_difficulty_file.write("Steel")
             dungeon_difficulty_file.close()
         elif difficulty == "Diamond":
             dungeon_difficulty_file = open(
-                "C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Data (DO NOT EDIT)/game_data_dungeon_difficulty.txt".format(COMPUTER_USERNAME),
+                "C:/Users/{}/Documents/L3_ASSIGNMENT_RPG/Game_Data (DO NOT EDIT)/game_data_dungeon_difficulty.txt".format(COMPUTER_USERNAME),
                 "w")
             dungeon_difficulty_file.write("Diamond")
             dungeon_difficulty_file.close()
         elif difficulty == "Ruby":
             dungeon_difficulty_file = open(
-                "C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Data (DO NOT EDIT)/game_data_dungeon_difficulty.txt".format(COMPUTER_USERNAME),
+                "C:/Users/{}/Documents/L3_ASSIGNMENT_RPG/Game_Data (DO NOT EDIT)/game_data_dungeon_difficulty.txt".format(COMPUTER_USERNAME),
                 "w")
             dungeon_difficulty_file.write("Ruby")
             dungeon_difficulty_file.close()
         elif difficulty == "Obsidian":
             dungeon_difficulty_file = open(
-                "C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Data (DO NOT EDIT)/game_data_dungeon_difficulty.txt".format(COMPUTER_USERNAME),
+                "C:/Users/{}/Documents/L3_ASSIGNMENT_RPG/Game_Data (DO NOT EDIT)/game_data_dungeon_difficulty.txt".format(COMPUTER_USERNAME),
                 "w")
             dungeon_difficulty_file.write("Obsidian")
             dungeon_difficulty_file.close()
         elif difficulty == "null":
             dungeon_difficulty_file = open(
-                "C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Data (DO NOT EDIT)/game_data_dungeon_difficulty.txt".format(COMPUTER_USERNAME),
+                "C:/Users/{}/Documents/L3_ASSIGNMENT_RPG/Game_Data (DO NOT EDIT)/game_data_dungeon_difficulty.txt".format(COMPUTER_USERNAME),
                 "w")
             dungeon_difficulty_file.write("null")
             dungeon_difficulty_file.close()
@@ -31405,7 +31405,7 @@ class GameFrame(tk.Frame):
 #Replaces the old emblem total with new total in the database and also changes their rank if they're surpassed a threshhold
     def update_account_emblems(self, new_emblem_total, rank_change_check):
         i = -1
-        file = open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Data (DO NOT EDIT)/account_data_users.txt".format(COMPUTER_USERNAME),
+        file = open("C:/Users/{}/Documents/L3_ASSIGNMENT_RPG/Game_Data (DO NOT EDIT)/account_data_users.txt".format(COMPUTER_USERNAME),
                     "r")
         file_allLines = file.readlines()
         user = ParentClass.get_account_data(self, "encoded_username")
@@ -31436,7 +31436,7 @@ class GameFrame(tk.Frame):
                 new_line = "{}, {}, {}, {}\n".format(user, champion_list, new_emblem_total, rank)
                 file_allLines[i] = new_line
                 file_write = open(
-                    "C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Data (DO NOT EDIT)/account_data_users.txt".format(COMPUTER_USERNAME),
+                    "C:/Users/{}/Documents/L3_ASSIGNMENT_RPG/Game_Data (DO NOT EDIT)/account_data_users.txt".format(COMPUTER_USERNAME),
                     "w")
                 file_write.writelines(file_allLines)
                 file.close()
@@ -31493,7 +31493,7 @@ class How2PlayPage(tk.Frame):
                                                     "This tutorial will take you around the games menus and give a brief description so you understand a basic whats what\n"
                                                     "The image below shows the 'Surface Menu'\n"
                                                     "Think of this as the Main Menu, from here you'll be able to get everywhere")
-        img1 = Image.open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Images/NavigatingMenus/navigatingMenus_tutorial_picture1.png".format(COMPUTER_USERNAME))
+        img1 = Image.open("C:/Users/{}/Documents/L3_ASSIGNMENT_RPG/Game_Images/NavigatingMenus/navigatingMenus_tutorial_picture1.png".format(COMPUTER_USERNAME))
         img1.thumbnail((450, 450))
         img1 = ImageTk.PhotoImage(img1)
         image_label = tk.Label(tutorial_frame, image=img1)
@@ -31515,7 +31515,7 @@ class How2PlayPage(tk.Frame):
         slide_progress = tk.Label(tutorial_frame, text="2/10", font=self.medium_text_font_bold)
         navigating_menus_tutorial_text_label = tk.Label(tutorial_frame, text="Firstly, we'll look into the 'Delve into the Dungeon' button\n"
                                                     "This button will send you to the dungeon's entrance, where you'll be able to choose your difficulty and begin playing")
-        img2 = Image.open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Images/NavigatingMenus/navigatingMenus_tutorial_picture2.png".format(COMPUTER_USERNAME))
+        img2 = Image.open("C:/Users/{}/Documents/L3_ASSIGNMENT_RPG/Game_Images/NavigatingMenus/navigatingMenus_tutorial_picture2.png".format(COMPUTER_USERNAME))
         img2.thumbnail((450, 450))
         img2 = ImageTk.PhotoImage(img2)
         image_label = tk.Label(tutorial_frame, image=img2)
@@ -31540,7 +31540,7 @@ class How2PlayPage(tk.Frame):
         navigating_menus_tutorial_text_label = tk.Label(tutorial_frame, text="This is the Dungeon entrance menu\n"
                                                     "The highlighted button is how you begin playing\n"
                                                     "When you've put together your champion team and picked your difficulty, you'll be able to explore the dungeon")
-        img3 = Image.open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Images/NavigatingMenus/navigatingMenus_tutorial_picture3.png".format(COMPUTER_USERNAME))
+        img3 = Image.open("C:/Users/{}/Documents/L3_ASSIGNMENT_RPG/Game_Images/NavigatingMenus/navigatingMenus_tutorial_picture3.png".format(COMPUTER_USERNAME))
         img3.thumbnail((450, 450))
         img3 = ImageTk.PhotoImage(img3)
         image_label = tk.Label(tutorial_frame, image=img3)
@@ -31564,7 +31564,7 @@ class How2PlayPage(tk.Frame):
         slide_progress = tk.Label(tutorial_frame, text="4/10", font=self.medium_text_font_bold)
         navigating_menus_tutorial_text_label = tk.Label(tutorial_frame, text="The highlighted button is how you'll pick the dungeon difficulty\n"
                                                     "For an indepth tutorial on dungeon difficulty, look for the 'Dungeon Difficulties' tutorial section")
-        img4 = Image.open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Images/NavigatingMenus/navigatingMenus_tutorial_picture4.png".format(COMPUTER_USERNAME))
+        img4 = Image.open("C:/Users/{}/Documents/L3_ASSIGNMENT_RPG/Game_Images/NavigatingMenus/navigatingMenus_tutorial_picture4.png".format(COMPUTER_USERNAME))
         img4.thumbnail((450, 450))
         img4 = ImageTk.PhotoImage(img4)
         image_label = tk.Label(tutorial_frame, image=img4)
@@ -31589,7 +31589,7 @@ class How2PlayPage(tk.Frame):
         navigating_menus_tutorial_text_label = tk.Label(tutorial_frame, text="Now we're back to the surface menu, we'll go over all the other buttons\n"
                                                     "The highlighed button is where you'll put together you're team of 5 unqiue champions that you'll take into the dungeon\n"
                                                     "For an indepth tutorial on how to recruit champions to your team, look for the 'Choosing your Team' tutorial section")
-        img5 = Image.open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Images/NavigatingMenus/navigatingMenus_tutorial_picture5.png".format(COMPUTER_USERNAME))
+        img5 = Image.open("C:/Users/{}/Documents/L3_ASSIGNMENT_RPG/Game_Images/NavigatingMenus/navigatingMenus_tutorial_picture5.png".format(COMPUTER_USERNAME))
         img5.thumbnail((450, 450))
         img5 = ImageTk.PhotoImage(img5)
         image_label = tk.Label(tutorial_frame, image=img5)
@@ -31613,7 +31613,7 @@ class How2PlayPage(tk.Frame):
         slide_progress = tk.Label(tutorial_frame, text="6/10", font=self.medium_text_font_bold)
         navigating_menus_tutorial_text_label = tk.Label(tutorial_frame, text="The highlighted button is where you can look at your current rank (currently NYI)\n"
                                                     "For an indepth tutorial on how the ranking system works, look for the 'Ranking System' tutorial section")
-        img6 = Image.open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Images/NavigatingMenus/navigatingMenus_tutorial_picture6.png".format(COMPUTER_USERNAME))
+        img6 = Image.open("C:/Users/{}/Documents/L3_ASSIGNMENT_RPG/Game_Images/NavigatingMenus/navigatingMenus_tutorial_picture6.png".format(COMPUTER_USERNAME))
         img6.thumbnail((450, 450))
         img6 = ImageTk.PhotoImage(img6)
         image_label = tk.Label(tutorial_frame, image=img6)
@@ -31637,7 +31637,7 @@ class How2PlayPage(tk.Frame):
         slide_progress = tk.Label(tutorial_frame, text="7/10", font=self.medium_text_font_bold)
         navigating_menus_tutorial_text_label = tk.Label(tutorial_frame, text="The highlighted button is where you can go to for tutorials and information on how the game works\n"
                                                     "You are always welcome to visit this this page if you've forgotten how a certain mechanic or page works")
-        img7 = Image.open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Images/NavigatingMenus/navigatingMenus_tutorial_picture7.png".format(COMPUTER_USERNAME))
+        img7 = Image.open("C:/Users/{}/Documents/L3_ASSIGNMENT_RPG/Game_Images/NavigatingMenus/navigatingMenus_tutorial_picture7.png".format(COMPUTER_USERNAME))
         img7.thumbnail((450, 450))
         img7 = ImageTk.PhotoImage(img7)
         image_label = tk.Label(tutorial_frame, image=img7)
@@ -31660,7 +31660,7 @@ class How2PlayPage(tk.Frame):
         title_label = tk.Label(tutorial_frame, text="Navigating the Menus", font=self.small_title_font)
         slide_progress = tk.Label(tutorial_frame, text="8/10", font=self.medium_text_font_bold)
         navigating_menus_tutorial_text_label = tk.Label(tutorial_frame, text="The highlighted button is where you can see the people who worked on this game! (currently NYI)")
-        img8 = Image.open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Images/NavigatingMenus/navigatingMenus_tutorial_picture8.png".format(COMPUTER_USERNAME))
+        img8 = Image.open("C:/Users/{}/Documents/L3_ASSIGNMENT_RPG/Game_Images/NavigatingMenus/navigatingMenus_tutorial_picture8.png".format(COMPUTER_USERNAME))
         img8.thumbnail((450, 450))
         img8 = ImageTk.PhotoImage(img8)
         image_label = tk.Label(tutorial_frame, image=img8)
@@ -31683,7 +31683,7 @@ class How2PlayPage(tk.Frame):
         title_label = tk.Label(tutorial_frame, text="Navigating the Menus", font=self.small_title_font)
         slide_progress = tk.Label(tutorial_frame, text="9/10", font=self.medium_text_font_bold)
         navigating_menus_tutorial_text_label = tk.Label(tutorial_frame, text="The highlighted button is how you can exit the game once you're done playing")
-        img9 = Image.open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Images/NavigatingMenus/navigatingMenus_tutorial_picture9.png".format(COMPUTER_USERNAME))
+        img9 = Image.open("C:/Users/{}/Documents/L3_ASSIGNMENT_RPG/Game_Images/NavigatingMenus/navigatingMenus_tutorial_picture9.png".format(COMPUTER_USERNAME))
         img9.thumbnail((450, 450))
         img9 = ImageTk.PhotoImage(img9)
         image_label = tk.Label(tutorial_frame, image=img9)
@@ -31759,7 +31759,7 @@ class How2PlayPage(tk.Frame):
                                                         "Healers, who heal back the damage their team takes\n"
                                                         "Each specialisation plays a role in their teams survival in the dungeon\n"
                                                         "Out of the total 20 champions, 4 are tanks, 12 are damage dealers, and the last 4 are healers")
-        img2 = Image.open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Images/ChampionBasics/championBasics_tutorial_picture1.png".format(COMPUTER_USERNAME))
+        img2 = Image.open("C:/Users/{}/Documents/L3_ASSIGNMENT_RPG/Game_Images/ChampionBasics/championBasics_tutorial_picture1.png".format(COMPUTER_USERNAME))
         img2.thumbnail((400, 400))
         img2 = ImageTk.PhotoImage(img2)
         image_label = tk.Label(tutorial_frame, image=img2)
@@ -31828,13 +31828,13 @@ class How2PlayPage(tk.Frame):
                                                         "When viewing the details of an abilities whether it be in combat or in the champion camp, abilities will show if they cost a certain amount of resource, or gain some when used\n"
                                                         "Make sure when playing to always have a healthy amount of resource available so that you can always use your powerful moves when needed the most otherwise you will be left without them\n"
                                                         "Here is a few examples of resource cost from some of the the Earth Speakers abilities")
-        img2 = Image.open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Images/ChampionBasics/championBasics_tutorial_picture2.png".format(COMPUTER_USERNAME))
+        img2 = Image.open("C:/Users/{}/Documents/L3_ASSIGNMENT_RPG/Game_Images/ChampionBasics/championBasics_tutorial_picture2.png".format(COMPUTER_USERNAME))
         img2.thumbnail((400, 400))
         img2 = ImageTk.PhotoImage(img2)
         image_label = tk.Label(tutorial_frame, image=img2)
         image_label.image = img2
         image_label.grid(row=4, column=1, sticky="w")
-        img3 = Image.open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Images/ChampionBasics/championBasics_tutorial_picture3.png".format(COMPUTER_USERNAME))
+        img3 = Image.open("C:/Users/{}/Documents/L3_ASSIGNMENT_RPG/Game_Images/ChampionBasics/championBasics_tutorial_picture3.png".format(COMPUTER_USERNAME))
         img3.thumbnail((400, 400))
         img3 = ImageTk.PhotoImage(img3)
         image_label = tk.Label(tutorial_frame, image=img3)
@@ -31859,7 +31859,7 @@ class How2PlayPage(tk.Frame):
         champion_basics_tutorial_text_label = tk.Label(tutorial_frame, text="Some abilities even have cooldowns, meaning that once used, you'll have to wait a certain number of rounds before using them again\n"
                                                         "Even powerful abilities that don't have a resource cost have cooldowns so that they aren't used over and over\n"
                                                         "When viewing an ability you can see its inital cooldown and its remaining cooldown if used recently")
-        img4 = Image.open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Images/ChampionBasics/championBasics_tutorial_picture4.png".format(COMPUTER_USERNAME))
+        img4 = Image.open("C:/Users/{}/Documents/L3_ASSIGNMENT_RPG/Game_Images/ChampionBasics/championBasics_tutorial_picture4.png".format(COMPUTER_USERNAME))
         img4.thumbnail((550, 250))
         img4 = ImageTk.PhotoImage(img4)
         image_label = tk.Label(tutorial_frame, image=img4)
@@ -31885,7 +31885,7 @@ class How2PlayPage(tk.Frame):
                                                         "Each champion has a passive, most champions passives synergize well with the abilities they have at their disposal but some champions passives actually support other champions instead\n"
                                                         "Some passives are incredibly powerful, so make sure to check out every champions passive to find ones you like the look of!\n"
                                                         "Heres the Earth Speakers passive, it gives the allies he heals a buff that protects them from damage while his heal over time is active on them")
-        img5 = Image.open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Images/ChampionBasics/championBasics_tutorial_picture5.png".format(COMPUTER_USERNAME))
+        img5 = Image.open("C:/Users/{}/Documents/L3_ASSIGNMENT_RPG/Game_Images/ChampionBasics/championBasics_tutorial_picture5.png".format(COMPUTER_USERNAME))
         img5.thumbnail((550, 250))
         img5 = ImageTk.PhotoImage(img5)
         image_label = tk.Label(tutorial_frame, image=img5)
@@ -31926,7 +31926,7 @@ class How2PlayPage(tk.Frame):
         choosing_team_tutorial_text_label = tk.Label(tutorial_frame, text="Before you can enter the Dungeon, you must select five champions"
                                                                           " to accompany you into the depths\n"
                                                                           "To begin assembling your team, select 'Champion Camp' in the Main Menu")
-        img1 = Image.open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Images/ChoosingTeam/choosingTeam_tutorial_picture1.png".format(COMPUTER_USERNAME))
+        img1 = Image.open("C:/Users/{}/Documents/L3_ASSIGNMENT_RPG/Game_Images/ChoosingTeam/choosingTeam_tutorial_picture1.png".format(COMPUTER_USERNAME))
         img1.thumbnail((450, 250))
         img1 = ImageTk.PhotoImage(img1)
         image_label = tk.Label(tutorial_frame, image=img1)
@@ -31949,7 +31949,7 @@ class How2PlayPage(tk.Frame):
         choosing_team_tutorial_text_label = tk.Label(tutorial_frame, text="Here, you are presented with your team of champions\n "
                                                                           "If this is your first time playing, you'll find that this section is empty\n"
                                                                           "Press the 'Create' button to begin assembling your champions!")
-        img2 = Image.open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Images/ChoosingTeam/choosingTeam_tutorial_picture2.png".format(COMPUTER_USERNAME))
+        img2 = Image.open("C:/Users/{}/Documents/L3_ASSIGNMENT_RPG/Game_Images/ChoosingTeam/choosingTeam_tutorial_picture2.png".format(COMPUTER_USERNAME))
         img2.thumbnail((550, 250))
         img2 = ImageTk.PhotoImage(img2)
         image_label = tk.Label(tutorial_frame, image=img2)
@@ -31976,7 +31976,7 @@ class How2PlayPage(tk.Frame):
                                                                           "Each specialisation plays an important role inside the dungeon, and utilizing each one will get you further in your expeditions\n"
                                                                           "To view each specialisations champion selection range, click on the specialisation name button up on the top of your page\n"
                                                                           "Pages 4-5-6 of this tutorial explain in details what each specialisation does")
-        img3 = Image.open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Images/ChoosingTeam/choosingTeam_tutorial_picture3.png".format(COMPUTER_USERNAME))
+        img3 = Image.open("C:/Users/{}/Documents/L3_ASSIGNMENT_RPG/Game_Images/ChoosingTeam/choosingTeam_tutorial_picture3.png".format(COMPUTER_USERNAME))
         img3.thumbnail((800, 800))
         img3 = ImageTk.PhotoImage(img3)
         image_label = tk.Label(tutorial_frame, image=img3)
@@ -32064,7 +32064,7 @@ class How2PlayPage(tk.Frame):
         choosing_team_tutorial_text_label = tk.Label(tutorial_frame, text="If you're curious what a champion does, click on the 'View Details' button below the champion you're interested in\n"
                                                      "A small window will pop up and will tell you everything you need to know about the champion. Including their attacks and special moves they can preform\n"
                                                      "Don't worry if you don't understand what any of it means, check out the 'Champion Basics' tutorial to learn about how champions function to gain a better understanding")
-        img4 = Image.open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Images/ChoosingTeam/choosingTeam_tutorial_picture4.png".format(COMPUTER_USERNAME))
+        img4 = Image.open("C:/Users/{}/Documents/L3_ASSIGNMENT_RPG/Game_Images/ChoosingTeam/choosingTeam_tutorial_picture4.png".format(COMPUTER_USERNAME))
         img4.thumbnail((450, 450))
         img4 = ImageTk.PhotoImage(img4)
         image_label = tk.Label(tutorial_frame, image=img4)
@@ -32090,7 +32090,7 @@ class How2PlayPage(tk.Frame):
                                                                           "You may select any combination of champions, but you cannot have more than one of the same champion\n"                                                         
                                                                           "Its smart to put together a team that can cover a wide array of scenarios so you can handle each challenge without being at a disadvantage\n"
                                                                           "Also think about a team of champions that synergises well with one anothers abilities")
-        img4 = Image.open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Images/ChoosingTeam/choosingTeam_tutorial_picture5.png".format(COMPUTER_USERNAME))
+        img4 = Image.open("C:/Users/{}/Documents/L3_ASSIGNMENT_RPG/Game_Images/ChoosingTeam/choosingTeam_tutorial_picture5.png".format(COMPUTER_USERNAME))
         img4.thumbnail((700, 7000))
         img4 = ImageTk.PhotoImage(img4)
         image_label = tk.Label(tutorial_frame, image=img4)
@@ -32114,13 +32114,13 @@ class How2PlayPage(tk.Frame):
         slide_progress = tk.Label(tutorial_frame, text="9/11", font=self.medium_text_font_bold)
         choosing_team_tutorial_text_label = tk.Label(tutorial_frame, text="If you have all five team slots full and want to change a champion, don't fret!\n"
                                                                           "Just add the champion you want like normal and you'll be able to swap around champions in your party")
-        img5 = Image.open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Images/ChoosingTeam/choosingTeam_tutorial_picture6.png".format(COMPUTER_USERNAME))
+        img5 = Image.open("C:/Users/{}/Documents/L3_ASSIGNMENT_RPG/Game_Images/ChoosingTeam/choosingTeam_tutorial_picture6.png".format(COMPUTER_USERNAME))
         img5.thumbnail((500, 900))
         img5 = ImageTk.PhotoImage(img5)
         image_label1 = tk.Label(tutorial_frame, image=img5)
         image_label1.image = img5
         image_label1.grid(row=4, column=1, sticky="w")
-        img6 = Image.open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Images/ChoosingTeam/choosingTeam_tutorial_picture7.png".format(COMPUTER_USERNAME))
+        img6 = Image.open("C:/Users/{}/Documents/L3_ASSIGNMENT_RPG/Game_Images/ChoosingTeam/choosingTeam_tutorial_picture7.png".format(COMPUTER_USERNAME))
         img6.thumbnail((500, 900))
         img6 = ImageTk.PhotoImage(img6)
         image_label2 = tk.Label(tutorial_frame, image=img6)
@@ -32143,7 +32143,7 @@ class How2PlayPage(tk.Frame):
         title_label = tk.Label(tutorial_frame, text="Choosing your Team", font=self.small_title_font)
         slide_progress = tk.Label(tutorial_frame, text="10/11", font=self.medium_text_font_bold)
         choosing_team_tutorial_text_label = tk.Label(tutorial_frame, text="Once you have chosen all five of your preferred champions, make sure to press the 'Confirm Changes' button to save that team to the slot")
-        img7 = Image.open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Images/ChoosingTeam/choosingTeam_tutorial_picture8.png".format(COMPUTER_USERNAME))
+        img7 = Image.open("C:/Users/{}/Documents/L3_ASSIGNMENT_RPG/Game_Images/ChoosingTeam/choosingTeam_tutorial_picture8.png".format(COMPUTER_USERNAME))
         img7.thumbnail((800, 800))
         img7 = ImageTk.PhotoImage(img7)
         image_label = tk.Label(tutorial_frame, image=img7)
@@ -32214,7 +32214,7 @@ class How2PlayPage(tk.Frame):
         title_label = tk.Label(tutorial_frame, text="Dungeon Difficulties", font=self.small_title_font)
         slide_progress = tk.Label(tutorial_frame, text="2/9", font=self.medium_text_font_bold)
         dungeon_difficulties_tutorial_text_label = tk.Label(tutorial_frame, text="Click the 'Delve into the Dungeon' option on the Surface Menu")
-        img1 = Image.open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Images/DungeonDifficulties/dungeonDifficulties_tutorial_picture1.png".format(COMPUTER_USERNAME))
+        img1 = Image.open("C:/Users/{}/Documents/L3_ASSIGNMENT_RPG/Game_Images/DungeonDifficulties/dungeonDifficulties_tutorial_picture1.png".format(COMPUTER_USERNAME))
         img1.thumbnail((400, 400))
         img1 = ImageTk.PhotoImage(img1)
         image_label = tk.Label(tutorial_frame, image=img1)
@@ -32237,7 +32237,7 @@ class How2PlayPage(tk.Frame):
         title_label = tk.Label(tutorial_frame, text="Dungeon Difficulties", font=self.small_title_font)
         slide_progress = tk.Label(tutorial_frame, text="3/9", font=self.medium_text_font_bold)
         dungeon_difficulties_tutorial_text_label = tk.Label(tutorial_frame, text="Then click 'Select Dungeon Expedition'")
-        img2 = Image.open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Images/DungeonDifficulties/dungeonDifficulties_tutorial_picture2.png".format(COMPUTER_USERNAME))
+        img2 = Image.open("C:/Users/{}/Documents/L3_ASSIGNMENT_RPG/Game_Images/DungeonDifficulties/dungeonDifficulties_tutorial_picture2.png".format(COMPUTER_USERNAME))
         img2.thumbnail((400, 400))
         img2 = ImageTk.PhotoImage(img2)
         image_label = tk.Label(tutorial_frame, image=img2)
@@ -32261,7 +32261,7 @@ class How2PlayPage(tk.Frame):
         slide_progress = tk.Label(tutorial_frame, text="4/9", font=self.medium_text_font_bold)
         dungeon_difficulties_tutorial_text_label = tk.Label(tutorial_frame, text="This menu shows you your currently selected expedition/difficulty\n"
                                                             "To view the rest, finally click the 'View Expeditions' button")
-        img3 = Image.open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Images/DungeonDifficulties/dungeonDifficulties_tutorial_picture3.png".format(COMPUTER_USERNAME))
+        img3 = Image.open("C:/Users/{}/Documents/L3_ASSIGNMENT_RPG/Game_Images/DungeonDifficulties/dungeonDifficulties_tutorial_picture3.png".format(COMPUTER_USERNAME))
         img3.thumbnail((400, 400))
         img3 = ImageTk.PhotoImage(img3)
         image_label = tk.Label(tutorial_frame, image=img3)
@@ -32287,7 +32287,7 @@ class How2PlayPage(tk.Frame):
                                                             "Here you can select different difficulty options you've unlocked through ranking up. New players will only have access to the first difficulty\n"
                                                             "Over top of each difficulty it will tell you how many more dungeoneer emblems you'll need to unlock them\n"
                                                             "To learn more about ranking up and obtaining emblems, visist the 'Ranking System' tutorial page")
-        img4 = Image.open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Images/DungeonDifficulties/dungeonDifficulties_tutorial_picture4.png".format(COMPUTER_USERNAME))
+        img4 = Image.open("C:/Users/{}/Documents/L3_ASSIGNMENT_RPG/Game_Images/DungeonDifficulties/dungeonDifficulties_tutorial_picture4.png".format(COMPUTER_USERNAME))
         img4.thumbnail((500, 500))
         img4 = ImageTk.PhotoImage(img4)
         image_label = tk.Label(tutorial_frame, image=img4)
@@ -32313,7 +32313,7 @@ class How2PlayPage(tk.Frame):
                                                             "The first is the Base health and attack. This is the starting stats that the monsters have, when there are multiple monsters, the base number is split equally amongst them\n"
                                                             "The second is the Increase per room. This is the modifier that is added onto the base number for every room that the player has cleared, this is the main way the dungeon gets harder over time\n"
                                                             "You can tell that for each difficulty increase. the base and increase per room numbers all go up, this makes later difficulties much harder than the easier ones")
-        img5 = Image.open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Images/DungeonDifficulties/dungeonDifficulties_tutorial_picture5.png".format(COMPUTER_USERNAME))
+        img5 = Image.open("C:/Users/{}/Documents/L3_ASSIGNMENT_RPG/Game_Images/DungeonDifficulties/dungeonDifficulties_tutorial_picture5.png".format(COMPUTER_USERNAME))
         img5.thumbnail((500, 500))
         img5 = ImageTk.PhotoImage(img5)
         image_label = tk.Label(tutorial_frame, image=img5)
@@ -32338,7 +32338,7 @@ class How2PlayPage(tk.Frame):
         dungeon_difficulties_tutorial_text_label = tk.Label(tutorial_frame, text="Here is the first example of the increasing power of monsters\n"
                                                             "In this picture, the active expedition is the 'Wailing Caverns' the Steel guilds difficulty!\n"
                                                             "This player is on the third room of the dungeon, meaning the extra damage and health is +195 (65x3) and +375 (125x3)")
-        img6 = Image.open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Images/DungeonDifficulties/dungeonDifficulties_tutorial_picture6.png".format(COMPUTER_USERNAME))
+        img6 = Image.open("C:/Users/{}/Documents/L3_ASSIGNMENT_RPG/Game_Images/DungeonDifficulties/dungeonDifficulties_tutorial_picture6.png".format(COMPUTER_USERNAME))
         img6.thumbnail((800, 800))
         img6 = ImageTk.PhotoImage(img6)
         image_label = tk.Label(tutorial_frame, image=img6)
@@ -32363,7 +32363,7 @@ class How2PlayPage(tk.Frame):
         dungeon_difficulties_tutorial_text_label = tk.Label(tutorial_frame, text="Here is the second example of the increasing power of monsters\n"
                                                             "In this picture, the active expedition is the 'Void Zone' the Ruby guilds difficulty!\n"
                                                             "This player is on the second floor and third room of the dungeon, meaning the extra damage and health is +675 (75x9) and +1575 (175x9)")
-        img7 = Image.open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Images/DungeonDifficulties/dungeonDifficulties_tutorial_picture7.png".format(COMPUTER_USERNAME))
+        img7 = Image.open("C:/Users/{}/Documents/L3_ASSIGNMENT_RPG/Game_Images/DungeonDifficulties/dungeonDifficulties_tutorial_picture7.png".format(COMPUTER_USERNAME))
         img7.thumbnail((800, 800))
         img7 = ImageTk.PhotoImage(img7)
         image_label = tk.Label(tutorial_frame, image=img7)
@@ -32423,7 +32423,7 @@ class How2PlayPage(tk.Frame):
                                                     "Here you can see all five of your champions along with their current health points and resource points if they have any\n"
                                                     "You're able to either start the next fight, quickly return to the main menu without ending the run, or forfeiting the run entirely\n"
                                                     "Forfeiting simply causes the game to end as though your team has been defeated, allowing you to claim rewards early")
-        img1 = Image.open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Images/CombatCycle/combatCycle_tutorial_picture1.png".format(COMPUTER_USERNAME))
+        img1 = Image.open("C:/Users/{}/Documents/L3_ASSIGNMENT_RPG/Game_Images/CombatCycle/combatCycle_tutorial_picture1.png".format(COMPUTER_USERNAME))
         img1.thumbnail((400, 400))
         img1 = ImageTk.PhotoImage(img1)
         image_label = tk.Label(tutorial_frame, image=img1)
@@ -32448,7 +32448,7 @@ class How2PlayPage(tk.Frame):
         combat_cycle_tutorial_text_label = tk.Label(tutorial_frame, text="If you choose to begin the next fight, you're brought to this screen. At the bottom, you're given the ability to select one of three buttons\n"
                                                     "The first lets you look through your current champions attacks, the second their specials, and the third which lets you control a different champion\n"
                                                     "You have free choice to take whatever action you want")
-        img2 = Image.open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Images/CombatCycle/combatCycle_tutorial_picture2.png".format(COMPUTER_USERNAME))
+        img2 = Image.open("C:/Users/{}/Documents/L3_ASSIGNMENT_RPG/Game_Images/CombatCycle/combatCycle_tutorial_picture2.png".format(COMPUTER_USERNAME))
         img2.thumbnail((450, 450))
         img2 = ImageTk.PhotoImage(img2)
         image_label = tk.Label(tutorial_frame, image=img2)
@@ -32473,7 +32473,7 @@ class How2PlayPage(tk.Frame):
         combat_cycle_tutorial_text_label = tk.Label(tutorial_frame, text="Clicking on either the 'Attacks' or 'Specials' buttons will open up a menu of all of that champions corrasponding abilities\n"
                                                     "You can select any of these abilities as long as it doesn't have a remaining cooldown and you have the resource for it\n"
                                                     "To learn more about champions and their abilities, visit the 'Champion Basics' tutorial section")
-        img3 = Image.open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Images/CombatCycle/combatCycle_tutorial_picture3.png".format(COMPUTER_USERNAME))
+        img3 = Image.open("C:/Users/{}/Documents/L3_ASSIGNMENT_RPG/Game_Images/CombatCycle/combatCycle_tutorial_picture3.png".format(COMPUTER_USERNAME))
         img3.thumbnail((450, 450))
         img3 = ImageTk.PhotoImage(img3)
         image_label = tk.Label(tutorial_frame, image=img3)
@@ -32497,7 +32497,7 @@ class How2PlayPage(tk.Frame):
         slide_progress = tk.Label(tutorial_frame, text="5/10", font=self.medium_text_font_bold)
         combat_cycle_tutorial_text_label = tk.Label(tutorial_frame, text="After making your action, you'll asked who out of your champions should take their turn next\n"
                                                     "Champions who've already had their turn won't be able to be selected, only those who haven't had a turn yet will be selectable")
-        img4 = Image.open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Images/CombatCycle/combatCycle_tutorial_picture4.png".format(COMPUTER_USERNAME))
+        img4 = Image.open("C:/Users/{}/Documents/L3_ASSIGNMENT_RPG/Game_Images/CombatCycle/combatCycle_tutorial_picture4.png".format(COMPUTER_USERNAME))
         img4.thumbnail((500, 500))
         img4 = ImageTk.PhotoImage(img4)
         image_label = tk.Label(tutorial_frame, image=img4)
@@ -32542,7 +32542,7 @@ class How2PlayPage(tk.Frame):
         slide_progress = tk.Label(tutorial_frame, text="7/10", font=self.medium_text_font_bold)
         combat_cycle_tutorial_text_label = tk.Label(tutorial_frame, text="The champions turn then begins once again, ready to repeat in the same fashion as before\n"
                                                     "This continues until either all the champions or monsters have been defeated")
-        img5 = Image.open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Images/CombatCycle/combatCycle_tutorial_picture5.png".format(COMPUTER_USERNAME))
+        img5 = Image.open("C:/Users/{}/Documents/L3_ASSIGNMENT_RPG/Game_Images/CombatCycle/combatCycle_tutorial_picture5.png".format(COMPUTER_USERNAME))
         img5.thumbnail((500, 500))
         img5 = ImageTk.PhotoImage(img5)
         image_label = tk.Label(tutorial_frame, image=img5)
@@ -32568,7 +32568,7 @@ class How2PlayPage(tk.Frame):
                                                     "Same as before, you can see the status of all your champions conditions. All health and resources lost in the previous battle will carry over. So be careful\n"
                                                     "But there are some things that occur after each victory in combat, first all champions that use the 'Mana' resource will regain 75 instantly\n"
                                                     "Secondly, all heal over time and buff effects will tick down once as well as remaining cooldowns")
-        img6 = Image.open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Images/CombatCycle/combatCycle_tutorial_picture6.png".format(COMPUTER_USERNAME))
+        img6 = Image.open("C:/Users/{}/Documents/L3_ASSIGNMENT_RPG/Game_Images/CombatCycle/combatCycle_tutorial_picture6.png".format(COMPUTER_USERNAME))
         img6.thumbnail((450, 450))
         img6 = ImageTk.PhotoImage(img6)
         image_label = tk.Label(tutorial_frame, image=img6)
@@ -32594,7 +32594,7 @@ class How2PlayPage(tk.Frame):
                                                     "Here, it will tell the player how many floors and rooms they've cleared as well as how many dungeoneer emblems they would've received\n"
                                                     "If the player is playing on a difficulty lower than the highest they can play on, then they receive no emblems\n"
                                                     "For more information on dungeoneer emblems and the ranking system, visit the 'Ranking System' tutorial section")
-        img7 = Image.open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Images/CombatCycle/combatCycle_tutorial_picture7.png".format(COMPUTER_USERNAME))
+        img7 = Image.open("C:/Users/{}/Documents/L3_ASSIGNMENT_RPG/Game_Images/CombatCycle/combatCycle_tutorial_picture7.png".format(COMPUTER_USERNAME))
         img7.thumbnail((500, 500))
         img7 = ImageTk.PhotoImage(img7)
         image_label = tk.Label(tutorial_frame, image=img7)
@@ -32651,7 +32651,7 @@ class How2PlayPage(tk.Frame):
         ranking_system_tutorial_text_label = tk.Label(tutorial_frame, text="There are 7 ranks with each rank is represented by a Guild\n"
                                                       "The higher your rank, the better your guild\n"
                                                       "The names for each of the 7 guilds is shown below")
-        img1 = Image.open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Images/RankingSystem/rankingSystem_tutorial_picture1.png".format(COMPUTER_USERNAME))
+        img1 = Image.open("C:/Users/{}/Documents/L3_ASSIGNMENT_RPG/Game_Images/RankingSystem/rankingSystem_tutorial_picture1.png".format(COMPUTER_USERNAME))
         img1.thumbnail((450, 450))
         img1 = ImageTk.PhotoImage(img1)
         image_label = tk.Label(tutorial_frame, image=img1)
@@ -32696,7 +32696,7 @@ class How2PlayPage(tk.Frame):
                                                       "The gap between each rank is equally 20 emblems apart\n"
                                                       "The reward for achieving a new rank is access to that guild's dungeon difficulty known as an Expedition\n"
                                                       "to learn more about the difficulties of each expedition, go to the 'Dungeon Difficulties' tutorial section")
-        img1 = Image.open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Images/RankingSystem/rankingSystem_tutorial_picture2.png".format(COMPUTER_USERNAME))
+        img1 = Image.open("C:/Users/{}/Documents/L3_ASSIGNMENT_RPG/Game_Images/RankingSystem/rankingSystem_tutorial_picture2.png".format(COMPUTER_USERNAME))
         img1.thumbnail((450, 450))
         img1 = ImageTk.PhotoImage(img1)
         image_label = tk.Label(tutorial_frame, image=img1)
@@ -32722,7 +32722,7 @@ class How2PlayPage(tk.Frame):
                                                       "Playing on difficulties that aren't the one tied to your current rank will not reward any emblems\n"
                                                       "The amount of emblems rewarded is 0.33 per room cleared, meaning completing an entire floor will grant 1 full emblem!\n"
                                                       "In essence, this means that to rank up, you must complete in total 20 floors worth of rooms in order to progress to the next rank")
-        img1 = Image.open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Images/RankingSystem/rankingSystem_tutorial_picture3.png".format(COMPUTER_USERNAME))
+        img1 = Image.open("C:/Users/{}/Documents/L3_ASSIGNMENT_RPG/Game_Images/RankingSystem/rankingSystem_tutorial_picture3.png".format(COMPUTER_USERNAME))
         img1.thumbnail((450, 450))
         img1 = ImageTk.PhotoImage(img1)
         image_label = tk.Label(tutorial_frame, image=img1)
@@ -32746,7 +32746,7 @@ class How2PlayPage(tk.Frame):
         slide_progress = tk.Label(tutorial_frame, text="6/7", font=self.medium_text_font_bold)
         ranking_system_tutorial_text_label = tk.Label(tutorial_frame, text="The Leaderboard was supposed to be where you could see the top 10 players that achieved the highest floors of each rank\n"
                                                       "But as of right now it is currently unavailable")
-        img1 = Image.open("C:/Users/{}/Documents/L2_ASSIGNMENT_RPG/Game_Images/RankingSystem/rankingSystem_tutorial_picture4.png".format(COMPUTER_USERNAME))
+        img1 = Image.open("C:/Users/{}/Documents/L3_ASSIGNMENT_RPG/Game_Images/RankingSystem/rankingSystem_tutorial_picture4.png".format(COMPUTER_USERNAME))
         img1.thumbnail((450, 450))
         img1 = ImageTk.PhotoImage(img1)
         image_label = tk.Label(tutorial_frame, image=img1)
